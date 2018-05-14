@@ -9,22 +9,40 @@
           <div class="layout-nav">
             <div class="user-info">
               <span class="user-img"></span>
-              <span class="user-name">超级管理员</span>
+              <Dropdown trigger="hover" style="margin: 0 10px">
+                  <a href="javascript:void(0)" style="color: #fff;">
+                      超级管理员
+                      <Icon type="arrow-down-b"></Icon>
+                  </a>
+                  <DropdownMenu slot="list">
+                      <DropdownItem>修改密码</DropdownItem>
+                      <DropdownItem>安全退出</DropdownItem>
+                  </DropdownMenu>
+              </Dropdown>
               <span class="msg-icon">
                 <i>99+</i>
               </span>
             </div>
           </div>
         </Header>
-        <Menu :style="{padding: '0 50px'}" mode="horizontal" :theme="theme1" active-name="1">
+        <Menu 
+          :style="{padding: '0 50px'}" 
+          mode="horizontal" 
+          :theme="theme1" 
+          active-name="1" 
+          @on-select="handleMenuClick"
+        >
           <MenuItem name="1">
             <Icon type="ios-paper"></Icon>
             首页
           </MenuItem>
-          <MenuItem name="2">
-            <Icon type="grid"></Icon>
-            产品管理
-          </MenuItem>
+          <Submenu name="2">
+            <template slot="title">
+              <Icon type="grid"></Icon>
+                产品管理
+            </template>
+            <MenuItem name="2-1">系统列表</MenuItem>
+          </Submenu>
           <Submenu name="3">
             <template slot="title">
               <Icon type="ios-people"></Icon>
@@ -34,46 +52,46 @@
             <MenuItem name="3-2">部门列表</MenuItem>
             <MenuItem name="3-3">管理员列表</MenuItem>
           </Submenu>
-          <Submenu name="3">
+          <Submenu name="4">
             <template slot="title">
               <Icon type="document-text"></Icon>
                 资源管理
             </template>
-            <MenuItem name="3-1">数据资源管理</MenuItem>
-            <MenuItem name="3-2">搜索管理</MenuItem>
+            <MenuItem name="4-1">数据资源管理</MenuItem>
+            <MenuItem name="4-2">搜索管理</MenuItem>
           </Submenu>
-          <Submenu name="3">
+          <Submenu name="5">
             <template slot="title">
               <Icon type="loop"></Icon>
                 交互管理
             </template>
-            <MenuItem name="3-1">推送管理</MenuItem>
-            <MenuItem name="3-2">短信管理</MenuItem>
+            <MenuItem name="5-1">推送管理</MenuItem>
+            <MenuItem name="5-2">短信管理</MenuItem>
           </Submenu>
-          <Submenu name="3">
+          <Submenu name="6">
             <template slot="title">
               <Icon type="stats-bars"></Icon>
                 行为分析
             </template>
-            <MenuItem name="3-1">用户访问</MenuItem>
-            <MenuItem name="3-2">数据访问</MenuItem>
-            <MenuItem name="3-2">用户轨迹</MenuItem>
+            <MenuItem name="6-1">用户访问</MenuItem>
+            <MenuItem name="6-2">数据访问</MenuItem>
+            <MenuItem name="6-3">用户轨迹</MenuItem>
           </Submenu>
-          <Submenu name="3">
+          <Submenu name="7">
             <template slot="title">
               <Icon type="disc"></Icon>
                 系统监控
             </template>
-            <MenuItem name="3-1">服务监控</MenuItem>
-            <MenuItem name="3-2">硬件监控</MenuItem>
+            <MenuItem name="7-1">服务监控</MenuItem>
+            <MenuItem name="7-2">硬件监控</MenuItem>
           </Submenu>
-          <Submenu name="3">
+          <Submenu name="8">
             <template slot="title">
               <Icon type="gear-a"></Icon>
                 系统配置
             </template>
-            <MenuItem name="3-1">功能配置</MenuItem>
-            <MenuItem name="3-2">数据访问</MenuItem>
+            <MenuItem name="8-1">功能配置</MenuItem>
+            <MenuItem name="8-2">数据访问</MenuItem>
           </Submenu>
         </Menu>
             <Content :style="{padding: '0 50px'}">
@@ -84,11 +102,14 @@
                 </Breadcrumb>
                 <Card>
                     <div style="min-height: 200px;">
-                        Content
+                        <router-view/>
                     </div>
                 </Card>
             </Content>
-            <Footer class="layout-footer-center">2011-2016 &copy; TalkingData</Footer>
+            <Footer class="layout-footer-center">
+              <p>建设单位：重庆市地理信息中心 | 技术支持：重庆知行宏图科技有限公司</p>
+              <p>邮箱：cqzhsq@qq.com | 联系电话：023-67033881 | 地址：重庆市渝北区冉家坝规划测绘创新基地1001室</p>
+            </Footer>
         </Layout>
     </div>
 </template>
@@ -98,6 +119,11 @@ export default {
     return {
       theme1: 'light'
     }
+  },
+  methods: {
+    handleMenuClick(name) {
+      console.log(name)
+    }
   }
 }
 </script>
@@ -105,6 +131,9 @@ export default {
 <style lang="scss" scoped>
 .ivu-layout-header {
   display: flex;
+}
+.ivu-select-dropdown {
+  z-index: 999;
 }
 .layout {
   border: 1px solid #d7dde4;
