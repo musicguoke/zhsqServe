@@ -46,8 +46,8 @@
         <Icon type="stats-bars"></Icon>
           行为分析
       </template>
-      <MenuItem name="6-1">用户访问</MenuItem>
-      <MenuItem name="6-2">数据访问</MenuItem>
+      <MenuItem name="user-statistics">用户访问</MenuItem>
+      <MenuItem name="data-statistics">数据访问</MenuItem>
       <MenuItem name="6-3">用户轨迹</MenuItem>
     </Submenu>
     <Submenu name="7">
