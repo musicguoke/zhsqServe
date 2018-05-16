@@ -21,7 +21,7 @@ export default {
     data(){
         return{
             searchName:'',
-            departmentListHeight:window.innerHeight - 65-60-20-90 -80 +'px',
+            departmentListHeight:window.innerHeight - 65-60-20-90-18 +'px',
             departmentAddName:'',
             columns: [
                 {

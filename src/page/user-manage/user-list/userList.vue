@@ -31,7 +31,7 @@
 export default {
     data(){
         return{
-            userListHeight:window.innerHeight - 65-60-20-90 -80 +'px',
+            userListHeight:window.innerHeight - 65-60-20-90-18 +'px',
             searchDepartment:'',
             searchCounty:'',
             searchSystem:'',

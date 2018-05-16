@@ -25,7 +25,7 @@
 export default {
     data(){
         return{
-            managerHeight:window.innerHeight - 65-60-20-90 -80 +'px',
+            managerHeight:window.innerHeight - 65-60-20-90-18 +'px',
             searchName:'',
             searchManagerType:'',
             columns: [
