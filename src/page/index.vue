@@ -48,9 +48,9 @@
               <Icon type="ios-people"></Icon>
                 用户管理
             </template>
-            <MenuItem name="3-1">用户列表</MenuItem>
-            <MenuItem name="3-2">部门列表</MenuItem>
-            <MenuItem name="3-3">管理员列表</MenuItem>
+            <MenuItem name="UserList">用户列表</MenuItem>
+            <MenuItem name="DepatmentList">部门列表</MenuItem>
+            <MenuItem name="ManagerList">管理员列表</MenuItem>
           </Submenu>
           <Submenu name="4">
             <template slot="title">
@@ -122,7 +122,8 @@ export default {
   },
   methods: {
     handleMenuClick(name) {
-      console.log(name)
+      // console.log(name)
+      this.$router.push({path:'/'+name})
     }
   }
 }
