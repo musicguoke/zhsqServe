@@ -1,5 +1,7 @@
 <template>
-  
+  <div>
+    系统列表
+  </div>
 </template>
 
 <script>
