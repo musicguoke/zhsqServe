@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Index from '@/page/index'
 import Vindex from '@/page/index/index'
 import SystemList from '@/page/product-manage/system-list/index'
-import DepatmentList from '@/page/user-manage/department-list/departmentList'
+import DepartmentList from '@/page/user-manage/department-list/departmentList'
 import UserList from '@/page/user-manage/user-list/userList'
 import ManagerList from '@/page/user-manage/manager-list/managerList'
 
@@ -23,8 +23,8 @@ export default new Router({
                 path: 'SystemList',
                 component: SystemList
             }, {
-                path: 'DepatmentList',
-                component: DepatmentList
+                path: 'DepartmentList',
+                component: DepartmentList
             }, {
                 path: 'UserList',
                 component: UserList
