@@ -5,6 +5,7 @@ import Vindex from '@/page/index/index'
 import SystemList from '@/page/product-manage/system-list/index'
 import UserVisit from '@/page/behavior/user-visit/index'
 import DataVisit from '@/page/behavior/data-visit/index'
+import SearchVisit from '@/page/behavior/search-visit/index'
 
 Vue.use(Router)
 
@@ -31,6 +32,10 @@ export default new Router({
         {
           path: 'data-statistics',
           component: DataVisit
+        },
+        {
+          path: 'search-statistics',
+          component: SearchVisit
         }
       ]
     }

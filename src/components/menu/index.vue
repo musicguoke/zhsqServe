@@ -9,13 +9,10 @@
       <Icon type="ios-paper"></Icon>
       首页
     </MenuItem>
-    <Submenu name="2">
-      <template slot="title">
-        <Icon type="grid"></Icon>
-          产品管理
-      </template>
-      <MenuItem name="SystemList">系统列表</MenuItem>
-    </Submenu>
+    <MenuItem name="SystemList">
+      <Icon type="ios-paper"></Icon>
+      产品管理
+    </MenuItem>
     <Submenu name="3">
       <template slot="title">
         <Icon type="ios-people"></Icon>
@@ -48,6 +45,7 @@
       </template>
       <MenuItem name="user-statistics">用户访问</MenuItem>
       <MenuItem name="data-statistics">数据访问</MenuItem>
+      <MenuItem name="search-statistics">搜索访问</MenuItem>
       <MenuItem name="6-3">用户轨迹</MenuItem>
     </Submenu>
     <Submenu name="7">

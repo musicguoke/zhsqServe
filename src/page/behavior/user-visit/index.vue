@@ -10,7 +10,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -28,7 +28,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -46,7 +46,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -64,7 +64,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -82,7 +82,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -100,7 +100,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -118,7 +118,7 @@
                     <div class="block">
                       <DatePicker 
                         :value="days" 
-                        format="yyyy/MM/dd" 
+                        format="yyyy-MM-dd" 
                         type="daterange" 
                         placement="bottom-end" 
                         placeholder="请选择开始结束时间"
@@ -131,8 +131,8 @@
          <div class="main">
             <h2>用户访问统计报表</h2>
             <p class="current-time">{{currentTime}}
-                <router-link to="/ServiceAnalysis" tag="span" class="link">数据访问统计报表</router-link>
-                <router-link to="/SearchAnalysis" tag="span" class="link key-link">搜索统计报表</router-link>
+                <router-link to="/data-statistics" tag="span" class="link">数据访问统计报表</router-link>
+                <router-link to="/search-statistics" tag="span" class="link key-link">搜索统计报表</router-link>
             </p>
             <div class="features clearfix">
                 <span class="export" @click="export2excel"><span class="icon-download"></span>导出</span>
@@ -386,15 +386,10 @@ export default {
         this._getSoftGroup(this.params)
       }
     },
-    getDateData() {
+    getDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.getItemDataPage(this.cur)
     },
     getDayData(index, day) {
@@ -423,15 +418,10 @@ export default {
         this.handleUserId()
       }
     },
-    getUserIdDateData() {
+    getUserIdDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.handleUserId()
     },
     getSearchDayData(index, day) {
@@ -447,15 +437,10 @@ export default {
         this.handleSearch()
       }
     },
-    getSearchDateData() {
+    getSearchDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.handleSearch()
     },
     getBidandUserIdDayData(index, day) {
@@ -471,15 +456,10 @@ export default {
         this.handleBidandUserId()
       }
     },
-    getBidandUserIdDateData() {
+    getBidandUserIdDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.handleBidandUserId()
     },
     getBidDayData(index, day) {
@@ -495,15 +475,10 @@ export default {
         this.handleBid()
       }
     },
-    getBidDateData() {
+    getBidDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.handleBid()
     },
     getSysVersionDayData(index, day) {
@@ -519,15 +494,10 @@ export default {
         this.handleSysVersion()
       }
     },
-    getSysVersionDateData() {
+    getSysVersionDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.handleSysVersion()
     },
     getSoftVersionDayData(index, day) {
@@ -543,15 +513,10 @@ export default {
         this.handleSoftVersion()
       }
     },
-    getSoftVersionDateData() {
+    getSoftVersionDateData(date) {
       let d = this.days
-      if (d) {
-        this.params.startDate = d[0].getFullYear() + '-' + (d[0].getMonth() + 1) + '-' + d[0].getDate()
-        this.params.endDate = d[1].getFullYear() + '-' + (d[1].getMonth() + 1) + '-' + d[1].getDate()
-      } else {
-        this.params.startDate = ''
-        this.params.endDate = ''
-      }
+      this.params.startDate = date[0]
+      this.params.endDate = date[1]
       this.handleSoftVersion()
     },
     getuserobj(id, type, name) {
