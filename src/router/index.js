@@ -6,6 +6,8 @@ import SystemManage from '@/page/product-manage/index'
 import UserVisit from '@/page/behavior/user-visit/index'
 import DataVisit from '@/page/behavior/data-visit/index'
 import SearchVisit from '@/page/behavior/search-visit/index'
+import ResourceManage from '@/page/resource/resource-manage/index'
+import SearchManage from '@/page/resource/search-manage/index'
 
 Vue.use(Router)
 
@@ -36,6 +38,14 @@ const router =  new Router({
         {
           path: 'search-statistics',
           component: SearchVisit
+        },
+        {
+          path: 'resource-manage',
+          component: ResourceManage
+        },
+        {
+          path: 'search-manage',
+          component: SearchManage
         }
       ]
     }
@@ -43,7 +53,7 @@ const router =  new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.name === 'index') {
+  if(to.name === 'index' || to.path.indexOf('statistics') > -1) {
     document.getElementById('app').style.height = 'auto'
   } else {
     document.getElementById('app').style.height = '100%'

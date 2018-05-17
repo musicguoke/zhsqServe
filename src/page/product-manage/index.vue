@@ -12,8 +12,8 @@
           <Step title="数据配置" content="这里是该步骤的描述信息"></Step>
           <Step title="地图配置" content="这里是该步骤的描述信息"></Step>
         </Steps>
-        <div class="form">
-          <Form :model="formItem" :label-width="80" v-show="current === 0">
+        <div>
+          <Form :model="formItem" :label-width="80" style="width: 400px" v-show="current === 0">
             <FormItem label="系统名称">
               <Input v-model="formItem.input" placeholder="请输入系统名称"></Input>
             </FormItem>
@@ -37,13 +37,13 @@
               </Upload>
             </FormItem>
           </Form>
-          <div v-show="current === 1">
+          <div style="width: 400px" v-show="current === 1">
             <Table border ref="selection" :columns="columns4" :data="data1"></Table>
           </div>
           <div v-show="current === 2">
             <Tree :data="data2" show-checkbox></Tree>
           </div>
-          <div v-show="current === 3">
+          <div style="width: 400px" v-show="current === 3">
             <Table border ref="selection" :columns="columns5" :data="data5"></Table>
           </div>
         </div>

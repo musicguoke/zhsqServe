@@ -27,8 +27,8 @@
         <Icon type="document-text"></Icon>
           资源管理
       </template>
-      <MenuItem name="4-1">数据资源管理</MenuItem>
-      <MenuItem name="4-2">搜索管理</MenuItem>
+      <MenuItem name="resource-manage">数据资源管理</MenuItem>
+      <MenuItem name="search-manage">搜索管理</MenuItem>
     </Submenu>
     <Submenu name="5">
       <template slot="title">
