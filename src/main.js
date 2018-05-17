@@ -8,6 +8,7 @@ import 'iview/dist/styles/iview.css'
 
 Vue.use(iView)
 
+import './common/css/common.css'
 import './common/css/normalize.css'
 
 Vue.config.productionTip = false

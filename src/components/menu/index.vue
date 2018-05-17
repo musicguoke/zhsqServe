@@ -9,7 +9,7 @@
       <Icon type="ios-paper"></Icon>
       首页
     </MenuItem>
-    <MenuItem name="SystemList">
+    <MenuItem name="system-manage">
       <Icon type="ios-paper"></Icon>
       产品管理
     </MenuItem>

@@ -2,14 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/page/index'
 import Vindex from '@/page/index/index'
-import SystemList from '@/page/product-manage/system-list/index'
+import SystemManage from '@/page/product-manage/index'
 import UserVisit from '@/page/behavior/user-visit/index'
 import DataVisit from '@/page/behavior/data-visit/index'
 import SearchVisit from '@/page/behavior/search-visit/index'
 
 Vue.use(Router)
 
-export default new Router({
+const router =  new Router({
   routes: [
     {
       path: '/',
@@ -22,8 +22,8 @@ export default new Router({
           component: Vindex
         },
         {
-          path: 'SystemList',
-          component: SystemList
+          path: 'system-manage',
+          component: SystemManage
         },
         {
           path: 'user-statistics',
@@ -41,3 +41,14 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if(to.name === 'index') {
+    document.getElementById('app').style.height = 'auto'
+  } else {
+    document.getElementById('app').style.height = '100%'
+  }
+  next()
+})
+
+export default router
