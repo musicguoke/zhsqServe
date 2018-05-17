@@ -129,11 +129,6 @@
             </ul>
          </div>
          <div class="main">
-            <h2>用户访问统计报表</h2>
-            <p class="current-time">{{currentTime}}
-                <router-link to="/data-statistics" tag="span" class="link">数据访问统计报表</router-link>
-                <router-link to="/search-statistics" tag="span" class="link key-link">搜索统计报表</router-link>
-            </p>
             <div class="features clearfix">
                 <span class="export" @click="export2excel"><span class="icon-download"></span>导出</span>
                 <div class="breadcrumb">
