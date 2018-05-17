@@ -1,247 +1,231 @@
 <template>
-    <div id="service-analysis">
-         <div class="head">
-            <ul class="clearfix" v-if="config.search && !config.userId">
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getSearchDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getSearchDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-            <ul class="clearfix" v-else-if="config.bId && config.userId">
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getBidandUserIdDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getBidandUserIdDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-            <ul class="clearfix" v-else-if="config.bId && !config.userId">
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getBidDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getBidDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-            <ul class="clearfix" v-else-if="config.userId && !config.bId">
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getUserIdDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getUserIdDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-            <ul class="clearfix" v-else-if="config.sysVersion">
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getSysVersionDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getSysVersionDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-            <ul class="clearfix" v-else-if="config.softVersion">
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getSoftVersionDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getSoftVersionDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-            <ul class="clearfix" v-else>
-                <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getDayData(index, item.day)" :class="{active:index===num}">
-                    {{item.title}}
-                </li>
-                <li class="date-box">
-                    <span>自定义日期:</span>
-                    <div class="block">
-                      <DatePicker 
-                        :value="days" 
-                        format="yyyy-MM-dd" 
-                        type="daterange" 
-                        placement="bottom-end" 
-                        placeholder="请选择开始结束时间"
-                        style="width: 200px"
-                        @on-change="getDateData"></DatePicker>
-                    </div>
-                </li>
-            </ul>
-         </div>
-         <div class="main">
-            <div class="features clearfix">
-                <span class="export" @click="export2excel"><span class="icon-download"></span>导出</span>
-                <div class="breadcrumb">
-                    <span class="btn-item" v-for="(item, index) in btnTitle" :class="{active: cur == index}" @click="getItemData(index)">{{item}}</span>
-                </div>
-                <div class="search-box">
-                    <input type="search" class="search" v-model="searchContent" placeholder="搜索"/><span @click="search">搜索</span>
-                </div>
+  <Content>
+    <Breadcrumb :style="{marginBottom: '17px'}">
+      <BreadcrumbItem>资源管理</BreadcrumbItem>
+      <BreadcrumbItem>资源列表</BreadcrumbItem>
+    </Breadcrumb>
+    <Card>
+      <div id="service-analysis">
+        <div class="head">
+          <ul class="clearfix" v-if="config.search && !config.userId">
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getSearchDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getSearchDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+          <ul class="clearfix" v-else-if="config.bId && config.userId">
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getBidandUserIdDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getBidandUserIdDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+          <ul class="clearfix" v-else-if="config.bId && !config.userId">
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getBidDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getBidDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+          <ul class="clearfix" v-else-if="config.userId && !config.bId">
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getUserIdDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getUserIdDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+          <ul class="clearfix" v-else-if="config.sysVersion">
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getSysVersionDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getSysVersionDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+          <ul class="clearfix" v-else-if="config.softVersion">
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getSoftVersionDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getSoftVersionDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+          <ul class="clearfix" v-else>
+            <li class="head-item" v-for="(item, index) in tabs" :key="item.title" @click="getDayData(index, item.day)" :class="{active:index===num}">
+              {{item.title}}
+            </li>
+            <li class="date-box">
+              <span>自定义日期:</span>
+              <div class="block">
+                <DatePicker :value="days" format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="请选择开始结束时间" style="width: 200px" @on-change="getDateData"></DatePicker>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="main">
+          <div class="features clearfix">
+            <span class="export" @click="export2excel">
+              <span class="icon-download"></span>导出</span>
+            <div class="breadcrumb">
+              <span class="btn-item" v-for="(item, index) in btnTitle" :class="{active: cur == index}" @click="getItemData(index)">{{item}}</span>
             </div>
-            <table border="1" style="table-layout: fixed;">
-                <thead>
-                    <tr v-if="data.length > 0" class="three">
-                        <th>序号<i class="icon-sort"></i></th>
-                        <th v-if="type == 4">系统版本<i class="icon-sort"></i></th>
-                        <th v-else-if="type == 5">软件版本<i class="icon-sort"></i></th>
-                        <th v-if="type == 1 || type == 2 && departmentObj == null">部门名称<i class="icon-sort"></i></th>
-                        <th v-if="type == 2">用户名<i class="icon-sort"></i></th>
-                        <th v-if="type == 2 && departmentObj !== null">部门<i class="icon-sort"></i></th>
-                        <th v-if="type == 2 && dataObj !== null">软件版本<i class="icon-sort"></i></th>
-                        <th v-else-if="type == 2 && dataObj !== null">系统版本<i class="icon-sort"></i></th>
-                        <th v-if="type == 3 && userObj !== null">用户名<i class="icon-sort"></i></th>
-                        <th v-if="type == 3 && userObj !== null">数据名称<i class="icon-sort"></i></th>
-                        <th v-if="type == 3 && userObj !== null">数据编码<i class="icon-sort"></i></th>
-                        <th>访问次数<i class="icon-sort"></i></th>
-                    </tr>
-                    <tr v-else>
-                        <th>序号<i class="icon-sort"></i></th>
-                        <th>用户名<i class="icon-sort"></i></th>
-                        <th>系统名称<i class="icon-sort"></i></th>
-                        <th v-if="type == 1">数据名称<i class="icon-sort"></i></th>
-                        <th>访问方式<i class="icon-sort"></i></th>
-                        <th v-if="type == 2">系统版本<i class="icon-sort"></i></th>
-                        <th v-if="type == 2">软件版本<i class="icon-sort"></i></th>
-                        <th>所在部门<i class="icon-sort"></i></th>
-                        <th>访问时间<i class="icon-sort"></i></th>
-                    </tr>
-                </thead >
-                <tbody>
-                    <tr v-for="(item, index) in data">
-                        <td>{{index + params.start + 1}}</td>
-                        <td v-if="type == 4 || type == 5">{{item.id}}</td>
-                        <td v-if="type == 2 && departmentObj == null">{{item.branch}}</td>
-                        <td v-if="type == 1" class="hover" @click="getDepartment(item.id, item.name)">{{item.name}}</td>
-                        <td v-else-if="type == 2">{{item.name}}</td>
-                        <td v-if="type == 2 && departmentObj !== null">{{departmentObj.name}}<i class="icon-sort"></i></td>
-                        <td v-if="type == 2 && dataObj !== null && dataObj.softVersion">{{dataObj.softVersion}}<i class="icon-sort"></i></td>
-                        <td v-else-if="type == 2 && dataObj !== null && dataObj.sysVersion">{{dataObj.sysVersion}}<i class="icon-sort"></i></td>
-                        <td v-if="type == 3 && userObj !== null">{{userObj.name}}<i class="icon-sort"></i></td>
-                        <td v-if="type == 3 && userObj !== null">{{item.name}}<i class="icon-sort"></i></td>
-                        <td v-if="type == 3 && userObj !== null">{{item.id}}<i class="icon-sort"></i></td>
-                        <td v-if="type == 2 && dataObj !== null" class="hover" @click="getvisitobj(item.id, item.type, item.name)">{{item.total}}<i class="icon-sort"></i></td>
-                        <td v-else-if="type == 3 && userObj !== null" class="hover" @click="getuserobj(item.id, item.type, item.name)">{{item.total}}<i class="icon-sort"></i></td>
-                        <td v-else class="hover" @click="getVisitTimes(item.id, item.type, item.name)">{{item.total}}</td>
-                    </tr>
-                    <tr v-for="(item, index) in userData">
-                        <td>{{index + params.start + 1}}</td>
-                        <td>{{item.arTrueName}}</td>
-                        <td>{{item.system}}</td>
-                        <td v-if="type == 1">{{item.visitName}}</td>
-                        <td>{{item.visitType}}</td>
-                        <td v-if="type == 2">{{item.sysVersion}}</td>
-                        <td v-if="type == 2">{{item.softVersion}}</td>
-                        <td>{{item.arBranchName}}</td>
-                        <td>{{format(item.visitTime)}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="block pagination">
-              <Page
-                v-if="config.search && !config.userId"
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleSearch"
-              ></Page>
-              <Page
-                v-else-if="config.bId && config.userId"
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleBidandUserId"
-              ></Page>
-              <Page
-                v-else-if="config.bId && !config.userId"
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleBid"
-              ></Page>
-              <Page
-                v-else-if="config.userId && !config.bId"
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleUserId"
-              ></Page>
-              <Page
-                v-else-if="config.sysVersion"
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleSysVersion"
-              ></Page>
-              <Page
-                v-else-if="config.softVersion"
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleSoftVersion"
-              ></Page>
-              <Page
-                v-else
-                :total="total"
-                :current.sync="currentPage"
-                @on-change="handleCurrentChange"
-              ></Page>
+            <div class="search-box">
+              <input type="search" class="search" v-model="searchContent" placeholder="搜索" />
+              <span @click="search">搜索</span>
             </div>
-         </div>
-    </div>
+          </div>
+          <table border="1" style="table-layout: fixed;">
+            <thead>
+              <tr v-if="data.length > 0" class="three">
+                <th>序号
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 4">系统版本
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-else-if="type == 5">软件版本
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 1 || type == 2 && departmentObj == null">部门名称
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 2">用户名
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 2 && departmentObj !== null">部门
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 2 && dataObj !== null">软件版本
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-else-if="type == 2 && dataObj !== null">系统版本
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 3 && userObj !== null">用户名
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 3 && userObj !== null">数据名称
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 3 && userObj !== null">数据编码
+                  <i class="icon-sort"></i>
+                </th>
+                <th>访问次数
+                  <i class="icon-sort"></i>
+                </th>
+              </tr>
+              <tr v-else>
+                <th>序号
+                  <i class="icon-sort"></i>
+                </th>
+                <th>用户名
+                  <i class="icon-sort"></i>
+                </th>
+                <th>系统名称
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 1">数据名称
+                  <i class="icon-sort"></i>
+                </th>
+                <th>访问方式
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 2">系统版本
+                  <i class="icon-sort"></i>
+                </th>
+                <th v-if="type == 2">软件版本
+                  <i class="icon-sort"></i>
+                </th>
+                <th>所在部门
+                  <i class="icon-sort"></i>
+                </th>
+                <th>访问时间
+                  <i class="icon-sort"></i>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in data">
+                <td>{{index + params.start + 1}}</td>
+                <td v-if="type == 4 || type == 5">{{item.id}}</td>
+                <td v-if="type == 2 && departmentObj == null">{{item.branch}}</td>
+                <td v-if="type == 1" class="hover" @click="getDepartment(item.id, item.name)">{{item.name}}</td>
+                <td v-else-if="type == 2">{{item.name}}</td>
+                <td v-if="type == 2 && departmentObj !== null">{{departmentObj.name}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-if="type == 2 && dataObj !== null && dataObj.softVersion">{{dataObj.softVersion}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-else-if="type == 2 && dataObj !== null && dataObj.sysVersion">{{dataObj.sysVersion}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-if="type == 3 && userObj !== null">{{userObj.name}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-if="type == 3 && userObj !== null">{{item.name}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-if="type == 3 && userObj !== null">{{item.id}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-if="type == 2 && dataObj !== null" class="hover" @click="getvisitobj(item.id, item.type, item.name)">{{item.total}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-else-if="type == 3 && userObj !== null" class="hover" @click="getuserobj(item.id, item.type, item.name)">{{item.total}}
+                  <i class="icon-sort"></i>
+                </td>
+                <td v-else class="hover" @click="getVisitTimes(item.id, item.type, item.name)">{{item.total}}</td>
+              </tr>
+              <tr v-for="(item, index) in userData">
+                <td>{{index + params.start + 1}}</td>
+                <td>{{item.arTrueName}}</td>
+                <td>{{item.system}}</td>
+                <td v-if="type == 1">{{item.visitName}}</td>
+                <td>{{item.visitType}}</td>
+                <td v-if="type == 2">{{item.sysVersion}}</td>
+                <td v-if="type == 2">{{item.softVersion}}</td>
+                <td>{{item.arBranchName}}</td>
+                <td>{{format(item.visitTime)}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="block pagination">
+            <Page v-if="config.search && !config.userId" :total="total" :current.sync="currentPage" @on-change="handleSearch"></Page>
+            <Page v-else-if="config.bId && config.userId" :total="total" :current.sync="currentPage" @on-change="handleBidandUserId"></Page>
+            <Page v-else-if="config.bId && !config.userId" :total="total" :current.sync="currentPage" @on-change="handleBid"></Page>
+            <Page v-else-if="config.userId && !config.bId" :total="total" :current.sync="currentPage" @on-change="handleUserId"></Page>
+            <Page v-else-if="config.sysVersion" :total="total" :current.sync="currentPage" @on-change="handleSysVersion"></Page>
+            <Page v-else-if="config.softVersion" :total="total" :current.sync="currentPage" @on-change="handleSoftVersion"></Page>
+            <Page v-else :total="total" :current.sync="currentPage" @on-change="handleCurrentChange"></Page>
+          </div>
+        </div>
+      </div>
+    </Card>
+  </Content>
 </template>
 <script>
 import { dayData, dateData, dayLogData, dateLogData, dayUserLogData, dateUserLogData, getDataCount, filterCommon, getSysGroup, getSoftGroup, getUserGroupSearchByDate, getBranchSearchByDate } from '@/api/service-data'
@@ -756,12 +740,9 @@ export default {
 </script>
 <style scoped lang="scss">
 .pagination {
-  margin: 20px auto;
-  display: table;
-}
-#service-analysis {
-  width: 1200px;
   margin: 0 auto;
+  margin-top: 10px;
+  display: table;
 }
 .clearfix:after {
   content: "";

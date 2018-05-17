@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '@/util/http'
 import qs from 'qs'
 
 const commonHeader = 'http://zhsq.digitalcq.com'

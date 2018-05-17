@@ -90,4 +90,8 @@ export default {
     background: transparent;
   }
 }
+.ivu-menu-horizontal {
+  height: 30px;
+  line-height: 30px;
+}
 </style>
