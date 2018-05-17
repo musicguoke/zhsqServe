@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/page/index'
 import Vindex from '@/page/index/index'
+import DepartmentList from '@/page/user-manage/department-list/departmentList'
+import UserList from '@/page/user-manage/user-list/userList'
+import ManagerList from '@/page/user-manage/manager-list/managerList'
 import SystemManage from '@/page/product-manage/index'
 import UserVisit from '@/page/behavior/user-visit/index'
 import DataVisit from '@/page/behavior/data-visit/index'
@@ -26,6 +29,18 @@ const router =  new Router({
         {
           path: 'system-manage',
           component: SystemManage
+        },
+        {
+          path: 'DepartmentList',
+          component: DepartmentList
+        }, 
+        {
+            path: 'UserList',
+            component: UserList
+        }, 
+        {
+          path: 'ManagerList',
+          component: ManagerList
         },
         {
           path: 'user-statistics',
