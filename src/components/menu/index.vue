@@ -9,13 +9,10 @@
       <Icon type="ios-paper"></Icon>
       首页
     </MenuItem>
-    <Submenu name="2">
-      <template slot="title">
-        <Icon type="grid"></Icon>
-          产品管理
-      </template>
-      <MenuItem name="SystemList">系统列表</MenuItem>
-    </Submenu>
+    <MenuItem name="system-manage">
+      <Icon type="ios-paper"></Icon>
+      产品管理
+    </MenuItem>
     <Submenu name="3">
       <template slot="title">
         <Icon type="ios-people"></Icon>
@@ -30,8 +27,8 @@
         <Icon type="document-text"></Icon>
           资源管理
       </template>
-      <MenuItem name="4-1">数据资源管理</MenuItem>
-      <MenuItem name="4-2">搜索管理</MenuItem>
+      <MenuItem name="resource-manage">数据资源管理</MenuItem>
+      <MenuItem name="search-manage">搜索管理</MenuItem>
     </Submenu>
     <Submenu name="5">
       <template slot="title">
@@ -46,8 +43,9 @@
         <Icon type="stats-bars"></Icon>
           行为分析
       </template>
-      <MenuItem name="6-1">用户访问</MenuItem>
-      <MenuItem name="6-2">数据访问</MenuItem>
+      <MenuItem name="user-statistics">用户访问</MenuItem>
+      <MenuItem name="data-statistics">数据访问</MenuItem>
+      <MenuItem name="search-statistics">搜索访问</MenuItem>
       <MenuItem name="6-3">用户轨迹</MenuItem>
     </Submenu>
     <Submenu name="7">

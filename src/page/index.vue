@@ -1,66 +1,55 @@
 <template>
   <div class="layout">
-      <Layout>
-        <Header>
-          <div class="navbar-logo">
-            <div class="layout-logo"></div>
-            <span class="navbar-title">重庆市综合市情管理系统—<small>管理平台</small></span>
+    <Layout>
+      <Header>
+        <div class="navbar-logo">
+          <div class="layout-logo"></div>
+          <span class="navbar-title">重庆市综合市情管理系统—
+            <small>管理平台</small>
+          </span>
+        </div>
+        <div class="layout-nav">
+          <div class="user-info">
+            <span class="user-img"></span>
+            <Dropdown trigger="hover" style="margin: 0 10px">
+              <a href="javascript:void(0)" style="color: #fff;">
+                超级管理员
+                <Icon type="arrow-down-b"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                <DropdownItem>修改密码</DropdownItem>
+                <DropdownItem>安全退出</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            <span class="msg-icon">
+              <i>99+</i>
+            </span>
           </div>
-          <div class="layout-nav">
-            <div class="user-info">
-              <span class="user-img"></span>
-              <Dropdown trigger="hover" style="margin: 0 10px">
-                  <a href="javascript:void(0)" style="color: #fff;">
-                      超级管理员
-                      <Icon type="arrow-down-b"></Icon>
-                  </a>
-                  <DropdownMenu slot="list">
-                      <DropdownItem>修改密码</DropdownItem>
-                      <DropdownItem>安全退出</DropdownItem>
-                  </DropdownMenu>
-              </Dropdown>
-              <span class="msg-icon">
-                <i>99+</i>
-              </span>
-            </div>
-          </div>
-        </Header>
+        </div>
+      </Header>
+      <div class="content">
         <div class="navbar">
           <div class="container">
             <v-menu/>
           </div>
         </div>
-        <!-- <v-index/> -->
         <div class="container">
-          <!-- <Content :style="{padding: '0 50px'}">
-              <Breadcrumb :style="{margin: '20px 0'}">
-                  <BreadcrumbItem>Home</BreadcrumbItem>
-                  <BreadcrumbItem>Components</BreadcrumbItem>
-                  <BreadcrumbItem>Layout</BreadcrumbItem>
-              </Breadcrumb>
-              <Card>
-                  <div style="min-height: 200px;">
-                      <router-view/>
-                  </div>
-              </Card>
-          </Content> -->
           <router-view/>
         </div>
-        <Footer class="layout-footer-center">
-          <p>建设单位：重庆市地理信息中心 | 技术支持：重庆知行宏图科技有限公司</p>
-          <p>邮箱：cqzhsq@qq.com | 联系电话：023-67033881 | 地址：重庆市渝北区冉家坝规划测绘创新基地1001室</p>
-        </Footer>
+      </div>
+      <Footer class="layout-footer-center">
+        <p>建设单位：重庆市地理信息中心 | 技术支持：重庆知行宏图科技有限公司</p>
+        <p>邮箱：cqzhsq@qq.com | 联系电话：023-67033881 | 地址：重庆市渝北区冉家坝规划测绘创新基地1001室</p>
+      </Footer>
     </Layout>
   </div>
 </template>
 <script>
 import vMenu from '@/components/menu/index'
-// import vIndex from '@/page/index/index'
 
 export default {
   components: {
-    vMenu,
-    // vIndex
+    vMenu
   }
 }
 </script>
@@ -77,12 +66,22 @@ export default {
   z-index: 899;
 }
 .layout {
+  width: 100%;
+  height: 100%;
   border: 1px solid #d7dde4;
   background: #f5f7f9;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
-  color: #fff;
+}
+.content {
+  width: 100%;
+  height: 100%;
+}
+.ivu-layout {
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
 }
 .navbar-logo {
   display: flex;
@@ -96,6 +95,7 @@ export default {
     font-size: 18px;
     font-weight: bold;
     margin-left: 14px;
+    color: #fff;
   }
 }
 .layout-nav {
