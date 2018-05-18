@@ -37,10 +37,10 @@
           <router-view/>
         </div>
       </div>
-      <Footer class="layout-footer-center">
+      <!-- <Footer class="layout-footer-center">
         <p>建设单位：重庆市地理信息中心 | 技术支持：重庆知行宏图科技有限公司</p>
         <p>邮箱：cqzhsq@qq.com | 联系电话：023-67033881 | 地址：重庆市渝北区冉家坝规划测绘创新基地1001室</p>
-      </Footer>
+      </Footer> -->
     </Layout>
   </div>
 </template>
@@ -160,7 +160,7 @@ export default {
 }
 .navbar {
   width: 100%;
-  margin: 17px 0;
+  margin-bottom: 17px;
   border-top: 1px solid #d8dcdf;
   border-bottom: 1px solid #d8dcdf;
   background: #fff;

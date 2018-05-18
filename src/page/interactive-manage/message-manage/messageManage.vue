@@ -6,10 +6,10 @@
             <i-button>新增</i-button>
          </div>
       </div>
-      <div class="messageTable">
+      <div class="tableSize">
         <Table border :columns="columns" :data="massageData"></Table>
       </div>
-      <div class="massagePage">
+      <div class="tablePage">
         <Page :total="massageData.length" ></Page>
       </div>
   </div>
@@ -29,6 +29,18 @@ export default {
                 {
                     title: '电话',
                     key: 'tel'
+                },
+                {
+                    title: '短信内容',
+                    key: 'messageInfo'
+                },
+                {
+                    title: '添加时间',
+                    key: 'addTime'
+                },
+                {
+                    title: '状态',
+                    key: 'status'
                 },
                 {
                         title: '操作',
@@ -66,47 +78,77 @@ export default {
                         }
                     }
             ],
-            departmentData:[
+            massageData:[
                 {
                     id:1,
-                    departmentName:'环保局',
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
-                {
-                    id:2,
-                    departmentName:'规划局',
-                },
-                {
-                    id:3,
-                    departmentName:'地理信息中心',
-                },
-                {
-                    id:4,
-                    departmentName:'知行公司',
+               {
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
                     id:1,
-                    departmentName:'环保局',
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
-                    id:2,
-                    departmentName:'规划局',
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
-                }
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
+                {
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
+                {
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
             ]
         }
     },
@@ -116,28 +158,5 @@ export default {
 </script>
 
 <style>
-    .seach_condition{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 80px;
-    }
-    .search_button{
-        width: 120px;
-        display: flex;
-        justify-content: space-between;
-    }
-    .departmentTable{
-        height: 520px;
-    }
-    .departmentPage{
-        width: 100%;
-        height: 80px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .marginLeft{
-        margin-left: 20px;
-    }
+    
 </style>

@@ -4,13 +4,13 @@
          <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
          <div class="search_button">
             <i-button @click="departmentAddOpen">新增</i-button>
-            <i-button >导入</i-button>
+            <i-button class="marginLeft">导入</i-button>
          </div>
       </div>
-      <div class="departmentTable">
+      <div class="tableSize">
         <Table border :columns="columns" :data="departmentData"></Table>
       </div>
-      <div class="departmentPage">
+      <div class="tablePage">
         <Page :total="departmentData.length" ></Page>
       </div>
   </div>
@@ -129,28 +129,4 @@ export default {
 </script>
 
 <style>
-    .seach_condition{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 80px;
-    }
-    .search_button{
-        width: 120px;
-        display: flex;
-        justify-content: space-between;
-    }
-    .departmentTable{
-        height: 520px;
-    }
-    .departmentPage{
-        width: 100%;
-        height: 80px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .marginLeft{
-        margin-left: 20px;
-    }
 </style>
