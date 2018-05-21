@@ -1,19 +1,27 @@
 <template>
-  <div :style="{height:departmentListHeight}">
-      <div class="seach_condition">
-         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-         <div class="search_button">
-            <i-button @click="departmentAddOpen">新增</i-button>
-            <i-button class="marginLeft">导入</i-button>
-         </div>
-      </div>
-      <div class="tableSize">
-        <Table border :columns="columns" :data="departmentData"></Table>
-      </div>
-      <div class="tablePage">
-        <Page :total="departmentData.length" ></Page>
-      </div>
-  </div>
+<Content :style="{height:departmentListHeight}">
+    <Breadcrumb :style="{marginBottom: '17px'}">
+      <BreadcrumbItem>用户管理</BreadcrumbItem>
+      <BreadcrumbItem>部门列表</BreadcrumbItem>
+    </Breadcrumb>
+    <Card>
+    <div>
+        <div class="seach_condition">
+            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
+            <div class="search_button">
+                <i-button @click="departmentAddOpen">新增</i-button>
+                <i-button class="marginLeft">导入</i-button>
+            </div>
+        </div>
+        <div class="tableSize">
+            <Table border :columns="columns" :data="departmentData"></Table>
+        </div>
+        <div class="tablePage">
+            <Page :total="departmentData.length" ></Page>
+        </div>
+    </div>
+  </Card>
+</Content>
 </template>
 
 <script>

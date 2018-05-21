@@ -1,5 +1,11 @@
 <template>
-  <div :style="{height:messageManageHeight}">
+<Content :style="{height:messageManageHeight}">
+    <Breadcrumb :style="{marginBottom: '17px'}">
+      <BreadcrumbItem>用户管理</BreadcrumbItem>
+      <BreadcrumbItem>短信管理</BreadcrumbItem>
+    </Breadcrumb>
+    <Card>
+  <div>
       <div class="seach_condition">
          <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
          <div class="search_button">
@@ -13,6 +19,8 @@
         <Page :total="massageData.length" ></Page>
       </div>
   </div>
+  </Card>
+  </Content>
 </template>
 
 <script>

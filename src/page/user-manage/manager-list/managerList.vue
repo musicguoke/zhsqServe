@@ -1,5 +1,11 @@
 <template>
-  <div :style="{height:managerHeight}">
+<Content :style="{height:managerHeight}">
+    <Breadcrumb :style="{marginBottom: '17px'}">
+      <BreadcrumbItem>用户管理</BreadcrumbItem>
+      <BreadcrumbItem>管理员列表</BreadcrumbItem>
+    </Breadcrumb>
+    <Card>
+  <div>
       <div class="seach_condition">
          <div class="condition_list">
             <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
@@ -19,6 +25,8 @@
         <Page :total="userData.length" ></Page>
       </div>
   </div>
+  </Card>
+  </Content>
 </template>
 
 <script>
