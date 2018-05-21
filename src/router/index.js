@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/page/index'
+import Login from '@/page/login/index'
 import Vindex from '@/page/index/index'
 import DepartmentList from '@/page/user-manage/department-list/departmentList'
 import UserList from '@/page/user-manage/user-list/userList'
