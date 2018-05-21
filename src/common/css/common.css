@@ -4,6 +4,10 @@ body {
     height: 100%;
 }
 
+.ivu-loading-bar {
+    top: 94px;
+}
+
 .seach_condition {
     width: 100%;
     display: flex;

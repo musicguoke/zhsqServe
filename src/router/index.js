@@ -74,13 +74,4 @@ const router = new Router({
     }]
 })
 
-router.beforeEach((to, from, next) => {
-    if (to.name === 'index' || to.path.indexOf('statistics') > -1) {
-        document.getElementById('app').style.height = 'auto'
-    } else {
-        document.getElementById('app').style.height = '100%'
-    }
-    next()
-})
-
 export default router
