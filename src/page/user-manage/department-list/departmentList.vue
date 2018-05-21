@@ -1,19 +1,32 @@
 <template>
-  <div :style="{height:departmentListHeight}">
-      <div class="seach_condition">
-         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-         <div class="search_button">
-            <i-button @click="departmentAddOpen">新增</i-button>
-            <i-button >导入</i-button>
-         </div>
-      </div>
-      <div class="departmentTable">
-        <Table border :columns="columns" :data="departmentData"></Table>
-      </div>
-      <div class="departmentPage">
-        <Page :total="departmentData.length" ></Page>
-      </div>
-  </div>
+<Content :style="{height:departmentListHeight}">
+    <Breadcrumb :style="{marginBottom: '17px'}">
+      <BreadcrumbItem>用户管理</BreadcrumbItem>
+      <BreadcrumbItem>部门列表</BreadcrumbItem>
+    </Breadcrumb>
+    <Card>
+    <div>
+        <div class="seach_condition">
+            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
+            <div class="search_button">
+                <i-button @click="modal3 = true">新增</i-button>
+                <i-button class="marginLeft">导入</i-button>
+            </div>
+        </div>
+        <div class="tableSize">
+            <Table border :columns="columns" :data="departmentData"></Table>
+        </div>
+        <div class="tablePage">
+            <Page :total="departmentData.length" ></Page>
+        </div>
+    </div>
+  </Card>
+  <Modal :visible.sync="modal3" title="普通的Modal对话框标题">
+        <p>对话框内容</p>
+        <p>对话框内容</p>
+        <p>对话框内容</p>
+    </Modal>
+</Content>
 </template>
 
 <script>
@@ -21,8 +34,9 @@ export default {
     data(){
         return{
             searchName:'',
-            departmentListHeight:window.innerHeight - 65-60-20-90 -80 +'px',
+            departmentListHeight:window.innerHeight - 65-60-20-90-18 +'px',
             departmentAddName:'',
+            modal3:false,
             columns: [
                 {
                     title: 'Id',
@@ -114,12 +128,13 @@ export default {
     },
     methods:{
         departmentAddOpen(){
-            this.$Modal.confirm({
-                    title: '新增部门',
-                    content: '<input placeholder="请输入..." type="text">',
-                    okText: '确定',
-                    cancelText: '取消'
-                });
+            // this.$Modal.confirm({
+            //         title: '新增部门',
+            //         content: '<input placeholder="请输入..." type="text">',
+            //         okText: '确定',
+            //         cancelText: '取消'
+            //     });
+            this.modal3 = true;
         },
         departmentAdd(){
             console.log(1)
@@ -129,28 +144,4 @@ export default {
 </script>
 
 <style>
-    .seach_condition{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 80px;
-    }
-    .search_button{
-        width: 120px;
-        display: flex;
-        justify-content: space-between;
-    }
-    .departmentTable{
-        height: 520px;
-    }
-    .departmentPage{
-        width: 100%;
-        height: 80px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .marginLeft{
-        margin-left: 20px;
-    }
 </style>

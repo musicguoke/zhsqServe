@@ -1,41 +1,49 @@
 <template>
-    <div :style="{height:userListHeight}">
-        <div class="search_condition">
+<Content :style="{height:userListHeight}">
+    <Breadcrumb :style="{marginBottom: '17px'}">
+      <BreadcrumbItem>用户管理</BreadcrumbItem>
+      <BreadcrumbItem>用户列表</BreadcrumbItem>
+    </Breadcrumb>
+    <Card>
+    <div>
+        <div class="seach_condition">
             <div class="condition_list">
                 <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
                 <i-select :model.sync="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
-                    <i-option v-for="item in departmentList" :value="item.value">{{ item.label }}</i-option>
+                    <i-option v-for="item in departmentList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
                 </i-select>
                 <i-select :model.sync="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
-                    <i-option v-for="item in countyList" :value="item.value">{{ item.label }}</i-option>
+                    <i-option v-for="item in countyList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
                 </i-select>
                 <i-select :model.sync="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
-                    <i-option v-for="item in systemList" :value="item.value">{{ item.label }}</i-option>
+                    <i-option v-for="item in systemList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
                 </i-select>
             </div>
             <div class="search_button">
                 <i-button>新增</i-button>
-                <i-button>导入</i-button>
+                <i-button class="marginLeft">导入</i-button>
             </div>
         </div>
-        <div class="userTable">
+        <div class="tableSize">
             <Table border :columns="columns" :data="userData"></Table>
         </div>
-        <div class="userPage">
+        <div class="tablePage">
             <Page :total="userData.length"></Page>
         </div>
     </div>
+    </Card>
+</Content>    
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            userListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 80 + 'px',
-            searchDepartment: '',
-            searchCounty: '',
-            searchSystem: '',
-            searchName: '',
+    data(){
+        return{
+            userListHeight:window.innerHeight - 65-60-20-90-18 +'px',
+            searchDepartment:'',
+            searchCounty:'',
+            searchSystem:'',
+            searchName:'',
             columns: [
                 {
                     title: 'Id',
@@ -196,31 +204,37 @@ export default {
             departmentList: [
                 {
                     value: '',
-                    label: '部门'
+                    label: '部门',
+                    key:1
                 },
                 {
                     value: 'beijing',
-                    label: '北京市'
+                    label: '北京市',
+                    key:2
                 }
             ],
             countyList: [
                 {
                     value: '',
-                    label: '区县'
+                    label: '区县',
+                    key:3
                 },
                 {
                     value: 'chongqing',
-                    label: '重庆市'
+                    label: '重庆市',
+                    key:4
                 }
             ],
             systemList: [
                 {
                     value: '',
-                    label: '系统选择'
+                    label: '系统选择',
+                    key:5
                 },
                 {
                     value: 'chongqing',
-                    label: '重庆市'
+                    label: '重庆市',
+                    key:6
                 }
             ]
         }
@@ -232,33 +246,4 @@ export default {
 </script>
 
 <style>
-.search_condition {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 80px;
-}
-.condition_list {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-.search_button {
-  width: 120px;
-  display: flex;
-  justify-content: space-between;
-}
-.userTable {
-  height: 520px;
-}
-.userPage {
-  width: 100%;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.marginLeft {
-  margin-left: 20px;
-}
 </style>

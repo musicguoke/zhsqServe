@@ -18,9 +18,9 @@
         <Icon type="ios-people"></Icon>
           用户管理
       </template>
-      <MenuItem name="UserList">用户列表</MenuItem>
-      <MenuItem name="DepartmentList">部门列表</MenuItem>
-      <MenuItem name="ManagerList">管理员列表</MenuItem>
+      <MenuItem name="user-list">用户列表</MenuItem>
+      <MenuItem name="department-list">部门列表</MenuItem>
+      <MenuItem name="manager-list">管理员列表</MenuItem>
     </Submenu>
     <Submenu name="4">
       <template slot="title">
@@ -35,8 +35,8 @@
         <Icon type="loop"></Icon>
           交互管理
       </template>
-      <MenuItem name="5-1">推送管理</MenuItem>
-      <MenuItem name="5-2">短信管理</MenuItem>
+      <MenuItem name="push-manage">推送管理</MenuItem>
+      <MenuItem name="message-manage">短信管理</MenuItem>
     </Submenu>
     <Submenu name="6">
       <template slot="title">

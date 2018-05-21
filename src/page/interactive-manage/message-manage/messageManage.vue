@@ -1,28 +1,22 @@
 <template>
-<Content :style="{height:managerHeight}">
+<Content :style="{height:messageManageHeight}">
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
-      <BreadcrumbItem>管理员列表</BreadcrumbItem>
+      <BreadcrumbItem>短信管理</BreadcrumbItem>
     </Breadcrumb>
     <Card>
   <div>
       <div class="seach_condition">
-         <div class="condition_list">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <i-select :model.sync="searchManagerType" style="width:200px" placeholder="市级管理员" class="marginLeft">
-                <i-option v-for="item in managerTypeList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
-            </i-select>
-        </div>
+         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
          <div class="search_button">
-            <i-button @click="managerAddOpen">新增</i-button>
-            <i-button class="marginLeft">导入</i-button>
+            <i-button>新增</i-button>
          </div>
       </div>
       <div class="tableSize">
-        <Table border :columns="columns" :data="userData"></Table>
+        <Table border :columns="columns" :data="massageData"></Table>
       </div>
       <div class="tablePage">
-        <Page :total="userData.length" ></Page>
+        <Page :total="massageData.length" ></Page>
       </div>
   </div>
   </Card>
@@ -33,17 +27,28 @@
 export default {
     data(){
         return{
-            managerHeight:window.innerHeight - 65-60-20-90-18 +'px',
             searchName:'',
-            searchManagerType:'',
+            messageManageHeight:window.innerHeight - 65-60-20-90-18 +'px',
             columns: [
                 {
                     title: 'Id',
                     key: 'id'
                 },
                 {
-                    title: '用户名',
-                    key: 'managerName'
+                    title: '电话',
+                    key: 'tel'
+                },
+                {
+                    title: '短信内容',
+                    key: 'messageInfo'
+                },
+                {
+                    title: '添加时间',
+                    key: 'addTime'
+                },
+                {
+                    title: '状态',
+                    key: 'status'
                 },
                 {
                         title: '操作',
@@ -81,69 +86,85 @@ export default {
                         }
                     }
             ],
-            userData:[
+            massageData:[
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
-                {
-                   id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
+               {
                     id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                    id:1,
-                    managerName:'啦啦啦啦'
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                   id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                    id:1,
-                    managerName:'啦啦啦啦'
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
-                }
-            ],
-            managerTypeList: [
-                {
-                    value: 'shiji',
-                    label: '市级管理员',
-                    key:1
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
                 },
                 {
-                    value: 'quxian',
-                    label: '区县管理员',
-                    key:2
-                }
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
+                {
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
+                {
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
+                {
+                    id:1,
+                    tel:'18888888888',
+                    messageInfo:'你好',
+                    addTime:'2018-4-27',
+                    status:'发送成功',
+                },
             ]
         }
     },
     methods:{
-        managerAddOpen(){
-
-        }
     }
 }
 </script>
 
 <style>
+    
 </style>

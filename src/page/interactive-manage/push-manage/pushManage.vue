@@ -1,28 +1,22 @@
 <template>
-<Content :style="{height:managerHeight}">
+<Content :style="{height:pushManageHeight}">
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
-      <BreadcrumbItem>管理员列表</BreadcrumbItem>
+      <BreadcrumbItem>推送管理</BreadcrumbItem>
     </Breadcrumb>
     <Card>
   <div>
       <div class="seach_condition">
-         <div class="condition_list">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <i-select :model.sync="searchManagerType" style="width:200px" placeholder="市级管理员" class="marginLeft">
-                <i-option v-for="item in managerTypeList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
-            </i-select>
-        </div>
+         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
          <div class="search_button">
-            <i-button @click="managerAddOpen">新增</i-button>
-            <i-button class="marginLeft">导入</i-button>
+            <i-button>新增</i-button>
          </div>
       </div>
       <div class="tableSize">
-        <Table border :columns="columns" :data="userData"></Table>
+        <Table border :columns="columns" :data="pushData"></Table>
       </div>
       <div class="tablePage">
-        <Page :total="userData.length" ></Page>
+        <Page :total="pushData.length" ></Page>
       </div>
   </div>
   </Card>
@@ -33,17 +27,28 @@
 export default {
     data(){
         return{
-            managerHeight:window.innerHeight - 65-60-20-90-18 +'px',
             searchName:'',
-            searchManagerType:'',
+            pushManageHeight:window.innerHeight - 65-60-20-90-18 +'px',
             columns: [
                 {
                     title: 'Id',
                     key: 'id'
                 },
                 {
-                    title: '用户名',
-                    key: 'managerName'
+                    title: '推送类型',
+                    key: 'pushType'
+                },
+                {
+                    title: '推送组/用户',
+                    key: 'pushTarget'
+                },
+                {
+                    title: '内容',
+                    key: 'pushContent'
+                },
+                {
+                    title: '时间',
+                    key: 'time'
                 },
                 {
                         title: '操作',
@@ -81,66 +86,81 @@ export default {
                         }
                     }
             ],
-            userData:[
+            pushData:[
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 },
-                {
-                   id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
+              {
                     id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                    id:1,
-                    managerName:'啦啦啦啦'
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                   id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                    id:1,
-                    managerName:'啦啦啦啦'
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
-                }
-            ],
-            managerTypeList: [
-                {
-                    value: 'shiji',
-                    label: '市级管理员',
-                    key:1
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 },
                 {
-                    value: 'quxian',
-                    label: '区县管理员',
-                    key:2
+                    id:1,
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
+                },
+                {
+                    id:1,
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
+                },
+                {
+                    id:1,
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
+                },
+                {
+                    id:1,
+                    pushType:'版本',
+                    pushTarget:'小张',
+                    pushContent:'新版本上线了',
+                    time:'2018-4-27'
                 }
             ]
         }
     },
     methods:{
-        managerAddOpen(){
-
-        }
     }
 }
 </script>
