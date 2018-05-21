@@ -86,10 +86,14 @@
           <div class="data-content data-bot">
             <div class="data-item">
               <span class="item-title">终端分布</span>
+              <div class="circle" ref="cbox"></div>
             </div>
             <div class="data-item">
               <span class="item-title">系统运行状态</span>
               <span class="more">更多>></span>
+              <div class="item-table">
+                <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
+              </div>
             </div>
           </div>
         </div>
@@ -100,46 +104,127 @@
 
 <script>
 import * as echarts from 'echarts'
+import { getMenu } from '@/api/service'
 
 export default {
+  data() {
+    return {
+      columns1: [
+        {
+          title: '服务器名称',
+          key: 'name'
+        },
+        {
+          title: '状态',
+          key: 'status'
+        },
+        {
+          title: '时间',
+          key: 'date'
+        }
+      ],
+      data1: [
+        {
+          name: 'John Brown',
+          status: 18,
+          date: '2016-10-03'
+        },
+        {
+          name: 'Jim Green',
+          status: 24,
+          date: '2016-10-01'
+        },
+        {
+          name: 'Joe Black',
+          status: 30,
+          date: '2016-10-02'
+        },
+        {
+          name: 'Jon Snow',
+          status: 26,
+          date: '2016-10-04'
+        }
+      ],
+    }
+  },
   mounted() {
     this.lineInitial()
+    this.pieInitial()
+    this._getMenu()
   },
   methods: {
+    rowClassName(row, index) {
+      if (index === 3) {
+        return 'demo-table-error-row';
+      }
+      return '';
+    },
     lineInitial() {
       var myChart = echarts.init(this.$refs.ebox);
       var option = {
         title: {
           text: '系统访问趋势',
-          // subtext: '纯属虚构'
+          // subtext: '纯属虚构',
+          top: 10,
+          left: 10,
+          textStyle: {
+            color: '#fff',
+            fontWeight: 'normal'
+          }
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['意向', '预购', '成交']
+          icon: 'rect',
+          itemWidth: 10,
+          itemHeight: 10,
+          right: 10,
+          top: 10,
+          textStyle: {
+            color: '#fff',
+            fontWeight: 'normal'
+          },
+          data: ['预购', '成交']
         },
-        // toolbox: {
-        //   show: true,
-        //   feature: {
-        //     mark: { show: true },
-        //     dataView: { show: true, readOnly: false },
-        //     magicType: { show: true, type: ['line', 'bar', 'stack', 'tiled'] },
-        //     restore: { show: true },
-        //     saveAsImage: { show: true }
-        //   }
-        // },
+        grid: {
+          left: '5%',
+          right: '2%',
+          bottom: '15%'
+        },
         calculable: true,
         xAxis: [
           {
             type: 'category',
             boundaryGap: false,
+            axisLine: {
+              lineStyle: {
+                color: '#fff'
+              }
+            },
+            splitLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
             data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
           }
         ],
         yAxis: [
           {
-            type: 'value'
+            type: 'value',
+            axisLine: {
+              lineStyle: {
+                color: '#fff'
+              }
+            },
+            splitLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            }
           }
         ],
         series: [
@@ -148,27 +233,137 @@ export default {
             type: 'line',
             smooth: true,
             symbol: '',
-            itemStyle: { normal: { areaStyle: { type: 'default' } } },
-            data: [10, 12, 21, 54, 260, 830, 710]
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(
+                  0, 0, 0, 1,
+                  [
+                    { offset: 0, color: '#89e636' },
+                    { offset: 0.5, color: '#7ed94d' },
+                    { offset: 1, color: '#8ee064' }
+                  ]
+                )
+              }
+            },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(
+                  0, 0, 0, 1,
+                  [
+                    { offset: 0, color: '#5aa3b6' },
+                    { offset: 0.5, color: '#5ea7b0' },
+                    { offset: 1, color: '#71b994' }
+                  ]
+                )
+              }
+            },
+            data: [400, 342, 576, 123, 342, 423, 710]
           },
           {
             name: '预购',
             type: 'line',
             smooth: true,
-            itemStyle: { normal: { areaStyle: { type: 'default' } } },
-            data: [30, 182, 434, 791, 390, 30, 10]
-          },
-          {
-            name: '意向',
-            type: 'line',
-            smooth: true,
-            itemStyle: { normal: { areaStyle: { type: 'default' } } },
-            data: [1320, 1132, 601, 234, 120, 90, 20]
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(
+                  0, 0, 0, 1,
+                  [
+                    { offset: 0, color: '#59b0f7' },
+                    { offset: 0.5, color: '#4795dd' },
+                    { offset: 1, color: '#37b4ec' }
+                  ]
+                )
+              }
+            },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(
+                  0, 0, 0, 1,
+                  [
+                    { offset: 0, color: '#4a88d1' },
+                    { offset: 0.5, color: '#4b98e8' },
+                    { offset: 1, color: '#43a9e5' }
+                  ]
+                )
+              }
+            },
+            data: [200, 182, 434, 791, 390, 30, 10]
           }
         ]
       }
-
       myChart.setOption(option)
+    },
+    pieInitial() {
+      var myChart = echarts.init(this.$refs.cbox)
+      var option = {
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+          orient: 'vertical',
+          x: 'left',
+          itemWidth: 10,
+          itemHeight: 10,
+          top: '30%',
+          left: '12%',
+          data: ['iPhone', 'iPad', 'PC', 'Android Phone', 'Android Pad']
+        },
+        series: [
+          {
+            name: 'iPhone',
+            type: 'pie',
+            radius: ['35%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false,
+                position: 'center'
+              },
+              emphasis: {
+                show: true,
+                textStyle: {
+                  fontSize: '30',
+                  fontWeight: 'bold'
+                }
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            itemStyle: {
+              normal: {
+                borderColor: "#FFF",
+                borderWidth: 5
+              }
+            },
+            data: [
+              {
+                value: 335,
+                name: 'iPhone',
+                itemStyle: {
+                  normal: {
+                    color: 'rgb(1,175,80)'
+                  }
+
+                }
+              },
+              { value: 310, name: 'iPad' },
+              { value: 234, name: 'PC' },
+              { value: 135, name: 'Android Phone' },
+              { value: 1548, name: 'Android Pad' }
+            ]
+          }
+        ]
+      }
+      myChart.setOption(option)
+    },
+    _getMenu() {
+      getMenu().then(res => {
+        console.log(res)
+      })
     }
   }
 }
@@ -180,6 +375,10 @@ export default {
   height: 300px;
   margin-bottom: 17px;
   background-color: #4a7fcf;
+}
+.ivu-table .demo-table-error-row td {
+  background-color: #ff6600;
+  color: #fff;
 }
 .data-content {
   width: 100%;
@@ -260,16 +459,24 @@ export default {
   margin-top: 23px;
   .data-item {
     width: 48.6%;
+    height: 360px;
     background-color: #fff;
     border: 1px solid #d8dcdf;
     border-radius: 2px;
     position: relative;
+  }
+  .circle {
+    height: 300px;
   }
   .more {
     position: absolute;
     right: 20px;
     top: 20px;
   }
+}
+.item-table {
+  padding: 0 15px;
+  padding-bottom: 40px;
 }
 </style>
 
