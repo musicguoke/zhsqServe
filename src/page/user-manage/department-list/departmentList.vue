@@ -76,62 +76,62 @@ export default {
                                             this.departmentEditOpen(params)
                                         }
                                     }
-                                }, '编辑'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
+                            }, '编辑'),
+                            h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.remove(params.index)
                                     }
-                                }, '删除')
-                            ]);
-                        }
+                                }
+                            }, '删除')
+                        ]);
                     }
+                }
             ],
-            departmentData:[
+            departmentData: [
                 {
-                    id:1,
-                    departmentName:'环保局',
+                    id: 1,
+                    departmentName: '环保局',
                 },
                 {
-                    id:2,
-                    departmentName:'规划局',
+                    id: 2,
+                    departmentName: '规划局',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id: 3,
+                    departmentName: '地理信息中心',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id: 4,
+                    departmentName: '知行公司',
                 },
                 {
-                    id:1,
-                    departmentName:'环保局',
+                    id: 1,
+                    departmentName: '环保局',
                 },
                 {
-                    id:2,
-                    departmentName:'规划局',
+                    id: 2,
+                    departmentName: '规划局',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id: 3,
+                    departmentName: '地理信息中心',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id: 4,
+                    departmentName: '知行公司',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id: 3,
+                    departmentName: '地理信息中心',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id: 4,
+                    departmentName: '知行公司',
                 }
             ]
         }

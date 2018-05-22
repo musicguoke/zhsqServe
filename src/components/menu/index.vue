@@ -10,7 +10,7 @@
       首页
     </MenuItem>
     <MenuItem name="system-manage">
-      <Icon type="ios-paper"></Icon>
+      <Icon type="pricetags"></Icon>
       产品管理
     </MenuItem>
     <Submenu name="3">
