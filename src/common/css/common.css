@@ -1,49 +1,49 @@
 html,
 body {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .ivu-loading-bar {
-  top: 94px;
+    top: 94px;
 }
 
 .seach_condition {
-  width: 100%;
-  padding-bottom: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    width: 100%;
+    padding-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .condition_list {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .search_button {
-  width: 120px;
-  display: flex;
-  justify-content: flex-end;
+    width: 120px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .tableSize {
-  height: 520px;
+    height: 600px;
 }
 
 .tablePage {
-  width: 100%;
-  margin-top: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .marginLeft {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 
 .marginRight {
-  margin-right: 20px;
+    margin-right: 20px;
 }

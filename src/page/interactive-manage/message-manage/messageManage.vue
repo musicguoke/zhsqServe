@@ -13,7 +13,41 @@
          </div>
       </div>
       <div class="tableSize">
-        <Table border :columns="columns" :data="massageData" ref="selection"></Table>
+        <el-table
+                :data="massageData"
+                border
+                style="width: 100%">
+                <el-table-column
+                prop="id"
+                label="Id" width="60">
+                </el-table-column>
+                <el-table-column
+                prop="tel"
+                label="电话">
+                </el-table-column>
+                <el-table-column
+                prop="messageInfo"
+                label="短信内容">
+                </el-table-column>
+                <el-table-column
+                prop="sendTime"
+                label="添加时间">
+                </el-table-column>
+                <el-table-column
+                prop="status"
+                label="状态">
+                </el-table-column>
+                <el-table-column
+                label="操作"
+                width="160"
+                align="center"
+                >
+                <template slot-scope="scope">
+                    <Button type="info" @click="messageEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                </template>
+                </el-table-column>
+            </el-table>
       </div>
       <div class="tablePage">
         <Page :total="massageData.length" ></Page>
@@ -51,68 +85,6 @@ export default {
             messageModal:false,
             modalTitle:'',
             isDetail:false,
-            columns: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },
-                {
-                    title: 'Id',
-                    key: 'id'
-                },
-                {
-                    title: '电话',
-                    key: 'tel'
-                },
-                {
-                    title: '短信内容',
-                    key: 'messageInfo'
-                },
-                {
-                    title: '添加时间',
-                    key: 'sendTime'
-                },
-                {
-                    title: '状态',
-                    key: 'status'
-                },
-                {
-                        title: '操作',
-                        key: 'action',
-                        width: 250,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '25px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                           this.messageEditOpen(params)
-                                        }
-                                    }
-                                }, '编辑'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, '删除')
-                            ]);
-                        }
-                    }
-            ],
             massageData:[
                 {
                     id:1,

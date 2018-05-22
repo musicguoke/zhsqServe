@@ -14,7 +14,29 @@
             </div>
         </div>
         <div class="tableSize">
-            <Table border :columns="columns" :data="departmentData" ref="selection"></Table>
+            <el-table
+                :data="departmentData"
+                border
+                style="width: 100%">
+                <el-table-column
+                prop="id"
+                label="Id">
+                </el-table-column>
+                <el-table-column
+                prop="departmentName"
+                label="部门名称">
+                </el-table-column>
+                <el-table-column
+                label="操作"
+                width="160"
+                align="center"
+                >
+                <template slot-scope="scope">
+                    <Button type="info" @click="departmentEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                </template>
+                </el-table-column>
+            </el-table>
         </div>
         <div class="tablePage">
             <Page :total="departmentData.length" ></Page>
@@ -42,56 +64,6 @@ export default {
                 departmentName:''
             },
             modalTitle:'',
-            columns: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },
-                {
-                    title: 'Id',
-                    key: 'id'
-                },
-                {
-                    title: '部门名称',
-                    key: 'departmentName'
-                },
-                {
-                        title: '操作',
-                        key: 'action',
-                        width: 250,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '25px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.departmentEditOpen(params)
-                                        }
-                                    }
-                            }, '编辑'),
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.remove(params.index)
-                                    }
-                                }
-                            }, '删除')
-                        ]);
-                    }
-                }
-            ],
             departmentData: [
                 {
                     id: 1,
@@ -141,9 +113,14 @@ export default {
             this.departmentModal = true;
             this.modalTitle = '新增部门';
         },
-        departmentEditOpen(){
+        departmentEditOpen(params){
             this.modalTitle = '修改部门'
             this.departmentModal = true;
+            for(var i in this.departmentForm){
+               if(params.row[i]){
+                   this.departmentForm[i] =params.row[i] 
+               }
+            }
         },
         remove (index) {
             this.$Modal.confirm({

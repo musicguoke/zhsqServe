@@ -13,7 +13,41 @@
          </div>
       </div>
       <div class="tableSize">
-        <Table border :columns="columns" :data="pushData" ref="selection"></Table>
+        <el-table
+                :data="pushData"
+                border
+                style="width: 100%">
+                <el-table-column
+                prop="id"
+                label="Id" width="60">
+                </el-table-column>
+                <el-table-column
+                prop="pushType"
+                label="推送类型">
+                </el-table-column>
+                <el-table-column
+                prop="userGroup"
+                label="推送组/用户">
+                </el-table-column>
+                <el-table-column
+                prop="messageInfo"
+                label="内容">
+                </el-table-column>
+                <el-table-column
+                prop="time"
+                label="时间">
+                </el-table-column>
+                <el-table-column
+                label="操作"
+                width="160"
+                align="center"
+                >
+                <template slot-scope="scope">
+                    <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                </template>
+                </el-table-column>
+            </el-table>
       </div>
       <div class="tablePage">
         <Page :total="pushData.length" ></Page>
@@ -60,68 +94,6 @@ export default {
             pushModal:false,
             modalTitle:'',
             isFile:false,
-            columns: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },
-                {
-                    title: 'Id',
-                    key: 'id'
-                },
-                {
-                    title: '推送类型',
-                    key: 'pushType'
-                },
-                {
-                    title: '推送组/用户',
-                    key: 'userGroup'
-                },
-                {
-                    title: '内容',
-                    key: 'messageInfo'
-                },
-                {
-                    title: '时间',
-                    key: 'time'
-                },
-                {
-                        title: '操作',
-                        key: 'action',
-                        width: 250,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '25px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.pushEditOpen(params)
-                                        }
-                                    }
-                                }, '编辑'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, '删除')
-                            ]);
-                        }
-                    }
-            ],
             pushData:[
                 {
                     id:1,

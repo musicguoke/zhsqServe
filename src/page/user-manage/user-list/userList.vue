@@ -25,7 +25,61 @@
             </div>
         </div>
         <div class="tableSize">
-            <Table border ref="selection" :columns="columns" :data="userData"></Table>
+            <el-table
+                :data="userData"
+                border
+                style="width: 100%"
+                :default-sort = "{prop: 'registerTime', order: 'descending'}"
+                >
+                <el-table-column
+                prop="id"
+                label="Id" width="60">
+                </el-table-column>
+                <el-table-column
+                prop="userName"
+                label="用户名">
+                </el-table-column>
+                <el-table-column
+                prop="realName"
+                label="姓名" width="100">
+                </el-table-column>
+                <el-table-column
+                prop="tel"
+                label="电话">
+                </el-table-column>
+                <el-table-column
+                prop="email"
+                label="邮箱" width="180">
+                </el-table-column>
+                <el-table-column
+                prop="userGroup"
+                label="区县"
+                :filters="[{ text: '万州区', value: '万州区' }, { text: '渝北区', value: '渝北区' }]"
+                :filter-method="filterByUserGroup"
+                filter-placement="bottom-end">
+                </el-table-column>
+                <el-table-column
+                prop="department"
+                label="部门"
+                :filters="[{ text: '环保局', value: '环保局' }, { text: '规划局', value: '规划局' }]"
+                :filter-method="filterByDepartment"
+                filter-placement="bottom-end">
+                </el-table-column>
+                <el-table-column
+                prop="registerTime"
+                label="注册时间" sortable>
+                </el-table-column>
+                <el-table-column
+                label="操作"
+                width="160"
+                align="center"
+                >
+                <template slot-scope="scope">
+                    <Button type="info" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
+                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                </template>
+                </el-table-column>
+            </el-table>
         </div>
         <div class="tablePage">
             <Page :total="userData.length"></Page>
@@ -84,80 +138,6 @@ export default {
                 userGroup:'',
                 department:''
             },
-            columns: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },
-                {
-                    title: 'Id',
-                    key: 'id'
-                },
-                {
-                    title: '用户名',
-                    key: 'userName'
-                },
-                {
-                    title: '真实姓名',
-                    key: 'realName'
-                },
-                {
-                    title: '手机',
-                    key: 'tel'
-                },
-                {
-                    title:'邮箱',
-                    key:'email'
-                },
-                {
-                    title: '区县',
-                    key: 'userGroup'
-                },
-                {
-                    title: '部门',
-                    key: 'department'
-                },
-                {
-                    title: '注册时间',
-                    key: 'registerTime'
-                },
-                {
-                    title: '操作',
-                    key: 'action',
-                    width: 250,
-                    align: 'center',
-                    render: (h, params) => {
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '25px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.userEditOpen(params)
-                                    }
-                                }
-                            }, '编辑'),
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.remove(params.index)
-                                    }
-                                }
-                            }, '删除')
-                        ]);
-                    }
-                }
-            ],
             userData: [
                 {
                     id: 1,
@@ -176,7 +156,47 @@ export default {
                     tel: '18888888888',
                     email:'123456@163.com',
                     userGroup: '万州区',
+                    department: '规划局',
+                    registerTime: '2018年1月2日'
+                },
+                {
+                    id: 1,
+                    userName: '啦啦啦啦',
+                    realName: '张三',
+                    tel: '18888888888',
+                    email:'123456@163.com',
+                    userGroup: '渝北区',
                     department: '环保局',
+                    registerTime: '2018年1月3日'
+                },
+                {
+                    id: 1,
+                    userName: '啦啦啦啦',
+                    realName: '张三',
+                    tel: '18888888888',
+                    email:'123456@163.com',
+                    userGroup: '渝北区',
+                    department: '规划局',
+                    registerTime: '2018年1月4日'
+                },
+                {
+                    id: 1,
+                    userName: '啦啦啦啦',
+                    realName: '张三',
+                    tel: '18888888888',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
+                    department: '环保局',
+                    registerTime: '2018年1月5日'
+                },
+                {
+                    id: 1,
+                    userName: '啦啦啦啦',
+                    realName: '张三',
+                    tel: '18888888888',
+                    email:'123456@163.com',
+                    userGroup: '渝北区',
+                    department: '规划局',
                     registerTime: '2018年1月1日'
                 },
                 {
@@ -196,47 +216,7 @@ export default {
                     tel: '18888888888',
                     email:'123456@163.com',
                     userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
+                    department: '规划局',
                     registerTime: '2018年1月1日'
                 },
                 {
@@ -342,6 +322,12 @@ export default {
                     }
                 });
             
+        },
+        filterByUserGroup(value, row) {
+            return row.userGroup === value;
+        },
+        filterByDepartment(value,row){
+            return row.department === value;
         }
     }
 }

@@ -19,7 +19,41 @@
          </div>
       </div>
       <div class="tableSize">
-        <Table border :columns="columns" :data="userData" ref="selection"></Table>
+        <el-table
+                :data="userData"
+                border
+                style="width: 100%">
+                <el-table-column
+                prop="id"
+                label="Id" width="60">
+                </el-table-column>
+                <el-table-column
+                prop="userName"
+                label="用户名">
+                </el-table-column>
+                <el-table-column
+                prop="realName"
+                label="姓名">
+                </el-table-column>
+                <el-table-column
+                prop="tel"
+                label="电话">
+                </el-table-column>
+                <el-table-column
+                prop="email"
+                label="邮箱">
+                </el-table-column>
+                <el-table-column
+                label="操作"
+                width="160"
+                align="center"
+                >
+                <template slot-scope="scope">
+                    <Button type="info" @click="managerEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                </template>
+                </el-table-column>
+            </el-table>
       </div>
       <div class="tablePage">
         <Page :total="userData.length" ></Page>
