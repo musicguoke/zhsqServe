@@ -1,42 +1,42 @@
 <template>
-<Content :style="{height:departmentListHeight}">
-    <Breadcrumb :style="{marginBottom: '17px'}">
-      <BreadcrumbItem>用户管理</BreadcrumbItem>
-      <BreadcrumbItem>部门列表</BreadcrumbItem>
-    </Breadcrumb>
-    <Card>
-    <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <div class="search_button">
-                <i-button @click="modal3 = true">新增</i-button>
-                <i-button class="marginLeft">导入</i-button>
+    <Content :style="{height:departmentListHeight}">
+        <Breadcrumb :style="{marginBottom: '17px'}">
+            <BreadcrumbItem>用户管理</BreadcrumbItem>
+            <BreadcrumbItem>部门列表</BreadcrumbItem>
+        </Breadcrumb>
+        <Card>
+            <div>
+                <div class="seach_condition">
+                    <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
+                    <div class="search_button">
+                        <i-button @click="modal3 = true">新增</i-button>
+                        <i-button class="marginLeft">导入</i-button>
+                    </div>
+                </div>
+                <div class="tableSize">
+                    <Table border :columns="columns" :data="departmentData"></Table>
+                </div>
+                <div class="tablePage">
+                    <Page :total="departmentData.length"></Page>
+                </div>
             </div>
-        </div>
-        <div class="tableSize">
-            <Table border :columns="columns" :data="departmentData"></Table>
-        </div>
-        <div class="tablePage">
-            <Page :total="departmentData.length" ></Page>
-        </div>
-    </div>
-  </Card>
-  <Modal :visible.sync="modal3" title="普通的Modal对话框标题">
-        <p>对话框内容</p>
-        <p>对话框内容</p>
-        <p>对话框内容</p>
-    </Modal>
-</Content>
+        </Card>
+        <Modal :visible.sync="modal3" title="普通的Modal对话框标题">
+            <p>对话框内容</p>
+            <p>对话框内容</p>
+            <p>对话框内容</p>
+        </Modal>
+    </Content>
 </template>
 
 <script>
 export default {
-    data(){
-        return{
-            searchName:'',
-            departmentListHeight:window.innerHeight - 65-60-20-90-18 +'px',
-            departmentAddName:'',
-            modal3:false,
+    data() {
+        return {
+            searchName: '',
+            departmentListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + 'px',
+            departmentAddName: '',
+            modal3: false,
             columns: [
                 {
                     title: 'Id',
@@ -47,87 +47,87 @@ export default {
                     key: 'departmentName'
                 },
                 {
-                        title: '操作',
-                        key: 'action',
-                        width: 250,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '25px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            console.log(params)
-                                        }
+                    title: '操作',
+                    key: 'action',
+                    width: 250,
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '25px'
+                                },
+                                on: {
+                                    click: () => {
+                                        console.log(params)
                                     }
-                                }, '编辑'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
+                                }
+                            }, '编辑'),
+                            h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.remove(params.index)
                                     }
-                                }, '删除')
-                            ]);
-                        }
+                                }
+                            }, '删除')
+                        ]);
                     }
+                }
             ],
-            departmentData:[
+            departmentData: [
                 {
-                    id:1,
-                    departmentName:'环保局',
+                    id: 1,
+                    departmentName: '环保局',
                 },
                 {
-                    id:2,
-                    departmentName:'规划局',
+                    id: 2,
+                    departmentName: '规划局',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id: 3,
+                    departmentName: '地理信息中心',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id: 4,
+                    departmentName: '知行公司',
                 },
                 {
-                    id:1,
-                    departmentName:'环保局',
+                    id: 1,
+                    departmentName: '环保局',
                 },
                 {
-                    id:2,
-                    departmentName:'规划局',
+                    id: 2,
+                    departmentName: '规划局',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id: 3,
+                    departmentName: '地理信息中心',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id: 4,
+                    departmentName: '知行公司',
                 },
                 {
-                    id:3,
-                    departmentName:'地理信息中心',
+                    id: 3,
+                    departmentName: '地理信息中心',
                 },
                 {
-                    id:4,
-                    departmentName:'知行公司',
+                    id: 4,
+                    departmentName: '知行公司',
                 }
             ]
         }
     },
-    methods:{
-        departmentAddOpen(){
+    methods: {
+        departmentAddOpen() {
             // this.$Modal.confirm({
             //         title: '新增部门',
             //         content: '<input placeholder="请输入..." type="text">',
@@ -136,7 +136,7 @@ export default {
             //     });
             this.modal3 = true;
         },
-        departmentAdd(){
+        departmentAdd() {
             console.log(1)
         }
     }

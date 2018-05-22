@@ -2,10 +2,22 @@
   <Content :style="{padding: '0 50px'}">
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>产品管理</BreadcrumbItem>
-      <BreadcrumbItem>新建系统</BreadcrumbItem>
+      <BreadcrumbItem>{{name}}</BreadcrumbItem>
     </Breadcrumb>
     <Card>
-      <div class="card-content" style="min-height: 400px;">
+      <div class="table" v-show="!isShow">
+        <div class="seach_condition">
+          <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
+          <div class="search_button">
+            <i-button @click="show()">新增</i-button>
+          </div>
+        </div>
+        <Table border :columns="columns1" :data="sysData"></Table>
+        <div class="tablePage">
+          <Page :total="sysData.length"></Page>
+        </div>
+      </div>
+      <div v-if="isShow" class="card-content" style="min-height: 400px;">
         <Steps :current="current">
           <Step title="基本信息" content="这里是该步骤的描述信息"></Step>
           <Step title="功能配置" content="这里是该步骤的描述信息"></Step>
@@ -62,6 +74,9 @@ export default {
     return {
       current: 0,
       btnContent: '下一步',
+      isShow: false,
+      name: '系统列表',
+      searchName: '',
       formItem: {
         input: '',
         select: '',
@@ -73,6 +88,78 @@ export default {
         slider: [20, 50],
         textarea: ''
       },
+      columns1: [
+        {
+          title: '系统编号',
+          key: 'id'
+        },
+        {
+          title: '系统名称',
+          key: 'name'
+        },
+        {
+          title: '所属区县',
+          key: 'address'
+        },
+        {
+          title: '系统状态',
+          key: 'status'
+        },
+        {
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '25px'
+                },
+                on: {
+                  click: () => {
+                    console.log(params)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.index)
+                  }
+                }
+              }, '删除')
+            ])
+          }
+        }
+      ],
+      sysData: [
+        {
+          id: 342,
+          name: '综合市情系统',
+          address: '重庆市',
+          status: '暂停运行'
+        },
+        {
+          id: 342,
+          name: '综合市情系统',
+          address: '重庆市',
+          status: '暂停运行'
+        },
+        {
+          id: 342,
+          name: '综合市情系统',
+          address: '重庆市',
+          status: '暂停运行'
+        }
+      ],
       columns4: [
         {
           type: 'selection',
@@ -146,12 +233,17 @@ export default {
     }
   },
   methods: {
+    show() {
+      this.isShow = true
+      this.name = '新建系统'
+    },
     next() {
       if (this.current === 2) {
         this.btnContent = '完成'
       }
       if (this.current == 3) {
-
+        this.isShow = false
+        this.name = '系统列表'
       } else {
         this.current += 1
       }

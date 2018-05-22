@@ -7,7 +7,7 @@
           <div class="data-content">
             <div class="data-item">
               <div class="item">
-                <span class="icon"></span>
+                <span class="icon user-icon"></span>
                 <div class="num">
                   <p class="num-title">用户总数</p>
                   <i>998
@@ -16,7 +16,7 @@
                 </div>
               </div>
               <div class="item">
-                <span class="icon"></span>
+                <span class="icon visit-icon"></span>
                 <div class="num">
                   <p class="num-title">累计访问次数</p>
                   <i>998
@@ -27,7 +27,7 @@
             </div>
             <div class="data-item">
               <div class="item">
-                <span class="icon"></span>
+                <span class="icon data-icon"></span>
                 <div class="num">
                   <p class="num-title">数据总量</p>
                   <i>998
@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div class="item">
-                <span class="icon"></span>
+                <span class="icon qx-icon"></span>
                 <div class="num">
                   <p class="num-title">部署区县</p>
                   <i>998
@@ -47,7 +47,7 @@
             </div>
             <div class="data-item">
               <div class="item">
-                <span class="icon"></span>
+                <span class="icon login-icon"></span>
                 <div class="num">
                   <p class="num-title">累计登陆</p>
                   <i>998
@@ -56,7 +56,7 @@
                 </div>
               </div>
               <div class="item">
-                <span class="icon"></span>
+                <span class="icon sys-icon"></span>
                 <div class="num">
                   <p class="num-title">系统数量</p>
                   <i>998
@@ -408,9 +408,31 @@ export default {
   }
   .item .icon {
     width: 108px;
-    background: url(../../assets/logo.png) #f7faff no-repeat center;
-    background-size: 55px 55px;
     border-right: 1px solid #d8dcdf;
+  }
+  .user-icon {
+    background: url(../../assets/user.png) #f7faff no-repeat center;
+    background-size: 55px 55px;
+  }
+  .visit-icon {
+    background: url(../../assets/visit.png) #f7faff no-repeat center;
+    background-size: 60px 55px;
+  }
+  .data-icon {
+    background: url(../../assets/data.png) #f7faff no-repeat center;
+    background-size: 55px 55px;
+  }
+  .qx-icon {
+    background: url(../../assets/qx.png) #f7faff no-repeat center;
+    background-size: 60px 55px;
+  }
+  .login-icon {
+    background: url(../../assets/login.png) #f7faff no-repeat center;
+    background-size: 55px 55px;
+  }
+  .sys-icon {
+    background: url(../../assets/sys.png) #f7faff no-repeat center;
+    background-size: 60px 55px;
   }
   .num {
     padding-top: 16px;
