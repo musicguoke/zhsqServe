@@ -239,7 +239,16 @@ export default {
             }
         },
          remove (index) {
-            this.userData.splice(index, 1);
+             this.$Modal.confirm({
+                    content: '删除后数据无法恢复，是否继续？',
+                    onOk: () => {
+                        this.massageData.splice(index, 1);
+                        this.$Message.success('删除成功');
+                    },
+                    onCancel: () => {
+                        
+                    }
+                });
         }
     }
 }
