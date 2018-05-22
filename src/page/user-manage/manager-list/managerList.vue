@@ -19,13 +19,37 @@
          </div>
       </div>
       <div class="tableSize">
-        <Table border :columns="columns" :data="userData"></Table>
+        <Table border :columns="columns" :data="userData" ref="selection"></Table>
       </div>
       <div class="tablePage">
         <Page :total="userData.length" ></Page>
       </div>
   </div>
   </Card>
+  <Modal v-model="managerModal" :title=modalTitle>
+        <Form :model="managerForm" label-position="left" :label-width="100">
+            <FormItem label="用户名">
+                <Input v-model="managerForm.userName" placeholder="请输入用户名..."></Input>
+            </FormItem>
+            <FormItem label="真实姓名">
+                <Input v-model="managerForm.realName" placeholder="请输入真实姓名..."></Input>
+            </FormItem>
+            <FormItem label="密码">
+                <Input v-model="managerForm.password" placeholder="请输入密码..." type="password"></Input>
+            </FormItem>
+            <FormItem label="手机号">
+                <Input v-model="managerForm.tel" placeholder="请输入手机号..."></Input>
+            </FormItem>
+            <FormItem label="邮箱">
+                <Input v-model="managerForm.email" placeholder="请输入邮箱..."></Input>
+            </FormItem>
+            <FormItem label="部门">
+                <Select v-model="managerForm.role">
+                    <Option v-for="item in roleList" :value="item.value" :key="item.key">{{ item.label }}</Option>
+                </Select>
+            </FormItem>
+        </Form>
+  </Modal>
   </Content>
 </template>
 
@@ -36,14 +60,41 @@ export default {
             managerHeight:window.innerHeight - 65-60-20-90-18 +'px',
             searchName:'',
             searchManagerType:'',
+            managerModal:false,
+            modalTitle:'',
+            managerForm:{
+                userName:'',
+                realName:'',
+                password:'',
+                tel:'',
+                email:'',
+                role:''
+            },
             columns: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },
                 {
                     title: 'Id',
                     key: 'id'
                 },
                 {
                     title: '用户名',
-                    key: 'managerName'
+                    key: 'userName'
+                },
+                {
+                    title: '姓名',
+                    key: 'realName'
+                },
+                {
+                    title: '电话',
+                    key: 'tel'
+                },
+                {
+                    title: '邮箱',
+                    key: 'email'
                 },
                 {
                         title: '操作',
@@ -62,7 +113,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            console.log(params)
+                                            this.managerEditOpen(params)
                                         }
                                     }
                                 }, '编辑'),
@@ -84,43 +135,73 @@ export default {
             userData:[
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                   id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                    id:1,
-                    managerName:'啦啦啦啦'
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                   id:1,
-                    managerName:'啦啦啦啦'
-                },
-                {
-                    id:1,
-                    managerName:'啦啦啦啦'
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
                 },
                 {
                     id:1,
-                    managerName:'啦啦啦啦'
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
+                },
+                {
+                    id:1,
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
+                },
+                {
+                    id:1,
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
+                },
+                {
+                    id:1,
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
+                },
+                {
+                    id:1,
+                    userName:'啦啦啦啦',
+                    realName:'张三',
+                    tel:'18888888888',
+                    email:'12456@163.com'
                 }
             ],
             managerTypeList: [
@@ -134,12 +215,45 @@ export default {
                     label: '区县管理员',
                     key:2
                 }
+            ],
+            roleList:[
+                {
+                    value: 'shiji',
+                    label: '市级管理员',
+                    key:1
+                },
+                {
+                    value: 'quxian',
+                    label: '区县管理员',
+                    key:2
+                },
+                {
+                    value: 'chaoji',
+                    label: '超级管理员',
+                    key:3
+                }
             ]
         }
     },
     methods:{
         managerAddOpen(){
-
+            this.managerModal = true;
+            this.modalTitle = '新增管理员';
+            for(var i in this.managerForm){
+               this.managerForm[i] = '';
+            }
+        },
+        managerEditOpen(params){
+            this.managerModal = true;
+            this.modalTitle = '修改管理员';
+            for(var i in this.managerForm){
+               if(params.row[i]){
+                   this.managerForm[i] =params.row[i] 
+               }
+            }
+        },
+        remove (index) {
+            this.userData.splice(index, 1);
         }
     }
 }

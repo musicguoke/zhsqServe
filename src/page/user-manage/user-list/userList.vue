@@ -20,18 +20,47 @@
                 </i-select>
             </div>
             <div class="search_button">
-                <i-button>新增</i-button>
+                <i-button @click="userAddOpen">新增</i-button>
                 <i-button class="marginLeft">导入</i-button>
             </div>
         </div>
         <div class="tableSize">
-            <Table border :columns="columns" :data="userData"></Table>
+            <Table border ref="selection" :columns="columns" :data="userData"></Table>
         </div>
         <div class="tablePage">
             <Page :total="userData.length"></Page>
         </div>
     </div>
     </Card>
+    <Modal v-model="userModal" :title=modalTitle>
+        <Form :model="userForm" label-position="left" :label-width="100">
+            <FormItem label="用户名">
+                <Input v-model="userForm.userName" placeholder="请输入用户名..."></Input>
+            </FormItem>
+            <FormItem label="真实姓名">
+                <Input v-model="userForm.realName" placeholder="请输入真实姓名..."></Input>
+            </FormItem>
+            <FormItem label="密码">
+                <Input v-model="userForm.password" placeholder="请输入密码..." type="password"></Input>
+            </FormItem>
+            <FormItem label="手机号">
+                <Input v-model="userForm.tel" placeholder="请输入手机号..."></Input>
+            </FormItem>
+            <FormItem label="邮箱">
+                <Input v-model="userForm.email" placeholder="请输入邮箱..."></Input>
+            </FormItem>
+            <FormItem label="区县">
+                <Select v-model="userForm.userGroup">
+                    <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="部门">
+                <Select v-model="userForm.department">
+                    <Option v-for="item in departmentList" :value="item.value" :key="item.key">{{ item.label }}</Option>
+                </Select>
+            </FormItem>
+        </Form>
+  </Modal>
 </Content>    
 </template>
 
@@ -44,7 +73,23 @@ export default {
             searchCounty:'',
             searchSystem:'',
             searchName:'',
+            userModal:false,
+            modalTitle:'',
+            userForm:{
+                userName:'',
+                realName:'',
+                password:'',
+                tel:'',
+                email:'',
+                userGroup:'',
+                department:''
+            },
             columns: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },
                 {
                     title: 'Id',
                     key: 'id'
@@ -55,15 +100,19 @@ export default {
                 },
                 {
                     title: '真实姓名',
-                    key: 'userRealName'
+                    key: 'realName'
                 },
                 {
                     title: '手机',
                     key: 'tel'
                 },
                 {
+                    title:'邮箱',
+                    key:'email'
+                },
+                {
                     title: '区县',
-                    key: 'county'
+                    key: 'userGroup'
                 },
                 {
                     title: '部门',
@@ -90,7 +139,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        console.log(params)
+                                        this.userEditOpen(params)
                                     }
                                 }
                             }, '编辑'),
@@ -113,90 +162,100 @@ export default {
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 },
                 {
                     id: 1,
                     userName: '啦啦啦啦',
-                    userRealName: '张三',
+                    realName: '张三',
                     tel: '18888888888',
-                    county: '万州区',
+                    email:'123456@163.com',
+                    userGroup: '万州区',
                     department: '环保局',
                     registerTime: '2018年1月1日'
                 }
@@ -208,10 +267,15 @@ export default {
                     key:1
                 },
                 {
-                    value: 'beijing',
-                    label: '北京市',
+                    value: 'hb',
+                    label: '环保局',
                     key:2
-                }
+                },
+                {
+                    value: 'jt',
+                    label: '交通局',
+                    key:3
+                },
             ],
             countyList: [
                 {
@@ -220,9 +284,14 @@ export default {
                     key:3
                 },
                 {
-                    value: 'chongqing',
-                    label: '重庆市',
+                    value: 'yb',
+                    label: '渝北区',
                     key:4
+                },
+                {
+                    value: 'wz',
+                    label: '万州区',
+                    key:5
                 }
             ],
             systemList: [
@@ -232,15 +301,38 @@ export default {
                     key:5
                 },
                 {
-                    value: 'chongqing',
-                    label: '重庆市',
+                    value: 'fx',
+                    label: '风险系统',
                     key:6
+                },
+                {
+                    value: 'ghdw',
+                    label: '规划定位',
+                    key:7
                 }
             ]
         }
     },
-    method: {
-
+    methods: {
+        userAddOpen(){
+            this.userModal = true;
+            this.modalTitle = '新增用户';
+            for(var i in this.userForm){
+               this.userForm[i] = '';
+            }
+        },
+        userEditOpen(params){
+            this.userModal = true;
+            this.modalTitle = '修改用户';
+             for(var i in this.userForm){
+               if(params.row[i]){
+                   this.userForm[i] =params.row[i] 
+               }
+            }
+        },
+        remove (index) {
+            this.userData.splice(index, 1);
+        }
     }
 }
 </script>
