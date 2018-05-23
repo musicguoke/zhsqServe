@@ -29,44 +29,43 @@
                 :data="userData"
                 border
                 style="width: 100%"
-                :default-sort = "{prop: 'registerTime', order: 'descending'}"
                 >
                 <el-table-column
-                prop="id"
-                label="Id" width="60">
+                prop="arId"
+                label="Id" width="60" sortable>
                 </el-table-column>
                 <el-table-column
-                prop="userName"
+                prop="arLoginname"
                 label="用户名">
                 </el-table-column>
                 <el-table-column
-                prop="realName"
+                prop="arTruename"
                 label="姓名" width="100">
                 </el-table-column>
                 <el-table-column
-                prop="tel"
+                prop="arMobile"
                 label="电话">
                 </el-table-column>
                 <el-table-column
-                prop="email"
+                prop="arEmail"
                 label="邮箱" width="180">
                 </el-table-column>
                 <el-table-column
-                prop="userGroup"
+                prop="areaname"
                 label="区县"
                 :filters="countyFilterList"
                 :filter-method="filterByUserGroup"
                 filter-placement="bottom-end">
                 </el-table-column>
                 <el-table-column
-                prop="department"
+                prop="name"
                 label="部门"
                 :filters="[{ text: '环保局', value: '环保局' }, { text: '规划局', value: '规划局' }]"
                 :filter-method="filterByDepartment"
                 filter-placement="bottom-end">
                 </el-table-column>
                 <el-table-column
-                prop="registerTime"
+                prop="addTime"
                 label="注册时间" sortable>
                 </el-table-column>
                 <el-table-column
@@ -82,34 +81,49 @@
             </el-table>
         </div>
         <div class="tablePage">
-            <Page :total="userData.length"></Page>
+            <Page :total=total  :current="1" @on-change="_getUserList"></Page>
         </div>
     </div>
     </Card>
-    <Modal v-model="userModal" :title=modalTitle>
+    <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser()">
         <Form :model="userForm" label-position="left" :label-width="100">
             <FormItem label="用户名">
-                <Input v-model="userForm.userName" placeholder="请输入用户名..."></Input>
+                <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
             </FormItem>
             <FormItem label="真实姓名">
-                <Input v-model="userForm.realName" placeholder="请输入真实姓名..."></Input>
+                <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."></Input>
             </FormItem>
             <FormItem label="密码">
-                <Input v-model="userForm.password" placeholder="请输入密码..." type="password"></Input>
+                <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
             </FormItem>
             <FormItem label="手机号">
-                <Input v-model="userForm.tel" placeholder="请输入手机号..."></Input>
+                <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
+            </FormItem>
+            <FormItem label="座机">
+                <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
             </FormItem>
             <FormItem label="邮箱">
-                <Input v-model="userForm.email" placeholder="请输入邮箱..."></Input>
+                <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
+            </FormItem>
+            <FormItem label="校验码">
+                <Input v-model="userForm.arSalt" placeholder="请输入校验码..."></Input>
+            </FormItem>
+            <FormItem label="来源">
+                <Input v-model="userForm.arSource" placeholder="请输入来源..."></Input>
+            </FormItem>
+            <FormItem label="用户组">
+                <Input v-model="userForm.arGroup" placeholder="请输入用户组..."></Input>
+            </FormItem>
+            <FormItem label="用户组">
+                <Input v-model="userForm.arFax" placeholder="请输入用户组..."></Input>
             </FormItem>
             <FormItem label="区县">
-                <Select v-model="userForm.userGroup">
+                <Select v-model="userForm.arAreacode">
                     <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="部门">
-                <Select v-model="userForm.department">
+                <Select v-model="userForm.arBranch">
                     <Option v-for="item in departmentList" :value="item.value" :key="item.key">{{ item.label }}</Option>
                 </Select>
             </FormItem>
@@ -119,7 +133,8 @@
 </template>
 
 <script>
-import { getAreaCode } from '@/api/user-service'
+import { getAreaCode,getUserList,addUser,updateUser } from '@/api/user-service'
+import crypto from 'crypto'
 export default {
     data(){
         return{
@@ -130,117 +145,23 @@ export default {
             searchName:'',
             userModal:false,
             modalTitle:'',
+            total:0,
+            isAdd:false,
             userForm:{
-                userName:'',
-                realName:'',
-                password:'',
-                tel:'',
-                email:'',
-                userGroup:'',
-                department:''
+                arLoginname:'',
+                arTruename:'',
+                arPassword:'',
+                arTel:'',//座机
+                arMobile:'',//手机
+                arEmail:'',
+                arSalt:'', //校验码
+                arGroup:'',//用户组
+                arFax:'',//用户组
+                arBranch:'', //部门
+                arAreacode:'',//区县
+                arSource:''//来源
             },
-            userData: [
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '规划局',
-                    registerTime: '2018年1月2日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '渝北区',
-                    department: '环保局',
-                    registerTime: '2018年1月3日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '渝北区',
-                    department: '规划局',
-                    registerTime: '2018年1月4日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月5日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '渝北区',
-                    department: '规划局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '规划局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                },
-                {
-                    id: 1,
-                    userName: '啦啦啦啦',
-                    realName: '张三',
-                    tel: '18888888888',
-                    email:'123456@163.com',
-                    userGroup: '万州区',
-                    department: '环保局',
-                    registerTime: '2018年1月1日'
-                }
-            ],
+            userData:[],
             departmentList: [
                 {
                     value: '',
@@ -287,20 +208,23 @@ export default {
                    value:res.data.list[i].areaname
                })
            }
-        })
+        }),
+        this._getUserList(1)
     },
     methods: {
         userAddOpen(){
             this.userModal = true;
+            this.isAdd = true;
             this.modalTitle = '新增用户';
-            for(var i in this.userForm){
+            for(let i in this.userForm){
                this.userForm[i] = '';
             }
         },
         userEditOpen(params){
             this.userModal = true;
+            this.isAdd = false;
             this.modalTitle = '修改用户';
-             for(var i in this.userForm){
+             for(let i in this.userForm){
                if(params.row[i]){
                    this.userForm[i] =params.row[i] 
                }
@@ -324,10 +248,55 @@ export default {
         },
         filterByDepartment(value,row){
             return row.department === value;
-        }
+        },
+        _getUserList(page){
+            let data = {
+                methods:'list',
+                pageNo:page,
+                pageSize:10
+            }
+            getUserList(data).then(res=>{
+                this.userData = []
+                for(let i in res.data.list){
+                    this.userData.push(res.data.list[i])
+                }
+                this.total = res.data.total
+            })
+        },
+        addOrUpdateUser(){
+            let md5 = crypto.createHash("md5");
+            let data = {
+                arLoginname:this.userForm.arLoginname,
+                arTruename:this.userForm.arTruename,
+                arPassword:md5.digest(this.userForm.arPassword),
+                arTel:this.userForm.arTel,//座机
+                arMobile:this.userForm.arMobile,//手机
+                arEmail:this.userForm.arEmail,
+                arSalt:this.userForm.arSalt, //校验码
+                arGroup:this.userForm.arGroup,//用户组
+                arFax:this.userForm.arFax,//用户组
+                arBranch:this.userForm.arBranch, //部门
+                arAreacode:this.userForm.arAreacode,//区县
+                arSource:this.userForm.arSource//来源
+            }
+            if(isAdd){
+                addUser(data).then(res=>{
+                    console.log(res)
+                })
+            }else{
+                updateUser(data).then(res=>{
+                    console.log(res)
+                })
+            }
+           
+        },
     }
 }
 </script>
 
 <style>
+    .el-table-filter__content{
+        max-height: 160px;
+        overflow-y: scroll;
+    }
 </style>
