@@ -10,13 +10,13 @@
             <div class="condition_list">
                 <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
                 <i-select :model.sync="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
-                    <i-option v-for="item in departmentList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
+                    <i-option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
                 </i-select>
                 <i-select :model.sync="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
-                    <i-option v-for="item in countyList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
+                    <i-option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
                 </i-select>
                 <i-select :model.sync="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
-                    <i-option v-for="item in systemList" :value="item.value" :key="item.key">{{ item.label }}</i-option>
+                    <i-option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
                 </i-select>
             </div>
             <div class="search_button">
@@ -54,7 +54,7 @@
                 <el-table-column
                 prop="userGroup"
                 label="区县"
-                :filters="[{ text: '万州区', value: '万州区' }, { text: '渝北区', value: '渝北区' }]"
+                :filters="countyFilterList"
                 :filter-method="filterByUserGroup"
                 filter-placement="bottom-end">
                 </el-table-column>
@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import { getAreaCode } from '@/api/user-service'
 export default {
     data(){
         return{
@@ -243,36 +244,17 @@ export default {
             departmentList: [
                 {
                     value: '',
-                    label: '部门',
-                    key:1
-                },
-                {
-                    value: 'hb',
-                    label: '环保局',
-                    key:2
-                },
-                {
-                    value: 'jt',
-                    label: '交通局',
-                    key:3
-                },
+                    label: '部门'
+                }
             ],
             countyList: [
                 {
                     value: '',
-                    label: '区县',
-                    key:3
-                },
-                {
-                    value: 'yb',
-                    label: '渝北区',
-                    key:4
-                },
-                {
-                    value: 'wz',
-                    label: '万州区',
-                    key:5
+                    label: '区县'
                 }
+            ],
+            countyFilterList:[
+
             ],
             systemList: [
                 {
@@ -292,6 +274,20 @@ export default {
                 }
             ]
         }
+    },
+    created(){
+        getAreaCode().then(res=>{
+           for(let i in res.data.list){
+               this.countyList.push({
+                   value:res.data.list[i].areacode,
+                   label:res.data.list[i].areaname
+               })
+               this.countyFilterList.push({
+                   text:res.data.list[i].areaname,
+                   value:res.data.list[i].areaname
+               })
+           }
+        })
     },
     methods: {
         userAddOpen(){
