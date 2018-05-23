@@ -3,97 +3,95 @@
     <Card>
       <div class="card-content">
         <div class="banner" ref="ebox"></div>
-        <div class="container">
-          <div class="data-content">
-            <div class="data-item">
-              <div class="item">
-                <span class="icon user-icon"></span>
-                <div class="num">
-                  <p class="num-title">用户总数</p>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </div>
-              </div>
-              <div class="item">
-                <span class="icon visit-icon"></span>
-                <div class="num">
-                  <p class="num-title">累计访问次数</p>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </div>
+        <div class="data-content">
+          <div class="data-item">
+            <div class="item">
+              <span class="icon user-icon"></span>
+              <div class="num">
+                <p class="num-title">用户总数</p>
+                <i>998
+                  <b>人</b>
+                </i>
               </div>
             </div>
-            <div class="data-item">
-              <div class="item">
-                <span class="icon data-icon"></span>
-                <div class="num">
-                  <p class="num-title">数据总量</p>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </div>
-              </div>
-              <div class="item">
-                <span class="icon qx-icon"></span>
-                <div class="num">
-                  <p class="num-title">部署区县</p>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </div>
-              </div>
-            </div>
-            <div class="data-item">
-              <div class="item">
-                <span class="icon login-icon"></span>
-                <div class="num">
-                  <p class="num-title">累计登陆</p>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </div>
-              </div>
-              <div class="item">
-                <span class="icon sys-icon"></span>
-                <div class="num">
-                  <p class="num-title">系统数量</p>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </div>
-              </div>
-            </div>
-            <div class="data-item data-right">
-              <div class="item">
-                <span class="item-title">今日动态</span>
-                <span class="num user-num">
-                  <span class="num-title">用户访问：</span>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </span>
-                <span class="num data-num">
-                  <span class="num-title">数据访问：</span>
-                  <i>998
-                    <b>人</b>
-                  </i>
-                </span>
+            <div class="item">
+              <span class="icon visit-icon"></span>
+              <div class="num">
+                <p class="num-title">累计访问次数</p>
+                <i>998
+                  <b>人</b>
+                </i>
               </div>
             </div>
           </div>
-          <div class="data-content data-bot">
-            <div class="data-item">
-              <span class="item-title">终端分布</span>
-              <div class="circle" ref="cbox"></div>
-            </div>
-            <div class="data-item">
-              <span class="item-title">系统运行状态</span>
-              <span class="more">更多>></span>
-              <div class="item-table">
-                <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
+          <div class="data-item">
+            <div class="item">
+              <span class="icon data-icon"></span>
+              <div class="num">
+                <p class="num-title">数据总量</p>
+                <i>998
+                  <b>人</b>
+                </i>
               </div>
+            </div>
+            <div class="item">
+              <span class="icon qx-icon"></span>
+              <div class="num">
+                <p class="num-title">部署区县</p>
+                <i>998
+                  <b>人</b>
+                </i>
+              </div>
+            </div>
+          </div>
+          <div class="data-item">
+            <div class="item">
+              <span class="icon login-icon"></span>
+              <div class="num">
+                <p class="num-title">累计登陆</p>
+                <i>998
+                  <b>人</b>
+                </i>
+              </div>
+            </div>
+            <div class="item">
+              <span class="icon sys-icon"></span>
+              <div class="num">
+                <p class="num-title">系统数量</p>
+                <i>998
+                  <b>人</b>
+                </i>
+              </div>
+            </div>
+          </div>
+          <div class="data-item data-right">
+            <div class="item">
+              <span class="item-title">今日动态</span>
+              <span class="num user-num">
+                <span class="num-title">用户访问：</span>
+                <i>998
+                  <b>人</b>
+                </i>
+              </span>
+              <span class="num data-num">
+                <span class="num-title">数据访问：</span>
+                <i>998
+                  <b>人</b>
+                </i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="data-content data-bot">
+          <div class="data-item">
+            <span class="item-title">终端分布</span>
+            <div class="circle" ref="cbox"></div>
+          </div>
+          <div class="data-item">
+            <span class="item-title">系统运行状态</span>
+            <span class="more">更多>></span>
+            <div class="item-table">
+              <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
             </div>
           </div>
         </div>

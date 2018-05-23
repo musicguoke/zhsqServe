@@ -12,7 +12,7 @@
             <i-button @click="show()">新增</i-button>
           </div>
         </div>
-        <Table border :columns="columns1" :data="sysData"></Table>
+        <Table border :columns="columns1" :data="sysData" @on-row-click="systemConfig"></Table>
         <div class="tablePage">
           <Page :total="sysData.length"></Page>
         </div>
@@ -149,8 +149,8 @@ export default {
       sysData: [
         {
           id: 342,
-          name: '综合市情系统',
-          address: '重庆市',
+          name: '万州区规划定位',
+          address: '万州区',
           status: '暂停运行'
         },
         {
@@ -231,6 +231,11 @@ export default {
     selectMapConfig(section, row) {
       // 已选择项
       console.log(section)
+    },
+    // 选择某个系统，进入系统详情
+    systemConfig(data) {
+      console.log(data)
+      this.$router.push('/system')
     },
     _getAreaQx() {
       getAreaQx().then(res => {
