@@ -4,6 +4,12 @@ import { url } from './config.js'
 
 axios.defaults.withCredentials = true
 
+export function login(loginInfo) {
+  return axios.post(`${url}//sys/sysUser/login.do`, qs.stringify(loginInfo)).then(res => {
+    return Promise.resolve(res.data)
+})
+}
+
 export function getMenu(id) {
   const data = {
     typeid: 13

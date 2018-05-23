@@ -150,7 +150,7 @@ export default {
   mounted() {
     this.lineInitial()
     this.pieInitial()
-    this._getMenu()
+    // this._getMenu()
   },
   methods: {
     rowClassName(row, index) {

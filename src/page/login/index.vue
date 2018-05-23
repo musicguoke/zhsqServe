@@ -2,13 +2,34 @@
   <div class="login-container">
     <header>
       <div class="wrap">
-        <!-- <img src="./images/login/3.png"> -->
+        <img src="static/images/3.png">
         <h2>重庆市综合市情系统</h2>
       </div>
     </header>
     <div id="login">
-      <!-- <img class="login-bg" src="./images/login/leftImg.png"> -->
-      <form action="" class="clearfix">
+      <img class="login-bg" src="static/images/leftImg.png">
+      <Form ref="formInline" :model="formInline" :rules="ruleInline">
+        <h1 class="title">
+          <span class="triangle"></span>
+          账户登录
+        </h1>
+        <div class="input">
+          <FormItem prop="user">
+            <Input type="text" v-model="formInline.username" placeholder="请输入用户名">
+            <Icon type="ios-person-outline" slot="prepend"></Icon>
+            </Input>
+          </FormItem>
+          <FormItem prop="password">
+            <Input type="password" v-model="formInline.password" placeholder="请输入密码">
+            <Icon type="ios-locked-outline" slot="prepend"></Icon>
+            </Input>
+          </FormItem>
+        </div>
+        <FormItem>
+          <Button type="primary" long @click="_login()">登录</Button>
+        </FormItem>
+      </Form>
+      <!-- <form action="" class="clearfix">
         <h1 class="title">
           <span class="triangle"></span>账户登录</h1>
         <div class="form-group username">
@@ -17,13 +38,10 @@
         <div class="form-group password">
           <input type="password" v-model="loginInfo.password" id="password" placeholder="密码" />
         </div>
-        <div class="form-group">
-          <span id="tip"></span>
-        </div>
         <div class="form-group loginBtn">
-          <button type="button" class="btn" @click="login()">登录</button>
+          <Button type="primary" long size="large" @click="login()">登录</Button>
         </div>
-      </form>
+      </form> -->
     </div>
     <footer>
       <div class="companyName">
@@ -44,20 +62,32 @@
 <script>
 import axios from '@/util/http'
 import qs from 'qs'
+import { login } from '@/api/service'
 
 export default {
   data() {
     return {
-      loginInfo: {
+      formInline: {
         username: '',
         password: ''
+      },
+      ruleInline: {
+        user: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { type: 'string', min: 6, message: '密码长度不能低于6位', trigger: 'blur' }
+        ]
       }
     }
   },
   methods: {
-    login() {
-      axios.post('http://192.168.21.37:8080/zhsq_business/sys/sysUser/login.do', qs.stringify(this.loginInfo), {withCredentials: true}).then(res => {
-        console.log(res)
+    _login() {
+      login(this.formInline).then(res => {
+        if(res.code) {
+          this.$router.replace('/zhsq_admin')
+        }
       })
     }
   }
@@ -66,4 +96,248 @@ export default {
 
 
 <style lang="scss" scoped>
+header {
+  width: 100%;
+  height: 74px;
+  background-color: #3a4255;
+}
+
+.wrap {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.logo {
+  height: 100%;
+  color: #fff;
+  margin-left: 160px;
+  font-size: 22px;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.logo p {
+  height: 100%;
+  line-height: 74px;
+}
+
+.logo p img {
+  display: inline-block;
+  margin-right: 14px;
+  padding-bottom: 6px;
+  vertical-align: middle;
+}
+
+.navbar {
+  height: 100%;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.tab_item {
+  position: relative;
+  height: 100%;
+  line-height: 74px;
+  color: #fff;
+}
+
+.tab_item a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.tab_item .tab_item_link {
+  padding: 6px 23px;
+}
+
+.tab_item span {
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tab_item img {
+  padding-right: 6px;
+  padding-left: 23px;
+  vertical-align: middle;
+}
+
+.tab_item .tab_item_login {
+  display: inline-block;
+  line-height: 74px;
+  height: 100%;
+}
+
+.system_link_list {
+  width: 410px;
+  /* height: 300px; */
+  background-color: #3a4255;
+  position: absolute;
+  top: 76px;
+  left: 15px;
+  padding: 10px 4px 20px 4px;
+  display: none;
+}
+
+.system_link {
+  width: 100%;
+  height: 40px;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.system_link span {
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.system_link_active {
+  background-color: #283142;
+}
+
+.active {
+  background-color: #283142;
+  background-size: inherit;
+  border: 1px solid #6b7485;
+}
+
+.main {
+  width: 100%;
+}
+
+.jumbotron {
+  width: 100%;
+  background-color: #056cb7;
+}
+
+.jumbotron_box {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.description {
+  color: #fff;
+  width: 420px;
+  margin-right: 50px;
+}
+
+.description span {
+  font-size: 26px;
+}
+
+.description p {
+  margin-top: 20px;
+  line-height: 30px;
+}
+
+.companyName,
+.baseInfo {
+  width: 100%;
+  display: flex;
+  line-height: 36px;
+  justify-content: center;
+}
+
+.footer_line {
+  margin: 0 10px;
+  color: #b7bac1;
+}
+.login-container {
+  width: 100%;
+  height: 100%;
+  background: url(../../assets/loginBg.png) no-repeat;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.login-container header {
+  background-color: #f8fbfc;
+  height: 100px;
+}
+
+.wrap {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.wrap h2 {
+  margin-left: 30px;
+  font-size: 40px;
+  text-align: center;
+  color: #036eb7;
+}
+
+#login {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  min-width: 1600px;
+}
+
+.login-bg {
+  margin-left: 180px;
+}
+
+form {
+  width: 400px;
+  height: 400px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+form .input {
+  margin-top: 60px;
+}
+
+.ivu-form-item {
+  padding: 0 50px;
+}
+
+.title {
+  height: 50px;
+  background-color: #2399ea;
+  text-align: center;
+  font-size: 24px;
+  line-height: 50px;
+  color: #fff;
+  font-weight: inherit;
+  position: relative;
+}
+
+.triangle {
+  position: absolute;
+  bottom: -10px;
+  left: 195px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 10px solid #2399ea;
+}
+
+.loginBtn {
+  padding: 0 50px;
+  margin-top: 30px;
+}
+
+.login-container footer {
+  background-color: rgba(0, 0, 0, 0);
+  color: #4c5260;
+}
 </style>
