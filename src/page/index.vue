@@ -11,19 +11,19 @@
         <div class="layout-nav">
           <div class="user-info">
             <span class="user-img"></span>
-            <Dropdown trigger="hover" style="margin: 0 10px">
+            <Dropdown trigger="hover"  @on-click="userClick" style="margin: 0 10px">
               <a href="javascript:void(0)" style="color: #fff;">
                 超级管理员
                 <Icon type="arrow-down-b"></Icon>
               </a>
               <DropdownMenu slot="list">
                 <DropdownItem>修改密码</DropdownItem>
-                <DropdownItem>安全退出</DropdownItem>
+                <DropdownItem name="logout">安全退出</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <span class="msg-icon">
-              <i>99+</i>
-            </span>
+            <Badge count="10" overflow-count="9">
+              <Icon type="ios-bell-outline" size="26"></Icon>
+            </Badge>
           </div>
         </div>
       </Header>
@@ -33,6 +33,7 @@
             <v-menu/>
           </div>
         </div>
+        <v-tags/>
         <div class="container">
           <router-view/>
         </div>
@@ -46,10 +47,25 @@
 </template>
 <script>
 import vMenu from '@/components/menu/index'
+import vTags from '@/components/tags/index'
 
 export default {
   components: {
-    vMenu
+    vMenu,
+    vTags
+  },
+  methods: {
+    userClick(name) {
+      if(name === 'logout') {
+        this.$Modal.confirm({
+          title: '提示',
+          content: '确实退出吗？',
+          onOk: () => {
+            this.$router.replace('/')
+          }
+        })
+      }
+    }
   }
 }
 </script>
@@ -101,6 +117,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  color: #fff;
   .user-img {
     display: block;
     width: 39px;
@@ -149,7 +166,6 @@ export default {
 }
 .navbar {
   width: 100%;
-  margin-bottom: 17px;
   border-top: 1px solid #d8dcdf;
   border-bottom: 1px solid #d8dcdf;
   background: #fff;
