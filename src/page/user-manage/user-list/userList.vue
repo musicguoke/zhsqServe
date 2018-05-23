@@ -75,7 +75,7 @@
                 align="center"
                 >
                 <template slot-scope="scope">
-                    <Button type="info" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
+                    <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight">编辑</Button>
                     <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
                 </template>
                 </el-table-column>
