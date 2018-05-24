@@ -1,12 +1,12 @@
 <template>
-  <div class="login-container">
+  <div class="container">
     <header>
       <div class="wrap">
         <img src="static/images/3.png">
         <h2>重庆市综合市情系统</h2>
       </div>
     </header>
-    <div id="login">
+    <div class="login">
       <img class="login-bg" src="static/images/leftImg.png">
       <Form ref="formInline" :model="formInline" :rules="ruleInline">
         <h1 class="title">
@@ -29,19 +29,6 @@
           <Button type="primary" long @click="_login()">登录</Button>
         </FormItem>
       </Form>
-      <!-- <form action="" class="clearfix">
-        <h1 class="title">
-          <span class="triangle"></span>账户登录</h1>
-        <div class="form-group username">
-          <input type="text" v-model="loginInfo.username" id="name" placeholder="用户名" />
-        </div>
-        <div class="form-group password">
-          <input type="password" v-model="loginInfo.password" id="password" placeholder="密码" />
-        </div>
-        <div class="form-group loginBtn">
-          <Button type="primary" long size="large" @click="login()">登录</Button>
-        </div>
-      </form> -->
     </div>
     <footer>
       <div class="companyName">
@@ -254,17 +241,17 @@ header {
   margin: 0 10px;
   color: #b7bac1;
 }
-.login-container {
+.container {
   width: 100%;
   height: 100%;
-  background: url(../../assets/loginBg.png) no-repeat;
+  background: url(../../assets/bg.png) no-repeat;
   background-size: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.login-container header {
+.container header {
   background-color: #f8fbfc;
   height: 100px;
 }
@@ -283,7 +270,7 @@ header {
   color: #036eb7;
 }
 
-#login {
+.login {
   width: 100%;
   display: flex;
   justify-content: space-around;

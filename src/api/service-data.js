@@ -1,7 +1,7 @@
 import axios from '@/util/http'
 import qs from 'qs'
 
-const commonHeader = '/api/cqzhsqd2c_v2'
+const commonHeader = process.env.NODE_ENV === 'production' ? 'http://zhsq.digitalcq.com/cqzhsqd2c_v2' : '/api/cqzhsqd2c_v2'
 export function dayData(data) {
 
 	let params = ''

@@ -12,7 +12,7 @@
             <i-button @click="show()">新增</i-button>
           </div>
         </div>
-        <Table border :columns="columns1" :data="sysData"></Table>
+        <Table border :columns="columns1" :data="sysData" @on-row-click="systemConfig"></Table>
         <div class="tablePage">
           <Page :total="sysData.length"></Page>
         </div>
@@ -30,17 +30,17 @@
               <Input v-model="formItem.input" placeholder="请输入系统名称"></Input>
             </FormItem>
             <FormItem label="系统类别">
-              <Select v-model="formItem.select">
+              <Select v-model="formItem.selectSys">
                 <Option value="beijing">综合市情</Option>
                 <Option value="shanghai">综合区情</Option>
                 <Option value="shenzhen">规划定位</Option>
               </Select>
             </FormItem>
             <FormItem label="地区选择">
-              <Select v-model="formItem.select">
-                <Option value="beijing">重庆市</Option>
-                <Option value="shanghai">万州区</Option>
-                <Option value="shenzhen">渝北区</Option>
+              <Select v-model="formItem.selectArea">
+                <Option v-for="(item, index) in areaQxList" :value="item.areaname" :key="index">
+                  {{item.areaname}}
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="上传欢迎页">
@@ -53,10 +53,17 @@
             <Table border ref="selection" :columns="columns4" :data="data1"></Table>
           </div>
           <div v-show="current === 2">
-            <Tree :data="data2" show-checkbox></Tree>
+            <Tree :data="dataTree" show-checkbox></Tree>
           </div>
           <div style="width: 400px" v-show="current === 3">
-            <Table border ref="selection" :columns="columns5" :data="data5"></Table>
+            <Table 
+              border 
+              ref="selection" 
+              :columns="columns5" 
+              :data="mapConfigList"
+              @on-select="selectMapConfig"
+            >
+            </Table>
           </div>
         </div>
         <div class="btn">
@@ -69,6 +76,8 @@
 </template>
 
 <script>
+import { getAreaQx, getDateTree, getMapConfig } from '@/api/system'
+
 export default {
   data() {
     return {
@@ -77,16 +86,13 @@ export default {
       isShow: false,
       name: '系统列表',
       searchName: '',
+      areaQxList: [],
+      dataTree: [],
+      mapConfigList: [],
       formItem: {
         input: '',
-        select: '',
-        radio: 'male',
-        checkbox: [],
-        switch: true,
-        date: '',
-        time: '',
-        slider: [20, 50],
-        textarea: ''
+        selectSys: '',
+        selectArea: ''
       },
       columns1: [
         {
@@ -143,8 +149,8 @@ export default {
       sysData: [
         {
           id: 342,
-          name: '综合市情系统',
-          address: '重庆市',
+          name: '万州区规划定位',
+          address: '万州区',
           status: '暂停运行'
         },
         {
@@ -189,45 +195,8 @@ export default {
           align: 'center'
         },
         {
-          title: '功能名称',
+          title: '地图名称',
           key: 'name'
-        }
-      ],
-      data5: [
-        {
-          name: '矢量'
-        },
-        {
-          name: '影像'
-        },
-        {
-          name: '2D/3D切换'
-        }
-      ],
-      data2: [
-        {
-          title: '重庆市',
-          expand: true,
-          children: [
-            {
-              title: '地表数据'
-            },
-            {
-              title: '各类规划'
-            }
-          ]
-        },
-        {
-          title: '万州区',
-          expand: true,
-          children: [
-            {
-              title: '地表数据'
-            },
-            {
-              title: '各类规划'
-            }
-          ]
         }
       ]
     }
@@ -236,9 +205,14 @@ export default {
     show() {
       this.isShow = true
       this.name = '新建系统'
+      this._getAreaQx()
     },
     next() {
+      if (this.current === 1) {
+        this._getDateTree()
+      }
       if (this.current === 2) {
+        this._getMapConfig()
         this.btnContent = '完成'
       }
       if (this.current == 3) {
@@ -253,6 +227,31 @@ export default {
         this.btnContent = '下一步'
       }
       this.current -= 1
+    },
+    selectMapConfig(section, row) {
+      // 已选择项
+      console.log(section)
+    },
+    // 选择某个系统，进入系统详情
+    systemConfig(data) {
+      console.log(data)
+      this.$router.push('/system')
+    },
+    _getAreaQx() {
+      getAreaQx().then(res => {
+        this.areaQxList = res.data.list
+      })
+    },
+    _getDateTree(id) {
+      getDateTree(id).then(res => {
+        console.log(JSON.parse(res.data))     
+        this.dataTree = JSON.parse(res.data)
+      })
+    },
+    _getMapConfig() {
+      getMapConfig().then(res => {
+        this.mapConfigList = res.data.list.filter(v => v.name = v.mName)
+      })
     }
   }
 }

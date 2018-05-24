@@ -15,6 +15,14 @@ import SearchManage from "@/page/resource/search-manage/index"
 import MessageManage from "@/page/interactive-manage/message-manage/messageManage"
 import PushManage from "@/page/interactive-manage/push-manage/pushManage"
 
+// system
+import SIndex from '@/system/index'
+import ContentList from '@/system/content-list/index'
+import SMsgList from '@/system/msg-manage/index'
+import STsList from '@/system/ts-manage/index'
+import SUserList from '@/system/user-manage/index'
+import SGroupList from '@/system/user-group/index'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -24,68 +32,68 @@ const router = new Router({
       redirect: "login"
     },
     {
-      path: "/zhsq_admin/",
+      path: "/zhsq_admin",
       component: Index,
-      redirect: "index",
+      redirect: "/zhsq_admin/index",
       children: [
         {
-          path: "/index",
+          path: "index",
           name: "index",
           component: Vindex,
           meta: { title: "首页" }
         },
         {
-          path: "/system-manage",
+          path: "system-manage",
           component: SystemManage,
           meta: { title: "产品管理" }
         },
         {
-          path: "/department-list",
+          path: "department-list",
           component: DepartmentList,
           meta: { title: "部门列表" }
         },
         {
-          path: "/user-list",
+          path: "user-list",
           component: UserList,
           meta: { title: "用户列表" }
         },
         {
-          path: "/manager-list",
+          path: "manager-list",
           component: ManagerList,
           meta: { title: "管理员列表" }
         },
         {
-          path: "/user-statistics",
+          path: "user-statistics",
           component: UserVisit,
           meta: { title: "用户统计" }
         },
         {
-          path: "/data-statistics",
+          path: "data-statistics",
           component: DataVisit,
           meta: { title: "数据统计" }
         },
         {
-          path: "/search-statistics",
+          path: "search-statistics",
           component: SearchVisit,
           meta: { title: "搜索统计" }
         },
         {
-          path: "/resource-manage",
+          path: "resource-manage",
           component: ResourceManage,
           meta: { title: "资源管理" }
         },
         {
-          path: "/search-manage",
+          path: "search-manage",
           component: SearchManage,
           meta: { title: "搜索管理" }
         },
         {
-          path: "/message-manage",
+          path: "message-manage",
           component: MessageManage,
           meta: { title: "短信管理" }
         },
         {
-          path: "/push-manage",
+          path: "push-manage",
           component: PushManage,
           meta: { title: "推送管理" }
         }
@@ -95,6 +103,33 @@ const router = new Router({
       path: "/login",
       name: "login",
       component: Login
+    },
+    {
+      path: '/system',
+      component: SIndex,
+      redirect: '/system/content-list',
+      children: [
+        {
+          path: 'content-list',
+          component: ContentList
+        }, 
+        {
+          path: 'suser-list',
+          component: SUserList
+        },
+        {
+          path: 'suser-group-list',
+          component: SGroupList
+        },
+        {
+          path: 'ts-list',
+          component: STsList
+        },
+        {
+          path: 'msg-list',
+          component: SMsgList
+        }
+      ]
     }
   ]
 })

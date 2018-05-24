@@ -1,14 +1,14 @@
 <template>
   <div class="layout">
     <Layout>
-      <v-header/>
+      <v-header title="万州区规划定位"/>
       <div class="content">
         <div class="navbar">
           <div class="container">
             <v-menu/>
           </div>
         </div>
-        <v-tags/>
+        <!-- <v-tags/> -->
         <div class="container">
           <router-view/>
         </div>
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import vMenu from '@/components/menu/index'
+import vMenu from '@/components/s-menu/index'
 import vTags from '@/components/tags/index'
 import vHeader from '@/components/header/index'
 
@@ -35,4 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.navbar {
+  margin-bottom: 16px;
+}
 </style>

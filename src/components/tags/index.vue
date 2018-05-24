@@ -40,7 +40,7 @@ export default {
       if (item) {
         delItem.path === this.$route.path && this.$router.push(item.path)
       } else {
-        this.$router.push('/')
+        this.$router.push('/zhsq_admin')
       }
     },
     close(name) {
@@ -54,7 +54,7 @@ export default {
       // 关闭全部标签
       if (name === 'all') {
         this.tagsList = []
-        this.$router.push('/')
+        this.$router.push('/zhsq_admin')
       }
     },
     // 设置标签
