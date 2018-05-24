@@ -32,8 +32,78 @@ export function getMapConfig() {
   })
 }
 
-export function getFeature() {
-  return axios.post(`${url}/sys/msCilentAuthorityController/list.do`).then(res => {
+export function getFeature(id) {
+  const data = {
+    id: id || ''
+  }
+  return axios.post(
+    `${url}/sys/msCilentAuthorityController/list.do`,
+    qs.stringify(data)
+    ).then(res => {
     return Promise.resolve(res.data)
+  })
+}
+
+//系统列表
+export function getSystemList() {
+  return axios.post(`${url}/sys/msSystemChildController/list.do`).then(res => {
+    return Promise.resolve(res.data)
+  })
+}
+
+//添加系统
+export function addSystem(data) {
+  return axios.post(
+    `${url}/sys/msSystemChildController/insert.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+//修改系统
+export function updateSystem(data) {
+  return axios.post(
+    `${url}/sys/msSystemChildController/update.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+//删除单个
+export function deleteSingleSystem(id) {
+  const data = {
+    id: id
+  }
+
+  return axios.post(
+    `${url}/sys/msSystemChildController/delete.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+//删除批量
+export function deleteBatchSystems(id) {
+  const data = {
+    idStr: id
+  }
+  
+  return axios.post(
+    `${url}/sys/msSystemChildController/deletes.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+// id搜索系统
+export function searchSysById(id) {
+  const data = {
+    id: id
+  }
+  
+  return axios.post(
+    `${url}/sys/msSystemChildController/getMsSystemChildById.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
   })
 }

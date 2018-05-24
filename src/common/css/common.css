@@ -61,10 +61,6 @@ body {
   justify-content: flex-end;
 }
 
-.tableSize {
-  height: 600px;
-}
-
 .tablePage {
   width: 100%;
   margin-top: 16px;

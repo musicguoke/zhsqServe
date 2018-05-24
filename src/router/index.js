@@ -1,29 +1,26 @@
-import Vue from "vue"
-import Router from "vue-router"
-import Index from "@/page/index"
-import Login from "@/page/login/index"
-import Vindex from "@/page/index/index"
-import DepartmentList from "@/page/user-manage/department-list/departmentList"
-import UserList from "@/page/user-manage/user-list/userList"
-import ManagerList from "@/page/user-manage/manager-list/managerList"
-import SystemManage from "@/page/product-manage/index"
-import UserVisit from "@/page/behavior/user-visit/index"
-import DataVisit from "@/page/behavior/data-visit/index"
-import SearchVisit from "@/page/behavior/search-visit/index"
-import ResourceManage from "@/page/resource/resource-manage/index"
-import SearchManage from "@/page/resource/search-manage/index"
-import MessageManage from "@/page/interactive-manage/message-manage/messageManage"
-import PushManage from "@/page/interactive-manage/push-manage/pushManage"
+import Vue from "vue";
+import Router from "vue-router";
+import Index from "@/page/index";
+import Login from "@/page/login/index";
+import Vindex from "@/page/index/index";
+import DepartmentList from "@/page/user-manage/department-list/departmentList";
+import UserList from "@/page/user-manage/user-list/userList";
+import ManagerList from "@/page/user-manage/manager-list/managerList";
+import SystemManage from "@/page/product-manage/index";
+import UserVisit from "@/page/behavior/user-visit/index";
+import DataVisit from "@/page/behavior/data-visit/index";
+import SearchVisit from "@/page/behavior/search-visit/index";
+import ResourceManage from "@/page/resource/resource-manage/index";
+import SearchManage from "@/page/resource/search-manage/index";
+import MessageManage from "@/page/interactive-manage/message-manage/messageManage";
+import PushManage from "@/page/interactive-manage/push-manage/pushManage";
 
 // system
-import SIndex from '@/system/index'
-import ContentList from '@/system/content-list/index'
-import SMsgList from '@/system/msg-manage/index'
-import STsList from '@/system/ts-manage/index'
-import SUserList from '@/system/user-manage/index'
-import SGroupList from '@/system/user-group/index'
+import SIndex from "@/system/index";
+import ContentList from "@/system/content-list/index";
+import SGroupList from "@/system/user-group/index";
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   routes: [
@@ -105,33 +102,48 @@ const router = new Router({
       component: Login
     },
     {
-      path: '/system',
+      path: "/system",
       component: SIndex,
-      redirect: '/system/content-list',
+      redirect: "/system/content-list",
       children: [
         {
-          path: 'content-list',
+          path: "content-list",
           component: ContentList
-        }, 
-        {
-          path: 'suser-list',
-          component: SUserList
         },
         {
-          path: 'suser-group-list',
+          path: "user-list",
+          component: UserList
+        },
+        {
+          path: "suser-group-list",
           component: SGroupList
         },
         {
-          path: 'ts-list',
-          component: STsList
+          path: "push-manage",
+          component: PushManage
         },
         {
-          path: 'msg-list',
-          component: SMsgList
+          path: "message-manage",
+          component: MessageManage
+        },
+        {
+          path: "user-statistics",
+          component: UserVisit,
+          meta: { title: "用户统计" }
+        },
+        {
+          path: "data-statistics",
+          component: DataVisit,
+          meta: { title: "数据统计" }
+        },
+        {
+          path: "search-statistics",
+          component: SearchVisit,
+          meta: { title: "搜索统计" }
         }
       ]
     }
   ]
-})
+});
 
-export default router
+export default router;
