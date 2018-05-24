@@ -5,7 +5,7 @@
     active-name="1" 
     @on-select="handleMenuClick"
   >
-    <MenuItem name="index">
+    <MenuItem name="content-list">
       <Icon type="ios-paper"></Icon>
       目录管理
     </MenuItem>

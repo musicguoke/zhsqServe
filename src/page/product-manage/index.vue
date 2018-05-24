@@ -24,7 +24,7 @@
           <Step title="数据配置" content="这里是该步骤的描述信息"></Step>
           <Step title="地图配置" content="这里是该步骤的描述信息"></Step>
         </Steps>
-        <div>
+        <div class="current-content">
           <Form :model="formItem" :label-width="80" style="width: 400px" v-show="current === 0">
             <FormItem label="系统名称">
               <Input v-model="formItem.input" placeholder="请输入系统名称"></Input>
@@ -50,19 +50,13 @@
             </FormItem>
           </Form>
           <div style="width: 400px" v-show="current === 1">
-            <Table border ref="selection" :columns="columns4" :data="data1"></Table>
+            <Table border ref="selection" :columns="columns4" :data="featureList"></Table>
           </div>
           <div v-show="current === 2">
             <Tree :data="dataTree" show-checkbox></Tree>
           </div>
           <div style="width: 400px" v-show="current === 3">
-            <Table 
-              border 
-              ref="selection" 
-              :columns="columns5" 
-              :data="mapConfigList"
-              @on-select="selectMapConfig"
-            >
+            <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select="selectMapConfig">
             </Table>
           </div>
         </div>
@@ -76,7 +70,7 @@
 </template>
 
 <script>
-import { getAreaQx, getDateTree, getMapConfig } from '@/api/system'
+import { getAreaQx, getDateTree, getMapConfig, getFeature } from '@/api/system'
 
 export default {
   data() {
@@ -89,6 +83,7 @@ export default {
       areaQxList: [],
       dataTree: [],
       mapConfigList: [],
+      featureList: [],
       formItem: {
         input: '',
         selectSys: '',
@@ -177,17 +172,6 @@ export default {
           key: 'name'
         }
       ],
-      data1: [
-        {
-          name: '定位'
-        },
-        {
-          name: '量算'
-        },
-        {
-          name: '2D/3D切换'
-        }
-      ],
       columns5: [
         {
           type: 'selection',
@@ -195,7 +179,7 @@ export default {
           align: 'center'
         },
         {
-          title: '地图名称',
+          title: '功能名称',
           key: 'name'
         }
       ]
@@ -208,6 +192,9 @@ export default {
       this._getAreaQx()
     },
     next() {
+      if (this.current === 0) {
+        this._getFeature()
+      }
       if (this.current === 1) {
         this._getDateTree()
       }
@@ -244,13 +231,27 @@ export default {
     },
     _getDateTree(id) {
       getDateTree(id).then(res => {
-        console.log(JSON.parse(res.data))     
+        console.log(JSON.parse(res.data))
         this.dataTree = JSON.parse(res.data)
       })
     },
     _getMapConfig() {
       getMapConfig().then(res => {
         this.mapConfigList = res.data.list.filter(v => v.name = v.mName)
+      })
+    },
+    _getFeature() {
+      getFeature().then(res => {
+        let list = []
+        res.data.list.map(v => {
+          v.name = v.moduleName
+          v._checked = false
+          if (v.id === 1) {
+            v._checked = true
+          }
+          list.push(v)
+        })
+        this.featureList = list
       })
     }
   }
@@ -266,6 +267,9 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+.current-content {
+  margin: 16px 0;
 }
 .form {
   width: 400px;

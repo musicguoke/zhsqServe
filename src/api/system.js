@@ -31,3 +31,9 @@ export function getMapConfig() {
     return Promise.resolve(res.data)
   })
 }
+
+export function getFeature() {
+  return axios.post(`${url}/sys/msCilentAuthorityController/list.do`).then(res => {
+    return Promise.resolve(res.data)
+  })
+}
