@@ -29,3 +29,8 @@ export function updateUser(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deleteUser(data) {
+    return axios.post(`${url}//sys/msMembers/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

@@ -75,7 +75,7 @@
                 >
                 <template slot-scope="scope">
                     <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight">编辑</Button>
-                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                    <Button type="error" @click="remove(scope)" size="small">删除</Button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -85,7 +85,7 @@
         </div>
     </div>
     </Card>
-    <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser()">
+    <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser">
         <Form :model="userForm" label-position="left" :label-width="100">
             <FormItem label="用户名">
                 <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
@@ -133,8 +133,8 @@
 </template>
 
 <script>
-import { getAreaCode,getUserList,addUser,updateUser } from '@/api/user-service'
-import crypto from 'crypto'
+import { getAreaCode,getUserList,addUser,updateUser,deleteUser} from '@/api/user-service'
+import MD5 from 'crypto-js/md5'
 export default {
     data(){
         return{
@@ -225,17 +225,25 @@ export default {
             this.isAdd = false;
             this.modalTitle = '修改用户';
              for(let i in this.userForm){
+               this.userForm[i] = '';
                if(params.row[i]){
                    this.userForm[i] =params.row[i] 
                }
             }
         },
-        remove (index) {
+        remove (params) {
+            let data = {
+                arId:params.row.arId
+            }
             this.$Modal.confirm({
                     content: '删除后数据无法恢复，是否继续？',
                     onOk: () => {
-                        this.userData.splice(index, 1);
-                        this.$Message.success('删除成功');
+                        this.userData.splice(params.$index, 1);
+                        deleteUser(data).then(res=>{
+                            if(res.code = 20000){
+                                 this.$Message.success('删除成功');
+                            }
+                        })
                     },
                     onCancel: () => {
                         
@@ -264,11 +272,10 @@ export default {
             })
         },
         addOrUpdateUser(){
-            let md5 = crypto.createHash("md5");
             let data = {
                 arLoginname:this.userForm.arLoginname,
                 arTruename:this.userForm.arTruename,
-                arPassword:md5.digest(this.userForm.arPassword),
+                arPassword:MD5(this.userForm.arPassword).toString(),
                 arTel:this.userForm.arTel,//座机
                 arMobile:this.userForm.arMobile,//手机
                 arEmail:this.userForm.arEmail,
@@ -279,13 +286,17 @@ export default {
                 arAreacode:this.userForm.arAreacode,//区县
                 arSource:this.userForm.arSource//来源
             }
-            if(isAdd){
+            if(this.isAdd){
                 addUser(data).then(res=>{
-                    console.log(res)
+                   if(res.code == 20000){
+                        this.$Message.info('添加成功');
+                    }
                 })
             }else{
                 updateUser(data).then(res=>{
-                    console.log(res)
+                    if(res.code == 20000){
+                        this.$Message.info('修改成功');
+                    }
                 })
             }
            

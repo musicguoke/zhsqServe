@@ -14,6 +14,8 @@
           <MenuItem name="5">扶贫信息</MenuItem>
           <MenuItem name="6">专题配置</MenuItem>
           <MenuItem name="7">地图配置</MenuItem>
+          <MenuItem name="8">宏观数据</MenuItem>
+          <MenuItem name="9">区域文本</MenuItem>
         </Menu>
         <div class="table">
           <div class="seach_condition">
