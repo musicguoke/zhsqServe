@@ -271,14 +271,10 @@ header {
 }
 
 .login {
-  width: 100%;
+  width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: space-around;
-  min-width: 1600px;
-}
-
-.login-bg {
-  margin-left: 180px;
+  justify-content: space-between;
 }
 
 form {

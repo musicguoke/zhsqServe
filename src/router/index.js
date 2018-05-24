@@ -108,23 +108,28 @@ const router = new Router({
       children: [
         {
           path: "content-list",
-          component: ContentList
+          component: ContentList,
+          meta: { title: "目录管理" }
         },
         {
           path: "user-list",
-          component: UserList
+          component: UserList,
+          meta: { title: "用户管理" }
         },
         {
           path: "suser-group-list",
-          component: SGroupList
+          component: SGroupList,
+          meta: { title: "用户组管理" }
         },
         {
           path: "push-manage",
-          component: PushManage
+          component: PushManage,
+          meta: { title: "推送管理" }
         },
         {
           path: "message-manage",
-          component: MessageManage
+          component: MessageManage,
+          meta: { title: "短信管理" }
         },
         {
           path: "user-statistics",

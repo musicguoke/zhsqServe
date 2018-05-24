@@ -8,7 +8,7 @@
             <v-menu/>
           </div>
         </div>
-        <!-- <v-tags/> -->
+        <v-tags/>
         <div class="container">
           <router-view/>
         </div>
@@ -35,7 +35,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.navbar {
-  margin-bottom: 16px;
-}
 </style>
