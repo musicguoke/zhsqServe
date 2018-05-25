@@ -15,12 +15,9 @@ axios.interceptors.request.use(function (config) {
 // 拦截响应
 axios.interceptors.response.use(function (response) {
   iView.LoadingBar.finish()
-  // if (response.data.code == '-3') {
-  //   router.replace('/login')
-  // }
-  // if (response.data.code == '-2') {
-  //   router.replace('/login')
-  // }
+  if (response.data.message == '请重新登录') {
+    router.replace('/login')
+  }
   return response
 }, function (err) {
   iView.LoadingBar.error()

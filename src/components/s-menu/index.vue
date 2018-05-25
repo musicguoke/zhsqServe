@@ -5,7 +5,7 @@
     active-name="1" 
     @on-select="handleMenuClick"
   >
-    <MenuItem name="index">
+    <MenuItem name="content-list">
       <Icon type="ios-paper"></Icon>
       目录管理
     </MenuItem>
@@ -14,7 +14,7 @@
         <Icon type="loop"></Icon>
           权限管理
       </template>
-      <MenuItem name="suser-list">用户管理</MenuItem>
+      <MenuItem name="user-list">用户管理</MenuItem>
       <MenuItem name="suser-group-list">用户组管理</MenuItem>
     </Submenu>
     <Submenu name="3">
@@ -22,8 +22,8 @@
         <Icon type="loop"></Icon>
           交互管理
       </template>
-      <MenuItem name="ts-list">推送管理</MenuItem>
-      <MenuItem name="msg-list">短信管理</MenuItem>
+      <MenuItem name="push-manage">推送管理</MenuItem>
+      <MenuItem name="message-manage">短信管理</MenuItem>
     </Submenu>
     <Submenu name="4">
       <template slot="title">

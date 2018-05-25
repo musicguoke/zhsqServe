@@ -1,27 +1,28 @@
 <template>
-<Content :style="{height:userListHeight}">
-    <Breadcrumb :style="{marginBottom: '17px'}">
-      <BreadcrumbItem>用户管理</BreadcrumbItem>
-      <BreadcrumbItem>用户列表</BreadcrumbItem>
-    </Breadcrumb>
-    <Card>
-    <div>
-        <div class="seach_condition">
-            <div class="condition_list">
-                <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-                <i-select :model.sync="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
-                    <i-option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-                </i-select>
-                <i-select :model.sync="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
-                    <i-option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-                </i-select>
-                <i-select :model.sync="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
-                    <i-option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-                </i-select>
-            </div>
-            <div class="search_button">
-                <i-button @click="userAddOpen">新增</i-button>
-                <i-button class="marginLeft">导入</i-button>
+    <Content :style="{height:userListHeight}">
+        <Breadcrumb :style="{marginBottom: '17px'}">
+            <BreadcrumbItem>用户管理</BreadcrumbItem>
+            <BreadcrumbItem>用户列表</BreadcrumbItem>
+        </Breadcrumb>
+        <Card>
+        <div>
+            <div class="seach_condition">
+                <div class="condition_list">
+                    <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
+                    <i-select :model.sync="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
+                        <i-option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                    </i-select>
+                    <i-select :model.sync="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
+                        <i-option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                    </i-select>
+                    <i-select :model.sync="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
+                        <i-option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
+                    </i-select>
+                </div>
+                <div class="search_button">
+                    <i-button @click="userAddOpen">新增</i-button>
+                    <i-button class="marginLeft">导入</i-button>
+                </div>
             </div>
         </div>
         <div class="tableSize">
@@ -84,7 +85,6 @@
         <div class="tablePage">
             <Page :total=total  :current="1" @on-change="_getUserList"></Page>
         </div>
-    </div>
     </Card>
     <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser">
         <Form :model="userForm" label-position="left" :label-width="100">
@@ -134,35 +134,35 @@
 </template>
 
 <script>
-import { getAreaCode,getUserList,addUser,updateUser,deleteUser} from '@/api/user-service'
-import MD5 from 'crypto-js/md5'
+import { getAreaCode, getUserList, addUser, updateUser, deleteUser } from '@/api/user-service'
+// import MD5 from 'crypto-js/md5'
 export default {
-    data(){
-        return{
-            userListHeight:window.innerHeight - 65-60-20-90-18 +'px',
-            searchDepartment:'',
-            searchCounty:'',
-            searchSystem:'',
-            searchName:'',
-            userModal:false,
-            modalTitle:'',
-            total:0,
-            isAdd:false,
-            userForm:{
-                arLoginname:'',
-                arTruename:'',
-                arPassword:'',
-                arTel:'',//座机
-                arMobile:'',//手机
-                arEmail:'',
-                arSalt:'', //校验码
-                arGroup:'',//用户组
-                arFax:'',//用户组
-                arBranch:'', //部门
-                arAreacode:'',//区县
-                arSource:''//来源
+    data() {
+        return {
+            userListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + 'px',
+            searchDepartment: '',
+            searchCounty: '',
+            searchSystem: '',
+            searchName: '',
+            userModal: false,
+            modalTitle: '',
+            total: 0,
+            isAdd: false,
+            userForm: {
+                arLoginname: '',
+                arTruename: '',
+                arPassword: '',
+                arTel: '',//座机
+                arMobile: '',//手机
+                arEmail: '',
+                arSalt: '', //校验码
+                arGroup: '',//用户组
+                arFax: '',//用户组
+                arBranch: '', //部门
+                arAreacode: '',//区县
+                arSource: ''//来源
             },
-            userData:[],
+            userData: [],
             departmentList: [
                 {
                     value: '',
@@ -175,140 +175,140 @@ export default {
                     label: '区县'
                 }
             ],
-            countyFilterList:[
+            countyFilterList: [
 
             ],
             systemList: [
                 {
                     value: '',
                     label: '系统选择',
-                    key:5
+                    key: 5
                 },
                 {
                     value: 'fx',
                     label: '风险系统',
-                    key:6
+                    key: 6
                 },
                 {
                     value: 'ghdw',
                     label: '规划定位',
-                    key:7
+                    key: 7
                 }
             ]
         }
     },
-    created(){
-        getAreaCode().then(res=>{
-           for(let i in res.data.list){
-               this.countyList.push({
-                   value:res.data.list[i].areacode,
-                   label:res.data.list[i].areaname
-               })
-               this.countyFilterList.push({
-                   text:res.data.list[i].areaname,
-                   value:res.data.list[i].areaname
-               })
-           }
+    created() {
+        getAreaCode().then(res => {
+            for (let i in res.data.list) {
+                this.countyList.push({
+                    value: res.data.list[i].areacode,
+                    label: res.data.list[i].areaname
+                })
+                this.countyFilterList.push({
+                    text: res.data.list[i].areaname,
+                    value: res.data.list[i].areaname
+                })
+            }
         }),
-        this._getUserList(1)
+            this._getUserList(1)
     },
     methods: {
-        userAddOpen(){
+        userAddOpen() {
             this.userModal = true;
             this.isAdd = true;
             this.modalTitle = '新增用户';
-            for(let i in this.userForm){
-               this.userForm[i] = '';
+            for (let i in this.userForm) {
+                this.userForm[i] = '';
             }
         },
-        userEditOpen(params){
+        userEditOpen(params) {
             this.userModal = true;
             this.isAdd = false;
             this.modalTitle = '修改用户';
-             for(let i in this.userForm){
-               this.userForm[i] = '';
-               if(params.row[i]){
-                   this.userForm[i] =params.row[i] 
-               }
+            for (let i in this.userForm) {
+                this.userForm[i] = '';
+                if (params.row[i]) {
+                    this.userForm[i] = params.row[i]
+                }
             }
         },
-        remove (params) {
+        remove(params) {
             let data = {
-                arId:params.row.arId
+                arId: params.row.arId
             }
             this.$Modal.confirm({
-                    content: '删除后数据无法恢复，是否继续？',
-                    onOk: () => {
-                        this.userData.splice(params.$index, 1);
-                        deleteUser(data).then(res=>{
-                            if(res.code = 20000){
-                                 this.$Message.success('删除成功');
-                            }
-                        })
-                    },
-                    onCancel: () => {
-                        
-                    }
-                });
-            
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    this.userData.splice(params.$index, 1);
+                    deleteUser(data).then(res => {
+                        if (res.code = 20000) {
+                            this.$Message.success('删除成功');
+                        }
+                    })
+                },
+                onCancel: () => {
+
+                }
+            });
+
         },
         filterByUserGroup(value, row) {
             return row.userGroup === value;
         },
-        filterByDepartment(value,row){
+        filterByDepartment(value, row) {
             return row.department === value;
         },
-        _getUserList(page){
+        _getUserList(page) {
             let data = {
-                methods:'list',
-                pageNo:page,
-                pageSize:10
+                methods: 'list',
+                pageNo: page,
+                pageSize: 10
             }
-            getUserList(data).then(res=>{
+            getUserList(data).then(res => {
                 this.userData = []
-                for(let i in res.data.list){
+                for (let i in res.data.list) {
                     this.userData.push(res.data.list[i])
                 }
                 this.total = res.data.total
             })
         },
-        addOrUpdateUser(){
+        addOrUpdateUser() {
             let data = {
-                arLoginname:this.userForm.arLoginname,
-                arTruename:this.userForm.arTruename,
-                arPassword:MD5(this.userForm.arPassword).toString(),
-                arTel:this.userForm.arTel,//座机
-                arMobile:this.userForm.arMobile,//手机
-                arEmail:this.userForm.arEmail,
-                arSalt:this.userForm.arSalt, //校验码
-                arGroup:this.userForm.arGroup,//用户组
-                arFax:this.userForm.arFax,//用户组
-                arBranch:this.userForm.arBranch, //部门
-                arAreacode:this.userForm.arAreacode,//区县
-                arSource:this.userForm.arSource//来源
+                arLoginname: this.userForm.arLoginname,
+                arTruename: this.userForm.arTruename,
+                arPassword: MD5(this.userForm.arPassword).toString(),
+                arTel: this.userForm.arTel,//座机
+                arMobile: this.userForm.arMobile,//手机
+                arEmail: this.userForm.arEmail,
+                arSalt: this.userForm.arSalt, //校验码
+                arGroup: this.userForm.arGroup,//用户组
+                arFax: this.userForm.arFax,//用户组
+                arBranch: this.userForm.arBranch, //部门
+                arAreacode: this.userForm.arAreacode,//区县
+                arSource: this.userForm.arSource//来源
             }
-            if(this.isAdd){
-                addUser(data).then(res=>{
-                   if(res.code == 20000){
+            if (this.isAdd) {
+                addUser(data).then(res => {
+                    if (res.code == 20000) {
                         this.$Message.info('添加成功');
                     }
                 })
-            }else{
-                updateUser(data).then(res=>{
-                    if(res.code == 20000){
+            } else {
+                updateUser(data).then(res => {
+                    if (res.code == 20000) {
                         this.$Message.info('修改成功');
                     }
                 })
             }
-           
+
         },
     }
 }
 </script>
 
 <style>
-    .el-table-filter__content{
-        max-height: 160px;
-        overflow-y: scroll;
-    }
+.el-table-filter__content {
+  max-height: 160px;
+  overflow-y: scroll;
+}
 </style>
