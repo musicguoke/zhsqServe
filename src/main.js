@@ -3,13 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { Table, TableColumn } from 'element-ui'
+import { Table, TableColumn, Tree, Button } from 'element-ui'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 
 Vue.use(iView)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Tree)
+Vue.use(Button)
 
 import './common/css/common.css'
 import './common/css/normalize.css'

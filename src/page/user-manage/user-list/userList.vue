@@ -74,8 +74,9 @@
                 align="center"
                 >
                 <template slot-scope="scope">
-                    <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight">编辑</Button>
-                    <Button type="error" @click="remove(scope)" size="small">删除</Button>
+                    <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button>
+                    <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="edit" title="编辑"></Button>
+                    <Button type="error" @click="remove(scope)" size="small" icon="trash-a" title="编辑"></Button>
                 </template>
                 </el-table-column>
             </el-table>
