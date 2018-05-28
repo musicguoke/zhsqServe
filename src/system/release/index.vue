@@ -2,7 +2,7 @@
   <Content>
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>目录管理</BreadcrumbItem>
-      <BreadcrumbItem>资源目录</BreadcrumbItem>
+      <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
     <Card>
       <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
@@ -21,19 +21,40 @@ export default {
   data() {
     return {
       dataTree: [],
-      dataColumns: [{
+      dataColumns: [
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        }, {
           title: '名称',
           key: 'title'
+        }, {
+          title: '区县',
+          key: 'qx'
         }, {
           title: '编码',
           key: 'id',
           sortable: true
         }, {
-          title: '类型',
+          title: '图片路径',
+          key: 'src'
+        }, {
+          title: '图片类型',
           key: 'type'
         }, {
           title: '更新时间',
           key: 'time'
+        }, {
+          title: '操作',
+          type: 'action',
+          actions: [{
+            type: 'primary',
+            text: '编辑'
+          }, {
+            type: 'error',
+            text: '删除'
+          }]
         }
       ]
     }

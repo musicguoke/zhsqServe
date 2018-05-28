@@ -55,6 +55,17 @@ export function getSystemList(page) {
   })
 }
 
+// 进入系统
+export function enterSystem(id) {
+  const data = {
+    sysId: id
+  }
+
+  return axios.post(`${url}/sys/sysUser/selectSysId.do`, qs.stringify(data)).then(res => {
+    return Promise.resolve(res.data)
+  })
+}
+
 //添加系统
 export function addSystem(data) {
   return axios.post(

@@ -74,7 +74,16 @@ export default {
     _login() {
       login(this.formInline).then(res => {
         if(res.code) {
-          this.$router.replace('/zhsq_admin')
+          if(res.data.userInfo) {
+            localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+          }
+          if(res.data.sysUserChildList.length > 0) {
+            localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
+            this.$router.replace('/system')
+          } else {
+            // 单个系统自动选择
+            this.$router.replace('/zhsq_admin')
+          }
         }
       })
     }

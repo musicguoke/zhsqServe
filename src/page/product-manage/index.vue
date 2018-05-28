@@ -48,6 +48,12 @@
                 </Option>
               </Select>
             </FormItem>
+            <FormItem label="是否启用">
+              <Select v-model="formItem.enable">
+                <Option value="1">启用</Option>
+                <Option value="0">暂不启用</Option>
+              </Select>
+            </FormItem>
             <FormItem label="上传欢迎页">
               <Input placeholder="上传后的地址" style="width: 68%"></Input>
               <Upload action="//jsonplaceholder.typicode.com/posts/">
@@ -143,7 +149,8 @@ export default {
       formItem: {
         sysName: "",
         type: "",
-        areacode: ""
+        areacode: "",
+        enable: '0'
       },
       cilentAuthorityStr: '1',
       tabDataIdStr: '',
@@ -368,8 +375,7 @@ export default {
         tabDataIdStr: this.tabDataIdStr,
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
-        funNum: this.funNum,
-        enable: 0
+        funNum: this.funNum
       }, this.formItem)
       addSystem(data).then(res => {
         this._getSystemList()

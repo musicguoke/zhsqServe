@@ -71,8 +71,13 @@
 export default {
   data() {
     return {
-      theme1: 'light'
+      theme1: 'light',
+      userInfo: ''
     }
+  },
+  created() {
+    // 用户权限信息
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
   },
   methods: {
     handleMenuClick(name) {

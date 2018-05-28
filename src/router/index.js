@@ -19,6 +19,11 @@ import PushManage from "@/page/interactive-manage/push-manage/pushManage";
 import SIndex from "@/system/index";
 import ContentList from "@/system/content-list/index";
 import SGroupList from "@/system/role-group/index";
+import Release from "@/system/release/index";
+import SystemList from "@/page/system-list/index";
+
+// user
+import Personal from '@/page/personal/index'
 
 Vue.use(Router);
 
@@ -27,6 +32,12 @@ const router = new Router({
     {
       path: "/",
       redirect: "login"
+    },
+    {
+      path: "/system",
+      name: "system",
+      component: SystemList,
+      meta: { title: "系统选择" }
     },
     {
       path: "/zhsq_admin",
@@ -38,6 +49,12 @@ const router = new Router({
           name: "index",
           component: Vindex,
           meta: { title: "首页" }
+        },
+        {
+          path: "personal-center",
+          name: "personal",
+          component: Personal,
+          meta: { title: "个人中心" }
         },
         {
           path: "system-manage",
@@ -110,6 +127,11 @@ const router = new Router({
           path: "content-list",
           component: ContentList,
           meta: { title: "目录管理" }
+        },
+        {
+          path: "release",
+          component: Release,
+          meta: { title: "发布目录" }
         },
         {
           path: "user-list",
