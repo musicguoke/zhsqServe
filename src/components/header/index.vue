@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { logout } from '@/api/service'
+
 export default {
   props: {
     title: {
@@ -45,10 +47,17 @@ export default {
           title: '提示',
           content: '确实退出吗？',
           onOk: () => {
-            this.$router.replace('/')
+            this._logout()
           }
         })
       }
+    },
+    _logout() {
+      logout(this.formInline).then(res => {
+        if(res.code) {
+          this.$router.replace('/')
+        }
+      })
     }
   }
 }

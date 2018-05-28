@@ -2,6 +2,7 @@
   <Content>
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>目录管理</BreadcrumbItem>
+      <BreadcrumbItem>资源目录</BreadcrumbItem>
     </Breadcrumb>
     <Card>
       <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>

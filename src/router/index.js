@@ -18,7 +18,7 @@ import PushManage from "@/page/interactive-manage/push-manage/pushManage";
 // system
 import SIndex from "@/system/index";
 import ContentList from "@/system/content-list/index";
-import SGroupList from "@/system/user-group/index";
+import SGroupList from "@/system/role-group/index";
 
 Vue.use(Router);
 
@@ -117,9 +117,9 @@ const router = new Router({
           meta: { title: "用户管理" }
         },
         {
-          path: "suser-group-list",
+          path: "role-list",
           component: SGroupList,
-          meta: { title: "用户组管理" }
+          meta: { title: "角色管理" }
         },
         {
           path: "push-manage",

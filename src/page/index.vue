@@ -8,7 +8,7 @@
             <v-menu/>
           </div>
         </div>
-        <v-tags/>
+        <!-- <v-tags/> -->
         <div class="container">
           <router-view/>
         </div>
@@ -30,6 +30,9 @@ export default {
     vMenu,
     vTags,
     vHeader
+  },
+  created() {
+    document.title = '运维管理系统'
   }
 }
 </script>

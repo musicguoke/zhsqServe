@@ -102,7 +102,6 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getMenu } from '@/api/service'
 
 export default {
   data() {
@@ -148,7 +147,6 @@ export default {
   mounted() {
     this.lineInitial()
     this.pieInitial()
-    // this._getMenu()
   },
   methods: {
     rowClassName(row, index) {
@@ -357,11 +355,6 @@ export default {
         ]
       }
       myChart.setOption(option)
-    },
-    _getMenu() {
-      getMenu().then(res => {
-        console.log(res)
-      })
     }
   }
 }

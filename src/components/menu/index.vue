@@ -91,7 +91,7 @@ export default {
   }
 }
 .ivu-menu-horizontal {
-  height: 30px;
-  line-height: 30px;
+  height: 36px;
+  line-height: 36px;
 }
 </style>
