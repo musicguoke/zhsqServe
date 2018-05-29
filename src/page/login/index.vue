@@ -73,18 +73,19 @@ export default {
   methods: {
     _login() {
       login(this.formInline).then(res => {
-        if(res.code) {
-          if(res.data.userInfo) {
-            localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
-          }
-          if(res.data.sysUserChildList.length > 0) {
-            localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
-            this.$router.replace('/system')
-          } else {
-            // 单个系统自动选择
-            this.$router.replace('/zhsq_admin')
-          }
-        }
+        this.$router.replace('/zhsq_admin')
+        // if(res.code) {
+        //   if(res.data.userInfo) {
+        //     localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+        //   }
+        //   if(res.data.sysUserChildList.length > 0) {
+        //     localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
+        //     this.$router.replace('/system')
+        //   } else {
+        //     // 单个系统自动选择
+        //     this.$router.replace('/zhsq_admin')
+        //   }
+        // }
       })
     }
   }

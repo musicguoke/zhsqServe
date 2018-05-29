@@ -6,7 +6,7 @@
                 <i-button @click="openAddModal()">新增</i-button>
             </div>
         </div>
-        <el-table v-show="searchType == 7" :data="mapConfigureData" border style="width: 100%">
+        <el-table :data="mapConfigureData" border style="width: 100%">
             <el-table-column prop="id" label="ID" width="100" sortable>
             </el-table-column>
             <el-table-column prop="mName" label="名称">
@@ -25,7 +25,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total :current="resetPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
         </div>
         <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="mapConfigureForm" label-position="left" :label-width="100">
@@ -76,14 +76,20 @@ export default {
             }
         }
     },
+    created(){
+        this._getMapConfigure()
+    },
     methods:{
         //地图配置
         _getMapConfigure(){
             getMapConfigure().then(res=>{
                 this.pageLength = res.data.total
-                this.resetPage = 1
                 this.mapConfigureData = res.data.list
             })
+        },
+        //分页点击
+        pageChange(Page){
+            this._getAreaText(Page)
         },
         //打开新增模态框
         openAddModal(){
