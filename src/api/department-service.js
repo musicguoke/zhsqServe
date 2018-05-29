@@ -11,7 +11,13 @@ export function getDepartmentList(data) {
 }
 //添加和更新部门列表
 export function addAndUpdateDepartment(data) {
-    return axios.post(`${url}/sys/msBranchStruct/saveTree.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/msBranchStruct/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+//导入
+export function importDepartment(data) {
+    return axios.post(`${url}/sys/msBranchStruct/importFile.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import {getDepartmentList,addAndUpdateDepartment} from '@/api/department-service'
+import {getDepartmentList,addAndUpdateDepartment,importDepartment} from '@/api/department-service'
 export default {
     data(){
         return{

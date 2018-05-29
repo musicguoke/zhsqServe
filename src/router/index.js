@@ -25,6 +25,10 @@ import SystemList from "@/page/system-list/index";
 // user
 import Personal from "@/page/personal/index";
 
+//resource
+import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
+import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
+import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
 Vue.use(Router);
 
 const router = new Router({
@@ -34,7 +38,7 @@ const router = new Router({
       redirect: "login"
     },
     {
-      path: "/system-list",
+      path: "/system",
       name: "system",
       component: SystemList,
       meta: { title: "系统选择" }
@@ -94,7 +98,24 @@ const router = new Router({
         {
           path: "resource-manage",
           component: ResourceManage,
-          meta: { title: "资源管理" }
+          meta: { title: "资源管理" },
+          children: [
+            {
+              path: "/area-text",
+              component: AreaText,
+              meta: { title: "区域文本" }
+            },
+            {
+              path: "/macro-data",
+              component: MacroData,
+              meta: { title: "宏观数据" }
+            },
+            {
+              path: "/map-configure",
+              component: MapConfigure,
+              meta: { title: "地图配置" }
+            }
+          ]
         },
         {
           path: "search-manage",
