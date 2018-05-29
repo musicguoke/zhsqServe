@@ -79,7 +79,7 @@ export default {
           }
           if(res.data.sysUserChildList.length > 0) {
             localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
-            this.$router.replace('/system')
+            this.$router.replace('/system-list')
           } else {
             // 单个系统自动选择
             this.$router.replace('/zhsq_admin')

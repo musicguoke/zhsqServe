@@ -23,7 +23,7 @@ import Release from "@/system/release/index";
 import SystemList from "@/page/system-list/index";
 
 // user
-import Personal from '@/page/personal/index'
+import Personal from "@/page/personal/index";
 
 Vue.use(Router);
 
@@ -34,7 +34,7 @@ const router = new Router({
       redirect: "login"
     },
     {
-      path: "/system",
+      path: "/system-list",
       name: "system",
       component: SystemList,
       meta: { title: "系统选择" }
