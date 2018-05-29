@@ -4,7 +4,7 @@
       <div class="navbar-logo">
         <div class="layout-logo"></div>
         <span class="navbar-title">
-          {{title}}—
+          {{title}} —
           <small>管理平台</small>
         </span>
       </div>
@@ -21,7 +21,7 @@
               <DropdownItem name="logout">安全退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Badge count="10" overflow-count="9">
+          <Badge dot>
             <Icon type="ios-bell-outline" size="26"></Icon>
           </Badge>
         </div>

@@ -20,6 +20,15 @@ export function logout(loginInfo) {
     })
 }
 
+//首页指标
+export function getIndex() {
+  return axios
+    .post(`${url}/sys/msHomepageStatistical/statistical.do`)
+    .then(res => {
+      return Promise.resolve(res.data);
+    })
+}
+
 export function getMenu(id) {
   const data = {
     typeid: 13

@@ -102,6 +102,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import { getIndex } from '@/api/service'
 
 export default {
   data() {
@@ -145,6 +146,7 @@ export default {
     }
   },
   mounted() {
+    this._getIndex()
     this.lineInitial()
     this.pieInitial()
   },
@@ -355,6 +357,11 @@ export default {
         ]
       }
       myChart.setOption(option)
+    },
+    _getIndex() {
+      getIndex().then(res => {
+        console.log(res)
+      })
     }
   }
 }
