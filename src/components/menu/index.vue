@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     handleMenuClick(name) {
-      this.$router.push(`${name}`)
+      this.$router.push(`${'/'+ 'zhsq_admin'+'/' + name}`)
     }
   }
 }

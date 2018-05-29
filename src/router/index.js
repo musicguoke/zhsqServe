@@ -29,6 +29,10 @@ import Personal from "@/page/personal/index";
 import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
 import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
 import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
+
+//search
+import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
+import PeripheryHotspot from "@/page/resource/search-manage/search-item/peripheryHotspot.vue";
 Vue.use(Router);
 
 const router = new Router({
@@ -46,64 +50,73 @@ const router = new Router({
     {
       path: "/zhsq_admin",
       component: Index,
-      redirect: "/zhsq_admin/index",
+      redirect: { name: "Vindex" },
       children: [
         {
           path: "index",
-          name: "index",
+          name: "Vindex",
           component: Vindex,
           meta: { title: "首页" }
         },
         {
           path: "personal-center",
-          name: "personal",
+          name: "Personal",
           component: Personal,
           meta: { title: "个人中心" }
         },
         {
           path: "system-manage",
+          name: "SystemManage",
           component: SystemManage,
           meta: { title: "产品管理" }
         },
         {
           path: "department-list",
+          name: "DepartmentList",
           component: DepartmentList,
           meta: { title: "部门列表" }
         },
         {
-          path: "/zhsq_admin/user-list",
+          path: "user-list",
+          name: "UserList",
           component: UserList,
           meta: { title: "用户列表" }
         },
         {
           path: "manager-list",
+          name: "ManagerList",
           component: ManagerList,
           meta: { title: "管理员列表" }
         },
         {
           path: "user-statistics",
+          name: "UserVisit",
           component: UserVisit,
           meta: { title: "用户统计" }
         },
         {
           path: "data-statistics",
+          name: "DataVisit",
           component: DataVisit,
           meta: { title: "数据统计" }
         },
         {
           path: "search-statistics",
+          name: "SearchVisit",
           component: SearchVisit,
           meta: { title: "搜索统计" }
         },
         {
           path: "resource-manage",
+          name: "ResourceManage",
           component: ResourceManage,
-          redirect: '/resource-manage/area-text',
           meta: { title: "资源管理" },
+          redirect: { name: "AreaText" },
           children: [
             {
               path: "area-text",
               component: AreaText,
+              name: "areaText",
               meta: { title: "区域文本" }
             },
             {
@@ -120,16 +133,34 @@ const router = new Router({
         },
         {
           path: "search-manage",
+          name: "SearchManage",
           component: SearchManage,
-          meta: { title: "搜索管理" }
+          meta: { title: "搜索管理" },
+          redirect: { name: "PeripheryHotspot" },
+          children: [
+            {
+              path: "periphery-hotspot",
+              component: PeripheryHotspot,
+              name: "PeripheryHotspot",
+              meta: { title: "周边热点" }
+            },
+            {
+              path: "hot-search",
+              component: HotSeach,
+              name: "HotSearch",
+              meta: { title: "热搜" }
+            }
+          ]
         },
         {
           path: "message-manage",
+          name: "MessageManage",
           component: MessageManage,
           meta: { title: "短信管理" }
         },
         {
           path: "push-manage",
+          name: "PushManage",
           component: PushManage,
           meta: { title: "推送管理" }
         }

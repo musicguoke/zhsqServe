@@ -27,7 +27,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total :current="resetPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
           </div>
         <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="areaTextForm" label-position="left" :label-width="100">
@@ -77,6 +77,9 @@ export default {
             },
         }
     },
+    created(){
+        this._getAreaText(1)
+    },
     methods:{
         //区域文本
         _getAreaText(page){
@@ -88,7 +91,6 @@ export default {
             }
             getAreaText(data).then(res=>{
                 this.pageLength = res.data.total
-                this.resetPage = 1
                 this.areaTextData = res.data.list
             })
         },

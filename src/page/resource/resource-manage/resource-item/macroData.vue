@@ -27,7 +27,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total :current="resetPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
         </div>
         <Modal v-model="macroDataModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="macroDataForm" label-position="left" :label-width="100">
@@ -95,6 +95,9 @@ export default {
             }
         }
     },
+    created(){
+        this._getMacroData(1)
+    },
     methods:{
         //宏观数据
         _getMacroData(page){
@@ -106,7 +109,6 @@ export default {
             }
             getMacroData(data).then(res=>{
                 this.pageLength = res.data.total
-                this.resetPage = 1
                 this.macroData = res.data.list
             })
         },
