@@ -5,17 +5,21 @@
     active-name="1" 
     @on-select="handleMenuClick"
   >
-    <MenuItem name="content-list">
-      <Icon type="ios-paper"></Icon>
-      目录管理
-    </MenuItem>
+    <Submenu name="1">
+      <template slot="title">
+        <Icon type="ios-paper"></Icon>
+          目录管理
+      </template>
+      <MenuItem name="content-list">资源目录</MenuItem>
+      <MenuItem name="release">发布目录</MenuItem>
+    </Submenu>
     <Submenu name="2">
       <template slot="title">
         <Icon type="loop"></Icon>
           权限管理
       </template>
       <MenuItem name="user-list">用户管理</MenuItem>
-      <MenuItem name="suser-group-list">用户组管理</MenuItem>
+      <MenuItem name="role-list">角色管理</MenuItem>
     </Submenu>
     <Submenu name="3">
       <template slot="title">
@@ -70,7 +74,7 @@ export default {
   }
 }
 .ivu-menu-horizontal {
-  height: 30px;
-  line-height: 30px;
+  height: 36px;
+  line-height: 36px;
 }
 </style>

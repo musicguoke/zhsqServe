@@ -14,7 +14,7 @@ Vue.use(Tree)
 Vue.use(Button)
 
 import './common/css/common.css'
-import './common/css/normalize.css'
+// import './common/css/normalize.css'
 
 Vue.config.productionTip = false
 

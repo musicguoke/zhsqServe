@@ -45,8 +45,23 @@ export function getFeature(id) {
 }
 
 //系统列表
-export function getSystemList() {
-  return axios.post(`${url}/sys/msSystemChildController/list.do`).then(res => {
+export function getSystemList(page) {
+  const data = {
+    page: page || 1
+  }
+
+  return axios.post(`${url}/sys/msSystemChildController/list.do`, qs.stringify(data)).then(res => {
+    return Promise.resolve(res.data)
+  })
+}
+
+// 进入系统
+export function enterSystem(id) {
+  const data = {
+    sysId: id
+  }
+
+  return axios.post(`${url}/sys/sysUser/selectSysId.do`, qs.stringify(data)).then(res => {
     return Promise.resolve(res.data)
   })
 }

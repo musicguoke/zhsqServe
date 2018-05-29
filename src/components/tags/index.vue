@@ -2,10 +2,17 @@
   <div class="tags" v-if="showTags">
     <div class="container">
       <div>
-        <Tag closable color="blue" v-for="(item,index) in tagsList" @on-close="closeTags(index)" :class="{'active': isActive(item.path)}" :key="index">
-          <router-link :to="item.path">
-            {{item.title}}
-          </router-link>
+        <Tag
+          type="dot"
+          v-for="(item,index) in tagsList" 
+          @on-close="closeTags(index)"
+          @click.native="linkTo(item.path)"
+          :class="{'active': isActive(item.path)}"
+          :closable="item.title==='首页'?false:true"
+          :color="isActive(item.path)?'blue':'default'"
+          :key="index"
+        >
+          {{item.title}}
         </Tag>
       </div>
       <Dropdown @on-click="close">
@@ -31,7 +38,10 @@ export default {
   },
   methods: {
     isActive(path) {
-      return path !== this.$route.path
+      return path === this.$route.path
+    },
+    linkTo(path) {
+      this.$router.push(path)
     },
     // 关闭单个标签
     closeTags(index) {
@@ -88,16 +98,12 @@ export default {
 <style lang="scss">
 .tags {
   display: flex;
-  height: 30px;
-  line-height: 30px;
   position: relative;
   margin-bottom: 16px;
-  background: #fff;
+  line-height: 36px;
+  box-shadow: 0 2px 1px 1px rgba(100, 100, 100, 0.1);
 }
 .tags .container {
-  width: 1200px;
-  padding: 0 20px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
 }

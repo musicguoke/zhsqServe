@@ -31,7 +31,7 @@
             <label v-if="column.type === 'selection'">
               <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
             </label>
-            <div v-if="column.type === 'action'">
+            <div class="btn-td" v-if="column.type === 'action'">
               <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">{{action.text}}</i-button>
             </div>
             <label @click="toggle(index,item)" v-if="!column.type">
@@ -472,6 +472,10 @@ table {
 .table-bordered > thead > tr > td,
 .table-bordered > thead > tr > th {
   border: 1px solid #e7e7e7;
+}
+.btn-td {
+  display: flex;
+  justify-content: space-around;
 }
 .table > thead > tr > th {
   border-bottom: 1px solid #ddd;

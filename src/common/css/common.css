@@ -9,6 +9,24 @@ body {
   margin: 0 auto;
 }
 
+/* 头部样式 */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+.navbar-logo .layout-logo {
+  width: 85px;
+  height: 46px;
+  background: url("../../assets/logo.png") no-repeat;
+}
+
+.navbar-logo .navbar-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 14px;
+  color: #fff;
+}
+
 /* 首页布局 */
 .ivu-menu {
   z-index: 899;
@@ -32,13 +50,14 @@ body {
 }
 .navbar {
   width: 100%;
+  margin-bottom: 17px;
   border-top: 1px solid #d8dcdf;
   border-bottom: 1px solid #d8dcdf;
   background: #fff;
 }
 
 .ivu-loading-bar {
-  top: 94px;
+  top: 102px;
 }
 
 .seach_condition {

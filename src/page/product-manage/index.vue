@@ -1,5 +1,5 @@
 <template>
-  <Content :style="{padding: '0 50px'}">
+  <Content>
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>产品管理</BreadcrumbItem>
       <BreadcrumbItem>{{name}}</BreadcrumbItem>
@@ -13,9 +13,6 @@
           </div>
         </div>
         <Table border :columns="columns1" :data="sysData" @on-row-click="systemConfig"></Table>
-        <div class="tablePage">
-          <Page :total="sysData.length"></Page>
-        </div>
       </div>
       <div v-if="isShow" class="card-content" style="min-height: 400px;">
         <Steps :current="current" v-if="newSys">
@@ -23,12 +20,14 @@
           <Step title="功能配置" content="这里是该步骤的描述信息"></Step>
           <Step title="数据配置" content="这里是该步骤的描述信息"></Step>
           <Step title="地图配置" content="这里是该步骤的描述信息"></Step>
+          <Step title="字段权限" content="这里是该步骤的描述信息"></Step>
         </Steps>
         <Menu mode="horizontal" style="width: 100%" v-if="!newSys" :theme="theme" active-name="0" @on-select="tabChange">
           <MenuItem name="0">基本信息</MenuItem>
           <MenuItem name="1">功能配置</MenuItem>
           <MenuItem name="2">数据配置</MenuItem>
           <MenuItem name="3">地图配置</MenuItem>
+          <MenuItem name="4">字段权限</MenuItem>
         </Menu>
         <div class="current-content">
           <Form :model="formItem" :label-width="80" style="width: 400px" v-show="current == 0">
@@ -49,6 +48,12 @@
                 </Option>
               </Select>
             </FormItem>
+            <FormItem label="是否启用">
+              <Select v-model="formItem.enable">
+                <Option value="1">启用</Option>
+                <Option value="0">暂不启用</Option>
+              </Select>
+            </FormItem>
             <FormItem label="上传欢迎页">
               <Input placeholder="上传后的地址" style="width: 68%"></Input>
               <Upload action="//jsonplaceholder.typicode.com/posts/">
@@ -57,14 +62,41 @@
             </FormItem>
           </Form>
           <div style="width: 400px" v-show="current == 1">
-            <Table border ref="selection" :columns="columns4" :data="featureList" @on-select="selectFeatureConfig"></Table>
+            <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig">
+            </Table>
           </div>
           <div v-show="current == 2">
-            <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
+            <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'>
+            </tree-table>
           </div>
           <div style="width: 400px" v-show="current == 3">
-            <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select="selectMapConfig">
+            <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
             </Table>
+          </div>
+          <div style="width: 400px" class="select-box" v-show="current == 4">
+            <Form :label-width="80">
+              <FormItem label="一级权限">
+                <Select v-model="funNum" placeholder="一级权限0~10">
+                  <Option v-for="(item, index) in funAry1" :value="item" :key="index">
+                    {{item}}
+                  </Option>
+                </Select>
+              </FormItem>
+              <FormItem label="二级权限">
+                <Select v-model="funNum" placeholder="二级权限11~20">
+                  <Option v-for="(item, index) in funAry2" :value="item" :key="index">
+                    {{item}}
+                  </Option>
+                </Select>
+              </FormItem>
+              <FormItem label="三级权限">
+                <Select v-model="funNum" placeholder="三级权限21~30">
+                  <Option v-for="(item, index) in funAry3" :value="item" :key="index">
+                    {{item}}
+                  </Option>
+                </Select>
+              </FormItem>
+            </Form>
           </div>
         </div>
         <div class="btn" v-if="newSys">
@@ -89,6 +121,7 @@ import {
   getFeature,
   getSystemList,
   addSystem,
+  searchSysById,
   deleteSingleSystem
 } from '@/api/system'
 import TreeTable from '@/components/tree-table/index'
@@ -110,13 +143,19 @@ export default {
       dataTree: [],
       mapConfigList: [],
       featureList: [],
+      funAry1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      funAry2: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+      funAry3: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
       formItem: {
         sysName: "",
         type: "",
-        areacode: ""
+        areacode: "",
+        enable: '0'
       },
-      funIdStr: '',
-      dataIdStr: '',
+      cilentAuthorityStr: '1',
+      tabDataIdStr: '',
+      mapIdStr: '',
+      funNum: '',
       selectedRow: '', //选中编辑的系统项
       columns1: [
         {
@@ -152,12 +191,8 @@ export default {
                 on: {
                   click: e => {
                     e.stopPropagation()
+                    this._searchSysById(params.row.id)
                     this.selectedRow = params.row
-                    this.formItem = {
-                      sysName: params.row.sysName,
-                      type: params.row.type.toString(),
-                      areacode: params.row.areacode
-                    }
                     this.current = 0
                     this.isShow = true
                     this.newSys = false
@@ -177,7 +212,7 @@ export default {
                       title: '提示',
                       content: '确认删除吗？',
                       onOk: () => {
-                        this._deleteSingleSystem(params.id)
+                        this._deleteSingleSystem(params.row.id)
                       }
                     })
                   }
@@ -239,6 +274,9 @@ export default {
   created() {
     this._getSystemList()
     this._getAreaQx()
+    this._getFeature()
+    this._getDateTree()
+    this._getMapConfig()
   },
   methods: {
     show() {
@@ -252,26 +290,19 @@ export default {
       this.name = '系统列表'
     },
     tabChange(name) {
-      if (name == 1) {
-        this._getFeature(this.selectedRow.msSystemFunList[0].funId)
-      }
-      this.current = name
+      this.current = parseInt(name)
     },
     next() {
-      if (this.current == 0) {
-        this._getFeature()
-      }
-      if (this.current == 1) {
-        this._getDateTree()
-      }
-      if (this.current == 2) {
-        this._getMapConfig()
+      if (this.current == 0) { }
+      if (this.current == 1) { }
+      if (this.current == 2) { }
+      if (this.current == 3) {
         this.btnContent = '完成'
       }
-      if (this.current == 3) {
+      if (this.current == 4) {
         this._addSystem()
       }
-      if (this.current < 3) {
+      if (this.current < 4) {
         this.current += 1
       }
     },
@@ -285,23 +316,20 @@ export default {
       // 已选择地图项
       let id = []
       section.map(v => id.push(v.id))
-      this.dataIdStr = id.toString()
+      this.mapIdStr = id.toString()
     },
     selectDataConfig(section) {
-      let id = []
-      section.map(v => id.push(v.id))
-      this.dataIdStr = id.toString()
+      this.tabDataIdStr = section.toString()
     },
-    selectFeatureConfig(section) {
+    selectFeatureConfig(section, row) {
       //已选择功能项
       let id = []
       section.map(v => id.push(v.id))
-      this.funIdStr = id.toString()
+      this.cilentAuthorityStr = id.toString()
     },
     // 选择某个系统，进入系统详情
     systemConfig(data) {
-      console.log(data)
-      this.$router.push('/system')
+      this.$router.push(`/system`)
     },
     _getAreaQx() {
       getAreaQx().then(res => {
@@ -315,7 +343,11 @@ export default {
     },
     _getMapConfig() {
       getMapConfig().then(res => {
-        this.mapConfigList = res.data.list.filter(v => v.name = v.mName)
+        this.mapConfigList = res.data.list
+        this.mapConfigList.map(v => {
+          v.name = v.mName
+          v._checked = false
+        })
       })
     },
     _getFeature(id) {
@@ -326,33 +358,75 @@ export default {
           v._checked = false
           if (v.id === 1) {
             v._checked = true
+            v._disabled = true
           }
           list.push(v)
         })
         this.featureList = list
       })
     },
-    _getSystemList() {
-      getSystemList().then(res => {
+    _getSystemList(page) {
+      getSystemList(page).then(res => {
         this.sysData = res.data.list
       })
     },
     _addSystem() {
       let data = Object.assign({}, {
-        dataIdStr: this.dataIdStr,
-        funIdStr: this.funIdStr,
-        funType: 1,
-        enable: 0
+        tabDataIdStr: this.tabDataIdStr,
+        cilentAuthorityStr: this.cilentAuthorityStr,
+        mapIdStr: this.mapIdStr,
+        funNum: this.funNum
       }, this.formItem)
       addSystem(data).then(res => {
+        this._getSystemList()
         this.isShow = false
         this.name = '系统列表'
       })
     },
     _deleteSingleSystem(id) {
       deleteSingleSystem(id).then(res => {
-        console.log(res)
+        this._getSystemList()
       })
+    },
+    _searchSysById(id) {
+      searchSysById(id).then(res => {
+        this.featureList.map(v => {
+          // 判断该系统的已选功能项
+          v._checked = false
+          res.data.cilentAuthorityList.map(h => {
+            if (v.id === h.funId) {
+              v._checked = true
+            }
+          })
+        })
+        this.mapConfigList.map((v, index) => {
+          // 判断该系统的已选地图项
+          v._checked = false
+          res.data.mapList.map(h => {
+            if (v.id === h.funId) {
+              v._checked = true
+            }
+          })
+          this.mapConfigList.splice(index, 1, v)
+        })
+        this.dataTree = this.checkData(this.dataTree, res.data.msSystemDatainfoList)
+        this.funNum = res.data.funNum
+      })
+    },
+    checkData(list, idList) {
+      list.map((v, index) => {
+        v._checked = false
+        idList.map(h => {
+          if (v.id === h.dataId) {
+            v._checked = true
+          }
+          if (v.children) {
+            this.checkData(v.children, idList)
+          }
+        })
+        list.splice(index, 1, v)
+      })
+      return list
     }
   }
 }
@@ -374,7 +448,10 @@ export default {
 .current-content {
   margin: 16px 0;
 }
-.form {
-  width: 400px;
+form {
+  width: 100%;
+}
+.select-box {
+  display: flex;
 }
 </style>

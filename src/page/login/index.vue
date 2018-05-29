@@ -47,8 +47,6 @@
   </div>
 </template>
 <script>
-import axios from '@/util/http'
-import qs from 'qs'
 import { login } from '@/api/service'
 
 export default {
@@ -69,11 +67,23 @@ export default {
       }
     }
   },
+  created() {
+    document.title = '系统登录'
+  },
   methods: {
     _login() {
       login(this.formInline).then(res => {
         if(res.code) {
-          this.$router.replace('/zhsq_admin')
+          if(res.data.userInfo) {
+            localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+          }
+          if(res.data.sysUserChildList.length > 0) {
+            localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
+            this.$router.replace('/system')
+          } else {
+            // 单个系统自动选择
+            this.$router.replace('/zhsq_admin')
+          }
         }
       })
     }
@@ -245,7 +255,8 @@ header {
   width: 100%;
   height: 100%;
   background: url(../../assets/bg.png) no-repeat;
-  background-size: 100%;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -275,21 +286,22 @@ header {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 form {
-  width: 400px;
-  height: 400px;
-  border-radius: 5px;
+  width: 300px;
+  height: 300px;
+  border-radius: 4px;
   background-color: #fff;
 }
 
 form .input {
-  margin-top: 60px;
+  margin-top: 50px;
 }
 
 .ivu-form-item {
-  padding: 0 50px;
+  padding: 0 20px;
 }
 
 .title {
@@ -301,12 +313,14 @@ form .input {
   color: #fff;
   font-weight: inherit;
   position: relative;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 .triangle {
   position: absolute;
   bottom: -10px;
-  left: 195px;
+  left: 142px;
   width: 0;
   height: 0;
   border-left: 7px solid transparent;

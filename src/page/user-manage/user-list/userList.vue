@@ -9,15 +9,15 @@
             <div class="seach_condition">
                 <div class="condition_list">
                     <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-                    <i-select :model.sync="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
-                        <i-option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-                    </i-select>
-                    <i-select :model.sync="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
-                        <i-option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-                    </i-select>
-                    <i-select :model.sync="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
-                        <i-option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-                    </i-select>
+                    <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
+                        <Option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
+                        <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
+                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
                 </div>
                 <div class="search_button">
                     <i-button @click="userAddOpen">新增</i-button>
@@ -77,13 +77,13 @@
                 <template slot-scope="scope">
                     <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button>
                     <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="edit" title="编辑"></Button>
-                    <Button type="error" @click="remove(scope)" size="small" icon="trash-a" title="编辑"></Button>
+                    <Button type="error" @click="remove(scope)" size="small" icon="trash-a" title="删除"></Button>
                 </template>
                 </el-table-column>
             </el-table>
         </div>
         <div class="tablePage">
-            <Page :total=total  :current="1" @on-change="_getUserList"></Page>
+            <Page :total=total  :current="1" @on-change="_getUserList" show-total></Page>
         </div>
     </Card>
     <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser">
@@ -141,7 +141,7 @@ export default {
         return {
             userListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + 'px',
             searchDepartment: '',
-            searchCounty: '',
+            searchCounty:'',
             searchSystem: '',
             searchName: '',
             userModal: false,

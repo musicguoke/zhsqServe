@@ -8,7 +8,7 @@
             <v-menu/>
           </div>
         </div>
-        <v-tags/>
+        <!-- <v-tags/> -->
         <div class="container">
           <router-view/>
         </div>

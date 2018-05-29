@@ -4,7 +4,7 @@
       <div class="navbar-logo">
         <div class="layout-logo"></div>
         <span class="navbar-title">
-          {{title}}—
+          {{title}} —
           <small>管理平台</small>
         </span>
       </div>
@@ -13,15 +13,15 @@
           <span class="user-img"></span>
           <Dropdown trigger="hover" @on-click="userClick" style="margin: 0 10px">
             <a href="javascript:void(0)" style="color: #fff;">
-              超级管理员
+              {{userInfo.realName}}
               <Icon type="arrow-down-b"></Icon>
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem>修改密码</DropdownItem>
+              <DropdownItem name="personal-center">个人中心</DropdownItem>
               <DropdownItem name="logout">安全退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Badge count="10" overflow-count="9">
+          <Badge dot>
             <Icon type="ios-bell-outline" size="26"></Icon>
           </Badge>
         </div>
@@ -31,12 +31,23 @@
 </template>
 
 <script>
+import { logout } from '@/api/service'
+
 export default {
+  data() {
+    return {
+      userInfo: ''
+    }
+  },
   props: {
     title: {
       type: String,
       default: '重庆市综合市情管理系统'
     }
+  },
+  created() {
+    // 用户权限信息
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
   },
   methods: {
     userClick(name) {
@@ -45,10 +56,20 @@ export default {
           title: '提示',
           content: '确实退出吗？',
           onOk: () => {
-            this.$router.replace('/')
+            this._logout()
           }
         })
       }
+      if(name === 'personal-center') {
+        this.$router.push(`/zhsq_admin/${name}`)
+      }
+    },
+    _logout() {
+      logout(this.formInline).then(res => {
+        if(res.code) {
+          this.$router.replace('/')
+        }
+      })
     }
   }
 }
@@ -58,21 +79,6 @@ export default {
 .container {
   display: flex;
   justify-content: space-between;
-}
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  .layout-logo {
-    width: 85px;
-    height: 46px;
-    background: url("../../assets/logo.png") no-repeat;
-  }
-  .navbar-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-left: 14px;
-    color: #fff;
-  }
 }
 .user-info {
   display: flex;
