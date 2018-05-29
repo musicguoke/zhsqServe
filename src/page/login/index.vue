@@ -73,11 +73,11 @@ export default {
   methods: {
     _login() {
       login(this.formInline).then(res => {
-        if(res.code) {
-          if(res.data.userInfo) {
+        if (res.code) {
+          if (res.data.userInfo) {
             localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
           }
-          if(res.data.sysUserChildList.length > 0) {
+          if (res.data.sysUserChildList.length > 0 && res.data.role == 3) {
             localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
             this.$router.replace('/system-list')
           } else {

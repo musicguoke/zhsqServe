@@ -38,7 +38,7 @@ const router = new Router({
       redirect: "login"
     },
     {
-      path: "/system",
+      path: "/system-list",
       name: "system",
       component: SystemList,
       meta: { title: "系统选择" }
@@ -71,7 +71,7 @@ const router = new Router({
           meta: { title: "部门列表" }
         },
         {
-          path: "user-list",
+          path: "/zhsq_admin/user-list",
           component: UserList,
           meta: { title: "用户列表" }
         },
@@ -98,20 +98,21 @@ const router = new Router({
         {
           path: "resource-manage",
           component: ResourceManage,
+          redirect: '/resource-manage/area-text',
           meta: { title: "资源管理" },
           children: [
             {
-              path: "/area-text",
+              path: "area-text",
               component: AreaText,
               meta: { title: "区域文本" }
             },
             {
-              path: "/macro-data",
+              path: "macro-data",
               component: MacroData,
               meta: { title: "宏观数据" }
             },
             {
-              path: "/map-configure",
+              path: "map-configure",
               component: MapConfigure,
               meta: { title: "地图配置" }
             }

@@ -26,7 +26,7 @@
             </div>
           </div>
           <Table border :columns="columns1" :data="data1" v-show="searchType == 1"></Table> -->
-           <router-view/>
+           <!-- <router-view/> -->
         </div>
       </div>
     </Card>

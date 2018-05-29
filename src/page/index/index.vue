@@ -9,7 +9,7 @@
               <span class="icon user-icon"></span>
               <div class="num">
                 <p class="num-title">用户总数</p>
-                <i>998
+                <i>{{result.user}}
                   <b>人</b>
                 </i>
               </div>
@@ -29,8 +29,8 @@
               <span class="icon data-icon"></span>
               <div class="num">
                 <p class="num-title">数据总量</p>
-                <i>998
-                  <b>人</b>
+                <i>{{result.data}}
+                  <b>条</b>
                 </i>
               </div>
             </div>
@@ -38,8 +38,8 @@
               <span class="icon qx-icon"></span>
               <div class="num">
                 <p class="num-title">部署区县</p>
-                <i>998
-                  <b>人</b>
+                <i>{{result.county}}
+                  <b>个</b>
                 </i>
               </div>
             </div>
@@ -89,7 +89,6 @@
           </div>
           <div class="data-item">
             <span class="item-title">系统运行状态</span>
-            <span class="more">更多>></span>
             <div class="item-table">
               <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
             </div>
@@ -109,12 +108,16 @@ export default {
     return {
       columns1: [
         {
-          title: '服务器名称',
+          title: '系统名称',
           key: 'name'
         },
         {
-          title: '状态',
-          key: 'status'
+          title: '正常',
+          key: 'normal'
+        },
+        {
+          title: '异常',
+          key: 'error'
         },
         {
           title: '时间',
@@ -143,12 +146,12 @@ export default {
           date: '2016-10-04'
         }
       ],
+      result: {}
     }
   },
   mounted() {
     this._getIndex()
     this.lineInitial()
-    this.pieInitial()
   },
   methods: {
     rowClassName(row, index) {
@@ -296,21 +299,24 @@ export default {
       var option = {
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{b}: {c} ({d}%)"
         },
         legend: {
           orient: 'vertical',
           x: 'left',
-          itemWidth: 10,
-          itemHeight: 10,
-          top: '30%',
+          itemWidth: 20,
+          itemHeight: 20,
+          top: '25%',
           left: '12%',
+          textStyle: {
+            fontSize: '20'
+          },
           data: ['iPhone', 'iPad', 'PC', 'Android Phone', 'Android Pad']
         },
         series: [
           {
-            name: 'iPhone',
             type: 'pie',
+            center: ['70%', '50%'],
             radius: ['35%', '70%'],
             avoidLabelOverlap: false,
             label: {
@@ -339,19 +345,18 @@ export default {
             },
             data: [
               {
-                value: 335,
+                value: this.result.ios_iphone,
                 name: 'iPhone',
                 itemStyle: {
                   normal: {
                     color: 'rgb(1,175,80)'
                   }
-
                 }
               },
-              { value: 310, name: 'iPad' },
-              { value: 234, name: 'PC' },
-              { value: 135, name: 'Android Phone' },
-              { value: 1548, name: 'Android Pad' }
+              { value: this.result.ios_ipad, name: 'iPad' },
+              { value: this.result.pc, name: 'PC' },
+              { value: this.result.android_phone, name: 'Android Phone' },
+              { value: this.result.android_pad, name: 'Android Pad' }
             ]
           }
         ]
@@ -360,7 +365,8 @@ export default {
     },
     _getIndex() {
       getIndex().then(res => {
-        console.log(res)
+        this.result = res.data
+        this.pieInitial()
       })
     }
   }
