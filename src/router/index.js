@@ -18,7 +18,12 @@ import PushManage from "@/page/interactive-manage/push-manage/pushManage";
 // system
 import SIndex from "@/system/index";
 import ContentList from "@/system/content-list/index";
-// import SGroupList from "@/system/user-group/index";
+import SGroupList from "@/system/role-group/index";
+import Release from "@/system/release/index";
+import SystemList from "@/page/system-list/index";
+
+// user
+import Personal from '@/page/personal/index'
 
 //resource 
 import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
@@ -32,6 +37,12 @@ const router = new Router({
             redirect: "login"
         },
         {
+            path: "/system",
+            name: "system",
+            component: SystemList,
+            meta: { title: "系统选择" }
+        },
+        {
             path: "/zhsq_admin",
             component: Index,
             redirect: "/zhsq_admin/index",
@@ -40,6 +51,12 @@ const router = new Router({
                     name: "index",
                     component: Vindex,
                     meta: { title: "首页" }
+                },
+                {
+                    path: "personal-center",
+                    name: "personal",
+                    component: Personal,
+                    meta: { title: "个人中心" }
                 },
                 {
                     path: "system-manage",
@@ -126,15 +143,20 @@ const router = new Router({
                     meta: { title: "目录管理" }
                 },
                 {
+                    path: "release",
+                    component: Release,
+                    meta: { title: "发布目录" }
+                },
+                {
                     path: "user-list",
                     component: UserList,
                     meta: { title: "用户管理" }
                 },
-                // {
-                //     path: "suser-group-list",
-                //     component: SGroupList,
-                //     meta: { title: "用户组管理" }
-                // },
+                {
+                    path: "role-list",
+                    component: SGroupList,
+                    meta: { title: "角色管理" }
+                },
                 {
                     path: "push-manage",
                     component: PushManage,
