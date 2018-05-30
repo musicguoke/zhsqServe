@@ -25,9 +25,9 @@ import Release from "@/system/release/index";
 import SystemList from "@/page/system-list/index";
 
 // user
-import Personal from '@/page/personal/index'
+import Personal from "@/page/personal/index";
 
-//resource 
+//resource
 import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
 import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
 import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
@@ -47,7 +47,7 @@ const router = new Router({
             redirect: "login"
         },
         {
-            path: "/system",
+            path: "/system-list",
             name: "system",
             component: SystemList,
             meta: { title: "系统选择" }
@@ -55,7 +55,7 @@ const router = new Router({
         {
             path: "/zhsq_admin",
             component: Index,
-            redirect: { name: 'Vindex' },
+            redirect: { name: "Vindex" },
             children: [{
                     path: "index",
                     name: "Vindex",
@@ -70,43 +70,43 @@ const router = new Router({
                 },
                 {
                     path: "system-manage",
-                    name: 'SystemManage',
+                    name: "SystemManage",
                     component: SystemManage,
                     meta: { title: "产品管理" }
                 },
                 {
                     path: "department-list",
-                    name: 'DepartmentList',
+                    name: "DepartmentList",
                     component: DepartmentList,
                     meta: { title: "部门列表" }
                 },
                 {
                     path: "user-list",
-                    name: 'UserList',
+                    name: "UserList",
                     component: UserList,
                     meta: { title: "用户列表" }
                 },
                 {
                     path: "manager-list",
-                    name: 'ManagerList',
+                    name: "ManagerList",
                     component: ManagerList,
                     meta: { title: "管理员列表" }
                 },
                 {
                     path: "user-statistics",
-                    name: 'UserVisit',
+                    name: "UserVisit",
                     component: UserVisit,
                     meta: { title: "用户统计" }
                 },
                 {
                     path: "data-statistics",
-                    name: 'DataVisit',
+                    name: "DataVisit",
                     component: DataVisit,
                     meta: { title: "数据统计" }
                 },
                 {
                     path: "search-statistics",
-                    name: 'SearchVisit',
+                    name: "SearchVisit",
                     component: SearchVisit,
                     meta: { title: "搜索统计" }
                 },
@@ -152,13 +152,13 @@ const router = new Router({
                 },
                 {
                     path: "message-manage",
-                    name: 'MessageManage',
+                    name: "MessageManage",
                     component: MessageManage,
                     meta: { title: "短信管理" }
                 },
                 {
                     path: "push-manage",
-                    name: 'PushManage',
+                    name: "PushManage",
                     component: PushManage,
                     meta: { title: "推送管理" }
                 },
