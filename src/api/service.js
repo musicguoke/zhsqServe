@@ -29,6 +29,17 @@ export function getIndex() {
     })
 }
 
+// 首页访问统计
+export function getAccessStatistical() {
+  return axios
+    .post(`${url}/sys/msHomepageStatistical/accessStatistical.do`)
+    .then(res => {
+      return Promise.resolve(res.data);
+    })
+}
+
+
+
 export function getMenu(id) {
   const data = {
     typeid: 13

@@ -18,7 +18,7 @@
               <span class="icon visit-icon"></span>
               <div class="num">
                 <p class="num-title">累计访问次数</p>
-                <i>998
+                <i>{{accessResult.access}}
                   <b>人</b>
                 </i>
               </div>
@@ -49,8 +49,8 @@
               <span class="icon login-icon"></span>
               <div class="num">
                 <p class="num-title">累计登陆</p>
-                <i>998
-                  <b>人</b>
+                <i>{{accessResult.login}}
+                  <b>次</b>
                 </i>
               </div>
             </div>
@@ -58,8 +58,8 @@
               <span class="icon sys-icon"></span>
               <div class="num">
                 <p class="num-title">系统数量</p>
-                <i>998
-                  <b>人</b>
+                <i>{{accessResult.system}}
+                  <b>个</b>
                 </i>
               </div>
             </div>
@@ -69,14 +69,14 @@
               <span class="item-title">今日动态</span>
               <span class="num user-num">
                 <span class="num-title">用户访问：</span>
-                <i>998
+                <i>{{accessResult.todaytUser}}
                   <b>人</b>
                 </i>
               </span>
               <span class="num data-num">
                 <span class="num-title">数据访问：</span>
-                <i>998
-                  <b>人</b>
+                <i>{{accessResult.todaytLogin}}
+                  <b>次</b>
                 </i>
               </span>
             </div>
@@ -101,7 +101,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getIndex } from '@/api/service'
+import { getIndex, getAccessStatistical } from '@/api/service'
 
 export default {
   data() {
@@ -146,19 +146,21 @@ export default {
           date: '2016-10-04'
         }
       ],
-      result: {}
+      result: {},
+      accessResult: {}
     }
   },
   mounted() {
     this._getIndex()
+    this._getAccessStatistical()
     this.lineInitial()
   },
   methods: {
     rowClassName(row, index) {
       if (index === 3) {
-        return 'demo-table-error-row';
+        return 'demo-table-error-row'
       }
-      return '';
+      return ''
     },
     lineInitial() {
       var myChart = echarts.init(this.$refs.ebox);
@@ -367,6 +369,11 @@ export default {
       getIndex().then(res => {
         this.result = res.data
         this.pieInitial()
+      })
+    },
+    _getAccessStatistical() {
+      getAccessStatistical().then(res => {
+        this.accessResult = res.data
       })
     }
   }
