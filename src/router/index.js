@@ -12,6 +12,8 @@ import DataVisit from "@/page/behavior/data-visit/index";
 import SearchVisit from "@/page/behavior/search-visit/index";
 import ResourceManage from "@/page/resource/resource-manage/index";
 import SearchManage from "@/page/resource/search-manage/index";
+
+//
 import MessageManage from "@/page/interactive-manage/message-manage/messageManage";
 import PushManage from "@/page/interactive-manage/push-manage/pushManage";
 
@@ -33,6 +35,10 @@ import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfi
 //search
 import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
 import PeripheryHotspot from "@/page/resource/search-manage/search-item/peripheryHotspot.vue";
+
+//system-configure
+import ParameterConfigure from "@/page/system-configure/parameter-configure/parameterConfigure.vue";
+import DataAccess from "@/page/system-configure/data-access/dataAccess.vue";
 Vue.use(Router);
 
 const router = new Router({
@@ -113,7 +119,7 @@ const router = new Router({
                     children: [{
                         path: "area-text",
                         component: AreaText,
-                        name: 'areaText',
+                        name: 'AreaText',
                         meta: { title: "区域文本" }
                     }, {
                         path: "macro-data",
@@ -155,6 +161,18 @@ const router = new Router({
                     name: 'PushManage',
                     component: PushManage,
                     meta: { title: "推送管理" }
+                },
+                {
+                    path: "parameter-configure",
+                    name: 'ParameterConfigure',
+                    component: ParameterConfigure,
+                    meta: { title: "功能配置" }
+                },
+                {
+                    path: "data-visit",
+                    name: 'DataAccess',
+                    component: DataAccess,
+                    meta: { title: "数据访问" }
                 }
             ]
         },

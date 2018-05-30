@@ -8,8 +8,8 @@
         <div>
             <div class="seach_condition">
                 <div class="condition_list">
-                    <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-                    <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
+                    <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @change="_getUserList(1)"></Input>
+                    <!-- <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
                         <Option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <Select v-model="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
@@ -17,7 +17,7 @@
                     </Select>
                     <Select v-model="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
                         <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
+                    </Select> -->
                 </div>
                 <div class="search_button">
                     <i-button @click="userAddOpen">新增</i-button>
@@ -75,7 +75,7 @@
                 align="center"
                 >
                 <template slot-scope="scope">
-                    <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button>
+                    <Button type="info" @click="equipmentOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button>
                     <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="edit" title="编辑"></Button>
                     <Button type="error" @click="remove(scope)" size="small" icon="trash-a" title="删除"></Button>
                 </template>
@@ -130,12 +130,35 @@
             </FormItem>
         </Form>
   </Modal>
+  <Modal v-model="equipmentModal" :title=modalTitle @on-ok="updateEquipment">
+        <Form :model="equipmentForm" label-position="left" :label-width="100">
+            <FormItem label="设备类型">
+                <Select v-model="equipmentForm.arOs" placeholder="请选择...">
+                    <Option v-for="item in equipmentType" :value="item.value" :key="item.key">{{ item.label }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="绑定码">
+                <Input v-model="equipmentForm.arCodeBind" placeholder="请输入..."></Input>
+            </FormItem>
+            <FormItem label="登陆次数">
+                <Input v-model="equipmentForm.arLogincount" placeholder="请输入..."></Input>
+            </FormItem>
+            <FormItem label="注册时间">
+                <Input v-model="equipmentForm.arRegtime" placeholder="请输入..." ></Input>
+            </FormItem>
+            <FormItem label="最后登陆时间">
+                <Input v-model="equipmentForm.arLastlogintime" placeholder="请输入..."></Input>
+            </FormItem>
+        </Form>
+  </Modal>
 </Content>    
 </template>
 
 <script>
-import { getAreaCode, getUserList, addUser, updateUser, deleteUser } from '@/api/user-service'
-// import MD5 from 'crypto-js/md5'
+import { getAreaCode, getUserList, addUser, updateUser, deleteUser ,
+        getEquipment , updateEquipment} from '@/api/user-service'
+import {formatDate} from '@/components/dateChange/dateChange.js';
+import MD5 from 'crypto-js/md5'
 export default {
     data() {
         return {
@@ -145,6 +168,7 @@ export default {
             searchSystem: '',
             searchName: '',
             userModal: false,
+            equipmentModal:false,
             modalTitle: '',
             total: 0,
             isAdd: false,
@@ -161,6 +185,9 @@ export default {
                 arBranch: '', //部门
                 arAreacode: '',//区县
                 arSource: ''//来源
+            },
+            equipmentForm:{
+
             },
             userData: [],
             departmentList: [
@@ -193,6 +220,24 @@ export default {
                     value: 'ghdw',
                     label: '规划定位',
                     key: 7
+                }
+            ],
+            equipmentType:[
+                {
+                    value:'ios_iphone',
+                    label:'ios_iphone'
+                },
+                {
+                    value:'ios_ipad',
+                    label:'ios_ipad'
+                },
+                {
+                    value:'android_iphone',
+                    label:'android_iphone'
+                },
+                {
+                    value:'android_ipad',
+                    label:'android_ipad'
                 }
             ]
         }
@@ -231,6 +276,17 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
+        },
+        equipmentOpen(params){
+            this.equipmentModal = true
+            let data = {
+                pageNo:1,
+                pageSize: 10,
+                arId:params.row.arId
+            }
+            getEquipment(data).then(res=>{
+                console.log(res)
+            })
         },
         remove(params) {
             let data = {
@@ -300,8 +356,11 @@ export default {
                     }
                 })
             }
-
         },
+        //跟新设备
+        updateEquipment(){
+
+        }
     }
 }
 </script>

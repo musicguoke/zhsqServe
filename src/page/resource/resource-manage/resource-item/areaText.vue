@@ -4,6 +4,7 @@
             <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
             <div class="search_button">
                 <i-button @click="openAddModal()">新增</i-button>
+                <i-button class="marginLeft">导入</i-button>
             </div>
         </div>
         <el-table :data="areaTextData" border style="width: 100%">
@@ -34,23 +35,36 @@
                 <FormItem label="行政区划编码">
                     <Input v-model="areaTextForm.areacode" ></Input>
                 </FormItem>
+                <FormItem label="数据编码">
+                    <Input v-model="areaTextForm.dataId" ></Input>
+                </FormItem>
                 <FormItem label="标题">
                     <Input v-model="areaTextForm.title" ></Input>
                 </FormItem>
                 <FormItem label="年份">
                     <Input v-model="areaTextForm.year"></Input>
                 </FormItem>
-                <!-- <FormItem label="类型">
-                    <Select v-model="areaTextForm.dataCode">
-                        <Option value="cun">村现状规划规划</Option>
-                        <Option value="fu">扶贫</Option>
-                    </Select>
-                </FormItem> -->
-                <FormItem label="描述">
+                <FormItem label="文件地址">
                     <Input v-model="areaTextForm.filePath"></Input>
                 </FormItem>
                 <FormItem label="排序">
                     <Input v-model="areaTextForm.listorder"></Input>
+                </FormItem>
+            </Form>
+        </Modal>
+        <Modal v-model="importModal" title='导入区域文本' @on-ok="saveImport">
+            <Form :model="importForm" label-position="left" :label-width="100">
+                <FormItem label="导入类型">
+                    <Select v-model="importForm.type">
+                        <Option value="1">增量导入</Option>
+                        <Option value="2">全量导入</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="选择文件">
+                    <Input v-model="importForm.file" placeholder="请选择excel"></Input>
+                    <Upload action="//jsonplaceholder.typicode.com/posts/">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                    </Upload>
                 </FormItem>
             </Form>
         </Modal>
@@ -68,13 +82,20 @@ export default {
             modalTitle:'',
             areaTextData:[],
             areaTextModal:false,
+            importModal:false,
             areaTextForm:{
                 areacode:'',
                 title:'',
                 year:'',
+                dataId:'',
                 filePath:'',
-                listorder:''
+                listorder:'',
+                id:''
             },
+            importForm:{
+
+            },
+            nowPage:1
         }
     },
     created(){
@@ -96,6 +117,7 @@ export default {
         },
         //分页点击
         pageChange(Page){
+            this.nowPage = Page
             this._getAreaText(Page)
         },
         //打开新增模态框
@@ -128,16 +150,18 @@ export default {
                     filePath:this.areaTextForm.filePath,
                     listorder:this.areaTextForm.listorder
                 }
-            if(isAdd){
+            if(this.isAdd){
                 addAreaText(data).then(res=>{
                     if(res.code == 20000){
-                    this.$Message.success('添加成功');
+                        this.$Message.success('添加成功');
                     }
                 })
             }else{
+                data.id = this.areaTextForm.id
                 updateAreaText(data).then(res=>{
                     if(res.code == 20000){
-                    this.$Message.success('修改成功');
+                        this.$Message.success('修改成功');
+                        this._getAreaText(this.nowPage)
                     }
                 })
                 

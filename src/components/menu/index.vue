@@ -61,8 +61,8 @@
         <Icon type="gear-a"></Icon>
           系统配置
       </template>
-      <MenuItem name="8-1">功能配置</MenuItem>
-      <MenuItem name="8-2">数据访问</MenuItem>
+      <MenuItem name="parameter-configure">参数配置</MenuItem>
+      <MenuItem name="data-visit">数据访问</MenuItem>
     </Submenu>
   </Menu>  
 </template>

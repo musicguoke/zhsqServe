@@ -36,6 +36,11 @@ export function deleteAreaText(data) {
         return Promise.resolve(res.data)
     })
 }
+export function importAreaText(data) {
+    return axios.post(`${url}/sys/areaText/importFile.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
 /***地图配置***/
 export function getMapConfigure(data) {
     return axios.post(`${url}/sys/msMapConfigController/list.do`, qs.stringify(data)).then(res => {

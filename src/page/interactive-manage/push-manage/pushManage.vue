@@ -13,35 +13,22 @@
          </div>
       </div>
       <div class="tableSize">
-        <el-table
-                :data="pushData"
-                border
-                style="width: 100%">
-                <el-table-column
-                prop="id"
-                label="Id" width="60">
-                </el-table-column>
-                <el-table-column
-                prop="pushType"
-                label="推送类型">
-                </el-table-column>
-                <el-table-column
-                prop="userGroup"
-                label="推送组/用户">
-                </el-table-column>
-                <el-table-column
-                prop="messageInfo"
-                label="内容">
-                </el-table-column>
-                <el-table-column
-                prop="time"
-                label="时间">
-                </el-table-column>
-                <el-table-column
-                label="操作"
-                width="160"
-                align="center"
-                >
+        <el-table :data="pushData" border style="width: 100%">
+            <el-table-column prop="pId" label="Id" width="60">
+            </el-table-column>
+            <el-table-column prop="pType" label="推送类型">
+            </el-table-column>
+            <el-table-column prop="pRemark" label="推送组/用户">
+            </el-table-column>
+            <el-table-column prop="pGroup" label="组编号">
+            </el-table-column>
+            <el-table-column prop="pContent" label="内容">
+            </el-table-column>
+            <el-table-column prop="pFilename" label="文件名">
+            </el-table-column>
+            <el-table-column prop="pFileurl" label="文件地址">
+            </el-table-column>
+             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
                     <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
                     <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
@@ -50,35 +37,36 @@
             </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pushData.length" ></Page>
+        <Page :total="pageLength" @on-change="pageChange"></Page>
       </div>
   </div>
   </Card>
   <Modal v-model="pushModal" :title=modalTitle>
         <Form :model="pushForm" label-position="left" :label-width="100">
             <FormItem label="用户组">
-                <Select v-model="pushForm.userGroup">
+                <Select v-model="pushForm.pGroup">
                     <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="推送用户">
-                <Input v-model="pushForm.userGroup" placeholder="请输入推送用户..."></Input>
+                <Input v-model="pushForm.pRemark" placeholder="请输入推送用户..." style='width:300px'></Input>
+                <Button type="primary" icon="person-add">添加</Button>
             </FormItem>
             <FormItem label="推送类型">
-                <RadioGroup v-model="pushForm.radio" @on-change="radioChange">
-                    <Radio label="info">消息</Radio>
-                    <Radio label="edition">版本</Radio>
-                    <Radio label="file">文件</Radio>
+                <RadioGroup v-model="pushForm.pType" @on-change="radioChange">
+                    <Radio label="0">消息</Radio>
+                    <Radio label="1">版本</Radio>
+                    <Radio label="2">文件</Radio>
                 </RadioGroup>
             </FormItem>
             <FormItem label="文件名" v-show="isFile">
-                <Input v-model="pushForm.fileName" placeholder="请输入文件名..."></Input>
+                <Input v-model="pushForm.pFilename" placeholder="请输入文件名..."></Input>
             </FormItem>
             <FormItem label="文件路径" v-show="isFile">
-                <Input v-model="pushForm.fileSrc" placeholder="请输入文件路径..."></Input>
+                <Input v-model="pushForm.pFileurl" placeholder="请输入文件路径..."></Input>
             </FormItem>
             <FormItem label="内容">
-                <Input v-model="pushForm.messageInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+                <Input v-model="pushForm.pContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
             </FormItem>
         </Form>
   </Modal>
@@ -86,6 +74,7 @@
 </template>
 
 <script>
+import {getPushList} from '@/api/interactive-service'
 export default {
     data(){
         return{
@@ -94,88 +83,8 @@ export default {
             pushModal:false,
             modalTitle:'',
             isFile:false,
-            pushData:[
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-              {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                },
-                {
-                    id:1,
-                    pushType:'版本',
-                    userGroup:'小张',
-                    messageInfo:'新版本上线了',
-                    radio:'edition',
-                    time:'2018-4-27'
-                }
-            ],
+            pushData:[],
+            pageLength:0,
             countyList: [
                 {
                     value: '',
@@ -194,23 +103,38 @@ export default {
                 }
             ],
             pushForm:{
-                userGroup:'',
-                userGroup:'',
-                pushType:'info',
-                messageInfo:'',
-                fileName:'',
-                radio:'',
-                fileSrc:''
+                pGroup:'',
+                pRemark:'',
+                pType:'0',
+                pFilename:'',
+                pFileurl:'',
+                pContent:''
             }
         }
     },
+    created(){
+        this._getPushList(1)
+    },
     methods:{
+        _getPushList(Page){
+            let data ={
+                pageNo:Page,
+                pageSize:10  
+            }
+            getPushList(data).then(res=>{
+                this.pageLength = res.data.total
+                this.pushData = res.data.list
+            })
+        },
+        pageChange(page){
+            this._getPushList(page)
+        },
         pushAddOpen(){
             this.pushModal = true;
             for(var i in this.pushForm){
                this.pushForm[i] = '';
             }
-            this.pushForm.radio = 'info';
+            this.pushForm.pType = '0';
         },
         pushEditOpen(params){
              this.pushModal = true;
@@ -221,7 +145,7 @@ export default {
             }
         },
         radioChange(){
-           if(this.pushForm.radio == 'file'){
+           if(this.pushForm.pType == '2'){
                this.isFile = true;
            }else{
                this.isFile = false;

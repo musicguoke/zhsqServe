@@ -34,3 +34,15 @@ export function deleteUser(data) {
         return Promise.resolve(res.data)
     })
 }
+//获取人员设备
+export function getEquipment(data) {
+    return axios.post(`${url}//sys/msMembersInfo/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+//修改人员设备
+export function updateEquipment(data) {
+    return axios.post(`${url}//sys/msMembersInfo/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

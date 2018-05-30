@@ -116,6 +116,14 @@ export default {
         pageChange(Page){
             this._getMacroData(Page)
         },
+        //打开新增模态框
+        openAddModal(){
+            this.isAdd = true
+            this.macroDataModal = true
+            for(let i in this.macroDataForm){
+                this.macroDataForm[i] = ''
+            }
+        },
         //打开编辑模态框
         openEditModal(params){
             this.isAdd = false
