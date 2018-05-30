@@ -58,7 +58,7 @@ export function getSystemList(page) {
 // 进入系统
 export function enterSystem(id) {
   const data = {
-    sysId: id
+    sysId: id || ''
   }
 
   return axios.post(`${url}/sys/sysUser/selectSysId.do`, qs.stringify(data)).then(res => {

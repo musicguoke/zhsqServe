@@ -16,7 +16,7 @@ axios.interceptors.request.use(function(config) {
 axios.interceptors.response.use(function(response) {
     iView.LoadingBar.finish()
     if (response.data.message == '请重新登录') {
-        // router.replace('/login')
+        router.replace('/login')
     }
     return response
 }, function(err) {

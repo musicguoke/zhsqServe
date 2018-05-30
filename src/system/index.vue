@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <Layout>
-      <v-header title="万州区规划定位"/>
+      <v-header :title="name"/>
       <div class="content">
         <div class="navbar">
           <div class="container">
@@ -30,6 +30,14 @@ export default {
     vMenu,
     vTags,
     vHeader
+  },
+  data() {
+    return {
+      name: ''
+    }
+  },
+  created() {
+    this.name = this.$route.query.systemname
   }
 }
 </script>
