@@ -18,9 +18,9 @@
         </div>
         <div class="tableSize">
           <el-table :data="roleList" border style="width: 100%">
-            <el-table-column prop="arId" label="Id" width="100" sortable>
+            <el-table-column prop="grId" label="Id" width="100" sortable>
             </el-table-column>
-            <el-table-column prop="arLoginname" label="角色名称">
+            <el-table-column prop="grName" label="角色名称">
             </el-table-column>
             <el-table-column prop="arTruename" label="描述">
             </el-table-column>
@@ -36,7 +36,7 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-show="isShow" ref="authConfig" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-show="isShow" ref="authConfig" :id="sysId" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -57,11 +57,13 @@ export default {
       searchName: '',
       name: '',
       total: 0,
-      page: 1
+      page: 1,
+      sysId: ''
     }
   },
   created() {
     this._getRolesList()
+    this.sysId = this.$route.query.id
   },
   methods: {
     show() {
@@ -77,26 +79,36 @@ export default {
     },
     edit(scope) {
       this.name = '编辑角色'
-      this.$refs.authConfig._getRoleMap(scope)
+      this.isShow = true
+      this.$refs.authConfig._getRoleMapById(scope.row.grId)
     },
     remove(scope) {
       this.$Modal.confirm({
         title: '提示',
         content: '确认删除吗？',
         onOk: () => {
-          this._deleteRole()
+          this._deleteRole(scope.row.grId)
         }
       })
     },
     _getRolesList(name, page) {
       getRolesList(name, page).then(res => {
-        this.roleList = res.data.list
-        this.total = res.data.total
+        if(res.code === 20000) {
+          this.roleList = res.data.list
+          this.total = res.data.total
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
     },
     _deleteRole(id) {
       deleteRole(id).then(res => {
-        console.log(res)
+        if(res.code === 20000) {
+          this._mm.successTips(`删除${res.message}`)
+          this._getRolesList()
+        } else {
+          this._mm.errorTips(`删除${res.message}`)
+        }
       })
     }
   }

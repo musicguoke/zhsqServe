@@ -102,7 +102,7 @@
     </div>
     <div class="btn" v-if="!newSys">
       <Button type="error" @click="cancel">取消</Button>
-      <Button type="primary" @click="done">完成</Button>
+      <Button type="primary" @click="save">完成</Button>
     </div>
   </div>
 </template>
@@ -114,9 +114,10 @@ import {
   getMapConfig,
   getFeature,
   addSystem,
-  searchSysById
+  searchSysById,
+  updateSystem
 } from '@/api/system'
-import { getRoleMap, addRole } from '@/api/role'
+import { addRole, updateRole, getRoleMapById } from '@/api/role'
 import TreeTable from '@/components/tree-table/index'
 
 export default {
@@ -131,7 +132,8 @@ export default {
     sysOrRole: {
       type: Boolean,
       default: true
-    }
+    },
+    id: ''
   },
   data() {
     return {
@@ -159,6 +161,8 @@ export default {
       tabDataIdStr: '',
       mapIdStr: '',
       funNum: '',
+      sysId: '',
+      grId: '',
       selectedRow: '', //选中编辑的系统项
       dataColumns: [
         {
@@ -238,10 +242,17 @@ export default {
       this.current -= 1
     },
     done() {
-      if(this.sysOrRole) {
+      if (this.sysOrRole) {
         this._addSystem()
       } else {
         this._addRole()
+      }
+    },
+    save() {
+      if (this.sysOrRole) {
+        this._updateSystem()
+      } else {
+        this._updateRole()
       }
     },
     selectMapConfig(section, row) {
@@ -261,7 +272,11 @@ export default {
     },
     _getAreaQx() {
       getAreaQx().then(res => {
-        this.areaQxList = res.data.list
+        if (res.code === 20000) {
+          this.areaQxList = res.data.list
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
     },
     _getDateTree(id) {
@@ -271,26 +286,34 @@ export default {
     },
     _getMapConfig() {
       getMapConfig().then(res => {
-        this.mapConfigList = res.data.list
-        this.mapConfigList.map(v => {
-          v.name = v.mName
-          v._checked = false
-        })
+        if (res.code === 20000) {
+          this.mapConfigList = res.data.list
+          this.mapConfigList.map(v => {
+            v.name = v.mName
+            v._checked = false
+          })
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
     },
     _getFeature(id) {
       getFeature(id).then(res => {
-        let list = []
-        res.data.list.map(v => {
-          v.name = v.moduleName
-          v._checked = false
-          if (v.id === 1) {
-            v._checked = true
-            v._disabled = true
-          }
-          list.push(v)
-        })
-        this.featureList = list
+        if (res.code === 20000) {
+          let list = []
+          res.data.list.map(v => {
+            v.name = v.moduleName
+            v._checked = false
+            if (v.id === 1) {
+              v._checked = true
+              v._disabled = true
+            }
+            list.push(v)
+          })
+          this.featureList = list
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
     },
     _addSystem() {
@@ -301,39 +324,78 @@ export default {
         funNum: this.funNum
       }, this.formItem)
       addSystem(data).then(res => {
-        this.cancel()
+        if (res.code === 20000) {
+          this._mm.successTips(`添加${res.message}`)
+          this.cancel()
+        } else {
+          this._mm.errorTips(`添加${res.message}`)
+        }
+      })
+    },
+    _updateSystem() {
+      let data = Object.assign({}, {
+        tabDataIdStr: this.tabDataIdStr,
+        cilentAuthorityStr: this.cilentAuthorityStr,
+        mapIdStr: this.mapIdStr,
+        funNum: this.funNum,
+        id: this.sysId
+      }, this.formItem)
+      updateSystem(data).then(res => {
+        if(res.code === 20000) {
+          this._mm.successTips(`修改${res.message}`)
+          this.cancel()
+        } else {
+          this._mm.errorTips(`修改${res.message}`)
+        }
       })
     },
     _searchSysById(id) {
       this.current = 0
       searchSysById(id).then(res => {
-        this.formItem = {
-          sysName: res.data.sysName,
-          type: res.data.type.toString(),
-          areacode: res.data.areacode.toString(),
-          enable: res.data.enable.toString()
+        if (res.code === 20000) {
+          this.formItem = {
+            sysName: res.data.sysName,
+            type: res.data.type.toString(),
+            areacode: res.data.areacode.toString(),
+            enable: res.data.enable.toString()
+          }
+          this.sysId = res.data.id
+          let list = []
+          this.featureList.map(v => {
+            // 判断该系统的已选功能项
+            v._checked = false
+            list = []
+            res.data.cilentAuthorityList.map(h => {
+              if (v.id === h.funId) {
+                v._checked = true
+              }
+              list.push(h.funId)
+            })
+          })
+          this.cilentAuthorityStr = list.toString()
+          this.mapConfigList.map((v, index) => {
+            // 判断该系统的已选地图项
+            v._checked = false
+            list = []
+            res.data.mapList.map(h => {
+              if (v.id === h.funId) {
+                v._checked = true
+              }
+              list.push(h.funId)
+            })
+            this.mapConfigList.splice(index, 1, v)
+          })
+          this.mapIdStr = list.toString()
+          list = []
+          res.data.msSystemDatainfoList.map(v => {
+            list.push(v.dataId)
+          })
+          this.tabDataIdStr = list.toString()
+          this.dataTree = this.checkData(this.dataTree, res.data.msSystemDatainfoList)
+          this.funNum = res.data.funNum
+        } else {
+          this._mm.errorTips(res.message)
         }
-        this.featureList.map(v => {
-          // 判断该系统的已选功能项
-          v._checked = false
-          res.data.cilentAuthorityList.map(h => {
-            if (v.id === h.funId) {
-              v._checked = true
-            }
-          })
-        })
-        this.mapConfigList.map((v, index) => {
-          // 判断该系统的已选地图项
-          v._checked = false
-          res.data.mapList.map(h => {
-            if (v.id === h.funId) {
-              v._checked = true
-            }
-          })
-          this.mapConfigList.splice(index, 1, v)
-        })
-        this.dataTree = this.checkData(this.dataTree, res.data.msSystemDatainfoList)
-        this.funNum = res.data.funNum
       })
     },
     checkData(list, idList) {
@@ -352,10 +414,66 @@ export default {
       return list
     },
     //获得角色详细信息
-    _getRoleMap(id) {
-      getRoleMap(id).then(res => {
-        console.log(res)
+    _getRoleMapById(id) {
+      getRoleMapById(id).then(res => {
+        if (res.code === 20000) {
+          this.formRoleItem = {
+            grName: res.data.grName,
+            grIspass: res.data.grIspass.toString()
+          }
+          this.grId = id
+          let list = []
+          this.featureList.map(v => {
+            // 判断该系统的已选功能项
+            v._checked = false
+            list = []
+            res.data.cilentAuthorityList.map(h => {
+              if (v.id === h.sysFun) {
+                v._checked = true
+              }
+              list.push(h.sysFun)
+            })
+          })
+          this.cilentAuthorityStr = list.toString()
+          this.mapConfigList.map((v, index) => {
+            // 判断该系统的已选地图项
+            v._checked = false
+            list = []
+            res.data.mapList.map(h => {
+              if (v.id === h.sysFun) {
+                v._checked = true
+              }
+              list.push(h.sysFun)
+            })
+            this.mapConfigList.splice(index, 1, v)
+          })
+          this.mapIdStr = list.toString()
+          list = []
+          res.data.msRoleDataList.map(v => {
+            list.push(v.sysData)
+          })
+          this.tabDataIdStr = list.toString()
+          this.dataTree = this.checkRoleData(this.dataTree, res.data.msRoleDataList)
+          this.funNum = res.data.funNum
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
+    },
+    checkRoleData(list, idList) {
+      list.map((v, index) => {
+        v._checked = false
+        idList.map(h => {
+          if (v.id === h.sysData) {
+            v._checked = true
+          }
+          if (v.children) {
+            this.checkRoleData(v.children, idList)
+          }
+        })
+        list.splice(index, 1, v)
+      })
+      return list
     },
     _addRole() {
       let data = Object.assign({}, {
@@ -363,10 +481,33 @@ export default {
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
-        sysId: 15
+        sysId: this.id
       }, this.formRoleItem)
       addRole(data).then(res => {
-        this.cancel()
+        if (res.code === 20000) {
+          this._mm.successTips(`添加${res.message}`)
+          this.cancel()
+        } else {
+          this._mm.errorTips(`添加${res.message}`)
+        }
+      })
+    },
+    _updateRole() {
+      let data = Object.assign({}, {
+        tabDataIdStr: this.tabDataIdStr,
+        cilentAuthorityStr: this.cilentAuthorityStr,
+        mapIdStr: this.mapIdStr,
+        funNum: this.funNum,
+        sysId: this.id,
+        grId: this.grId
+      }, this.formRoleItem)
+      updateRole(data).then(res => {
+        if(res.code === 20000) {
+          this._mm.successTips(`修改${res.message}`)
+          this.cancel()
+        } else {
+          this._mm.errorTips(`修改${res.message}`)
+        }
       })
     }
   }

@@ -1,11 +1,3 @@
-<!--
- * @events  @on-row-click 单击行或者单击操作按钮方法
-            @on-selection-change  多选模式下 选中项变化时触发
-            @on-sort-change  排序时有效，当点击排序时触发
-   @props   items 显示的结构化数据
-            columns 表格列的配置描述 sortable:true 开启排序功能 
-            type: 'selection'为多选功能 type: 'action' 为操作功能 actions:[{}] 操作按钮
- -->
 <template>
   <div :style="{width:tableWidth}" class='autoTbale'>
     <table class="table table-bordered" id='hl-tree-table'>
@@ -27,7 +19,7 @@
       </thead>
       <tbody>
         <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
-          <td :class="{'label-box': column.type === 'selection'}" v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
+          <td :class="{'label-box': column.type === 'selection'}" v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
             <label v-if="column.type === 'selection'">
               <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
             </label>
@@ -35,11 +27,18 @@
               <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">{{action.text}}</i-button>
             </div>
             <label @click="toggle(index,item)" v-if="!column.type">
-              <span v-if='snum==iconRow()'>
+              <span class="icon-box" v-if='snum==iconRow()'>
                 <i v-html='item.spaceHtml'></i>
-                <i v-if="item.children&&item.children.length>0" class="ivu-icon" :class="{'ivu-icon-plus-circled':!item.expand,'ivu-icon-minus-circled':item.expand }"></i>
-                <i v-else class="ms-tree-space"></i>
-              </span> {{renderBody(item,column) }}
+                <span class="item-icon-box" v-if="item.children&&item.children.length>0">
+                  <!-- <i class="icon" :class="{'icon-plus':!item.expand,'icon-minus':item.expand }"></i> -->
+                  <i class="folder" :class="{'icon-folder':!item.expand,'icon-folder-open':item.expand }"></i>
+                </span>
+                <span class="item-icon-box" v-else>
+                  <!-- <i class="ms-tree-space"></i> -->
+                  <i class="folder icon-leaf"></i>
+                </span>
+                <span>{{renderBody(item,column)}}</span>
+              </span>
             </label>
           </td>
         </tr>
@@ -505,5 +504,54 @@ table {
 }
 #hl-tree-table th > label {
   margin: 0;
+}
+.table-bordered > tbody > tr > td > label,
+.table-bordered > tbody > tr > td > label .icon-box,
+.table-bordered > tbody > tr > td > label .item-icon-box {
+  display: flex;
+  align-items: center;
+}
+.icon {
+  display: block;
+  width: 18px;
+  height: 24px;
+}
+.folder {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 0 4px;
+}
+.icon-plus {
+  background: url("../../assets/elbow-plus.png") no-repeat;
+  background-size: 100%;
+}
+.icon-minus {
+  background: url("../../assets/elbow-minus.png") no-repeat;
+  background-size: 100%;
+}
+.icon-folder {
+  background: url("../../assets/folder.png") no-repeat;
+  background-size: 100%;
+}
+.icon-folder-open {
+  background: url("../../assets/folder-open.png") no-repeat;
+  background-size: 100%;
+}
+.icon-leaf {
+  background: url("../../assets/leaf.png") no-repeat;
+  background-size: 100%;
+}
+.icon-elbow-line {
+  background: url("../../assets/elbow-line.png") no-repeat;
+  background-size: 100%;
+}
+.icon-elbow {
+  background: url("../../assets/elbow.png") no-repeat;
+  background-size: 100%;
+}
+.icon-elbow-end {
+  background: url("../../assets/elbow-end.png") no-repeat;
+  background-size: 100%;
 }
 </style>

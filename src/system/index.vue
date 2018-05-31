@@ -5,7 +5,7 @@
       <div class="content">
         <div class="navbar">
           <div class="container">
-            <v-menu/>
+            <v-menu :query="this.$route.query"/>
           </div>
         </div>
         <!-- <v-tags/> -->

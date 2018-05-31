@@ -5,22 +5,22 @@ import { url } from './config.js'
 axios.defaults.withCredentials = true
 
 export function getManagerList(data) {
-    return axios.post(`${url}//sys/sysUser/list.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/sysUser/list.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }
 export function addManager(data) {
-    return axios.post(`${url}//sys/sysUser/insert.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/sysUser/insert.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }
 export function updateManager(data) {
-    return axios.post(`${url}//sys/sysUser/update.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/sysUser/update.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }
 export function deleteManager(data) {
-    return axios.post(`${url}//sys/sysUser/delete.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/sysUser/delete.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

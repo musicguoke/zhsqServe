@@ -66,8 +66,10 @@ export default {
     },
     _logout() {
       logout(this.formInline).then(res => {
-        if(res.code) {
+        if(res.code === 20000) {
           this.$router.replace('/')
+        } else {
+          this._mm.errorTips(res.message)
         }
       })
     }

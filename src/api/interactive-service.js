@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true
      * 推送
      * ***/
 export function getPushList(data) {
-    return axios.post(`${url}//sys/msPushController/list.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/msPushController/list.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }
