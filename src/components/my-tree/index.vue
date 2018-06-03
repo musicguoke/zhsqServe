@@ -70,6 +70,7 @@ export default {
       tdsWidth: 0, //td总宽
       timer: false, //控制监听时长
       dataLength: 0, //树形数据长度
+      deepList: []
     }
   },
   computed: {
@@ -225,7 +226,7 @@ export default {
         }
         if ((typeof item.show) == "undefined") {
           item = Object.assign({}, item, {
-            "isShow": false
+            "isShow": true
           });
         }
         if ((typeof item.isChecked) == "undefined") {
@@ -236,11 +237,22 @@ export default {
         item = Object.assign({}, item, {
           "load": (item.expand ? true : false)
         });
-        this.initItems.push(item);
+        this.initItems.push(item)
+        // this.pushInitItems(item)
         if (item.children && item.expand) {
           this.initData(item.children, level + 1, item);
         }
       })
+    },
+    pushInitItems(item) {
+      this.deepList.findIndex((v, index) => {
+        if(v.id === item.id) {
+          list.splice(index, 1, item)
+        } else if(v.children) {
+          v.children.map(h => this.pushInitItems(v.children, h))
+        }
+      })
+      this.initItems = this.deepList
     },
     //  隐藏显示
     show(item) {

@@ -65,6 +65,12 @@ export default {
     this._getRolesList()
     this.sysId = this.$route.query.id
   },
+  mounted() {
+    this.$refs.authConfig._getDateTree()
+    this.$refs.authConfig._getAreaList()
+    this.$refs.authConfig._getFeature()
+    this.$refs.authConfig._getMapConfig()
+  },
   methods: {
     show() {
       this.isShow = true
@@ -93,7 +99,7 @@ export default {
     },
     _getRolesList(name, page) {
       getRolesList(name, page).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
           this.roleList = res.data.list
           this.total = res.data.total
         } else {
@@ -103,7 +109,7 @@ export default {
     },
     _deleteRole(id) {
       deleteRole(id).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
           this._mm.successTips(`删除${res.message}`)
           this._getRolesList()
         } else {

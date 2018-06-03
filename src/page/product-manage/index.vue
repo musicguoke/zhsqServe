@@ -158,6 +158,10 @@ export default {
             })
           } else {
             this._getSystemList()
+            this.$refs.authConfig._getDateTree()
+            this.$refs.authConfig._getAreaList()
+            this.$refs.authConfig._getFeature()
+            this.$refs.authConfig._getMapConfig()
           }
         } else {
           this._mm.errorTips(res.message)

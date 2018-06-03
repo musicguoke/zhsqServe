@@ -214,12 +214,7 @@ export default {
       ]
     }
   },
-  created() {
-    this._getAreaList()
-    this._getFeature()
-    this._getDateTree()
-    this._getMapConfig()
-  },
+  created() {},
   methods: {
     cancel() {
       this.$emit('cancel')
@@ -298,8 +293,6 @@ export default {
           res.data.list.map(v => {
             v.title = v.areaname
             v.id = v.areacode
-            v.loading = false
-            v.children = []
             this.dataTree.push(v)
           })
         } else {
