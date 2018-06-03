@@ -100,8 +100,7 @@ export default {
           }
         }
       ],
-      sysData: [],
-      // 表格树title
+      sysData: []
     }
   },
   created() {
@@ -125,12 +124,21 @@ export default {
     },
     _getSystemList(page) {
       getSystemList(page).then(res => {
-        this.sysData = res.data.list
+        if(res.code === 20000) {
+          this.sysData = res.data.list
+        } else {
+          this._mm.errorTips(`${res.message}`)
+        }
       })
     },
     _deleteSingleSystem(id) {
       deleteSingleSystem(id).then(res => {
-        this._getSystemList()
+        if(res.code === 20000) {
+          this._mm.successTips(`删除${res.message}`)
+          this._getSystemList()
+        } else {
+          this._mm.errorTips(`删除${res.message}`)
+        }
       })
     },
     _enterSystem(data) {
@@ -139,7 +147,7 @@ export default {
         id = data.id
       }
       enterSystem(id).then(res => {
-        if (res.code) {
+        if (res.code === 20000) {
           if (id) {
             this.$router.push({
               path: '/system',
@@ -151,6 +159,8 @@ export default {
           } else {
             this._getSystemList()
           }
+        } else {
+          this._mm.errorTips(res.message)
         }
       })
     }

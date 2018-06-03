@@ -52,6 +52,12 @@
 
 <script>
 export default {
+  props: {
+    query: {
+      type: Object,
+      default: {}
+    }
+  },
   data() {
     return {
       theme1: 'light'
@@ -59,7 +65,10 @@ export default {
   },
   methods: {
     handleMenuClick(name) {
-      this.$router.push(`${name}`)
+      this.$router.push({
+        path: `${name}`,
+        query: this.query
+      })
     }
   }
 }

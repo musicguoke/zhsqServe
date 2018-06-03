@@ -10,7 +10,7 @@ export function getRolesList(name, page) {
     pageNo: page || 1,
     pageSize: 10,
     method: 'list', 
-    grName: name || ''
+    grName: name
   }
 
   return axios.post(
@@ -24,7 +24,7 @@ export function getRolesList(name, page) {
 export function addRole(data) {
 
   return axios.post(
-    `${url}/sys/msMembersGroup/save.do`,
+    `${url}/sys/msMembersGroup/insertRoleS.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
@@ -33,7 +33,7 @@ export function addRole(data) {
 // 更新角色
 export function updateRole(data) {
   return axios.post(
-    `${url}/sys/msMembersGroup/update.do`,
+    `${url}/sys/msMembersGroup/updateRoleS.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
@@ -54,7 +54,7 @@ export function deleteRole(id) {
 }
 
 // 根据编号获取角色及角色数据功能地图
-export function getRoleMap(id) {
+export function getRoleMapById(id) {
   const data = {
     grId: id
   }

@@ -6,7 +6,7 @@
         <div class="data-content">
           <div class="data-item">
             <div class="item">
-              <span class="icon user-icon"></span>
+              <span class="i-icon user-icon"></span>
               <div class="num">
                 <p class="num-title">用户总数</p>
                 <i>{{result.user}}
@@ -15,18 +15,18 @@
               </div>
             </div>
             <div class="item">
-              <span class="icon visit-icon"></span>
+              <span class="i-icon visit-icon"></span>
               <div class="num">
                 <p class="num-title">累计访问次数</p>
                 <i>{{accessResult.access}}
-                  <b>人</b>
+                  <b>次</b>
                 </i>
               </div>
             </div>
           </div>
           <div class="data-item">
             <div class="item">
-              <span class="icon data-icon"></span>
+              <span class="i-icon data-icon"></span>
               <div class="num">
                 <p class="num-title">数据总量</p>
                 <i>{{result.data}}
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div class="item">
-              <span class="icon qx-icon"></span>
+              <span class="i-icon qx-icon"></span>
               <div class="num">
                 <p class="num-title">部署区县</p>
                 <i>{{result.county}}
@@ -46,7 +46,7 @@
           </div>
           <div class="data-item">
             <div class="item">
-              <span class="icon login-icon"></span>
+              <span class="i-icon login-icon"></span>
               <div class="num">
                 <p class="num-title">累计登陆</p>
                 <i>{{accessResult.login}}
@@ -55,7 +55,7 @@
               </div>
             </div>
             <div class="item">
-              <span class="icon sys-icon"></span>
+              <span class="i-icon sys-icon"></span>
               <div class="num">
                 <p class="num-title">系统数量</p>
                 <i>{{accessResult.system}}
@@ -76,7 +76,7 @@
               <span class="num data-num">
                 <span class="num-title">数据访问：</span>
                 <i>{{accessResult.todaytLogin}}
-                  <b>次</b>
+                  <b>条</b>
                 </i>
               </span>
             </div>
@@ -367,13 +367,21 @@ export default {
     },
     _getIndex() {
       getIndex().then(res => {
-        this.result = res.data
-        this.pieInitial()
+        if(res.code === 20000) {
+          this.result = res.data
+          this.pieInitial()
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
     },
     _getAccessStatistical() {
       getAccessStatistical().then(res => {
-        this.accessResult = res.data
+        if(res.code === 20000) {
+          this.accessResult = res.data
+        } else {
+          this._mm.errorTips(res.message)
+        }
       })
     }
   }
@@ -417,7 +425,7 @@ export default {
     border-bottom: 1px solid #d8dcdf;
     background-color: #f7faff;
   }
-  .item .icon {
+  .item .i-icon {
     width: 108px;
     border-right: 1px solid #d8dcdf;
   }
