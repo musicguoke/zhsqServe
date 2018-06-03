@@ -13,41 +13,24 @@
          </div>
       </div>
       <div class="tableSize">
-        <el-table
-                :data="massageData"
-                border
-                style="width: 100%">
-                <el-table-column
-                prop="id"
-                label="Id" width="60">
-                </el-table-column>
-                <el-table-column
-                prop="tel"
-                label="电话">
-                </el-table-column>
-                <el-table-column
-                prop="messageInfo"
-                label="短信内容">
-                </el-table-column>
-                <el-table-column
-                prop="sendTime"
-                label="添加时间">
-                </el-table-column>
-                <el-table-column
-                prop="status"
-                label="状态">
-                </el-table-column>
-                <el-table-column
-                label="操作"
-                width="160"
-                align="center"
-                >
+        <el-table :data="massageData" border style="width: 100%">
+            <el-table-column prop="id" label="Id" width="60">
+            </el-table-column>
+            <el-table-column prop="tel" label="电话">
+            </el-table-column>
+            <el-table-column prop="messageInfo" label="短信内容">
+            </el-table-column>
+            <el-table-column prop="sendTime" label="添加时间">
+            </el-table-column>
+            <el-table-column prop="status" label="状态">
+            </el-table-column>
+            <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
                     <Button type="info" @click="messageEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
                     <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
                 </template>
                 </el-table-column>
-            </el-table>
+        </el-table>
       </div>
       <div class="tablePage">
         <Page :total="massageData.length" ></Page>
@@ -77,6 +60,7 @@
 </template>
 
 <script>
+import {getMessageList,addContacts,updateContacts,deleteContacts,sendMessage} from '@/api/interactive-service'
 export default {
     data(){
         return{
@@ -85,105 +69,7 @@ export default {
             messageModal:false,
             modalTitle:'',
             isDetail:false,
-            massageData:[
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-               {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-                {
-                    id:1,
-                    tel:'18888888888',
-                    messageInfo:'你好',
-                    sendTime:'2018-4-27',
-                    type:'手动发送',
-                    status:'发送成功',
-                },
-            ],
-            countyList: [
-                {
-                    value: '',
-                    label: '区县',
-                    key:3
-                },
-                {
-                    value: 'yb',
-                    label: '渝北区',
-                    key:4
-                },
-                {
-                    value: 'wz',
-                    label: '万州区',
-                    key:5
-                }
-            ],
+            massageData:[],
             messageForm:{
                 tel:'',
                 messageInfo:'',
@@ -193,7 +79,15 @@ export default {
             }
         }
     },
+    created(){
+        this._getMessageList()
+    },
     methods:{
+        _getMessageList(){
+            getMessageList().then(res=>{
+                this.massageData = res.data.list
+            })
+        },
         messageAddOpen(){
             this.messageModal = true;
             this.isDetail = false;

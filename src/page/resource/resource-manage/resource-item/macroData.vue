@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
+            <!-- <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input> -->
             <div class="search_button">
-                <i-button @click="openAddModal()">新增</i-button>
+                <!-- <i-button @click="openAddModal()">新增</i-button> -->
             </div>
         </div>
         <el-table :data="macroData" border style="width: 100%">
@@ -81,6 +81,7 @@ export default {
             macroData:[],
             macroDataModal:false,
             macroDataForm:{
+                id:'',
                 name:'',
                 dataId:'',
                 areaCode:'',
@@ -92,7 +93,8 @@ export default {
                 y:'',
                 dataDesc:'',
                 filedsData:''
-            }
+            },
+            nowPage:1
         }
     },
     created(){
@@ -114,6 +116,7 @@ export default {
         },
         //分页点击
         pageChange(Page){
+            this.nowPage = Page
             this._getMacroData(Page)
         },
         //打开新增模态框
@@ -155,16 +158,17 @@ export default {
                     label:this.macroDataForm.label,
                     dataDesc:this.macroDataForm.dataDesc
                 }
-            if(isAdd){
+            if(this.isAdd){
                 updateMacroData(data).then(res=>{
                     if(res.code == 20000){
-                    this.$Message.success('添加成功');
+                        this.$Message.success('添加成功');
                     }
                 })
             }else{
                 updateMacroData(data).then(res=>{
                     if(res.code == 20000){
-                    this.$Message.success('修改成功');
+                        this.$Message.success('修改成功');
+                        this._getMacroData(this.nowPage)
                     }
                 })
             }

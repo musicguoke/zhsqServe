@@ -16,9 +16,9 @@
         <el-table :data="pushData" border style="width: 100%">
             <el-table-column prop="pId" label="Id" width="60">
             </el-table-column>
-            <el-table-column prop="pType" label="推送类型">
-            </el-table-column>
             <el-table-column prop="pRemark" label="推送组/用户">
+            </el-table-column>
+            <el-table-column prop="pType" label="推送类型">
             </el-table-column>
             <el-table-column prop="pGroup" label="组编号">
             </el-table-column>
@@ -30,7 +30,7 @@
             </el-table-column>
              <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
-                    <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <!-- <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button> -->
                     <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
                 </template>
                 </el-table-column>
@@ -49,8 +49,8 @@
                 </Select>
             </FormItem>
             <FormItem label="推送用户">
-                <Input v-model="pushForm.pRemark" placeholder="请输入推送用户..." style='width:300px'></Input>
-                <Button type="primary" icon="person-add">添加</Button>
+                <Input v-model="pushForm.pRemark" placeholder="请输入推送用户..." style='width:310px'></Input>
+                <Button type="primary" icon="person-add" @click="chooseUserModal = true">添加</Button>
             </FormItem>
             <FormItem label="推送类型">
                 <RadioGroup v-model="pushForm.pType" @on-change="radioChange">
@@ -70,21 +70,62 @@
             </FormItem>
         </Form>
   </Modal>
+  <Modal v-model="chooseUserModal" title="选择推送用户" width="60">
+      <Row>
+        <Col span="8">
+            <Input v-model="searchUserName" placeholder="请输入..." ></Input>
+        </Col>
+        <Col span="4" style="text-align:center">
+             <Button type="primary" icon="ios-search" @click="searchUser(1)">搜索</Button>
+        </Col>
+        <Col span="12">
+        </Col>
+      </Row>
+    <br>
+    <Row>
+        <Col span="24">
+            <el-table :data="userData" border style="width: 100%" @selection-change="selectUser">
+                <el-table-column type="selection" width="55">
+                </el-table-column>
+                <el-table-column prop="arLoginname" label="用户名">
+                </el-table-column>
+                <el-table-column prop="arTruename" label="姓名" >
+                </el-table-column>
+                <el-table-column prop="arMobile" label="电话">
+                </el-table-column>
+                <el-table-column prop="arEmail" label="邮箱">
+                </el-table-column>
+                <el-table-column prop="areaname" label="区县">
+                </el-table-column>
+                <el-table-column prop="name" label="部门">
+                </el-table-column>
+            </el-table>
+            <div class="tablePage">
+                <Page :total=total  :current="1" @on-change="searchUser" show-total v-show="total>10"></Page>
+            </div>
+        </Col>  
+    </Row>
+  </Modal>
   </Content>
 </template>
 
 <script>
-import {getPushList} from '@/api/interactive-service'
+import {getPushList,addPushList,deletePush} from '@/api/interactive-service'
+import {getUserList} from '@/api/user-service'
 export default {
     data(){
         return{
             searchName:'',
+            searchUserName:'',
             pushManageHeight:window.innerHeight - 65-60-20-90-18 +'px',
             pushModal:false,
+            chooseUserModal:false,
             modalTitle:'',
             isFile:false,
             pushData:[],
+            userData:[],
             pageLength:0,
+            total:0,
             countyList: [
                 {
                     value: '',
@@ -162,6 +203,25 @@ export default {
                         
                     }
                 });
+        },
+        //搜索用户
+        searchUser(page){
+            let data = {
+                methods: 'list',
+                pageNo: page,
+                pageSize: 10
+            }
+            getUserList(data).then(res => {
+                this.userData = []
+                for (let i in res.data.list) {
+                    this.userData.push(res.data.list[i])
+                }
+                this.total = res.data.total
+            })
+        },
+        //选择用户
+        selectUser(val){
+            console.log(val)
         }
     }
 }

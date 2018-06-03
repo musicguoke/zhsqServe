@@ -24,6 +24,11 @@ export function deleteHotspot(data) {
         return Promise.resolve(res.data)
     })
 }
+export function importHotspot(data) {
+    return axios.post(`${url}/sys/hotAround/importFile.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
 //热搜
 export function getHotSearch(data) {
     return axios.post(`${url}/sys/hotSearch/list.do`, qs.stringify(data)).then(res => {
@@ -43,6 +48,11 @@ export function updateHotSearch(data) {
 }
 export function deleteHotSearch(data) {
     return axios.post(`${url}/sys/hotSearch/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function importHotSearch(data) {
+    return axios.post(`${url}/sys/hotSearch/importFile.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

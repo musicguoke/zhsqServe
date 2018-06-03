@@ -46,3 +46,19 @@ export function updateEquipment(data) {
         return Promise.resolve(res.data)
     })
 }
+//获取用户角色
+export function getRolesList(sysId) {
+    const data = {
+        pageNo: 1,
+        pageSize: 100,
+        method: 'list',
+        grName: name || '',
+        sysId: sysId
+    }
+
+    return axios.post(
+        `${url}/sys/msMembersGroup/list.do`,
+        qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

@@ -4,7 +4,7 @@
             <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
             <div class="search_button">
                 <i-button @click="openAddModal()">新增</i-button>
-                <i-button class="marginLeft">导入</i-button>
+                <i-button class="marginLeft" @click="openImportModal">导入</i-button>
             </div>
         </div>
         <el-table :data="areaTextData" border style="width: 100%">
@@ -60,12 +60,21 @@
                         <Option value="2">全量导入</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="选择文件">
-                    <Input v-model="importForm.file" placeholder="请选择excel"></Input>
-                    <Upload action="//jsonplaceholder.typicode.com/posts/">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
-                    </Upload>
+                <FormItem label="选择文件" style="width:100px;">
+                    <div style="display:flex">
+                        <div>
+                            <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
+                        </div>
+                        <Upload action="//jsonplaceholder.typicode.com/posts/">
+                            <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                        </Upload>
+                    </div>
                 </FormItem>
+                <div class="importSlot">
+                    <div class="importSlotTitle">导入须知</div>
+                    <p>1、导入文件大小不超过2MB.</p>
+                    <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a>点此下载.</a></p>
+                </div>
             </Form>
         </Modal>
     </div>
@@ -139,6 +148,10 @@ export default {
                 }
             } 
         },
+        //打开导入模态框
+        openImportModal(){
+            this.importModal = true
+        },
         //点击确定
         addOrUpdate(){
             let data = {}
@@ -184,6 +197,10 @@ export default {
                 onCancel: () => {            
                 }
             });   
+        },
+        //导入文件保存
+        saveImport(){
+
         }
     }
 }
