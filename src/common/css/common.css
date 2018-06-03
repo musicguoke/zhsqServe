@@ -60,6 +60,10 @@ body {
   top: 64px;
 }
 
+.ivu-upload {
+  display: inline-block;
+}
+
 .seach_condition {
   width: 100%;
   padding-bottom: 16px;

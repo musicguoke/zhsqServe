@@ -18,7 +18,7 @@ export function getAreaQx() {
 
 export function getDateTree(id) {
   const data = {
-    parentid: id || 'G00000000'
+    parentid: id
   }
 
   return axios.post(`${url}/sys/msTabDataController/getGroupDataTreeByParentid.do`, qs.stringify(data)).then(res => {

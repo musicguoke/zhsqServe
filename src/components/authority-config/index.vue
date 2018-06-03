@@ -62,8 +62,7 @@
         </Table>
       </div>
       <div v-show="current == 2">
-        <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'>
-        </tree-table>
+        <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-expand-click="loadData" @on-selection-change="selectDataConfig"></my-tree>
       </div>
       <div style="width: 400px" v-show="current == 3">
         <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
@@ -118,11 +117,14 @@ import {
   updateSystem
 } from '@/api/system'
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
+import { getAreaList, getMsTabDatainfoById } from '@/api/catalog'
 import TreeTable from '@/components/tree-table/index'
+import MyTree from '@/components/my-tree/index'
 
 export default {
   components: {
-    TreeTable
+    TreeTable,
+    MyTree
   },
   props: {
     newSys: {
@@ -137,6 +139,7 @@ export default {
   },
   data() {
     return {
+      code: '', // 目录树code
       theme: 'light',
       current: 0,
       btnContent: '下一步',
@@ -212,7 +215,7 @@ export default {
     }
   },
   created() {
-    this._getAreaQx()
+    this._getAreaList()
     this._getFeature()
     this._getDateTree()
     this._getMapConfig()
@@ -270,10 +273,35 @@ export default {
       section.map(v => id.push(v.id))
       this.cilentAuthorityStr = id.toString()
     },
-    _getAreaQx() {
-      getAreaQx().then(res => {
+    handleCheckData(arr) {
+      let list = []
+      arr.map(v => {
+        list.push(v.id)
+        if (v.children && v.children.length > 0) {
+          this.handleCheckData(v.children)
+        }
+      })
+      return list.toString()
+    },
+    loadData(item) {
+      if (item.areacode) {
+        if (this.code !== item.areacode) {
+          this._getDateTree(item.areacode)
+        }
+        this.code = item.areacode
+      }
+    },
+    _getAreaList() {
+      getAreaList().then(res => {
         if (res.code === 20000) {
           this.areaQxList = res.data.list
+          res.data.list.map(v => {
+            v.title = v.areaname
+            v.id = v.areacode
+            v.loading = false
+            v.children = []
+            this.dataTree.push(v)
+          })
         } else {
           this._mm.errorTips(res.message)
         }
@@ -281,7 +309,12 @@ export default {
     },
     _getDateTree(id) {
       getDateTree(id).then(res => {
-        this.dataTree = res
+        this.dataTree.map(v => {
+          if (v.areacode === id) {
+            v.children = res
+          }
+        })
+        this.$refs.treeTable.initData(this.$refs.treeTable.deepCopy(this.dataTree), 1, null)
       })
     },
     _getMapConfig() {
@@ -341,7 +374,7 @@ export default {
         id: this.sysId
       }, this.formItem)
       updateSystem(data).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
           this._mm.successTips(`修改${res.message}`)
           this.cancel()
         } else {
@@ -502,7 +535,7 @@ export default {
         grId: this.grId
       }, this.formRoleItem)
       updateRole(data).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
           this._mm.successTips(`修改${res.message}`)
           this.cancel()
         } else {
@@ -517,9 +550,6 @@ export default {
 <style lang="scss" scoped>
 .ivu-tree-arrow {
   color: #495060;
-}
-.ivu-upload {
-  display: inline-block;
 }
 .card-content {
   display: flex;

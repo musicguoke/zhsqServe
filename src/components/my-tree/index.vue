@@ -24,13 +24,7 @@
               <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
             </label>
             <div class="btn-td" v-if="column.type === 'action'">
-              <i-button 
-                :type="action.type" 
-                size="small" 
-                @click="RowClick(item,$event,index,action.text)" 
-                v-for='action in (column.actions)' 
-                :key="action.text"
-              >
+              <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">
                 {{action.text}}
               </i-button>
             </div>
@@ -305,27 +299,30 @@ export default {
       }
     },
     //点击check勾选框,判断是否有children节点 如果有就一并勾选
-    handleCheckClick(data, event, index) {
-      data.isChecked = !data.isChecked;
-      var arr = data.children;
-      if (arr) {
-        if (data.isChecked) {
-          this.checkGroup.push(data.id);
-          for (let i = 0; i < arr.length; i++) {
-            this.checkGroup.push(arr[i].id)
-          }
-        } else {
-          for (var i = 0; i < this.checkGroup.length; i++) {
-            if (this.checkGroup[i] == data.id) {
-              this.checkGroup.splice(i, 1)
-            }
-            for (var j = 0; j < arr.length; j++) {
-              if (this.checkGroup[i] == arr[j].id) {
-                this.checkGroup.splice(i, 1);
-              }
-            }
-          }
+    handleCheckClick(data, status) {
+      data.isChecked = !data.isChecked
+      this.handleCheck(data, data.isChecked)
+    },
+    handleCheck(data, status) {
+      if(data.children) {
+        data.children.map((v, index) => {
+          v.isChecked = status
+        })
+      }
+      if (data.isChecked) {
+        let index = this.checkGroup.findIndex(v => v === data.id)
+        if(index < 0) {
+          this.checkGroup.push(data.id)
         }
+      } else {
+        this.checkGroup.map((v, i) => {
+          if (this.checkGroup[i] == data.id) {
+            this.checkGroup.splice(i, 1)
+          }
+        })
+      }
+      if(data.children) {
+        data.children.map(v => this.handleCheck(v, status))
       }
     },
     //checkbox 全选 选择事件
