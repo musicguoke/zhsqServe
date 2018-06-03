@@ -17,10 +17,10 @@
             </el-table-column>
             <el-table-column prop="mVersion" label="版本" sortable>
             </el-table-column>
-            <el-table-column label="操作" width="100" align="center">
+            <el-table-column label="操作" width="120" align="center">
                 <template slot-scope="scope">
                         <Button type="info"  size="small"  @click="openEditModal(scope)">编辑</Button>
-                        <!-- <Button type="error" size="small" @click="remove(scope)">删除</Button> -->
+                        <Button type="error" size="small" @click="remove(scope)">删除</Button>
                 </template>
             </el-table-column>
         </el-table>
@@ -120,16 +120,16 @@ export default {
                     mImage:this.mapConfigureForm.mImage,
                     mVersion:this.mapConfigureForm.mVersion
                 }
-            if(isAdd){
+            if(this.isAdd){
                 insertMapConfigure(data).then(res=>{
                     if(res.code == 20000){
-                    this.$Message.success('添加成功');
+                        this.$Message.success('添加成功');
                     }
                 })
             }else{
                 updateMapConfigure(data).then(res => {
                     if(res.code == 20000){
-                    this.$Message.success('修改成功');
+                        this.$Message.success('修改成功');
                     }
                 })
             }

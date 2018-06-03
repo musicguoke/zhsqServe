@@ -3,11 +3,12 @@
         <div class="seach_condition">
             <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
             <div class="search_button">
-            <i-button @click="openAddModal">新增</i-button>
+              <i-button @click="openAddModal">新增</i-button>
+              <i-button class="marginLeft" @click="importModal = true">导入</i-button>
             </div>
         </div>
         <el-table :data="hotSearchData" border style="width: 100%">
-            <el-table-column prop="dataCode" label="Id" sortable>
+            <el-table-column prop="dataCode" label="数据编码" sortable>
             </el-table-column>
             <el-table-column prop="dataname" label="热搜内容">
             </el-table-column>
@@ -39,6 +40,31 @@
                 </FormItem>
             </Form>
         </Modal>
+        <Modal v-model="importModal" title='导入热搜' @on-ok="saveImport">
+          <Form :model="importForm" label-position="left" :label-width="100">
+              <FormItem label="导入类型">
+                  <Select v-model="importForm.type">
+                      <Option value="1">增量导入</Option>
+                      <Option value="2">全量导入</Option>
+                  </Select>
+              </FormItem>
+              <FormItem label="选择文件" style="width:100px;">
+                  <div style="display:flex">
+                      <div>
+                          <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
+                      </div>
+                      <Upload action="//jsonplaceholder.typicode.com/posts/">
+                          <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                      </Upload>
+                  </div>
+              </FormItem>
+                  <div class="importSlot">
+                  <div class="importSlotTitle">导入须知</div>
+                  <p>1、导入文件大小不超过2MB.</p>
+                  <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a>点此下载.</a></p>
+              </div>
+          </Form>
+        </Modal>
     </div>
 </template>
 <script>
@@ -46,7 +72,8 @@ import {
   getHotSearch,
   addHotSearch,
   updateHotSearch,
-  deleteHotSearch
+  deleteHotSearch,
+  importHotSearch
 } from "@/api/search-service";
 export default {
   data() {
@@ -55,14 +82,21 @@ export default {
       hotSearchData: [],
       pageLength: 0,
       hotSearchModal: false,
+      importModal:false,
       isAdd: true,
       modalTitle: "",
+      nowPage:1,
       hotSearchForm: {
         dataname: "",
         parentsCode: "",
         dataCode: "",
-        listorder: ""
-      }
+        listorder: "",
+        id:""
+      },
+      importForm:{
+          type:'',
+          file:''
+      },
     }
   },
   created(){
@@ -84,6 +118,7 @@ export default {
     },
     //分页点击
     pageChange(Page){
+        this.nowPage = Page
         this._getHotSearch(Page)
     },
     //打开新增模态框
@@ -125,16 +160,19 @@ export default {
           listorder:this.hotSearchForm.listorder
         }
       }
-      if(isAdd){
+      if(this.isAdd){
         addHotSearch(data).then(res=>{
             if(res.code == 20000){
               this.$Message.success('添加成功');
+              this._getHotSearch(1)
             }
         })
       }else{
+        data.id = this.hotSearchForm.id
         updateHotSearch(data).then(res=>{
             if(res.code == 20000){
               this.$Message.success('修改成功');
+              this._getHotSearch(this.nowPage)
             }
         }) 
       }
@@ -153,9 +191,20 @@ export default {
                 }
             })
           },
-          onCancel: () => {            
-          }
-        });   
+        onCancel: () => {            
+        }
+      });   
+    },
+     //导入文件保存
+    saveImport(){
+      let data = {
+        method:'importFile',
+        type:this.importForm.type,
+        file:this.importForm.file
+      }
+      importHotSearch(data).then(res=>{
+
+      })
     }
   }
 }
