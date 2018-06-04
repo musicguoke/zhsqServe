@@ -1,5 +1,5 @@
 <template>
-<Content :style="{height:managerHeight}">
+<Content :style="{maxHeight:managerHeight}">
     <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>管理员列表</BreadcrumbItem>
@@ -9,9 +9,6 @@
       <div class="seach_condition">
          <div class="condition_list">
             <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <i-select :model.sync="searchManagerType" style="width:200px" placeholder="请选择" class="marginLeft">
-                <i-option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-            </i-select>
         </div>
          <div class="search_button">
             <i-button @click="managerAddOpen">新增</i-button>
@@ -25,9 +22,11 @@
             </el-table-column>
             <el-table-column prop="realName" label="姓名">
             </el-table-column>
-             <el-table-column prop="tel" label="电话">
+            <el-table-column prop="tel" label="电话">
             </el-table-column>
             <el-table-column prop="email" label="邮箱">
+            </el-table-column>
+            <el-table-column prop="roleName" label="角色" :filters="managerTypeList" :filter-method="filterByRole" filter-placement="bottom-end">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
@@ -104,14 +103,17 @@ export default {
                 {
                     value: 1,
                     label: '超级管理员',
+                    text:'超级管理员',
                 },
                 {
                     value: 2,
                     label: '市级管理员',
+                    text: '市级管理员',
                 },
                 {
                     value: 3,
                     label: '普通管理员',
+                    text: '普通管理员',
                 }
             ]
         }
@@ -136,6 +138,15 @@ export default {
             }
             getManagerList(data).then(res=>{
                 this.userData = res.data.list
+                this.userData.map(v=>{
+                    if(v.role == 1){
+                        v.roleName = '超级管理员'
+                    }else if(v.role == 2){
+                        v.roleName = '市级管理员'
+                    }else if(v.role == 3){
+                        v.roleName = '普通管理员'
+                    }
+                })
                 this.pageLength = res.data.total
             })
         },
@@ -212,6 +223,9 @@ export default {
                         
                     }
                 });
+        },
+        filterByRole(value, row){
+            return row.role === value
         }
     }
 }

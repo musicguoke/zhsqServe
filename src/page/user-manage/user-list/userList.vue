@@ -37,7 +37,7 @@
                     </el-table-column>
                     <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByUserGroup" filter-placement="bottom-end">
                     </el-table-column>
-                    <el-table-column prop="name" label="部门" :filters="[{ text: '环保局', value: '环保局' }, { text: '规划局', value: '规划局' }]" :filter-method="filterByDepartment" filter-placement="bottom-end">
+                    <el-table-column prop="name" label="部门" :filters="departmentFilterList" :filter-method="filterByDepartment" filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column prop="addTime" label="注册时间" sortable>
                     </el-table-column>
@@ -168,13 +168,15 @@ export default {
                 arBranch: '', //部门
                 arAreacode: '',//区县
                 arSource: '',//来源
-                sysId: ''
+                sysIds: '',//系统编号
+                grIds:'',//角色编号
             },
             equipmentForm: {
 
             },
             userData: [],
             departmentData: [],
+            departmentFilterList:[],
             countyFilterList: [],
             countyList: [],
             defaultProps: {
@@ -256,9 +258,28 @@ export default {
             };
             getDepartmentList(data).then(res => {
                 this.departmentData = res.data;
-                for(let i in this.departmentData){
-                    this.departmentData[i].addtime = formatDate(new Date(this.departmentData[i].addtime),'yyyy-MM-dd')
-                }
+                res.data.map(v=>{
+                    this.departmentFilterList.push({
+                       value: v.name,
+                       text: v.name
+                    })
+                    if(v.list){
+                        v.list.map(a=>{
+                            this.departmentFilterList.push({
+                                value: a.name,
+                                text: a.name
+                            })
+                            if(a.list){
+                                a.list.map(b=>{
+                                    this.departmentFilterList.push({
+                                        value: b.name,
+                                        text: b.name
+                                    })
+                                })
+                            }
+                        })
+                    }
+                })
             });
         },
         _getSystemList() {
@@ -310,7 +331,7 @@ export default {
             return row.userGroup === value;
         },
         filterByDepartment(value, row) {
-            return row.department === value;
+            return row.name === value;
         },
         _getUserList(page) {
             let data = {
@@ -335,6 +356,12 @@ export default {
             })
         },
         addOrUpdateUser() {
+            this.sysAndGroupList.map(v=>{
+                this.userForm.sysIds += v.sysId +','
+                this.userForm.grIds += v.groupId + ','
+            })
+            this.userForm.sysIds = this.userForm.sysIds.substring(0,this.userForm.sysIds.length -1)
+            this.userForm.grIds = this.userForm.grIds.substring(0,this.userForm.grIds.length -1)
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
@@ -350,19 +377,20 @@ export default {
                 sysIds:this.userForm.sysIds,//多个系统编号
                 grIds:this.userForm.grIds,//多个用用角色编号
             }
-            // if (this.isAdd) {
-            //     addUser(data).then(res => {
-            //         if (res.code == 20000) {
-            //             this.$Message.info('添加成功');
-            //         }
-            //     })
-            // } else {
-            //     updateUser(data).then(res => {
-            //         if (res.code == 20000) {
-            //             this.$Message.info('修改成功');
-            //         }
-            //     })
-            // }
+            console.log(data)
+            if (this.isAdd) {
+                addUser(data).then(res => {
+                    if (res.code == 20000) {
+                        this.$Message.info('添加成功');
+                    }
+                })
+            } else {
+                updateUser(data).then(res => {
+                    if (res.code == 20000) {
+                        this.$Message.info('修改成功');
+                    }
+                })
+            }
         },
         //跟新设备
         updateEquipment() {

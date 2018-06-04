@@ -184,21 +184,18 @@ export default {
     },
     //点击保存
     saveDepartment() {
-      let data = {};
-      addAndUpdateDepartment().then(res => {
-        let data = {
-          name: this.departmentInfoForm.name,
-          id: this.departmentInfoForm.id,
-          parentid: this.departmentInfoForm.id,
-          nameA: this.departmentInfoForm.id,
-          listorder: this.departmentInfoForm.listorder
-        };
+      let data = {
+        name: this.departmentInfoForm.name,
+        id: this.departmentInfoForm.id,
+        parentid: this.departmentInfoForm.id,
+        nameA: this.departmentInfoForm.nameA,
+        listorder: this.departmentInfoForm.listorder
+      };
         addAndUpdateDepartment(data).then(res => {
           if ((res.code = 20000)) {
             this.$Message.success("保存成功");
             this._getDepartmentList();
           }
-        });
       });
     },
     //导入文件保存
