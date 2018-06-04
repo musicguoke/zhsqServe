@@ -2,13 +2,12 @@
   <div class="layout">
     <Layout>
       <v-header/>
-      <div class="content">
-        <div class="navbar">
-          <div class="container">
-            <v-menu/>
-          </div>
+      <div class="navbar">
+        <div class="container">
+          <v-menu/>
         </div>
-        <!-- <v-tags/> -->
+      </div>
+      <div class="content">
         <div class="container">
           <router-view/>
         </div>

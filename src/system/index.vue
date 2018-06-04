@@ -2,12 +2,12 @@
   <div class="layout">
     <Layout>
       <v-header :title="name"/>
-      <div class="content">
-        <div class="navbar">
-          <div class="container">
-            <v-menu :query="this.$route.query"/>
-          </div>
+      <div class="navbar">
+        <div class="container">
+          <v-menu :query="this.$route.query"/>
         </div>
+      </div>
+      <div class="content">
         <!-- <v-tags/> -->
         <div class="container">
           <router-view/>

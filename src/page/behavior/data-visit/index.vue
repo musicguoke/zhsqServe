@@ -1,6 +1,6 @@
 <template>
   <Content>
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>资源管理</BreadcrumbItem>
       <BreadcrumbItem>资源列表</BreadcrumbItem>
     </Breadcrumb>

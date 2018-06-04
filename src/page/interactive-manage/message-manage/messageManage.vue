@@ -1,6 +1,6 @@
 <template>
 <Content :style="{height:messageManageHeight}">
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>短信管理</BreadcrumbItem>
     </Breadcrumb>

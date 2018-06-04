@@ -1,6 +1,6 @@
 <template>
 <Content :style="{height:parameterHeight}">
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>系统配置</BreadcrumbItem>
       <BreadcrumbItem>参数配置</BreadcrumbItem>
     </Breadcrumb>

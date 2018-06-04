@@ -18,7 +18,7 @@
       <MenuItem name="5">字段权限</MenuItem>
     </Menu>
     <div class="current-content">
-      <Form :model="formItem" :label-width="80" style="width: 400px" v-if="current == 0 && sysOrRole">
+      <Form :model="formItem" :label-width="80" style="width: 400px" v-show="current == 0 && sysOrRole">
         <FormItem label="系统名称">
           <Input v-model="formItem.sysName" placeholder="请输入系统名称"></Input>
         </FormItem>
@@ -43,7 +43,7 @@
           </Select>
         </FormItem>
       </Form>
-      <Form :model="formRoleItem" :label-width="80" style="width: 400px" v-if="current == 0 && !sysOrRole">
+      <Form :model="formRoleItem" :label-width="80" style="width: 400px" v-show="current == 0 && !sysOrRole">
         <FormItem label="角色名称">
           <Input v-model="formRoleItem.grName" placeholder="请输入角色名称"></Input>
         </FormItem>
@@ -54,9 +54,9 @@
           </Select>
         </FormItem>
       </Form>
-      <div style="width: 400px" v-if="current == 1">
+      <div style="width: 500px" v-show="current == 1">
         <Form>
-          <FormItem label="上传手机端欢迎页">
+          <FormItem label="上传欢迎页">
             <Select v-model="uploadType" style="width:100px">
               <Option value="手机端">手机端</Option>
               <Option value="Pad端">Pad端</Option>
@@ -68,18 +68,18 @@
           </FormItem>
         </Form>
       </div>
-      <div style="width: 400px" v-if="current == 2">
+      <div style="width: 400px" v-show="current == 2">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig">
         </Table>
       </div>
-      <div v-if="current == 3" class="table-tree-box">
+      <div v-show="current == 3" class="table-tree-box" :style="{height: tableHeight}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-expand-click="loadData" @on-selection-change="selectDataConfig"></my-tree>
       </div>
-      <div style="width: 400px" v-if="current == 4">
+      <div style="width: 400px" v-show="current == 4">
         <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
         </Table>
       </div>
-      <div style="width: 400px" class="select-box" v-if="current == 5">
+      <div style="width: 400px" class="select-box" v-show="current == 5">
         <Form :label-width="80">
           <FormItem label="权限等级">
             <Select @on-change="qx1Change" placeholder="请选择权限等级">
@@ -144,6 +144,7 @@ export default {
   data() {
     return {
       contentHeight: window.innerHeight - 136 + 'px',
+      tableHeight: window.innerHeight - 298 + 'px',
       code: '', // 目录树code
       tabActiveName: '0',
       theme: 'light',
@@ -233,6 +234,7 @@ export default {
       this.$emit('cancel')
       this.initFormData()
     },
+    // 数据初始化
     initFormData() {
       Object.assign(this.$data, this.$options.data())
       this._getAreaList()
@@ -281,6 +283,7 @@ export default {
       this.mapIdStr = id.toString()
     },
     selectDataConfig(section) {
+      // 数据选择
       this.tabDataIdStr = section.toString()
     },
     selectFeatureConfig(section, row) {
@@ -587,7 +590,7 @@ export default {
 form {
   width: 100%;
 }
-.select-box {
+.select-box, .ivu-form-item-content {
   display: flex;
 }
 </style>

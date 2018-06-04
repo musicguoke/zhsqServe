@@ -1,10 +1,10 @@
 <template>
   <Content>
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>产品管理</BreadcrumbItem>
       <BreadcrumbItem>{{name}}</BreadcrumbItem>
     </Breadcrumb>
-    <Card :style="{height: contentHeight}">
+    <Card :style="{maxHeight: contentHeight}">
       <div class="table" v-show="!isShow">
         <div class="seach_condition">
           <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>

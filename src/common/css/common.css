@@ -64,7 +64,6 @@ body {
 
 .navbar {
     width: 100%;
-    margin-bottom: 17px;
     border-top: 1px solid #d8dcdf;
     border-bottom: 1px solid #d8dcdf;
     background: #fff;
@@ -74,8 +73,9 @@ body {
     top: 64px;
 }
 
-.ivu-upload {
-  display: inline-block;
+.ivu-form-item-content {
+    display: flex;
+    justify-content: space-between;
 }
 
 /* .ivu-spin-fix {
