@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top: 17px">
     <Card>
       <p slot="title">
         <Icon type="person"></Icon>

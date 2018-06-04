@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>目录管理</BreadcrumbItem>
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
@@ -44,7 +44,7 @@
           </FormItem>
         </Form>
         <div slot="footer">
-          <Button type="text" @click="cancelEditPass">取消</Button>
+          <Button type="text" @click="cancelEdit">取消</Button>
           <Button type="primary" :loading="savePassLoading" @click="saveEditPass">保存</Button>
         </div>
       </Modal>
@@ -54,7 +54,7 @@
         :mask-closable=false 
         :width="500"
         @on-ok="saveCatalog"
-        @on-cancel="cancelCatalog"
+        @on-cancel="cancelEdit"
       >
         <h3 slot="header" style="color:#2D8CF0">数据目录</h3>
         <Form :label-width="100" label-position="right">
@@ -129,17 +129,16 @@ export default {
       dataColumns: [
         {
           title: '数据名称',
-          key: 'title'
+          key: 'dpName'
         }, {
           title: '数据类型',
-          key: 'id',
-          sortable: true
+          key: 'id'
         }, {
           title: '排序',
-          key: 'sort'
+          key: 'dpListorder'
         }, {
-          title: '更新时间',
-          key: 'time'
+          title: '描述',
+          key: 'description'
         }, {
           title: '操作',
           type: 'action',
@@ -155,7 +154,8 @@ export default {
           }, {
             type: 'error',
             text: '删除'
-          }]
+          }],
+          width: 120
         }
       ]
     }
@@ -169,8 +169,14 @@ export default {
       this.isAdd = true
       this.editItemModal = true
     },
-    cancelEditPass() {
+    cancelEdit() {
       this.editItemModal = false
+      this.cancelCatalog = false
+      this.editItemForm =  {
+        dpName: '',
+        dpType: '',
+        dpListorder: ''
+      }
     },
     saveEditPass() {
       if(this.isAdd) {
@@ -178,10 +184,6 @@ export default {
       } else {
         this._updateTopicData(this.editItemForm)
       }
-    },
-    // 数据目录框显示隐藏
-    cancelCatalog() {
-      this.cancelCatalog = false
     },
     // 保存数据目录
     saveCatalog() {

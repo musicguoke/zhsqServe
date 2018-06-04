@@ -1,6 +1,6 @@
 <template>
     <Content :style="{height:userListHeight}">
-        <Breadcrumb :style="{marginBottom: '17px'}">
+        <Breadcrumb :style="{padding: '17px 0'}">
             <BreadcrumbItem>用户管理</BreadcrumbItem>
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>

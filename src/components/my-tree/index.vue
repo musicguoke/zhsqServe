@@ -19,7 +19,8 @@
       </thead>
       <tbody>
         <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
-          <td :class="{'label-box': column.type === 'selection'}" v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
+          <td :class="{'label-box': column.type === 'selection'}" 
+            v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
             <label v-if="column.type === 'selection'">
               <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
             </label>
@@ -39,8 +40,8 @@
                   <!-- <i class="ms-tree-space"></i> -->
                   <i class="folder icon-leaf"></i>
                 </span>
-                <span>{{renderBody(item,column)}}</span>
               </span>
+              <span>{{renderBody(item,column)}}</span>
             </label>
           </td>
         </tr>
@@ -150,7 +151,7 @@ export default {
         style["text-align"] = column.align;
       }
       if (column.width) {
-        style["min-width"] = column.width + 'px';
+        style["max-width"] = column.width + 'px';
       }
       return style;
     },

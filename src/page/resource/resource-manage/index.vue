@@ -1,10 +1,10 @@
 <template>
   <Content>
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>资源管理</BreadcrumbItem>
       <BreadcrumbItem>资源列表</BreadcrumbItem>
     </Breadcrumb>
-    <Card>
+    <Card :style="{maxHeight:resourceListHeight}">
       <div class="card-content">
         <Menu theme="light" active-name="resource-catalog" @on-select="menuChange">
           <MenuItem name="resource-catalog">数据资源目录</MenuItem>
@@ -29,6 +29,7 @@
 export default {
   data() {
     return {
+      resourceListHeight: window.innerHeight - 174 + 'px',
       searchName: '',
       searchType: 1,
       pageLength:0,
