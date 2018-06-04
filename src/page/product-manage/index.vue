@@ -12,7 +12,7 @@
             <i-button @click="show()">新增</i-button>
           </div>
         </div>
-        <Table border :columns="columns1" :data="sysData" @on-row-click="systemConfig"></Table>
+        <Table border :columns="columns1" :data="sysData"></Table>
       </div>
       <authority-config v-show="isShow" ref="authConfig" :newSys="newSys" @cancel="cancel" />
     </Card>
@@ -49,11 +49,11 @@ export default {
         },
         {
           title: '所属区县',
-          key: 'areacode'
+          key: 'areaName'
         },
         {
           title: '系统状态',
-          key: 'enable'
+          key: 'status'
         },
         {
           title: '操作',
@@ -67,7 +67,7 @@ export default {
                   size: 'small'
                 },
                 style: {
-                  marginRight: '25px'
+                  margin: '0 5px'
                 },
                 on: {
                   click: e => {
@@ -81,15 +81,32 @@ export default {
               }, '编辑'),
               h('Button', {
                 props: {
+                  type: 'success',
+                  size: 'small'
+                },
+                style: {
+                  margin: '0 5px'
+                },
+                on: {
+                  click: e => {
+                    this._enterSystem(params.row)
+                  }
+                }
+              }, '进入系统'),
+              h('Button', {
+                props: {
                   type: 'error',
                   size: 'small'
+                },
+                style: {
+                  margin: '0 5px'
                 },
                 on: {
                   click: e => {
                     e.stopPropagation()
                     this.$Modal.confirm({
                       title: '提示',
-                      content: '确认删除吗？',
+                      content: '确认删除这条数据吗？',
                       onOk: () => {
                         this._deleteSingleSystem(params.row.id)
                       }
@@ -119,13 +136,16 @@ export default {
       this.newSys = false
       this.name = '系统列表'
     },
-    // 选择某个系统，进入系统详情
-    systemConfig(data) {
-      this._enterSystem(data)
-    },
     _getSystemList(page) {
       getSystemList(page).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
+          res.data.list.filter(v => {
+            if(v.enable === 0) {
+              v.status = '暂停运行'
+            } else if(v.enable === 1) {
+              v.status = '正在运行'
+            }
+          })
           this.sysData = res.data.list
         } else {
           this._mm.errorTips(`${res.message}`)
@@ -134,7 +154,7 @@ export default {
     },
     _deleteSingleSystem(id) {
       deleteSingleSystem(id).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
           this._mm.successTips(`删除${res.message}`)
           this._getSystemList()
         } else {

@@ -179,21 +179,17 @@ export default {
           width: '50',
         }, {
           title: '名称',
-          key: 'title',
-          width: '150',
+          key: 'title'
         }, {
           title: '编码',
           key: 'id',
-          sortable: true,
-          width: '150',
+          sortable: true
         }, {
           title: '类型',
-          key: 'type',
-          width: '150',
+          key: 'type'
         }, {
           title: '更新时间',
-          key: 'time',
-          width: '150',
+          key: 'updatetime'
         }
       ],
       columns4: [
@@ -592,5 +588,9 @@ form {
 }
 .select-box, .ivu-form-item-content {
   display: flex;
+}
+.ivu-menu-horizontal {
+  height: 26px;
+  line-height: 26px;
 }
 </style>
