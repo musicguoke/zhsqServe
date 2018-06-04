@@ -140,6 +140,7 @@ import { formatDate } from '@/components/dateChange/dateChange.js'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
+
 export default {
     data() {
         return {
@@ -345,19 +346,19 @@ export default {
                 this.$Message.warning('同一个系统下只能选择一个角色')
                 return
             }
-            // if (this.isAdd) {
-            //     addUser(data).then(res => {
-            //         if (res.code == 20000) {
-            //             this.$Message.info('添加成功');
-            //         }
-            //     })
-            // } else {
-            //     updateUser(data).then(res => {
-            //         if (res.code == 20000) {
-            //             this.$Message.info('修改成功');
-            //         }
-            //     })
-            // }
+            if (this.isAdd) {
+                addUser(data).then(res => {
+                    if (res.code == 20000) {
+                        this.$Message.info('添加成功');
+                    }
+                })
+            } else {
+                updateUser(data).then(res => {
+                    if (res.code == 20000) {
+                        this.$Message.info('修改成功');
+                    }
+                })
+            }
         },
         //跟新设备
         updateEquipment() {

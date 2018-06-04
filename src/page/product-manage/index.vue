@@ -4,7 +4,7 @@
       <BreadcrumbItem>产品管理</BreadcrumbItem>
       <BreadcrumbItem>{{name}}</BreadcrumbItem>
     </Breadcrumb>
-    <Card>
+    <Card :style="{height: contentHeight}">
       <div class="table" v-show="!isShow">
         <div class="seach_condition">
           <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
@@ -33,6 +33,7 @@ export default {
   },
   data() {
     return {
+      contentHeight: window.innerHeight - 174 + 'px',
       newSys: true,
       isShow: false,
       name: '系统列表',
@@ -158,7 +159,6 @@ export default {
             })
           } else {
             this._getSystemList()
-            this.$refs.authConfig._getDateTree()
             this.$refs.authConfig._getAreaList()
             this.$refs.authConfig._getFeature()
             this.$refs.authConfig._getMapConfig()

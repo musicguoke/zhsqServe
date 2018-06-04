@@ -36,7 +36,7 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-show="isShow" ref="authConfig" :id="sysId" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-if="isShow" ref="authConfig" :id="sysId" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
