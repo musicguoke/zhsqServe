@@ -117,7 +117,7 @@ export default {
         return{
             searchName:'',
             searchUserName:'',
-            pushManageHeight:window.innerHeight - 65-60-20-90-18 +'px',
+            pushManageHeight:window.innerHeight - 136 +'px',
             pushModal:false,
             chooseUserModal:false,
             modalTitle:'',

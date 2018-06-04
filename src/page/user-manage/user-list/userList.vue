@@ -68,7 +68,7 @@
                             <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                         </FormItem>
                         <FormItem label="部门">
-                            <Select v-model="userForm.arBranch">
+                            <Select v-model="userForm.arBranch" ref="department">
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
@@ -97,7 +97,7 @@
                     </div>
                     <Form label-position="left">
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index">
-                            <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px">
+                            <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
                                 <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Select v-model="item.groupId" style="width:220px">
@@ -144,7 +144,7 @@ import MD5 from 'crypto-js/md5'
 export default {
     data() {
         return {
-            userListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + 'px',
+            userListHeight: window.innerHeight - 136 + 'px',
             searchDepartment: '',
             searchCounty: '',
             searchSystem: '',
@@ -219,9 +219,9 @@ export default {
                 })
             }
         }),
-            this._getUserList(1)
+        this._getUserList(1)
         this._getDepartmentList()
-        this._getSystemList(1)
+        this._getSystemList()
     },
     methods: {
         userAddOpen() {
@@ -232,8 +232,9 @@ export default {
                 this.userForm[i] = '';
             }
             this.sysAndGroupList = [{ sysId: '', groupId: '' }]
-            this.systemList = []
+            // this.systemList = []
             this.groupList = []
+            this.nowSystemLength = 1
         },
         userEditOpen(params) {
             this.userModal = true;
@@ -255,6 +256,9 @@ export default {
             };
             getDepartmentList(data).then(res => {
                 this.departmentData = res.data;
+                for(let i in this.departmentData){
+                    this.departmentData[i].addtime = formatDate(new Date(this.departmentData[i].addtime),'yyyy-MM-dd')
+                }
             });
         },
         _getSystemList() {
@@ -312,18 +316,25 @@ export default {
             let data = {
                 methods: 'list',
                 pageNo: page,
-                pageSize: 10
+                pageSize: 10,
+                // arTruename:this.searchName
             }
             getUserList(data).then(res => {
                 this.userData = []
-                for (let i in res.data.list) {
-                    this.userData.push(res.data.list[i])
+                let data = res.data.list
+                for (let i in data) {
+                    if(data[i].addTime < 0){
+                        data[i].addTime = Math.abs(data[i].addTime)
+                    }
+                    if(data[i].addTime){
+                        data[i].addTime = formatDate(new Date(data[i].addTime),'yyyy-MM-dd')
+                    }
+                    this.userData.push(data[i])
                 }
                 this.total = res.data.total
             })
         },
         addOrUpdateUser() {
-            let list = []
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
@@ -333,32 +344,25 @@ export default {
                 arEmail: this.userForm.arEmail,
                 arSalt: this.userForm.arSalt, //校验码
                 arGroup: this.userForm.arGroup,//用户组
-                arFax: this.userForm.arFax,//用户组
                 arBranch: this.userForm.arBranch, //部门
                 arAreacode: this.userForm.arAreacode,//区县
-                arSource: this.userForm.arSource//来源
+                arSource: this.userForm.arSource,//来源
+                sysIds:this.userForm.sysIds,//多个系统编号
+                grIds:this.userForm.grIds,//多个用用角色编号
             }
-            this.sysAndGroupList.map(v => {
-                list.push(v.sysId)
-            })
-            let setList = Array.from(new Set(list))
-            if (list.length > setList.length) {
-                this.$Message.warning('同一个系统下只能选择一个角色')
-                return
-            }
-            if (this.isAdd) {
-                addUser(data).then(res => {
-                    if (res.code == 20000) {
-                        this.$Message.info('添加成功');
-                    }
-                })
-            } else {
-                updateUser(data).then(res => {
-                    if (res.code == 20000) {
-                        this.$Message.info('修改成功');
-                    }
-                })
-            }
+            // if (this.isAdd) {
+            //     addUser(data).then(res => {
+            //         if (res.code == 20000) {
+            //             this.$Message.info('添加成功');
+            //         }
+            //     })
+            // } else {
+            //     updateUser(data).then(res => {
+            //         if (res.code == 20000) {
+            //             this.$Message.info('修改成功');
+            //         }
+            //     })
+            // }
         },
         //跟新设备
         updateEquipment() {
@@ -366,7 +370,9 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
-            console.log(data)
+            this.$refs.department.selectedSingle = data.name
+            this.userForm.arBranch = data.id
+            console.log(this.userForm)
         },
         //点击添加，新增一行系统角色选择
         addChooseSystem() {
@@ -375,7 +381,7 @@ export default {
             } else {
                 this.nowSystemLength++
                 this.sysAndGroupList.push({ sysId: '', groupId: '' })
-                this._getSystemList(1)
+                this._getSystemList()
             }
         },
         //移除当前行的选择框
@@ -387,6 +393,21 @@ export default {
         },
         //系统改变，获取对应系统下的角色
         systemChange(id, index) {
+            let list = []
+            this.sysAndGroupList.map(v => {
+                list.push(v.sysId)
+            })
+            let setList = Array.from(new Set(list))
+            if (list.length > setList.length) {
+                this.$Message.warning('同一个系统下只能选择一个角色')
+                this.sysAndGroupList[index] = {
+                    sysId:'',
+                    groupId:''
+                }
+                this.$refs['item' + index][0].selectedSingle = ''
+                this.$refs['item' + index][0].model = ''
+                return
+            }
             getRolesList(id).then(res => {
                 let data = res.data.list
                 let array = []

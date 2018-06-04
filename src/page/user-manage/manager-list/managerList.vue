@@ -81,7 +81,7 @@ import MD5 from 'crypto-js/md5'
 export default {
     data(){
         return{
-            managerHeight:window.innerHeight - 65-60-20-90-18 +'px',
+            managerHeight:window.innerHeight - 136 +'px',
             searchName:'',
             searchManagerType:'',
             managerModal:false,
