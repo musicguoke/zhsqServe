@@ -51,6 +51,11 @@ body {
     margin-right: 20px;
 }
 
+.ivu-card-bordered,
+.table-tree-box {
+    overflow-y: auto;
+}
+
 .layout-footer-center {
     text-align: center;
     background-color: #4c5260;
@@ -72,6 +77,14 @@ body {
 .ivu-upload {
   display: inline-block;
 }
+
+/* .ivu-spin-fix {
+    background-color: transparent;
+}
+.ivu-spin-fix .ivu-spin-main {
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, .5);
+} */
 
 .seach_condition {
     width: 100%;

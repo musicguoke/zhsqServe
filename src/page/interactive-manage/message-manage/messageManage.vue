@@ -65,7 +65,7 @@ export default {
     data(){
         return{
             searchName:'',
-            messageManageHeight:window.innerHeight - 65-60-20-90-18 +'px',
+            messageManageHeight:window.innerHeight - 136 +'px',
             messageModal:false,
             modalTitle:'',
             isDetail:false,

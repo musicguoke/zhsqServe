@@ -73,7 +73,7 @@ import {getParameterList,addParameter,updateParameter,deleteParameter} from '@/a
 export default {
     data(){
         return{
-            parameterHeight:window.innerHeight - 65-60-20-90-18 +'px',
+            parameterHeight:window.innerHeight - 136 +'px',
             searchName:'',
             searchManagerType:'',
             parameterModal:false,

@@ -140,10 +140,11 @@ import { formatDate } from '@/components/dateChange/dateChange.js'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
+
 export default {
     data() {
         return {
-            userListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + 'px',
+            userListHeight: window.innerHeight - 136 + 'px',
             searchDepartment: '',
             searchCounty: '',
             searchSystem: '',
@@ -345,7 +346,9 @@ export default {
                 arGroup: this.userForm.arGroup,//用户组
                 arBranch: this.userForm.arBranch, //部门
                 arAreacode: this.userForm.arAreacode,//区县
-                arSource: this.userForm.arSource//来源
+                arSource: this.userForm.arSource,//来源
+                sysIds:this.userForm.sysIds,//多个系统编号
+                grIds:this.userForm.grIds,//多个用用角色编号
             }
             // if (this.isAdd) {
             //     addUser(data).then(res => {

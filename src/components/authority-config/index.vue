@@ -1,21 +1,24 @@
 <template>
   <div class="card-content" style="min-height: 400px;">
     <Steps :current="current" v-if="newSys">
-      <Step title="基本信息" content="这里是该步骤的描述信息"></Step>
-      <Step title="功能配置" content="这里是该步骤的描述信息"></Step>
-      <Step title="数据配置" content="这里是该步骤的描述信息"></Step>
-      <Step title="地图配置" content="这里是该步骤的描述信息"></Step>
-      <Step title="字段权限" content="这里是该步骤的描述信息"></Step>
+      <Step title="基本信息" content=""></Step>
+      <Step title="上传欢迎页" content=""></Step>
+      <Step title="功能配置" content=""></Step>
+      <Step title="数据配置" content=""></Step>
+      <Step title="地图配置" content=""></Step>
+      <Step title="字段权限" content=""></Step>
     </Steps>
-    <Menu mode="horizontal" style="width: 100%" v-if="!newSys" :theme="theme" active-name="0" @on-select="tabChange">
+    <Menu mode="horizontal" ref="tab_menu" style="width: 100%" v-if="!newSys" :theme="theme" 
+      :active-name="tabActiveName" @on-select="tabChange">
       <MenuItem name="0">基本信息</MenuItem>
-      <MenuItem name="1">功能配置</MenuItem>
-      <MenuItem name="2">数据配置</MenuItem>
-      <MenuItem name="3">地图配置</MenuItem>
-      <MenuItem name="4">字段权限</MenuItem>
+      <MenuItem name="1">上传欢迎页</MenuItem>
+      <MenuItem name="2">功能配置</MenuItem>
+      <MenuItem name="3">数据配置</MenuItem>
+      <MenuItem name="4">地图配置</MenuItem>
+      <MenuItem name="5">字段权限</MenuItem>
     </Menu>
     <div class="current-content">
-      <Form :model="formItem" :label-width="80" style="width: 400px" v-show="current == 0 && sysOrRole">
+      <Form :model="formItem" :label-width="80" style="width: 400px" v-if="current == 0 && sysOrRole">
         <FormItem label="系统名称">
           <Input v-model="formItem.sysName" placeholder="请输入系统名称"></Input>
         </FormItem>
@@ -39,14 +42,8 @@
             <Option value="0">暂不启用</Option>
           </Select>
         </FormItem>
-        <FormItem label="上传欢迎页">
-          <Input placeholder="上传后的地址" style="width: 68%"></Input>
-          <Upload action="//jsonplaceholder.typicode.com/posts/">
-            <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
-          </Upload>
-        </FormItem>
       </Form>
-      <Form :model="formRoleItem" :label-width="80" style="width: 400px" v-show="current == 0 && !sysOrRole">
+      <Form :model="formRoleItem" :label-width="80" style="width: 400px" v-if="current == 0 && !sysOrRole">
         <FormItem label="角色名称">
           <Input v-model="formRoleItem.grName" placeholder="请输入角色名称"></Input>
         </FormItem>
@@ -57,36 +54,43 @@
           </Select>
         </FormItem>
       </Form>
-      <div style="width: 400px" v-show="current == 1">
+      <div style="width: 400px" v-if="current == 1">
+        <Form>
+          <FormItem label="上传手机端欢迎页">
+            <Select v-model="uploadType" style="width:100px">
+              <Option value="手机端">手机端</Option>
+              <Option value="Pad端">Pad端</Option>
+            </Select>
+            <Input placeholder="上传后的地址" style="width: 47%"></Input>
+            <Upload action="//jsonplaceholder.typicode.com/posts/">
+              <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+            </Upload>
+          </FormItem>
+        </Form>
+      </div>
+      <div style="width: 400px" v-if="current == 2">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig">
         </Table>
       </div>
-      <div v-show="current == 2">
+      <div v-if="current == 3" class="table-tree-box">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-expand-click="loadData" @on-selection-change="selectDataConfig"></my-tree>
       </div>
-      <div style="width: 400px" v-show="current == 3">
+      <div style="width: 400px" v-if="current == 4">
         <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
         </Table>
       </div>
-      <div style="width: 400px" class="select-box" v-show="current == 4">
+      <div style="width: 400px" class="select-box" v-if="current == 5">
         <Form :label-width="80">
-          <FormItem label="一级权限">
-            <Select v-model="funNum" placeholder="一级权限0~10">
-              <Option v-for="(item, index) in funAry1" :value="item" :key="index">
-                {{item}}
-              </Option>
+          <FormItem label="权限等级">
+            <Select @on-change="qx1Change" placeholder="请选择权限等级">
+              <Option value="一级权限">一级权限</Option>
+              <Option value="二级权限">二级权限</Option>
+              <Option value="三级权限">三级权限</Option>
             </Select>
           </FormItem>
-          <FormItem label="二级权限">
-            <Select v-model="funNum" placeholder="二级权限11~20">
-              <Option v-for="(item, index) in funAry2" :value="item" :key="index">
-                {{item}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="三级权限">
-            <Select v-model="funNum" placeholder="三级权限21~30">
-              <Option v-for="(item, index) in funAry3" :value="item" :key="index">
+          <FormItem label="请选择权限">
+            <Select v-model="funNum" placeholder="请先选择权限等级">
+              <Option v-for="(item, index) in funAry" :value="item" :key="index">
                 {{item}}
               </Option>
             </Select>
@@ -139,13 +143,13 @@ export default {
   },
   data() {
     return {
+      contentHeight: window.innerHeight - 136 + 'px',
       code: '', // 目录树code
+      tabActiveName: '0',
       theme: 'light',
+      uploadType: '',
       current: 0,
       btnContent: '下一步',
-      funAry1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      funAry2: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      funAry3: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
       formItem: {
         sysName: "",
         type: "",
@@ -164,6 +168,7 @@ export default {
       tabDataIdStr: '',
       mapIdStr: '',
       funNum: '',
+      funAry: [],
       sysId: '',
       grId: '',
       selectedRow: '', //选中编辑的系统项
@@ -197,7 +202,7 @@ export default {
           align: 'center'
         },
         {
-          title: '地图名称',
+          title: '功能名称',
           key: 'name'
         }
       ],
@@ -208,28 +213,44 @@ export default {
           align: 'center'
         },
         {
-          title: '功能名称',
+          title: '地图名称',
           key: 'name'
         }
       ]
+    }
+  },
+  watch: {
+    // 手动更新iview menu选中项
+    tabActiveName() {
+      this.$nextTick(() => {
+        this.$refs.tab_menu.updateActiveName()
+      })
     }
   },
   created() {},
   methods: {
     cancel() {
       this.$emit('cancel')
+      this.initFormData()
+    },
+    initFormData() {
+      Object.assign(this.$data, this.$options.data())
+      this._getAreaList()
+      this._getFeature()
+      this._getMapConfig()
     },
     tabChange(name) {
+      this.tabActiveName = name
       this.current = parseInt(name)
     },
     next() {
-      if (this.current == 3) {
+      if (this.current == 4) {
         this.btnContent = '完成'
       }
-      if (this.current == 4) {
+      if (this.current == 5) {
         this.done()
       }
-      if (this.current < 4) {
+      if (this.current < 5) {
         this.current += 1
       }
     },
@@ -267,6 +288,16 @@ export default {
       let id = []
       section.map(v => id.push(v.id))
       this.cilentAuthorityStr = id.toString()
+    },
+    // 权限选择
+    qx1Change(value) {
+      if(value === '一级权限') {
+        this.funAry = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      } else if(value === '二级权限') {
+        this.funAry = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+      } else {
+        this.funAry = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+      }
     },
     handleCheckData(arr) {
       let list = []

@@ -56,3 +56,29 @@ export function importHotSearch(data) {
         return Promise.resolve(res.data)
     })
 }
+//词库
+export function getLexicon(data) {
+    return axios.post(`${url}/sys/msWordLibraryController/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function addLexicon(data) {
+    return axios.post(`${url}/sys/msWordLibraryController/insert.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function updateLexicon(data) {
+    return axios.post(`${url}/sys/msWordLibraryController/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function deleteLexicon(data) {
+    return axios.post(`${url}/sys/msWordLibraryController/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function importLexicon(data) {
+    return axios.post(`${url}/sys/msWordLibraryController/importFile.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
