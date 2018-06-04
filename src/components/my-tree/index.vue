@@ -21,6 +21,7 @@
         <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
           <td :class="{'label-box': column.type === 'selection'}" 
             v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
+            <!-- 市县不让选择 -->
             <label v-if="column.type === 'selection'">
               <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
             </label>
@@ -399,7 +400,11 @@ export default {
     },
     // 返回内容
     renderBody(row, column, index) {
-      return row[column.key]
+      if(column.key === 'updatetime') {
+        return row[column.key] ? this._mm.formatDate(row[column.key]) : ''
+      } else {
+        return row[column.key]
+      }
     },
     // 默认选中
     renderCheck(data) {

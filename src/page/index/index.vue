@@ -1,6 +1,6 @@
 <template>
   <Content>
-    <Card>
+    <Card style="margin-top: 17px">
       <div class="card-content">
         <div class="banner" ref="ebox"></div>
         <div class="data-content">

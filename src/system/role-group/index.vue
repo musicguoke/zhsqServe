@@ -36,7 +36,7 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-if="isShow" ref="authConfig" :id="sysId" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-show="isShow" ref="authConfig" :id="sysId" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -67,7 +67,6 @@ export default {
   },
   mounted() {
     this.$refs.authConfig._getDateTree()
-    this.$refs.authConfig._getAreaList()
     this.$refs.authConfig._getFeature()
     this.$refs.authConfig._getMapConfig()
   },
