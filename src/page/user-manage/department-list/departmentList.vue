@@ -69,6 +69,19 @@
             </div>
         </Form>
     </Modal>
+    <!-- <span style="float:right;padding-right:5px;display:block">
+            <i
+              on-click={() => this.append(data)}
+              class="el-icon-circle-plus"
+              style="color:#20a0ff"
+            />
+            &nbsp;
+            <i
+              on-click={() => this.remove(node, data)}
+              class="el-icon-circle-close"
+              style="color:#ff3800"
+            />
+      </span> -->
 </Content>
 </template>
 
@@ -116,19 +129,6 @@ export default {
         <span style="font-size: 14px;width:100%;">
           <span style="float:left">
             <span title={node.label}>{node.label}</span>
-          </span>
-          <span style="float:right;padding-right:5px;display:block">
-            <i
-              on-click={() => this.append(data)}
-              class="el-icon-circle-plus"
-              style="color:#20a0ff"
-            />
-            &nbsp;
-            <i
-              on-click={() => this.remove(node, data)}
-              class="el-icon-circle-close"
-              style="color:#ff3800"
-            />
           </span>
         </span>
       );
