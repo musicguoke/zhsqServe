@@ -81,10 +81,6 @@ export default {
 .ivu-menu {
   z-index: 901;
 }
-.ivu-select-dropdown {
-  z-index: 902;
-}
-
 .container {
   display: flex;
   justify-content: space-between;

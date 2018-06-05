@@ -28,9 +28,9 @@
         <FormItem label="类型编号" prop="typeid">
           <Input v-model="editItemForm.typeid" placeholder="数据更新时间"></Input>
         </FormItem>
-        <FormItem label="插入类型" prop="typestatus">
+        <!-- <FormItem label="插入类型" prop="typestatus">
           <Input v-model="editItemForm.typestatus" placeholder="数据更新时间"></Input>
-        </FormItem>
+        </FormItem> -->
       </Form>
     </Modal>
   </div>
@@ -71,8 +71,6 @@ export default {
         this._mm.errorTips('数据类型id不能为空')
       } else if(this.editItemForm.typename == '') {
         this._mm.errorTips('数据类型名称不能为空')
-      } else if(this.editItemForm.typestatus == '') {
-        this._mm.errorTips('数据类型状态不能为空')
       } else if(!newOrEdit) {
         this._updateDataType(this.editItemForm)
       } else {

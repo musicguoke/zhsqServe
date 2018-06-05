@@ -3,9 +3,7 @@
     <div class="seach_condition">
       <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
     </div>
-    <div class="table-tree-box" :style="{maxHeight: tableHeight}">
-      <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick" @on-expand-click="loadData"></tree-table>
-    </div>
+    <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick" @on-expand-click="loadData"></tree-table>
     <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
       <h3 slot="header" style="color:#2D8CF0">修改目录</h3>
       <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right">
@@ -53,7 +51,7 @@
           <div class="importSlotTitle">导入须知</div>
           <p>1、导入文件大小不超过2MB.</p>
           <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
-            <a href="/mouldFile/ms_branch_struct.xlsx" download="ms_branch_struct.xlsx">点此下载.</a>
+            <a :href="`${uploadUrl}/sys/msTabDataController/downloadImportedFile.do`" download="ms_branch_struct.xlsx">点此下载.</a>
           </p>
         </div>
       </Form>
@@ -65,7 +63,14 @@
 import { url } from '@/api/config.js'
 import TreeTable from '@/components/my-tree/index'
 import { getDateTree } from '@/api/system'
-import { getAreaList, getAreaCatalog, getMsTabDatainfoById, updateMsTabDatainfo, deleteMsTabDatainfo, importMsTabFile } from '@/api/catalog'
+import { 
+  getAreaList,
+  getAreaCatalog,
+  getMsTabDatainfoById,
+  updateMsTabDatainfo,
+  deleteMsTabDatainfo,
+  importMsTabFile
+} from '@/api/catalog'
 
 export default {
   components: {
@@ -73,7 +78,6 @@ export default {
   },
   data() {
     return {
-      tableHeight: window.innerHeight - 258 + 'px',
       data3: [],
       code: '',
       searchName: '',

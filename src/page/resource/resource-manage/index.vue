@@ -4,7 +4,7 @@
       <BreadcrumbItem>资源管理</BreadcrumbItem>
       <BreadcrumbItem>资源列表</BreadcrumbItem>
     </Breadcrumb>
-    <Card :style="style">
+    <Card :style="{maxHeight: contentHeight}">
       <div class="card-content">
         <Menu theme="light" active-name="resource-catalog" @on-select="menuChange">
           <MenuItem name="resource-catalog">数据资源目录</MenuItem>
@@ -30,11 +30,7 @@
 export default {
   data() {
     return {
-      style: {
-        height: window.innerHeight - 174 + 'px',
-        overflow: 'hidden'
-      },
-      // contentHeight: window.innerHeight - 174 + 'px',
+      contentHeight: window.innerHeight - 174 + 'px',
       searchName: '',
       searchType: 1,
       pageLength:0,
@@ -71,11 +67,8 @@ export default {
   color: #495060;
 }
 .table {
-  width: 900px;
+  width: 100%;
   margin-left: 16px;
-  position: absolute;
-  top: 16px;
-  right: 16px;
 }
 .ivu-table-wrapper {
   width: 100%;

@@ -30,6 +30,10 @@ body {
   color: #fff;
 }
 
+.ivu-select-dropdown {
+  z-index: 902;
+}
+
 /* 首页布局 */
 
 .layout {
