@@ -13,7 +13,6 @@
           </div>
           <div class="search_button">
             <i-button @click="show">新增</i-button>
-            <i-button class="marginLeft">导入</i-button>
           </div>
         </div>
         <div class="tableSize">

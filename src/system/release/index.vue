@@ -9,7 +9,6 @@
         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
         <div class="search_button">
           <i-button class="marginLeft" @click="build">新增</i-button>
-          <i-button class="marginLeft">导入</i-button>
         </div>
       </div>
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
@@ -48,28 +47,17 @@
           <Button type="primary" :loading="savePassLoading" @click="saveEditPass">保存</Button>
         </div>
       </Modal>
-      <Modal 
-        v-model="editCatalogModal" 
-        :closable='false' 
-        :mask-closable=false 
-        :width="500"
-        @on-ok="saveCatalog"
-        @on-cancel="cancelEdit"
-      >
+      <Modal v-model="editCatalogModal" :closable='false' :mask-closable=false :width="500" @on-ok="saveCatalog" @on-cancel="cancelEdit">
         <h3 slot="header" style="color:#2D8CF0">数据目录</h3>
         <Form :label-width="100" label-position="right">
           <FormItem label="数据名称">
             <Input v-model="editItemForm.dpName" disabled></Input>
           </FormItem>
-          <tree-table 
-            :items='catalogData' 
-            :columns='catalogColumns' 
-            @on-row-click="rowClick"
-            @on-selection-change="selectDataConfig"
-          >
+          <tree-table :items='catalogData' :columns='catalogColumns' @on-row-click="rowClick" @on-selection-change="selectDataConfig">
           </tree-table>
         </Form>
       </Modal>
+      
     </Card>
   </div>
 </template>
@@ -172,14 +160,14 @@ export default {
     cancelEdit() {
       this.editItemModal = false
       this.cancelCatalog = false
-      this.editItemForm =  {
+      this.editItemForm = {
         dpName: '',
         dpType: '',
         dpListorder: ''
       }
     },
     saveEditPass() {
-      if(this.isAdd) {
+      if (this.isAdd) {
         this._addTopicData(this.editItemForm)
       } else {
         this._updateTopicData(this.editItemForm)
