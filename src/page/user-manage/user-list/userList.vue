@@ -387,8 +387,10 @@ export default {
                 this.userForm.sysId += v.sysId +','
                 this.userForm.grId += v.grId + ','
             })
+            console.log(this.userForm)
             this.userForm.sysId = this.userForm.sysId.substring(0,this.userForm.sysId.length -1)
             this.userForm.grId = this.userForm.grId.substring(0,this.userForm.grId.length -1)
+            console.log(this.userForm)
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,

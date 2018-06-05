@@ -13,9 +13,10 @@ import SearchVisit from "@/page/behavior/search-visit/index";
 import ResourceManage from "@/page/resource/resource-manage/index";
 import SearchManage from "@/page/resource/search-manage/index";
 
-//
+//交互
 import MessageManage from "@/page/interactive-manage/message-manage/messageManage";
 import PushManage from "@/page/interactive-manage/push-manage/pushManage";
+import TechnicalSupport from "@/page/interactive-manage/technical-support/technicalSupport";
 
 // system
 import SIndex from "@/system/index";
@@ -34,6 +35,7 @@ import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfi
 import ResourceCatalog from "@/page/resource/resource-manage/resource-item/resourceCatalog.vue";
 import DataTarget from "@/page/resource/resource-manage/resource-item/dataTarget.vue"
 import AreaTarget from "@/page/resource/resource-manage/resource-item/areaTarget.vue"
+import STopicType from "@/page/resource/resource-manage/resource-item/specialTopicType.vue"
 //search
 import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
 import PeripheryHotspot from "@/page/resource/search-manage/search-item/peripheryHotspot.vue";
@@ -150,6 +152,11 @@ const router = new Router({
                             path: "area-target",
                             component: AreaTarget,
                             meta: { title: "区域指标" }
+                        },
+                        {
+                            path: "sTopic-type",
+                            component: STopicType,
+                            meta: { title: "专题类型" }
                         }
                     ]
                 },
@@ -190,6 +197,12 @@ const router = new Router({
                     name: "PushManage",
                     component: PushManage,
                     meta: { title: "推送管理" }
+                },
+                {
+                    path: "technical-support",
+                    name: "TechnicalSupport",
+                    component: TechnicalSupport,
+                    meta: { title: "技术支持" }
                 },
                 {
                     path: "parameter-configure",
