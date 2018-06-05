@@ -6,7 +6,7 @@
                 <!-- <i-button @click="openAddModal()">新增</i-button> -->
             </div>
         </div>
-        <el-table :data="dataTargetData" border style="width: 100%">
+        <el-table :data="areaTargetData" border style="width: 100%">
             <el-table-column prop="title" label="标题" width="200">
             </el-table-column>
             <el-table-column prop="dataId" label="数据编号" sortable>
@@ -29,30 +29,30 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
         </div>
-        <Modal v-model="dataTargetModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="dataTargetForm" label-position="left" :label-width="100">
+        <Modal v-model="areaTargetModal" :title=modalTitle @on-ok="addOrUpdate">
+            <Form :model="areaTargetForm" label-position="left" :label-width="100">
                 <FormItem label="数据名称">
-                    <Input v-model="dataTargetForm.name" ></Input>
+                    <Input v-model="areaTargetForm.name" ></Input>
                 </FormItem>
                 <FormItem label="数据编码">
-                    <Input v-model="dataTargetForm.dataId" ></Input>
+                    <Input v-model="areaTargetForm.dataId" ></Input>
                 </FormItem>
                 <FormItem label="标题">
-                    <Input v-model="dataTargetForm.title" ></Input>
+                    <Input v-model="areaTargetForm.title" ></Input>
                 </FormItem>
                 <FormItem label="数据标签">
-                    <Input v-model="dataTargetForm.label" ></Input>
+                    <Input v-model="areaTargetForm.label" ></Input>
                 </FormItem>
                 <FormItem label="指标">
-                    <Input v-model="dataTargetForm.cityTarget" ></Input>
+                    <Input v-model="areaTargetForm.cityTarget" ></Input>
                 </FormItem>
                 <FormItem label="行政区划">
-                    <Select v-model="dataTargetForm.areacode" :label-in-value=true @on-change="getCodeAndName">
+                    <Select v-model="areaTargetForm.areacode" :label-in-value=true @on-change="getCodeAndName">
                         <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="年份">
-                    <Input v-model="dataTargetForm.year" ></Input>
+                    <Input v-model="areaTargetForm.year" ></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -60,7 +60,7 @@
 </template>
 <script>
 import { getAreaCode } from '@/api/user-service'
-import { getDataTarget,updateDataTarget,deleteDataTarget } from '@/api/dataSource-service'
+import { getAreaTarget,addAreaTarget,updateAreaTarget,deleteAreaTarget } from '@/api/dataSource-service'
 export default {
     data(){
         return{
@@ -68,19 +68,16 @@ export default {
             pageLength:0,
             isAdd:true,
             modalTitle:'',
-            dataTargetData:[],
-            dataTargetModal:false,
+            areaTargetData:[],
+            areaTargetModal:false,
             countyList:[],
-            dataTargetForm:{
+            areaTargetForm:{
                 id:'',
-                dataId:'',
                 areacode:'',
                 areaname:'',
                 year:'',
                 cityTarget:'',
-                title:'',
-                label:'',
-                name:''
+                countyTarget:''
             },
             nowPage:1
         }
@@ -94,16 +91,16 @@ export default {
                 })
             }
         }),
-        this._getDataTarget(1)
+        this._getAreaTarget(1)
     },
     methods:{
-        _getDataTarget(page){
+        _getAreaTarget(page){
             let data ={
                 pageNo:page,
                 pageSize:10, 
                 title:this.searchName 
             }
-            getDataTarget(data).then(res=>{
+            getAreaTarget(data).then(res=>{
                 this.pageLength = res.data.total
                 this.dataTargetData = res.data.list
             })
@@ -111,7 +108,7 @@ export default {
         //分页点击
         pageChange(Page){
             this.nowPage = Page
-            this._getDataTarget(Page)
+            this._getAreaTarget(Page)
         },
         //打开新增模态框
         openAddModal(){
@@ -146,10 +143,10 @@ export default {
                 label:this.dataTargetForm.label,
                 name:this.dataTargetForm.name
             }
-            updateDataTarget(data).then(res=>{
+            updateAreaTarget(data).then(res=>{
                 if(res.code == 20000){
                     this._mm.successTips('修改成功');
-                    this._getDataTarget(this.nowPage)
+                    this._getAreaTarget(this.nowPage)
                 }
             })  
         },
@@ -165,7 +162,7 @@ export default {
                 content: '删除后数据无法恢复，是否继续？',
                 onOk: () => {
                     this.dataTargetData.splice(params.$index, 1);
-                    deleteDataTarget(data).then(res => {
+                    deleteAreaTarget(data).then(res => {
                         if (res.code = 20000) {
                             this._mm.successTips('删除成功')
                             this.total--

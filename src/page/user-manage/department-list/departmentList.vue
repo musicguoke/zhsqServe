@@ -35,8 +35,10 @@
                         <FormItem label="序号" :label-width="100">
                             <Input v-model="departmentInfoForm.listorder"></Input>
                         </FormItem>
-                        <FormItem style="text-align:center">
+                        <FormItem>
+                          <div style="text-align:center;width:100%">
                             <Button type="primary"  icon="document" @click="saveDepartment">保存</Button>
+                          </div>
                         </FormItem>
                     </Form>
                 </Col>
@@ -193,8 +195,10 @@ export default {
       };
         addAndUpdateDepartment(data).then(res => {
           if ((res.code = 20000)) {
-            this.$Message.success("保存成功");
+            this._mm.successTips("保存成功");
             this._getDepartmentList();
+          }else{
+            this._mm.errorTips(res.message);
           }
       });
     },

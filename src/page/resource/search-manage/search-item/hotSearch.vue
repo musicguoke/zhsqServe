@@ -12,7 +12,7 @@
             </el-table-column>
             <el-table-column prop="dataname" label="热搜内容">
             </el-table-column>
-            <el-table-column prop="parentsCode" label="父节点">
+            <el-table-column prop="parentsCode" label="大类编码">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
@@ -68,13 +68,7 @@
     </div>
 </template>
 <script>
-import {
-  getHotSearch,
-  addHotSearch,
-  updateHotSearch,
-  deleteHotSearch,
-  importHotSearch
-} from "@/api/search-service";
+import {getHotSearch,addHotSearch,updateHotSearch,deleteHotSearch,importHotSearch} from "@/api/search-service";
 export default {
   data() {
     return {
@@ -142,37 +136,29 @@ export default {
     },
     //点击确定
     addOrUpdate(){
-      let data = {}
-      if(this.searchType == 3){
-        data = {
-          method:'save',
-          name:this.hotSpotForm.name,
-          parentid:this.hotSpotForm.parentid,
-          dataId:this.hotSpotForm.dataId,
-          listorder:this.hotSpotForm.listorder
-        }
-      }else if(this.searchType == 4){
-        data = {
-          method:'save',
-          dataname:this.hotSearchForm.dataname,
-          parentsCode:this.hotSearchForm.parentsCode,
-          dataCode:this.hotSearchForm.dataCode,
-          listorder:this.hotSearchForm.listorder
-        }
-      }
+       let data = {
+            dataname:this.hotSearchForm.dataname,
+            parentsCode:this.hotSearchForm.parentsCode,
+            dataCode:this.hotSearchForm.dataCode,
+            listorder:this.hotSearchForm.listorder
+       }
       if(this.isAdd){
         addHotSearch(data).then(res=>{
             if(res.code == 20000){
-              this.$Message.success('添加成功');
-              this._getHotSearch(1)
+              this._mm.successTips('添加成功');
+              this._getHotSearch(this.nowPage)
+            }else{
+              this._mm.errorTips(res.message)
             }
         })
       }else{
         data.id = this.hotSearchForm.id
         updateHotSearch(data).then(res=>{
             if(res.code == 20000){
-              this.$Message.success('修改成功');
+              this._mm.successTips('修改成功');
               this._getHotSearch(this.nowPage)
+            }else{
+               this._mm.errorTips(res.message)
             }
         }) 
       }
@@ -187,7 +173,9 @@ export default {
             data = {id:params.row.id,method:'delete'}
             deleteHotSearch(data).then(res=>{
                 if(res.code == 20000){
-                  this.$Message.success('删除成功');
+                  this._mm.successTips('删除成功');
+                }else{
+                  this._mm.errorTips(res.message)
                 }
             })
           },

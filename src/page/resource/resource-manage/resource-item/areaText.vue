@@ -8,9 +8,7 @@
             </div>
         </div>
         <el-table :data="areaTextData" border style="width: 100%">
-            <el-table-column prop="id" label="ID" width="100" sortable>
-            </el-table-column>
-            <el-table-column prop="areacode" label="区域编码">
+            <el-table-column prop="areacode" label="区域编码" sortable>
             </el-table-column>
             <el-table-column prop="dataId" label="数据编码">
             </el-table-column>
@@ -160,24 +158,29 @@ export default {
                     areacode:this.areaTextForm.areacode,
                     title:this.areaTextForm.title,
                     year:this.areaTextForm.year,
+                    dataId:this.areaTextForm.dataId,
                     filePath:this.areaTextForm.filePath,
                     listorder:this.areaTextForm.listorder
                 }
             if(this.isAdd){
                 addAreaText(data).then(res=>{
                     if(res.code == 20000){
-                        this.$Message.success('添加成功');
+                        this._mm.successTips('添加成功')
+                        this._getAreaText(this.nowPage)
+                    }else{
+                        this._mm.errorTips(res.message);  
                     }
                 })
             }else{
                 data.id = this.areaTextForm.id
                 updateAreaText(data).then(res=>{
                     if(res.code == 20000){
-                        this.$Message.success('修改成功');
+                        this._mm.successTips('修改成功')
                         this._getAreaText(this.nowPage)
+                    }else{
+                        this._mm.errorTips(res.message);  
                     }
                 })
-                
             }
         },
         //删除
@@ -190,7 +193,9 @@ export default {
                     data = {id:params.row.id,method:'delete'}
                     deleteAreaText(data).then(res=>{
                         if(res.code == 20000){
-                        this.$Message.success('删除成功');
+                            this._mm.successTips('删除成功');
+                        }else{
+                            this._mm.errorTips(res.message);
                         }
                     })
                 },

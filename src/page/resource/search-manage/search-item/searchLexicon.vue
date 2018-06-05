@@ -24,21 +24,15 @@
         </div>
         <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="lexiconForm" label-position="left" :label-width="100">
-                <FormItem label="热搜名">
-                    <Input v-model="lexiconForm.dataname" placeholder="请输入热搜名..."></Input>
-                </FormItem>
-                <FormItem label="大类编码">
-                    <Input v-model="lexiconForm.parentsCode" placeholder="请输入大类编码..."></Input>
-                </FormItem>
                 <FormItem label="数据编码">
-                    <Input v-model="lexiconForm.dataCode" placeholder="请输入数据编码..."></Input>
+                    <Input v-model="lexiconForm.dataId" placeholder="请输入..."></Input>
                 </FormItem>
-                <FormItem label="序号">
-                    <Input v-model="lexiconForm.listorder" placeholder="请输入序号..."></Input>
+                <FormItem label="名称">
+                    <Input v-model="lexiconForm.name" placeholder="请输入..."></Input>
                 </FormItem>
             </Form>
         </Modal>
-        <Modal v-model="importModal" title='导入热搜' @on-ok="saveImport">
+        <Modal v-model="importModal" title='导入词库' @on-ok="saveImport">
           <Form :model="importForm" label-position="left" :label-width="100">
               <FormItem label="导入类型">
                   <Select v-model="importForm.type">
@@ -79,10 +73,8 @@ export default {
       modalTitle: "",
       nowPage:1,
       lexiconForm: {
-        dataname: "",
-        parentsCode: "",
-        dataCode: "",
-        listorder: "",
+        dataId: "",
+        name: "",
         id:""
       },
       importForm:{
@@ -133,37 +125,27 @@ export default {
     },
     //点击确定
     addOrUpdate(){
-      let data = {}
-      if(this.searchType == 3){
-        data = {
-          method:'save',
-          name:this.hotSpotForm.name,
-          parentid:this.hotSpotForm.parentid,
-          dataId:this.hotSpotForm.dataId,
-          listorder:this.hotSpotForm.listorder
-        }
-      }else if(this.searchType == 4){
-        data = {
-          method:'save',
-          dataname:this.hotSearchForm.dataname,
-          parentsCode:this.hotSearchForm.parentsCode,
-          dataCode:this.hotSearchForm.dataCode,
-          listorder:this.hotSearchForm.listorder
-        }
+      let data = {
+         dataId:this.lexiconForm.dataId,
+         name:this.lexiconForm.name
       }
       if(this.isAdd){
         addLexicon(data).then(res=>{
             if(res.code == 20000){
-              this.$Message.success('添加成功');
-              this._getLexicon(1)
+               this._mm.successTips('添加成功')
+               this._getLexicon(this.nowPage)
+            }else{
+               this._mm.errorTips(res.message)     
             }
         })
       }else{
         data.id = this.lexiconForm.id
         updateLexicon(data).then(res=>{
             if(res.code == 20000){
-              this.$Message.success('修改成功');
+              this._mm.successTips('修改成功')
               this._getLexicon(this.nowPage)
+            }else{
+              this._mm.errorTips(res.message)
             }
         }) 
       }
@@ -176,9 +158,11 @@ export default {
         onOk: () => {
             this.lexiconData.splice(params.$index, 1)
             data = {id:params.row.id,method:'delete'}
-            deleteHotSearch(data).then(res=>{
+            deleteLexicon(data).then(res=>{
                 if(res.code == 20000){
-                  this.$Message.success('删除成功');
+                  this._mm.successTips('删除成功');
+                }else{
+                  this._mm.errorTips(res.message)
                 }
             })
           },

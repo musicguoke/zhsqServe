@@ -171,36 +171,30 @@ export default {
             }
         },
         addOrUpdate(){
-            let data = {}
+            let data = {
+                userName:this.managerForm.userName,
+                realName:this.managerForm.realName,
+                password:MD5(this.managerForm.password).toString(),
+                tel:this.managerForm.tel,
+                email:this.managerForm.email,
+                role:this.managerForm.role,
+                sysId:Array.from(this.sysId)
+            }
             if(this.isAdd){
-                data = {
-                    userName:this.managerForm.userName,
-                    realName:this.managerForm.realName,
-                    password:MD5(this.managerForm.password).toString(),
-                    tel:this.managerForm.tel,
-                    email:this.managerForm.email,
-                    role:this.managerForm.role,
-                    sysId:Array.from(this.sysId)
-                }
                 addManager(data).then(res=>{
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this._mm.successTips('添加成功');
+                    }else{
+                        this._mm.errorTips(res.message);
                     }
                 })
             }else{
-                data = {
-                    id:this.managerForm.id,
-                    userName:this.managerForm.userName,
-                    realName:this.managerForm.realName,
-                    password:this.managerForm.password,
-                    tel:this.managerForm.tel,
-                    email:this.managerForm.email,
-                    role:this.managerForm.role,
-                    sysId:Array.from(this.sysId)
-                }
+                data.id = this.managerForm.id
                 updateManager(data).then(res=>{
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this._mm.successTips('修改成功');
+                    }else{
+                        this._mm.errorTips(res.message);
                     }
                 })
             }
@@ -215,7 +209,9 @@ export default {
                         deleteManager(data).then(res=>{
                             if (res.code == 20000) {
                                 this.userData.splice(params.$index, 1);
-                                this.$Message.success('删除成功');
+                                this._mm.successTips('删除成功');
+                            }else{
+                                this._mm.errorTips(res.message);
                             }
                         })
                     },

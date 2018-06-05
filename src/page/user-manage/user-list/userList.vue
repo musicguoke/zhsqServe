@@ -8,7 +8,7 @@
             <div>
                 <div class="seach_condition">
                     <div class="condition_list">
-                        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @change="_getUserList(1)"></Input>
+                        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @change="_getUserList(1)" disabled ></Input>
                         <!-- <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
                         <Option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
@@ -35,7 +35,7 @@
                     </el-table-column>
                     <el-table-column prop="arEmail" label="邮箱" width="180">
                     </el-table-column>
-                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByUserGroup" filter-placement="bottom-end">
+                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column prop="name" label="部门" :filters="departmentFilterList" :filter-method="filterByDepartment" filter-placement="bottom-end">
                     </el-table-column>
@@ -43,9 +43,9 @@
                     </el-table-column>
                     <el-table-column label="操作" width="160" align="center">
                         <template slot-scope="scope">
-                            <Button type="info" @click="equipmentOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" icon="edit" title="编辑"></Button>
-                            <Button type="error" @click="remove(scope)" size="small" icon="trash-a" title="删除"></Button>
+                            <!-- <Button type="info" @click="equipmentOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button> -->
+                            <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight"  title="编辑">编辑</Button>
+                            <Button type="error" @click="remove(scope)" size="small"  title="删除">删除</Button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -96,11 +96,11 @@
                         <Button type="info" icon="plus" title="新增系统角色选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
                     </div>
                     <Form label-position="left">
-                        <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index">
+                        <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
                             <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
                                 <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                            <Select v-model="item.groupId" style="width:220px">
+                            <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index">
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:10px;" v-show="$index != 0"></Button>
@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import {    getAreaCode, getUserList, addUser, updateUser, deleteUser,
+import { getAreaCode, getUserList, addUser, updateUser, deleteUser,
     getEquipment, updateEquipment, getRolesList} from '@/api/user-service'
 import { formatDate } from '@/components/dateChange/dateChange.js'
 import { getSystemList } from '@/api/system'
@@ -168,8 +168,10 @@ export default {
                 arBranch: '', //部门
                 arAreacode: '',//区县
                 arSource: '',//来源
-                sysIds: '',//系统编号
-                grIds:'',//角色编号
+                name:'',
+                sysId: '',//系统编号
+                grId:'',//角色编号
+                arId:''
             },
             equipmentForm: {
 
@@ -203,7 +205,7 @@ export default {
                     label: 'android_ipad'
                 }
             ],
-            sysAndGroupList: [{ sysId: '', groupId: '' }],
+            sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
             nowSystemLength: 1
         }
@@ -220,10 +222,9 @@ export default {
                     value: res.data.list[i].areaname
                 })
             }
+            this._getUserList(1)
         }),
-        this._getUserList(1)
         this._getDepartmentList()
-        this._getSystemList()
     },
     methods: {
         userAddOpen() {
@@ -233,8 +234,9 @@ export default {
             for (let i in this.userForm) {
                 this.userForm[i] = '';
             }
-            this.sysAndGroupList = [{ sysId: '', groupId: '' }]
-            // this.systemList = []
+            this.sysAndGroupList = [{ sysId: '', grId: '' }]
+            this.systemList = []
+            this._getSystemList()
             this.groupList = []
             this.nowSystemLength = 1
         },
@@ -247,6 +249,24 @@ export default {
                 if (params.row[i]) {
                     this.userForm[i] = params.row[i]
                 }
+            }
+            this.$refs.department.selectedSingle = this.userForm.name
+            this.systemList = []
+            this.groupList = []
+            this.nowSystemLength = 1
+            this.sysAndGroupList = []
+            this._getSystemList()
+            if(this.userForm.sysId.toString().indexOf(',') != -1){
+                let sysArray = this.userForm.sysId.split(',')
+                let groupArray = this.userForm.grId.split(',')
+                for(let i in sysArray){
+                    this.sysAndGroupList.push({
+                        sysId:sysArray[i],
+                        grId:groupArray[i]
+                    })
+                }
+            }else{
+                 this.sysAndGroupList.push({ sysId: this.userForm.sysId, grId:this.userForm.grId })
             }
         },
         _getDepartmentList() {
@@ -317,7 +337,10 @@ export default {
                     this.userData.splice(params.$index, 1);
                     deleteUser(data).then(res => {
                         if (res.code = 20000) {
-                            this.$Message.success('删除成功');
+                            this._mm.successTips('删除成功')
+                            this.total--
+                        }else{
+                            this._mm.errorTips(res.message);
                         }
                     })
                 },
@@ -325,10 +348,9 @@ export default {
 
                 }
             });
-
         },
-        filterByUserGroup(value, row) {
-            return row.userGroup === value;
+        filterByAreaCode(value, row) {
+            return row.areaname === value;
         },
         filterByDepartment(value, row) {
             return row.name === value;
@@ -348,8 +370,13 @@ export default {
                         data[i].addTime = Math.abs(data[i].addTime)
                     }
                     if(data[i].addTime){
-                        data[i].addTime = formatDate(new Date(data[i].addTime),'yyyy-MM-dd')
+                        data[i].addTime = formatDate(new Date(data[i].addTime*1000),'yyyy-MM-dd')
                     }
+                    this.countyList.map(v=>{
+                        if(v.value == data[i].arAreacode){
+                            data[i].areaname = v.label
+                        }
+                    })
                     this.userData.push(data[i])
                 }
                 this.total = res.data.total
@@ -357,11 +384,11 @@ export default {
         },
         addOrUpdateUser() {
             this.sysAndGroupList.map(v=>{
-                this.userForm.sysIds += v.sysId +','
-                this.userForm.grIds += v.groupId + ','
+                this.userForm.sysId += v.sysId +','
+                this.userForm.grId += v.grId + ','
             })
-            this.userForm.sysIds = this.userForm.sysIds.substring(0,this.userForm.sysIds.length -1)
-            this.userForm.grIds = this.userForm.grIds.substring(0,this.userForm.grIds.length -1)
+            this.userForm.sysId = this.userForm.sysId.substring(0,this.userForm.sysId.length -1)
+            this.userForm.grId = this.userForm.grId.substring(0,this.userForm.grId.length -1)
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
@@ -374,20 +401,24 @@ export default {
                 arBranch: this.userForm.arBranch, //部门
                 arAreacode: this.userForm.arAreacode,//区县
                 arSource: this.userForm.arSource,//来源
-                sysIds:this.userForm.sysIds,//多个系统编号
-                grIds:this.userForm.grIds,//多个用用角色编号
+                sysIds:this.userForm.sysId,//多个系统编号
+                grIds:this.userForm.grId,//多个用用角色编号
             }
-            console.log(data)
             if (this.isAdd) {
                 addUser(data).then(res => {
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this._mm.successTips('添加成功')
+                    }else{
+                        this._mm.errorTips(res.message);
                     }
                 })
             } else {
+                data.arId = this.userForm.arId
                 updateUser(data).then(res => {
                     if (res.code == 20000) {
-                        this.$Message.info('修改成功');
+                        this._mm.successTips('修改成功')
+                    }else{
+                        this._mm.errorTips(res.message);
                     }
                 })
             }
@@ -400,7 +431,6 @@ export default {
         handleNodeClick(data) {
             this.$refs.department.selectedSingle = data.name
             this.userForm.arBranch = data.id
-            console.log(this.userForm)
         },
         //点击添加，新增一行系统角色选择
         addChooseSystem() {
@@ -408,7 +438,7 @@ export default {
                 this.$Message.warning('当前只有' + this.systemLength + '个系统可供选择');
             } else {
                 this.nowSystemLength++
-                this.sysAndGroupList.push({ sysId: '', groupId: '' })
+                this.sysAndGroupList.push({ sysId: '', grId: '' })
                 this._getSystemList()
             }
         },
@@ -428,29 +458,37 @@ export default {
             let setList = Array.from(new Set(list))
             if (list.length > setList.length) {
                 this.$Message.warning('同一个系统下只能选择一个角色')
-                this.sysAndGroupList[index] = {
-                    sysId:'',
-                    groupId:''
-                }
                 this.$refs['item' + index][0].selectedSingle = ''
                 this.$refs['item' + index][0].model = ''
-                return
+                this.sysAndGroupList[index] = {
+                    sysId:'',
+                    grId:''
+                }
+            }else{
+                if(!id){
+                    return
+                }
+                getRolesList(id).then(res => {
+                    let data = res.data.list
+                    if(data.length == 0){
+                        this.$refs['group' + index][0].notFound = true
+                    }else{
+                        this.$refs['group' + index][0].notFound = false
+                    }
+                    let array = []
+                    for (let i in data) {
+                        array.push({
+                            value: data[i].grId,
+                            label: data[i].grName
+                        })
+                    }
+                    if (this.groupList[index]) {
+                        this.groupList.splice(index, 1, array)
+                    } else {
+                        this.groupList.push(array)
+                    }
+                })
             }
-            getRolesList(id).then(res => {
-                let data = res.data.list
-                let array = []
-                for (let i in data) {
-                    array.push({
-                        value: data[i].grId,
-                        label: data[i].grName
-                    })
-                }
-                if (this.groupList[index]) {
-                    this.groupList.splice(index, 1, array)
-                } else {
-                    this.groupList.push(array)
-                }
-            })
         }
     }
 }
