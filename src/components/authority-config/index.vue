@@ -56,12 +56,12 @@
       <div style="width: 500px" v-show="current == 1">
         <Form>
           <FormItem label="上传欢迎页">
-            <Select v-model="uploadType" style="width:100px">
-              <Option value="手机端">手机端</Option>
-              <Option value="Pad端">Pad端</Option>
+            <Select v-model="uploadForm.type" style="width:100px">
+              <Option value="1">手机端</Option>
+              <Option value="2">Pad端</Option>
             </Select>
-            <Input placeholder="上传后的地址" style="width: 47%"></Input>
-            <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <Input v-model="uploadForm.file" placeholder="上传后的地址" style="width: 64%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/uploadEquImage.do?type=${uploadForm.type}`" with-credentials :on-success="handleSuccess">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
@@ -110,6 +110,7 @@
 </template>
 
 <script>
+import { url } from '@/api/config'
 import {
   getAreaQx,
   getDateTree,
@@ -144,6 +145,7 @@ export default {
     return {
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298 + 'px',
+      uploadUrl: url,
       code: '', // 目录树code
       tabActiveName: '0',
       theme: 'light',
@@ -160,6 +162,10 @@ export default {
       formRoleItem: {
         grName: '',
         grIspass: '1'
+      },
+      uploadForm: {
+        file: '',
+        type: ''
       },
       areaQxList: [],
       dataTree: [],
@@ -273,6 +279,10 @@ export default {
       } else {
         this._updateRole()
       }
+    },
+    // 图片上传成功
+    handleSuccess(res) {
+      this.uploadForm.file = res.data
     },
     selectMapConfig(section, row) {
       // 已选择地图项
@@ -594,12 +604,15 @@ export default {
 form {
   width: 100%;
 }
-.select-box,
-.ivu-form-item-content {
+.select-box {
   display: flex;
 }
 .ivu-menu-horizontal {
   height: 26px;
   line-height: 26px;
+}
+.ivu-upload {
+  margin-left: 175px;
+  margin-top: 16px;
 }
 </style>
