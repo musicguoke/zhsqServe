@@ -8,9 +8,9 @@ export function getAreaCode() {
     const data = {
         method: 'list',
         pageNo: '1',
-        pageSize: '50',
+        pageSize: '60',
     }
-    return axios.post(`${url}/sys/areaQx/list.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/msAreaCode/list.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

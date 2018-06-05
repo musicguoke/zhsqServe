@@ -8,7 +8,7 @@
             </div>
         </div>
         <el-table :data="hotspotData" border style="width: 100%">
-            <el-table-column prop="id" label="Id" width="100" sortable>
+            <el-table-column prop="dataId" label="Id" sortable>
             </el-table-column>
             <el-table-column prop="name" label="热点名">
             </el-table-column>
@@ -147,16 +147,20 @@ data() {
       if(this.isAdd){
           addHotspot(data).then(res=>{
             if(res.code == 20000){
-              this.$Message.success('添加成功');
-              this._getHotspot(1)
+              this._mm.successTips('添加成功');
+              this._getHotspot(this.nowPage)
+            }else{
+              this._mm.errorTips(res.message)
             }
           })
       }else{
           data.id = this.hotSpotForm.id
           updateHotspot(data).then(res=>{
             if(res.code == 20000){
-              this.$Message.success('修改成功');
+              this._mm.successTips('修改成功');
               this._getHotspot(this.nowPage)
+            }else{
+              this._mm.errorTips(res.message)
             }
           })
       }
@@ -171,8 +175,10 @@ data() {
             data = {id:params.row.id,method:'delete'}
             deleteHotspot(data).then(res=>{
               if(res.code == 20000){
-                this.$Message.success('删除成功');
-              }
+                  this._mm.successTips('删除成功');
+              }else{
+                  this._mm.errorTips(res.message)
+                }
             })
           },
         onCancel: () => {            

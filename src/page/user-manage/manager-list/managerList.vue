@@ -1,6 +1,6 @@
 <template>
-<Content :style="{height:managerHeight}">
-    <Breadcrumb :style="{padding: '17px 0'}">
+<Content :style="{maxHeight:managerHeight}">
+    <Breadcrumb :style="{marginBottom: '17px'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>管理员列表</BreadcrumbItem>
     </Breadcrumb>
@@ -9,9 +9,6 @@
       <div class="seach_condition">
          <div class="condition_list">
             <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <i-select :model.sync="searchManagerType" style="width:200px" placeholder="请选择" class="marginLeft">
-                <i-option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</i-option>
-            </i-select>
         </div>
          <div class="search_button">
             <i-button @click="managerAddOpen">新增</i-button>
@@ -25,9 +22,11 @@
             </el-table-column>
             <el-table-column prop="realName" label="姓名">
             </el-table-column>
-             <el-table-column prop="tel" label="电话">
+            <el-table-column prop="tel" label="电话">
             </el-table-column>
             <el-table-column prop="email" label="邮箱">
+            </el-table-column>
+            <el-table-column prop="roleName" label="角色" :filters="managerTypeList" :filter-method="filterByRole" filter-placement="bottom-end">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
@@ -104,14 +103,17 @@ export default {
                 {
                     value: 1,
                     label: '超级管理员',
+                    text:'超级管理员',
                 },
                 {
                     value: 2,
                     label: '市级管理员',
+                    text: '市级管理员',
                 },
                 {
                     value: 3,
                     label: '普通管理员',
+                    text: '普通管理员',
                 }
             ]
         }
@@ -136,6 +138,15 @@ export default {
             }
             getManagerList(data).then(res=>{
                 this.userData = res.data.list
+                this.userData.map(v=>{
+                    if(v.role == 1){
+                        v.roleName = '超级管理员'
+                    }else if(v.role == 2){
+                        v.roleName = '市级管理员'
+                    }else if(v.role == 3){
+                        v.roleName = '普通管理员'
+                    }
+                })
                 this.pageLength = res.data.total
             })
         },
@@ -160,36 +171,30 @@ export default {
             }
         },
         addOrUpdate(){
-            let data = {}
+            let data = {
+                userName:this.managerForm.userName,
+                realName:this.managerForm.realName,
+                password:MD5(this.managerForm.password).toString(),
+                tel:this.managerForm.tel,
+                email:this.managerForm.email,
+                role:this.managerForm.role,
+                sysId:Array.from(this.sysId)
+            }
             if(this.isAdd){
-                data = {
-                    userName:this.managerForm.userName,
-                    realName:this.managerForm.realName,
-                    password:MD5(this.managerForm.password).toString(),
-                    tel:this.managerForm.tel,
-                    email:this.managerForm.email,
-                    role:this.managerForm.role,
-                    sysId:Array.from(this.sysId)
-                }
                 addManager(data).then(res=>{
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this._mm.successTips('添加成功');
+                    }else{
+                        this._mm.errorTips(res.message);
                     }
                 })
             }else{
-                data = {
-                    id:this.managerForm.id,
-                    userName:this.managerForm.userName,
-                    realName:this.managerForm.realName,
-                    password:this.managerForm.password,
-                    tel:this.managerForm.tel,
-                    email:this.managerForm.email,
-                    role:this.managerForm.role,
-                    sysId:Array.from(this.sysId)
-                }
+                data.id = this.managerForm.id
                 updateManager(data).then(res=>{
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this._mm.successTips('修改成功');
+                    }else{
+                        this._mm.errorTips(res.message);
                     }
                 })
             }
@@ -204,7 +209,9 @@ export default {
                         deleteManager(data).then(res=>{
                             if (res.code == 20000) {
                                 this.userData.splice(params.$index, 1);
-                                this.$Message.success('删除成功');
+                                this._mm.successTips('删除成功');
+                            }else{
+                                this._mm.errorTips(res.message);
                             }
                         })
                     },
@@ -212,6 +219,9 @@ export default {
                         
                     }
                 });
+        },
+        filterByRole(value, row){
+            return row.role === value
         }
     }
 }

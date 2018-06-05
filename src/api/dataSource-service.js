@@ -74,3 +74,40 @@ export function deletesMapConfigureById(data) {
         return Promise.resolve(res.data)
     })
 }
+/**数据指标**/
+export function getDataTarget(data) {
+    return axios.post(`${url}/sys/dataTarget/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function updateDataTarget(data) {
+    return axios.post(`${url}/sys/dataTarget/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function deleteDataTarget(data) {
+    return axios.post(`${url}/sys/dataTarget/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+/**区域指标**/
+export function getAreaTarget(data) {
+    return axios.post(`${url}/sys/msAreaTarget/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function addAreaTarget(data) {
+    return axios.post(`${url}/sys/msAreaTarget/insert.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function updateAreaTarget(data) {
+    return axios.post(`${url}/sys/msAreaTarget/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function deleteAreaTarget(data) {
+    return axios.post(`${url}/sys/msAreaTarget/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

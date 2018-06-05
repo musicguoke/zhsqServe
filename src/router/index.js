@@ -32,7 +32,8 @@ import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue
 import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
 import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
 import ResourceCatalog from "@/page/resource/resource-manage/resource-item/resourceCatalog.vue";
-
+import DataTarget from "@/page/resource/resource-manage/resource-item/dataTarget.vue"
+import AreaTarget from "@/page/resource/resource-manage/resource-item/areaTarget.vue"
 //search
 import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
 import PeripheryHotspot from "@/page/resource/search-manage/search-item/peripheryHotspot.vue";
@@ -139,6 +140,16 @@ const router = new Router({
                             path: "map-configure",
                             component: MapConfigure,
                             meta: { title: "地图配置" }
+                        },
+                        {
+                            path: "data-target",
+                            component: DataTarget,
+                            meta: { title: "数据指标" }
+                        },
+                        {
+                            path: "area-target",
+                            component: AreaTarget,
+                            meta: { title: "区域指标" }
                         }
                     ]
                 },
