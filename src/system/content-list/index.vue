@@ -4,7 +4,7 @@
       <BreadcrumbItem>目录管理</BreadcrumbItem>
       <BreadcrumbItem>资源目录</BreadcrumbItem>
     </Breadcrumb>
-    <Card>
+    <Card :style="{maxHeight: contentHeight}">
       <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
     </Card>
   </Content>
@@ -12,7 +12,7 @@
 
 <script>
 import { getDateTree } from '@/api/system'
-import TreeTable from '@/components/tree-table/index'
+import TreeTable from '@/components/my-tree/index'
 
 export default {
   components: {
@@ -20,6 +20,7 @@ export default {
   },
   data() {
     return {
+      contentHeight: window.innerHeight - 174 + 'px',
       dataTree: [],
       dataColumns: [{
           title: '名称',
@@ -29,11 +30,11 @@ export default {
           key: 'id',
           sortable: true
         }, {
-          title: '类型',
-          key: 'type'
+          title: '排序',
+          key: 'listorder'
         }, {
           title: '更新时间',
-          key: 'time'
+          key: 'updatetime'
         }
       ]
     }

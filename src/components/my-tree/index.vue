@@ -21,11 +21,12 @@
         <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
           <td :class="{'label-box': column.type === 'selection'}" 
             v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
+            <!-- 市县不让选择 -->
             <label v-if="column.type === 'selection'">
               <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
             </label>
-            <div class="btn-td" v-if="column.type === 'action'">
-              <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">
+            <div class="btn-td" v-if="column.type === 'action'"> 
+              <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' v-if="checkBtn(item, action)" :key="action.text">
                 {{action.text}}
               </i-button>
             </div>
@@ -135,6 +136,14 @@ export default {
     }
   },
   methods: {
+    // 判断parentId，显示导入按钮
+    checkBtn(row, column) {
+      if(column.key && column.key === 'parentId') {
+        return row[column.key] === '-1' ? true : false
+      } else {
+        return true
+      }
+    },
     // 有无多选框折叠位置优化
     iconRow() {
       for (var i = 0, len = this.columns.length; i < len; i++) {
@@ -399,7 +408,11 @@ export default {
     },
     // 返回内容
     renderBody(row, column, index) {
-      return row[column.key]
+      if(column.key === 'updatetime') {
+        return row[column.key] ? this._mm.formatDate(row[column.key]) : ''
+      } else {
+        return row[column.key]
+      }
     },
     // 默认选中
     renderCheck(data) {

@@ -91,6 +91,7 @@ export default {
 .ivu-menu {
   display: flex;
   justify-content: space-between;
+  z-index: 901;
   &::after {
     background: transparent;
   }

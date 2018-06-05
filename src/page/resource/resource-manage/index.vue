@@ -4,7 +4,7 @@
       <BreadcrumbItem>资源管理</BreadcrumbItem>
       <BreadcrumbItem>资源列表</BreadcrumbItem>
     </Breadcrumb>
-    <Card :style="{maxHeight:resourceListHeight}">
+    <Card :style="{maxHeight: contentHeight}">
       <div class="card-content">
         <Menu theme="light" active-name="resource-catalog" @on-select="menuChange">
           <MenuItem name="resource-catalog">数据资源目录</MenuItem>
@@ -29,7 +29,7 @@
 export default {
   data() {
     return {
-      resourceListHeight: window.innerHeight - 174 + 'px',
+      contentHeight: window.innerHeight - 174 + 'px',
       searchName: '',
       searchType: 1,
       pageLength:0,

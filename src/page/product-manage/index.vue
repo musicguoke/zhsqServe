@@ -180,6 +180,7 @@ export default {
           } else {
             this._getSystemList()
             this.$refs.authConfig._getAreaList()
+            this.$refs.authConfig._getAreaCatalog()
             this.$refs.authConfig._getFeature()
             this.$refs.authConfig._getMapConfig()
           }

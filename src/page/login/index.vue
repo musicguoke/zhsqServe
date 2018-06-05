@@ -1,10 +1,9 @@
 <template>
   <div class="container">
+    <img class="bg" src="static/images/bg.png" alt="">
     <header>
-      <div class="wrap">
-        <img src="static/images/3.png">
-        <h2>重庆市综合市情系统</h2>
-      </div>
+      <img src="../../assets/logo.png">
+      <h2>重庆市综合市情系统</h2>
     </header>
     <div class="login">
       <img class="login-bg" src="static/images/leftImg.png">
@@ -93,152 +92,6 @@ export default {
 
 
 <style lang="scss" scoped>
-header {
-  width: 100%;
-  height: 74px;
-  background-color: #3a4255;
-}
-
-.wrap {
-  height: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.logo {
-  height: 100%;
-  color: #fff;
-  margin-left: 160px;
-  font-size: 22px;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-
-.logo p {
-  height: 100%;
-  line-height: 74px;
-}
-
-.logo p img {
-  display: inline-block;
-  margin-right: 14px;
-  padding-bottom: 6px;
-  vertical-align: middle;
-}
-
-.navbar {
-  height: 100%;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-}
-
-.tab_item {
-  position: relative;
-  height: 100%;
-  line-height: 74px;
-  color: #fff;
-}
-
-.tab_item a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.tab_item .tab_item_link {
-  padding: 6px 23px;
-}
-
-.tab_item span {
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.tab_item img {
-  padding-right: 6px;
-  padding-left: 23px;
-  vertical-align: middle;
-}
-
-.tab_item .tab_item_login {
-  display: inline-block;
-  line-height: 74px;
-  height: 100%;
-}
-
-.system_link_list {
-  width: 410px;
-  /* height: 300px; */
-  background-color: #3a4255;
-  position: absolute;
-  top: 76px;
-  left: 15px;
-  padding: 10px 4px 20px 4px;
-  display: none;
-}
-
-.system_link {
-  width: 100%;
-  height: 40px;
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-}
-
-.system_link span {
-  font-size: 14px;
-  margin-left: 5px;
-}
-
-.system_link_active {
-  background-color: #283142;
-}
-
-.active {
-  background-color: #283142;
-  background-size: inherit;
-  border: 1px solid #6b7485;
-}
-
-.main {
-  width: 100%;
-}
-
-.jumbotron {
-  width: 100%;
-  background-color: #056cb7;
-}
-
-.jumbotron_box {
-  width: 100%;
-  height: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.description {
-  color: #fff;
-  width: 420px;
-  margin-right: 50px;
-}
-
-.description span {
-  font-size: 26px;
-}
-
-.description p {
-  margin-top: 20px;
-  line-height: 30px;
-}
-
 .companyName,
 .baseInfo {
   width: 100%;
@@ -248,37 +101,37 @@ header {
 }
 
 .footer_line {
-  margin: 0 10px;
-  color: #b7bac1;
+  margin: 0 5px;
 }
 .container {
   width: 100%;
   height: 100%;
-  background: url(../../assets/bg.png) no-repeat;
-  background-size: cover;
-  background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.container header {
-  background-color: #f8fbfc;
-  height: 100px;
+.container .bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 
-.wrap {
-  width: 100%;
-  margin: 0;
+.container header {
+  height: 88px;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
-
-.wrap h2 {
+header h2 {
   margin-left: 30px;
-  font-size: 40px;
-  text-align: center;
-  color: #036eb7;
+  font-size: 32px;
+  color: #fff;
 }
 
 .login {
@@ -328,13 +181,4 @@ form .input {
   border-top: 10px solid #2399ea;
 }
 
-.loginBtn {
-  padding: 0 50px;
-  margin-top: 30px;
-}
-
-.login-container footer {
-  background-color: rgba(0, 0, 0, 0);
-  color: #4c5260;
-}
 </style>

@@ -18,6 +18,15 @@ export function getAreaList(page) {
   })
 }
 
+// 获取目录带区域
+export function getAreaCatalog() {
+
+  return axios.post(
+    `${url}/sys/msTabDataController/getGroupDataTreeAllByParentid.do`).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
 // 根据编号获取目录信息
 export function getMsTabDatainfoById(id) {
   const data = {

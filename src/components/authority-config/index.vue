@@ -8,8 +8,7 @@
       <Step title="地图配置" content=""></Step>
       <Step title="字段权限" content=""></Step>
     </Steps>
-    <Menu mode="horizontal" ref="tab_menu" style="width: 100%" v-if="!newSys" :theme="theme" 
-      :active-name="tabActiveName" @on-select="tabChange">
+    <Menu mode="horizontal" ref="tab_menu" style="width: 100%" v-if="!newSys" :theme="theme" :active-name="tabActiveName" @on-select="tabChange">
       <MenuItem name="0">基本信息</MenuItem>
       <MenuItem name="1">上传欢迎页</MenuItem>
       <MenuItem name="2">功能配置</MenuItem>
@@ -57,12 +56,12 @@
       <div style="width: 500px" v-show="current == 1">
         <Form>
           <FormItem label="上传欢迎页">
-            <Select v-model="uploadType" style="width:100px">
-              <Option value="手机端">手机端</Option>
-              <Option value="Pad端">Pad端</Option>
+            <Select v-model="uploadForm.type" style="width:100px">
+              <Option value="1">手机端</Option>
+              <Option value="2">Pad端</Option>
             </Select>
-            <Input placeholder="上传后的地址" style="width: 47%"></Input>
-            <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <Input v-model="uploadForm.file" placeholder="上传后的地址" style="width: 64%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/uploadEquImage.do?type=${uploadForm.type}`" with-credentials :on-success="handleSuccess">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
@@ -72,7 +71,7 @@
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig">
         </Table>
       </div>
-      <div v-show="current == 3" class="table-tree-box" :style="{height: tableHeight}">
+      <div v-show="current == 3" class="table-tree-box" :style="{maxHeight: tableHeight}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-expand-click="loadData" @on-selection-change="selectDataConfig"></my-tree>
       </div>
       <div style="width: 400px" v-show="current == 4">
@@ -82,7 +81,7 @@
       <div style="width: 400px" class="select-box" v-show="current == 5">
         <Form :label-width="80">
           <FormItem label="权限等级">
-            <Select @on-change="qx1Change" placeholder="请选择权限等级">
+            <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option value="一级权限">一级权限</Option>
               <Option value="二级权限">二级权限</Option>
               <Option value="三级权限">三级权限</Option>
@@ -111,6 +110,7 @@
 </template>
 
 <script>
+import { url } from '@/api/config'
 import {
   getAreaQx,
   getDateTree,
@@ -121,7 +121,7 @@ import {
   updateSystem
 } from '@/api/system'
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
-import { getAreaList, getMsTabDatainfoById } from '@/api/catalog'
+import { getAreaList, getMsTabDatainfoById, getAreaCatalog } from '@/api/catalog'
 import TreeTable from '@/components/tree-table/index'
 import MyTree from '@/components/my-tree/index'
 
@@ -145,10 +145,12 @@ export default {
     return {
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298 + 'px',
+      uploadUrl: url,
       code: '', // 目录树code
       tabActiveName: '0',
       theme: 'light',
       uploadType: '',
+      qxLevel: '一级权限',
       current: 0,
       btnContent: '下一步',
       formItem: {
@@ -161,15 +163,20 @@ export default {
         grName: '',
         grIspass: '1'
       },
+      uploadForm: {
+        file: '',
+        type: ''
+      },
       areaQxList: [],
       dataTree: [],
+      tempDataTree: [],
       mapConfigList: [],
       featureList: [],
       cilentAuthorityStr: '1',
       tabDataIdStr: '',
       mapIdStr: '',
       funNum: '',
-      funAry: [],
+      funAry: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       sysId: '',
       grId: '',
       selectedRow: '', //选中编辑的系统项
@@ -185,8 +192,8 @@ export default {
           key: 'id',
           sortable: true
         }, {
-          title: '类型',
-          key: 'type'
+          title: '排序',
+          key: 'listorder'
         }, {
           title: '更新时间',
           key: 'updatetime'
@@ -224,7 +231,7 @@ export default {
       })
     }
   },
-  created() {},
+  created() { },
   methods: {
     cancel() {
       this.$emit('cancel')
@@ -234,6 +241,7 @@ export default {
     initFormData() {
       Object.assign(this.$data, this.$options.data())
       this._getAreaList()
+      this._getAreaCatalog()
       this._getFeature()
       this._getMapConfig()
     },
@@ -272,6 +280,10 @@ export default {
         this._updateRole()
       }
     },
+    // 图片上传成功
+    handleSuccess(res) {
+      this.uploadForm.file = res.data
+    },
     selectMapConfig(section, row) {
       // 已选择地图项
       let id = []
@@ -290,9 +302,9 @@ export default {
     },
     // 权限选择
     qx1Change(value) {
-      if(value === '一级权限') {
+      if (value === '一级权限') {
         this.funAry = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-      } else if(value === '二级权限') {
+      } else if (value === '二级权限') {
         this.funAry = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
       } else {
         this.funAry = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
@@ -320,24 +332,20 @@ export default {
       getAreaList().then(res => {
         if (res.code === 20000) {
           this.areaQxList = res.data.list
-          res.data.list.map(v => {
-            v.title = v.areaname
-            v.id = v.areacode
-            this.dataTree.push(v)
-          })
         } else {
           this._mm.errorTips(res.message)
         }
       })
     },
+    _getAreaCatalog() {
+      getAreaCatalog().then(res => {
+        res.map(v => v._checked = false)
+        this.dataTree = this.tempDataTree = res
+      })
+    },
     _getDateTree(id) {
       getDateTree(id).then(res => {
-        this.dataTree.map(v => {
-          if (v.areacode === id) {
-            v.children = res
-          }
-        })
-        this.$refs.treeTable.initData(this.$refs.treeTable.deepCopy(this.dataTree), 1, null)
+        this.dataTree = this.tempDataTree = res
       })
     },
     _getMapConfig() {
@@ -412,7 +420,7 @@ export default {
           this.formItem = {
             sysName: res.data.sysName,
             type: res.data.type.toString(),
-            areacode: res.data.areacode.toString(),
+            areacode: res.data.areacode,
             enable: res.data.enable.toString()
           }
           this.sysId = res.data.id
@@ -444,28 +452,33 @@ export default {
           this.mapIdStr = list.toString()
           list = []
           res.data.msSystemDatainfoList.map(v => {
+            this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
             list.push(v.dataId)
           })
           this.tabDataIdStr = list.toString()
-          this.dataTree = this.checkData(this.dataTree, res.data.msSystemDatainfoList)
+          this.dataTree = this.tempDataTree
+          let level = parseInt(res.data.funNum / 10)
+          if(level === 0 ) {
+            this.qxLevel = '一级权限'
+          } else if(level === 1) {
+            this.qxLevel = '二级权限'
+          } else if(level === 2) {
+            this.qxLevel = '三级权限'
+          }
           this.funNum = res.data.funNum
         } else {
           this._mm.errorTips(res.message)
         }
       })
     },
-    checkData(list, idList) {
-      list.map((v, index) => {
-        v._checked = false
-        idList.map(h => {
-          if (v.id === h.dataId) {
-            v._checked = true
-          }
-          if (v.children) {
-            this.checkData(v.children, idList)
-          }
-        })
-        list.splice(index, 1, v)
+    checkData(list, id) {
+      list.map((h, index) => {
+        if (id === h.id) {
+          h._checked = true
+        } else if (h.children) {
+          this.checkData(h.children, id)
+        }
+        list.splice(index, 1, h)
       })
       return list
     },
@@ -506,28 +519,33 @@ export default {
           this.mapIdStr = list.toString()
           list = []
           res.data.msRoleDataList.map(v => {
+            this.tempDataTree = this.checkData(this.tempDataTree, v.sysData)
             list.push(v.sysData)
           })
           this.tabDataIdStr = list.toString()
-          this.dataTree = this.checkRoleData(this.dataTree, res.data.msRoleDataList)
+          this.dataTree = this.tempDataTree
+          let level = parseInt(res.data.funNum / 10)
+          if(level === 0 ) {
+            this.qxLevel = '一级权限'
+          } else if(level === 1) {
+            this.qxLevel = '二级权限'
+          } else if(level === 2) {
+            this.qxLevel = '三级权限'
+          }
           this.funNum = res.data.funNum
         } else {
           this._mm.errorTips(res.message)
         }
       })
     },
-    checkRoleData(list, idList) {
-      list.map((v, index) => {
-        v._checked = false
-        idList.map(h => {
-          if (v.id === h.sysData) {
-            v._checked = true
-          }
-          if (v.children) {
-            this.checkRoleData(v.children, idList)
-          }
-        })
-        list.splice(index, 1, v)
+    checkRoleData(list, id) {
+      list.map((h, index) => {
+        if (id === h.id) {
+          h._checked = true
+        } else if (h.children) {
+          this.checkData(h.children, id)
+        }
+        list.splice(index, 1, h)
       })
       return list
     },
@@ -586,11 +604,15 @@ export default {
 form {
   width: 100%;
 }
-.select-box, .ivu-form-item-content {
+.select-box {
   display: flex;
 }
 .ivu-menu-horizontal {
   height: 26px;
   line-height: 26px;
+}
+.ivu-upload {
+  margin-left: 175px;
+  margin-top: 16px;
 }
 </style>
