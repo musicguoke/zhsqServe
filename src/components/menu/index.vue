@@ -37,6 +37,7 @@
       </template>
       <MenuItem name="push-manage">推送管理</MenuItem>
       <MenuItem name="message-manage">短信管理</MenuItem>
+      <MenuItem name="technical-support">技术支持</MenuItem>
     </Submenu>
     <Submenu name="6">
       <template slot="title">

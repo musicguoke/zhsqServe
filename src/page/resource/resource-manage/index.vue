@@ -17,6 +17,7 @@
           <MenuItem name="macro-data">宏观数据</MenuItem>
           <MenuItem name="area-text">区域文本</MenuItem>
           <MenuItem name="data-target">数据指标</MenuItem>
+          <MenuItem name="STopic-type">专题类型</MenuItem>
         </Menu>
         <div class="table">
            <router-view/>
@@ -31,26 +32,6 @@ export default {
   data() {
     return {
       contentHeight: window.innerHeight - 174 + 'px',
-      searchName: '',
-      searchType: 1,
-      pageLength:0,
-      isAdd:true,
-      modalTitle:'',
-      macroData:[],
-      macroDataModal:false,
-      macroDataForm:{
-        name:'',
-        dataId:'',
-        areaCode:'',
-        areaName:'',
-        year:'',
-        title:'',
-        label:'',
-        x:'',
-        y:'',
-        dataDesc:'',
-        filedsData:''
-      },
     }
   },
   methods: {
