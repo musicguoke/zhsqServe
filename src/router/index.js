@@ -1,54 +1,51 @@
-import Vue from "vue";
-import Router from "vue-router";
-import Index from "@/page/index";
-import Login from "@/page/login/index";
-import Vindex from "@/page/index/index";
-import DepartmentList from "@/page/user-manage/department-list/departmentList";
-import UserList from "@/page/user-manage/user-list/userList";
-import ManagerList from "@/page/user-manage/manager-list/managerList";
-import SystemManage from "@/page/product-manage/index";
-import UserVisit from "@/page/behavior/user-visit/index";
-import DataVisit from "@/page/behavior/data-visit/index";
-import SearchVisit from "@/page/behavior/search-visit/index";
-import ResourceManage from "@/page/resource/resource-manage/index";
-import SearchManage from "@/page/resource/search-manage/index";
+const Index = r => require(['@/page/index'], r)
+const Login = r => require(['@/page/login/index'], r)
+const Vindex = r => require(['@/page/index/index'], r)
+const DepartmentList = r => require(['@/page/user-manage/department-list/departmentList'], r)
+const UserList = r => require(['@/page/user-manage/user-list/userList'], r)
+const ManagerList = r => require(['@/page/user-manage/manager-list/managerList'], r)
+const SystemManage = r => require(['@/page/product-manage/index'], r)
+const UserVisit = r => require(['@/page/behavior/user-visit/index'], r)
+const DataVisit = r => require(['@/page/behavior/data-visit/index'], r)
+const SearchVisit = r => require(['@/page/behavior/search-visit/index'], r)
+const ResourceManage = r => require(['@/page/resource/resource-manage/index'], r)
+const SearchManage = r => require(['@/page/resource/search-manage/index'], r)
 
 //交互
-import MessageManage from "@/page/interactive-manage/message-manage/messageManage";
-import PushManage from "@/page/interactive-manage/push-manage/pushManage";
-import TechnicalSupport from "@/page/interactive-manage/technical-support/technicalSupport";
+const MessageManage = r => require(['@/page/interactive-manage/message-manage/messageManage'], r)
+const PushManage = r => require(['@/page/interactive-manage/push-manage/pushManage'], r)
+const TechnicalSupport = r => require(['@/page/interactive-manage/technical-support/technicalSupport'], r)
 
 // system
-import SIndex from "@/system/index";
-import ContentList from "@/system/content-list/index";
-import SGroupList from "@/system/role-group/index";
-import Release from "@/system/release/index";
-import SystemList from "@/page/system-list/index";
+const SIndex = r => require(['@/system/index'], r)
+const ContentList = r => require(['@/system/content-list/index'], r)
+const SGroupList = r => require(['@/system/role-group/index'], r)
+const Release = r => require(['@/system/release/index'], r)
+const SystemList = r => require(['@/page/system-list/index'], r)
 
 // user
-import Personal from "@/page/personal/index";
+const Personal = r => require(['@/page/personal/index'], r)
 
 //resource
-import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
-import DataType from "@/page/resource/resource-manage/resource-item/data-type.vue";
-import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
-import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
-import ResourceCatalog from "@/page/resource/resource-manage/resource-item/resourceCatalog.vue";
-import DataTarget from "@/page/resource/resource-manage/resource-item/dataTarget.vue";
-import AreaTarget from "@/page/resource/resource-manage/resource-item/areaTarget.vue";
-import STopicType from "@/page/resource/resource-manage/resource-item/specialTopicType.vue";
+const AreaText = r => require(['@/page/resource/resource-manage/resource-item/areaText'], r)
+const DataType = r => require(['@/page/resource/resource-manage/resource-item/data-type'], r)
+const MacroData = r => require(['@/page/resource/resource-manage/resource-item/macroData'], r)
+const MapConfigure = r => require(['@/page/resource/resource-manage/resource-item/mapConfigure'], r)
+const ResourceCatalog = r => require(['@/page/resource/resource-manage/resource-item/resourceCatalog'], r)
+const DataTarget = r => require(['@/page/resource/resource-manage/resource-item/dataTarget'], r)
+const AreaTarget = r => require(['@/page/resource/resource-manage/resource-item/areaTarget'], r)
+const STopicType = r => require(['@/page/resource/resource-manage/resource-item/specialTopicType'], r)
 
 //search
-import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
-import PeripheryHotspot from "@/page/resource/search-manage/search-item/peripheryHotspot.vue";
-import Lexicon from "@/page/resource/search-manage/search-item/searchLexicon.vue";
+const HotSeach = r => require(['@/page/resource/search-manage/search-item/hotSearch'], r)
+const PeripheryHotspot = r => require(['@/page/resource/search-manage/search-item/peripheryHotspot'], r)
+const Lexicon = r => require(['@/page/resource/search-manage/search-item/searchLexicon'], r)
 
 //system-configure
-import ParameterConfigure from "@/page/system-configure/parameter-configure/parameterConfigure.vue";
-import DataAccess from "@/page/system-configure/data-access/dataAccess.vue";
-Vue.use(Router);
+const ParameterConfigure = r => require(['@/page/system-configure/parameter-configure/parameterConfigure'], r)
+const DataAccess = r => require(['@/page/system-configure/data-access/dataAccess'], r)
 
-const router = new Router({
+const router = new VueRouter({
     routes: [{
             path: "/",
             redirect: "login"
