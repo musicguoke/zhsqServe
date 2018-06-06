@@ -15,7 +15,9 @@ module.exports = {
   },
   externals: {
     'vue': 'Vue',
-    'vue-router': 'VueRouter'
+    'vue-router': 'VueRouter',
+    'iview': 'iView',
+    'axios': 'axios'
   },
   output: {
     path: config.build.assetsRoot,

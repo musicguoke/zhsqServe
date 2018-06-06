@@ -7,14 +7,7 @@
     </Breadcrumb>
     <Card>
       <div v-show="!isShow">
-        <div class="seach_condition">
-          <div class="condition_list">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-          </div>
-          <div class="search_button">
-            <i-button @click="show">新增</i-button>
-          </div>
-        </div>
+        <v-search :search-show="false" :import-show="false" @on-build="show"/>
         <div class="tableSize">
           <el-table :data="roleList" border style="width: 100%">
             <el-table-column prop="grId" label="Id" width="100" sortable>
@@ -43,10 +36,12 @@
 <script>
 import { getRolesList, updateRole, deleteRole, updateRoleMap } from '@/api/role'
 import AuthorityConfig from '@/components/authority-config/index'
+import vSearch from '@/components/search/index'
 
 export default {
   components: {
-    AuthorityConfig
+    AuthorityConfig,
+    vSearch
   },
   data() {
     return {
