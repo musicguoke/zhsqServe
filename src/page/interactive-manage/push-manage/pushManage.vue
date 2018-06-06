@@ -6,12 +6,7 @@
     </Breadcrumb>
     <Card>
   <div>
-      <div class="seach_condition">
-         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-         <div class="search_button">
-            <i-button @click="pushAddOpen">新增</i-button>
-         </div>
-      </div>
+      <v-search :search-show="false" :import-show="false" @on-build="pushAddOpen"/>
       <div class="tableSize">
         <el-table :data="pushData" border style="width: 100%">
             <el-table-column prop="pId" label="Id" width="60">
@@ -37,7 +32,7 @@
             </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" @on-change="pageChange"></Page>
+        <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
@@ -112,7 +107,11 @@
 <script>
 import {getPushList,addPushList,deletePush} from '@/api/interactive-service'
 import {getUserList} from '@/api/user-service'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             searchName:'',
@@ -209,7 +208,8 @@ export default {
             let data = {
                 methods: 'list',
                 pageNo: page,
-                pageSize: 10
+                pageSize: 10,
+                arTruename:this.searchUserName
             }
             getUserList(data).then(res => {
                 this.userData = []

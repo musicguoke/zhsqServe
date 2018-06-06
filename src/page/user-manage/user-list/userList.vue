@@ -5,26 +5,7 @@
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
         <Card>
-            <div>
-                <div class="seach_condition">
-                    <div class="condition_list">
-                        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @on-change="_getUserList(1)"></Input>
-                        <!-- <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
-                        <Option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
-                        <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
-                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select> -->
-                    </div>
-                    <div class="search_button">
-                        <i-button @click="userAddOpen">新增</i-button>
-                        <!-- <i-button class="marginLeft">导入</i-button> -->
-                    </div>
-                </div>
-            </div>
+            <v-search :importShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset"/>
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arLoginname" label="用户名">
@@ -51,7 +32,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" @on-change="pageChange" show-total></Page>
+                <Page :total=total :current="1" v-show="total>10" @on-change="pageChange" show-total show-elevator></Page>
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
@@ -140,8 +121,11 @@ import { formatDate } from '@/components/dateChange/dateChange.js'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
-
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data() {
         return {
             userListHeight: window.innerHeight - 136 + 'px',
@@ -261,9 +245,7 @@ export default {
                     })
                 }
             }else{
-                console.log(this.userForm)
                 this.sysAndGroupList.push({ sysId: this.userForm.sysId, grId:this.userForm.grId })
-                console.log(this.sysAndGroupList)
                 this._getRolesList(this.userForm.sysId,0)
             }
         },
@@ -319,6 +301,16 @@ export default {
             this.nowPage = page
             this._getUserList(page)
         },
+        //点击搜索
+        search(searchName){
+            this.searchName = searchName 
+            this._getUserList(1)
+        },
+        //点击清空
+        searchReset(){
+            this.searchName = ''
+            this._getUserList(1)
+        },
         equipmentOpen(params) {
             this.equipmentModal = true
             let data = {
@@ -362,7 +354,7 @@ export default {
         _getUserList(page) {
             let data = {
                 methods: 'list',
-                pageNo: page,
+                pageNo: page||tis.nowPage,
                 pageSize: 10,
                 arTruename:this.searchName
             }

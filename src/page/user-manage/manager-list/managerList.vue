@@ -6,14 +6,7 @@
     </Breadcrumb>
     <Card>
   <div>
-      <div class="seach_condition">
-         <div class="condition_list">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-        </div>
-         <div class="search_button">
-            <i-button @click="managerAddOpen">新增</i-button>
-         </div>
-      </div>
+      <v-search :searchShow="false" :importShow="false" @on-build="managerAddOpen" />
       <div class="tableSize">
         <el-table :data="userData" border style="width: 100%">
             <el-table-column prop="id" label="Id" width="60">
@@ -37,7 +30,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" v-show="pageLength>10"></Page>
+        <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
@@ -77,7 +70,11 @@
 import {getManagerList,addManager,updateManager,deleteManager} from '@/api/manager-service.js'
 import {getSystemList} from '@/api/system.js'
 import MD5 from 'crypto-js/md5'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             managerHeight:window.innerHeight - 136 +'px',
@@ -86,6 +83,7 @@ export default {
             managerModal:false,
             modalTitle:'',
             pageLength:0,
+            nowPage:1,
             managerForm:{
                 userName:'',
                 realName:'',
@@ -184,6 +182,7 @@ export default {
                 addManager(data).then(res=>{
                     if (res.code == 20000) {
                         this._mm.successTips('添加成功');
+                        this._getManagerList(this.nowPage)
                     }else{
                         this._mm.errorTips(res.message);
                     }
@@ -193,11 +192,16 @@ export default {
                 updateManager(data).then(res=>{
                     if (res.code == 20000) {
                         this._mm.successTips('修改成功');
+                        this._getManagerList(this.nowPage)
                     }else{
                         this._mm.errorTips(res.message);
                     }
                 })
             }
+        },
+        pageChange(page){
+            this.nowPage = page
+            this._getManagerList(page)
         },
         remove (params) {
             this.$Modal.confirm({
@@ -210,6 +214,7 @@ export default {
                             if (res.code == 20000) {
                                 this.userData.splice(params.$index, 1);
                                 this._mm.successTips('删除成功');
+                                this._getManagerList(this.nowPage)
                             }else{
                                 this._mm.errorTips(res.message);
                             }

@@ -7,10 +7,8 @@
     <Card>
   <div>
       <div class="seach_condition">
-         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-         <div class="search_button">
-            <i-button @click="messageAddOpen">新增</i-button>
-         </div>
+         <!-- <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input> -->
+        <i-button @click="messageAddOpen">发送短信</i-button>
       </div>
       <div class="tableSize">
         <el-table :data="massageData" border style="width: 100%">
@@ -33,7 +31,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="massageData.length" ></Page>
+        <Page :total="pageLength"  @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
@@ -61,7 +59,11 @@
 
 <script>
 import {getMessageList,addContacts,updateContacts,deleteContacts,sendMessage} from '@/api/interactive-service'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             searchName:'',
@@ -70,6 +72,7 @@ export default {
             modalTitle:'',
             isDetail:false,
             massageData:[],
+            pageLength:1,
             messageForm:{
                 tel:'',
                 messageInfo:'',
@@ -85,6 +88,7 @@ export default {
     methods:{
         _getMessageList(){
             getMessageList().then(res=>{
+                this.pageLength = res.data.total
                 this.massageData = res.data.list
             })
         },

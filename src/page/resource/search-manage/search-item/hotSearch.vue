@@ -1,12 +1,6 @@
 <template>
     <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <div class="search_button">
-              <i-button @click="openAddModal">新增</i-button>
-              <i-button class="marginLeft" @click="importModal = true">导入</i-button>
-            </div>
-        </div>
+        <v-search :search-show="false"  @on-build="openAddModal" @on-import="importModal = true"/>
         <el-table :data="hotSearchData" border style="width: 100%">
             <el-table-column prop="dataCode" label="数据编码" sortable>
             </el-table-column>
@@ -22,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange"></Page>
+            <Page :total="pageLength" @on-change="pageChange" show-total show-elevator></Page>
         </div>
         <Modal v-model="hotSearchModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="hotSearchForm" label-position="left" :label-width="100">
@@ -69,7 +63,11 @@
 </template>
 <script>
 import {getHotSearch,addHotSearch,updateHotSearch,deleteHotSearch,importHotSearch} from "@/api/search-service";
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
   data() {
     return {
       searchName: "",

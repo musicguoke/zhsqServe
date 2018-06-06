@@ -6,14 +6,7 @@
     </Breadcrumb>
     <Card>
   <div>
-      <div class="seach_condition">
-         <div class="condition_list">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-        </div>
-         <div class="search_button">
-            <i-button @click="parameterAddOpen">新增</i-button>
-         </div>
-      </div>
+      <v-search :search-show="false" :import-show="false" @on-build="parameterAddOpen"/>
       <div class="tableSize">
         <el-table :data="parameterData" border style="width: 100%">
             <el-table-column prop="metaId" label="Id" width="60">
@@ -35,7 +28,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange"></Page>
+        <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
@@ -70,7 +63,11 @@
 
 <script>
 import {getParameterList,addParameter,updateParameter,deleteParameter} from '@/api/systemConfigure-service.js'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             parameterHeight:window.innerHeight - 136 +'px',
