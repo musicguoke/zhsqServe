@@ -145,20 +145,20 @@ export default {
       if(this.isAdd){
         addHotSearch(data).then(res=>{
             if(res.code == 20000){
-              this._mm.successTips('添加成功');
+              this.$Message.success('添加成功');
               this._getHotSearch(this.nowPage)
             }else{
-              this._mm.errorTips(res.message)
+              this.$Message.error(res.message)
             }
         })
       }else{
         data.id = this.hotSearchForm.id
         updateHotSearch(data).then(res=>{
             if(res.code == 20000){
-              this._mm.successTips('修改成功');
+              this.$Message.success('修改成功');
               this._getHotSearch(this.nowPage)
             }else{
-               this._mm.errorTips(res.message)
+               this.$Message.error(res.message)
             }
         }) 
       }
@@ -173,9 +173,9 @@ export default {
             data = {id:params.row.id,method:'delete'}
             deleteHotSearch(data).then(res=>{
                 if(res.code == 20000){
-                  this._mm.successTips('删除成功');
+                  this.$Message.success('删除成功');
                 }else{
-                  this._mm.errorTips(res.message)
+                  this.$Message.error(res.message)
                 }
             })
           },

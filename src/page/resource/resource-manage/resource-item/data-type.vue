@@ -65,9 +65,9 @@ export default {
   methods: {
     saveModal() {
       if(this.editItemForm.typeid == '') {
-        this._mm.errorTips('数据类型id不能为空')
+        this.$Message.error('数据类型id不能为空')
       } else if(this.editItemForm.typename == '') {
-        this._mm.errorTips('数据类型名称不能为空')
+        this.$Message.error('数据类型名称不能为空')
       } else if(!newOrEdit) {
         this._updateDataType(this.editItemForm)
       } else {
@@ -105,7 +105,7 @@ export default {
           })
           this.data = res.data.list
         } else {
-          this._mm.errorTips()
+          this.$Message.error()
         }
       })
     },
@@ -121,7 +121,7 @@ export default {
           this.newOrEdit = false
           this.editDataModal = true
         } else {
-          this._mm.errorTips()
+          this.$Message.error()
         }
       })
     },
@@ -133,40 +133,40 @@ export default {
     _addDataType(data) {
       addDataType(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`添加${res.message}`)
+          this.$Message.success(`添加${res.message}`)
           this._getDataTypeList()
         } else {
-          this._mm.errorTips(`添加${res.message}`)
+          this.$Message.error(`添加${res.message}`)
         }
       })
     },
     _updateDataType(data) {
       updateDataType(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`修改${res.message}`)
+          this.$Message.success(`修改${res.message}`)
           this._getDataTypeList()
         } else {
-          this._mm.errorTips(`修改${res.message}`)
+          this.$Message.error(`修改${res.message}`)
         }
       })
     },
     _deleteDataType(id) {
       deleteDataType(id).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`删除${res.message}`)
+          this.$Message.success(`删除${res.message}`)
           this._getDataTypeList()
         } else {
-          this._mm.errorTips(`删除${res.message}`)
+          this.$Message.error(`删除${res.message}`)
         }
       })
     },
     _deleteDataTypes(data) {
       deleteDataTypes(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`批量删除${res.message}`)
+          this.$Message.success(`批量删除${res.message}`)
           this._getDataTypeList()
         } else {
-          this._mm.errorTips(`批量删除${res.message}`)
+          this.$Message.error(`批量删除${res.message}`)
         }
       })
     }

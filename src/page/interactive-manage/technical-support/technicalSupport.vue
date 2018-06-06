@@ -115,20 +115,20 @@ export default {
             if(this.isAdd){
                 addTechnicalSupport(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('添加成功')
+                        this.$Message.success('添加成功')
                         this._getTechnicalSupportList(this.nowPage)
                     }else{
-                        this._mm.successTips(res.message)
+                        this.$Message.success(res.message)
                     }
                 })
             }else{
                 data.id = this.technicalForm.id
                 updateTechnicalSupport(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('修改成功')
+                        this.$Message.success('修改成功')
                         this._getTechnicalSupportList(this.nowPage)
                     }else{
-                        this._mm.successTips(res.message)
+                        this.$Message.success(res.message)
                     }
                 })
             }
@@ -142,7 +142,7 @@ export default {
                     }
                     deleteTechnicalSupport(data).then(res=>{
                         if(res.code == 20000){
-                            this._mm.successTips('删除成功');
+                            this.$Message.success('删除成功');
                             this.technicalData.splice(params.$index, 1);
                             this._getTechnicalSupportList(this.nowPage)
                         }

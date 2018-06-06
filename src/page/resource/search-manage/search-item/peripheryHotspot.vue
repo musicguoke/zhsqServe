@@ -147,20 +147,20 @@ data() {
       if(this.isAdd){
           addHotspot(data).then(res=>{
             if(res.code == 20000){
-              this._mm.successTips('添加成功');
+              this.$Message.success('添加成功');
               this._getHotspot(this.nowPage)
             }else{
-              this._mm.errorTips(res.message)
+              this.$Message.error(res.message)
             }
           })
       }else{
           data.id = this.hotSpotForm.id
           updateHotspot(data).then(res=>{
             if(res.code == 20000){
-              this._mm.successTips('修改成功');
+              this.$Message.success('修改成功');
               this._getHotspot(this.nowPage)
             }else{
-              this._mm.errorTips(res.message)
+              this.$Message.error(res.message)
             }
           })
       }
@@ -175,9 +175,9 @@ data() {
             data = {id:params.row.id,method:'delete'}
             deleteHotspot(data).then(res=>{
               if(res.code == 20000){
-                  this._mm.successTips('删除成功');
+                  this.$Message.success('删除成功');
               }else{
-                  this._mm.errorTips(res.message)
+                  this.$Message.error(res.message)
                 }
             })
           },

@@ -150,9 +150,9 @@ export default {
     // 上传文件
     saveImport() {
       if (this.importFile.type === '') {
-        this._mm.errorTips('请选择导入类型')
+        this.$Message.error('请选择导入类型')
       } else if (this.importFile.file === '') {
-        this._mm.errorTips('请选择上传文件')
+        this.$Message.error('请选择上传文件')
       } else {
         let formData = new FormData(this.$refs.file_form)
         // 向 formData 对象中添加文件
@@ -193,7 +193,7 @@ export default {
             this.data3.push(v)
           })
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
@@ -216,10 +216,10 @@ export default {
     _deleteMsTabDatainfo(id) {
       deleteMsTabDatainfo(id).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`删除${res.message}`)
+          this.$Message.success(`删除${res.message}`)
           this._getAreaCatalog()
         } else {
-          this._mm.errorTips(`删除${res.message}`)
+          this.$Message.error(`删除${res.message}`)
         }
       })
     },
@@ -235,27 +235,27 @@ export default {
           }
           this.editItemModal = true
         } else {
-          this._mm.errorTips(`获取${res.message}`)
+          this.$Message.error(`获取${res.message}`)
         }
       })
     },
     _updateMsTabDatainfo(data) {
       updateMsTabDatainfo(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`修改${res.message}`)
+          this.$Message.success(`修改${res.message}`)
           this._getAreaCatalog()
         } else {
-          this._mm.errorTips(`修改${res.message}`)
+          this.$Message.error(`修改${res.message}`)
         }
       })
     },
     _importMsTabFile(data) {
       importMsTabFile(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(res.message)
+          this.$Message.success(res.message)
           this._getAreaCatalog()
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     }

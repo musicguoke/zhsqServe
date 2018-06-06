@@ -69,7 +69,7 @@ export default {
         if(res.code === 20000) {
           this.$router.replace('/')
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     }

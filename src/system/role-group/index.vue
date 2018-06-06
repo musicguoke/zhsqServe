@@ -96,17 +96,17 @@ export default {
           this.roleList = res.data.list
           this.total = res.data.total
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
     _deleteRole(id) {
       deleteRole(id).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`删除${res.message}`)
+          this.$Message.success(`删除${res.message}`)
           this._getRolesList()
         } else {
-          this._mm.errorTips(`删除${res.message}`)
+          this.$Message.error(`删除${res.message}`)
         }
       })
     }

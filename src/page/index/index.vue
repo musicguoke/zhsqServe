@@ -101,27 +101,31 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getIndex } from '@/api/service'
+import { getIndex, getLogStatistics, getMetaUrl } from '@/api/service'
 
 export default {
   data() {
     return {
       columns1: [
         {
+          title: '系统编码',
+          key: 'systemCode'
+        },
+        {
           title: '系统名称',
-          key: 'name'
+          key: 'systemName'
         },
         {
           title: '正常',
-          key: 'normal'
+          key: 'successRate'
         },
         {
           title: '异常',
-          key: 'error'
+          key: 'errorSize'
         },
         {
-          title: '时间',
-          key: 'date'
+          title: '总量',
+          key: 'totalSize'
         }
       ],
       data1: [],
@@ -134,6 +138,8 @@ export default {
   },
   mounted() {
     this._getIndex()
+    this._getMetaUrl()
+    this._getLogStatistics()
   },
   methods: {
     rowClassName(row, index) {
@@ -146,7 +152,7 @@ export default {
       var myChart = echarts.init(this.$refs.ebox);
       var option = {
         title: {
-          text: '系统访问趋势',
+          // text: '系统访问趋势',
           // subtext: '纯属虚构',
           top: 10,
           left: 10,
@@ -162,8 +168,6 @@ export default {
           icon: 'rect',
           itemWidth: 10,
           itemHeight: 10,
-          right: 10,
-          top: 10,
           textStyle: {
             color: '#fff',
             fontWeight: 'normal'
@@ -172,7 +176,7 @@ export default {
         },
         grid: {
           left: '5%',
-          right: '2%',
+          right: '5%',
           bottom: '15%'
         },
         calculable: true,
@@ -198,6 +202,22 @@ export default {
         yAxis: [
           {
             type: 'value',
+            name: '登录',
+            axisLine: {
+              lineStyle: {
+                color: '#fff'
+              }
+            },
+            splitLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            }
+          },
+          {
+            type: 'value',
+            name: '数据',
             axisLine: {
               lineStyle: {
                 color: '#fff'
@@ -217,6 +237,7 @@ export default {
             type: 'line',
             smooth: true,
             symbol: '',
+            yAxisIndex: 0,
             itemStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(
@@ -247,6 +268,7 @@ export default {
             name: '数据',
             type: 'line',
             smooth: true,
+            yAxisIndex: 1,
             itemStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(
@@ -349,7 +371,26 @@ export default {
     _getIndex() {
       getIndex().then(res => {
         if (res.code === 20000) {
-          this.accessResult = res.data.access
+          this.accessResult = res.data.aceessStatistical       
+          this.result  = res.data
+          this.pieInitial()
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
+    _getMetaUrl() {
+      getMetaUrl().then(res => {
+        if(res.code === 20000 && res.data) {
+          this.data1 = res.data.result
+        } else {
+          this.$Message.error('好像出什么问题了')
+        }
+      })
+    },
+    _getLogStatistics() {
+      getLogStatistics().then(res => {
+        if(res.code === 20000 && res.data) {
           this.dateArray = []
           this.dataArray = []
           this.loginArray = []
@@ -358,11 +399,9 @@ export default {
             this.dataArray.push(v.data.data)
             this.loginArray.push(v.data.login)
           })
-          this.result  = res.data.system
           this.lineInitial()
-          this.pieInitial()
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error('好像出什么问题了')
         }
       })
     }
