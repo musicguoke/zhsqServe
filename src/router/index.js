@@ -29,7 +29,7 @@ import Personal from "@/page/personal/index";
 
 //resource
 import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
-import DataType from '@/page/resource/resource-manage/resource-item/data-type.vue'
+import DataType from "@/page/resource/resource-manage/resource-item/data-type.vue";
 import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
 import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
 import ResourceCatalog from "@/page/resource/resource-manage/resource-item/resourceCatalog.vue";

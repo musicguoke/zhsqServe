@@ -23,16 +23,7 @@ export function logout(loginInfo) {
 //首页指标
 export function getIndex() {
   return axios
-    .post(`${url}/sys/msHomepageStatistical/statistical.do`)
-    .then(res => {
-      return Promise.resolve(res.data);
-    })
-}
-
-// 首页访问统计
-export function getAccessStatistical() {
-  return axios
-    .post(`${url}/sys/msHomepageStatistical/accessStatistical.do`)
+    .post(`${url}/sys/msHomepageStatistical/getLogStatistics.do`)
     .then(res => {
       return Promise.resolve(res.data);
     })

@@ -69,13 +69,13 @@
               <span class="item-title">今日动态</span>
               <span class="num user-num">
                 <span class="num-title">用户访问：</span>
-                <i>{{accessResult.todaytUser}}
+                <i>{{accessResult.todayUser}}
                   <b>人</b>
                 </i>
               </span>
               <span class="num data-num">
                 <span class="num-title">数据访问：</span>
-                <i>{{accessResult.todaytLogin}}
+                <i>{{accessResult.todayLogin}}
                   <b>条</b>
                 </i>
               </span>
@@ -101,7 +101,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getIndex, getAccessStatistical } from '@/api/service'
+import { getIndex } from '@/api/service'
 
 export default {
   data() {
@@ -146,14 +146,15 @@ export default {
           date: '2016-10-04'
         }
       ],
-      result: {},
-      accessResult: {}
+      result: [],
+      accessResult: {},
+      dateArray: [],
+      dataArray: [],
+      loginArray: []
     }
   },
   mounted() {
     this._getIndex()
-    this._getAccessStatistical()
-    this.lineInitial()
   },
   methods: {
     rowClassName(row, index) {
@@ -188,7 +189,7 @@ export default {
             color: '#fff',
             fontWeight: 'normal'
           },
-          data: ['预购', '成交']
+          data: ['登录', '数据']
         },
         grid: {
           left: '5%',
@@ -209,9 +210,10 @@ export default {
               show: false
             },
             axisTick: {
+              length: 1,
               show: false
             },
-            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            data: this.dateArray.reverse()
           }
         ],
         yAxis: [
@@ -232,7 +234,7 @@ export default {
         ],
         series: [
           {
-            name: '成交',
+            name: '登录',
             type: 'line',
             smooth: true,
             symbol: '',
@@ -260,10 +262,10 @@ export default {
                 )
               }
             },
-            data: [400, 342, 576, 123, 342, 423, 710]
+            data: this.loginArray.reverse()
           },
           {
-            name: '预购',
+            name: '数据',
             type: 'line',
             smooth: true,
             itemStyle: {
@@ -290,7 +292,7 @@ export default {
                 )
               }
             },
-            data: [200, 182, 434, 791, 390, 30, 10]
+            data: this.dataArray.reverse()
           }
         ]
       }
@@ -367,18 +369,26 @@ export default {
     },
     _getIndex() {
       getIndex().then(res => {
-        if(res.code === 20000) {
-          this.result = res.data
+        if (res.code === 20000) {
+          this.accessResult = res.data.access
+          this.dateArray = []
+          this.dataArray = []
+          this.loginArray = []
+          res.data.barChart.map(v => {
+            this.dateArray.push(v.date)
+            this.dataArray.push(v.data.data)
+            this.loginArray.push(v.data.login)
+          })
+          this.result.county = res.data.system[0].value
+          this.result.user = res.data.system[1].value
+          this.result.data = res.data.system[2].value
+          this.result.pc = res.data.system[3].value
+          this.result.android_pad = res.data.system[4].value
+          this.result.android_phone = res.data.system[5].value
+          this.result.ios_ipad = res.data.system[6].value
+          this.result.ios_iphone = res.data.system[7].value
+          this.lineInitial()
           this.pieInitial()
-        } else {
-          this._mm.errorTips(res.message)
-        }
-      })
-    },
-    _getAccessStatistical() {
-      getAccessStatistical().then(res => {
-        if(res.code === 20000) {
-          this.accessResult = res.data
         } else {
           this._mm.errorTips(res.message)
         }
