@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="seach_condition">
-      <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-    </div>
     <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick" @on-expand-click="loadData"></tree-table>
     <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
       <h3 slot="header" style="color:#2D8CF0">修改目录</h3>

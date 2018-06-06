@@ -6,12 +6,7 @@
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
       <div class="table" v-show="!isShow">
-        <div class="seach_condition">
-          <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-          <div class="search_button">
-            <i-button @click="show()">新增</i-button>
-          </div>
-        </div>
+        <v-search :importShow="false" @on-search="search" @on-build="show"/>
         <Table border :columns="columns1" :data="sysData"></Table>
       </div>
       <authority-config v-show="isShow" ref="authConfig" :newSys="newSys" @cancel="cancel" />
@@ -26,10 +21,12 @@ import {
   enterSystem
 } from '@/api/system'
 import AuthorityConfig from '@/components/authority-config/index'
+import vSearch from '@/components/search/index'
 
 export default {
   components: {
-    AuthorityConfig
+    AuthorityConfig,
+    vSearch
   },
   data() {
     return {

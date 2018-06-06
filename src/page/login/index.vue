@@ -14,18 +14,18 @@
         </h1>
         <div class="input">
           <FormItem prop="user">
-            <Input type="text" v-model="formInline.username" placeholder="请输入用户名">
+            <Input type="text" v-model="formInline.username" @on-enter="_login('formInline')" placeholder="请输入用户名">
             <Icon type="ios-person-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
           <FormItem prop="password">
-            <Input type="password" v-model="formInline.password" placeholder="请输入密码">
+            <Input type="password" v-model="formInline.password" @on-enter="_login('formInline')" placeholder="请输入密码">
             <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
           </FormItem>
         </div>
         <FormItem>
-          <Button type="primary" long @click="_login()">登录</Button>
+          <Button type="primary" long @click="_login('formInline')">登录</Button>
         </FormItem>
       </Form>
     </div>
@@ -56,7 +56,7 @@ export default {
         password: ''
       },
       ruleInline: {
-        user: [
+        username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [
@@ -70,19 +70,25 @@ export default {
     document.title = '系统登录'
   },
   methods: {
-    _login() {
-      login(this.formInline).then(res => {
-        if (res.code) {
-          if (res.data.userInfo) {
-            localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
-          }
-          if (res.data.sysUserChildList.length > 0 && res.data.role == 3) {
-            localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
-            this.$router.replace('/system-list')
-          } else {
-            // 单个系统自动选择
-            this.$router.replace('/zhsq_admin')
-          }
+    _login(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          login(this.formInline).then(res => {
+            if (res.code) {
+              if (res.data.userInfo) {
+                localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+              }
+              if (res.data.sysUserChildList.length > 0 && res.data.role == 3) {
+                localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
+                this.$router.replace('/system-list')
+              } else {
+                // 单个系统自动选择
+                this.$router.replace('/zhsq_admin')
+              }
+            }
+          })
+        } else {
+          this.$Message.error('用户名和密码不能为空！')
         }
       })
     }
@@ -180,5 +186,4 @@ form .input {
   border-right: 7px solid transparent;
   border-top: 10px solid #2399ea;
 }
-
 </style>

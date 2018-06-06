@@ -268,9 +268,10 @@ export default {
     show(item) {
       return ((item.level == 1) || (item.parent && item.parent.expand && item.isShow));
     },
-    toggle(index, item) {
+    toggle(index, item, event) {
       let result = this.makeData(item)
-      this.$emit('on-expand-click', result, index, event)
+      let e = document.all ? window.event : arguments[0] ? arguments[0] : event
+      this.$emit('on-expand-click', result, index, e)
       let level = item.level + 1;
       let spaceHtml = "";
       for (var i = 1; i < level; i++) {

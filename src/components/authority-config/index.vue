@@ -53,7 +53,7 @@
           </Select>
         </FormItem>
       </Form>
-      <div style="width: 500px" v-show="current == 1">
+      <div style="width: 500px" v-show="current == 1 && sysOrRole">
         <Form>
           <FormItem label="上传欢迎页">
             <Select v-model="uploadForm.type" style="width:100px">

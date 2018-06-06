@@ -69,13 +69,13 @@
               <span class="item-title">今日动态</span>
               <span class="num user-num">
                 <span class="num-title">用户访问：</span>
-                <i>{{accessResult.todaytUser}}
+                <i>{{accessResult.todayUser}}
                   <b>人</b>
                 </i>
               </span>
               <span class="num data-num">
                 <span class="num-title">数据访问：</span>
-                <i>{{accessResult.todaytLogin}}
+                <i>{{accessResult.todayLogin}}
                   <b>条</b>
                 </i>
               </span>
@@ -87,7 +87,7 @@
             <span class="item-title">终端分布</span>
             <div class="circle" ref="cbox"></div>
           </div>
-          <div class="data-item">
+          <div class="data-item data-table-item">
             <span class="item-title">系统运行状态</span>
             <div class="item-table">
               <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
@@ -101,7 +101,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getIndex, getAccessStatistical } from '@/api/service'
+import { getIndex } from '@/api/service'
 
 export default {
   data() {
@@ -124,36 +124,16 @@ export default {
           key: 'date'
         }
       ],
-      data1: [
-        {
-          name: 'John Brown',
-          status: 18,
-          date: '2016-10-03'
-        },
-        {
-          name: 'Jim Green',
-          status: 24,
-          date: '2016-10-01'
-        },
-        {
-          name: 'Joe Black',
-          status: 30,
-          date: '2016-10-02'
-        },
-        {
-          name: 'Jon Snow',
-          status: 26,
-          date: '2016-10-04'
-        }
-      ],
-      result: {},
-      accessResult: {}
+      data1: [],
+      result: [],
+      accessResult: {},
+      dateArray: [],
+      dataArray: [],
+      loginArray: []
     }
   },
   mounted() {
     this._getIndex()
-    this._getAccessStatistical()
-    this.lineInitial()
   },
   methods: {
     rowClassName(row, index) {
@@ -188,7 +168,7 @@ export default {
             color: '#fff',
             fontWeight: 'normal'
           },
-          data: ['预购', '成交']
+          data: ['登录', '数据']
         },
         grid: {
           left: '5%',
@@ -209,9 +189,10 @@ export default {
               show: false
             },
             axisTick: {
+              length: 1,
               show: false
             },
-            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            data: this.dateArray.reverse()
           }
         ],
         yAxis: [
@@ -232,7 +213,7 @@ export default {
         ],
         series: [
           {
-            name: '成交',
+            name: '登录',
             type: 'line',
             smooth: true,
             symbol: '',
@@ -260,10 +241,10 @@ export default {
                 )
               }
             },
-            data: [400, 342, 576, 123, 342, 423, 710]
+            data: this.loginArray.reverse()
           },
           {
-            name: '预购',
+            name: '数据',
             type: 'line',
             smooth: true,
             itemStyle: {
@@ -290,7 +271,7 @@ export default {
                 )
               }
             },
-            data: [200, 182, 434, 791, 390, 30, 10]
+            data: this.dataArray.reverse()
           }
         ]
       }
@@ -367,18 +348,19 @@ export default {
     },
     _getIndex() {
       getIndex().then(res => {
-        if(res.code === 20000) {
-          this.result = res.data
+        if (res.code === 20000) {
+          this.accessResult = res.data.access
+          this.dateArray = []
+          this.dataArray = []
+          this.loginArray = []
+          res.data.barChart.map(v => {
+            this.dateArray.push(v.date)
+            this.dataArray.push(v.data.data)
+            this.loginArray.push(v.data.login)
+          })
+          this.result  = res.data.system
+          this.lineInitial()
           this.pieInitial()
-        } else {
-          this._mm.errorTips(res.message)
-        }
-      })
-    },
-    _getAccessStatistical() {
-      getAccessStatistical().then(res => {
-        if(res.code === 20000) {
-          this.accessResult = res.data
         } else {
           this._mm.errorTips(res.message)
         }
@@ -506,6 +488,9 @@ export default {
     border-radius: 2px;
     position: relative;
   }
+  .data-table-item {
+    justify-content: flex-start;
+  }
   .circle {
     height: 300px;
   }
@@ -516,8 +501,7 @@ export default {
   }
 }
 .item-table {
-  padding: 0 15px;
-  padding-bottom: 40px;
+  padding: 20px 15px 40px 15px;
 }
 </style>
 
