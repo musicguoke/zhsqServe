@@ -35,6 +35,8 @@ const ResourceCatalog = r => require(['@/page/resource/resource-manage/resource-
 const DataTarget = r => require(['@/page/resource/resource-manage/resource-item/dataTarget'], r)
 const AreaTarget = r => require(['@/page/resource/resource-manage/resource-item/areaTarget'], r)
 const STopicType = r => require(['@/page/resource/resource-manage/resource-item/specialTopicType'], r)
+const STZResource = r => require(['@/page/resource/resource-manage/resource-item/720Resource'], r)
+const ImageResource = r => require(['@/page/resource/resource-manage/resource-item/ImageResource'], r)
 
 //search
 const HotSeach = r => require(['@/page/resource/search-manage/search-item/hotSearch'], r)
@@ -131,6 +133,18 @@ const router = new VueRouter({
                             component: DataType,
                             name: "DataType",
                             meta: { title: "数据类型" }
+                        },
+                        {
+                            path: "720-resource",
+                            component: STZResource,
+                            name: "STZResource",
+                            meta: { title: "720资源" }
+                        },
+                        {
+                            path: "image-resource",
+                            component: ImageResource,
+                            name: "ImageResource",
+                            meta: { title: "图片资源" }
                         },
                         {
                             path: "area-target",

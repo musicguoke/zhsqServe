@@ -7,13 +7,13 @@
             </div>
         </div>
         <el-table :data="dataTargetData" border style="width: 100%">
-            <el-table-column prop="title" label="标题" width="200">
+             <el-table-column prop="id" label="ID">
+            </el-table-column>
+            <el-table-column prop="name" label="数据名称" >
             </el-table-column>
             <el-table-column prop="dataId" label="数据编号" sortable>
             </el-table-column>
-            <el-table-column prop="label" label="数据标签">
-            </el-table-column>
-            <el-table-column prop="cityTarget" label="指标">
+            <el-table-column prop="areacode" label="行政区划编码">
             </el-table-column>
             <el-table-column prop="areaname" label="行政区划名称">
             </el-table-column>
