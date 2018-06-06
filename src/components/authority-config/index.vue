@@ -54,14 +54,34 @@
         </FormItem>
       </Form>
       <div style="width: 500px" v-show="current == 1 && sysOrRole">
-        <Form>
-          <FormItem label="上传欢迎页">
-            <Select v-model="uploadForm.type" style="width:100px">
-              <Option value="1">手机端</Option>
-              <Option value="2">Pad端</Option>
-            </Select>
-            <Input v-model="uploadForm.file" placeholder="上传后的地址" style="width: 64%"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/uploadEquImage.do?type=${uploadForm.type}`" with-credentials :on-success="handleSuccess">
+        <Form :model="uploadForm" :label-width="100">
+          <FormItem label="ios_iphone">
+            <Input v-model="uploadForm.ios_iphone" placeholder="上传后的地址" style="width: 57%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess1">
+              <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+            </Upload>
+          </FormItem>
+          <FormItem label="ios_ipad">
+            <Input v-model="uploadForm.ios_ipad" placeholder="上传后的地址" style="width: 57%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess2">
+              <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+            </Upload>
+          </FormItem>
+          <FormItem label="android_phone">
+            <Input v-model="uploadForm.android_phone" placeholder="上传后的地址" style="width: 57%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess3">
+              <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+            </Upload>
+          </FormItem>
+          <FormItem label="android_pad">
+            <Input v-model="uploadForm.android_pad" placeholder="上传后的地址" style="width: 57%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess4">
+              <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+            </Upload>
+          </FormItem>
+          <FormItem label="pc">
+            <Input v-model="uploadForm.pc" placeholder="上传后的地址" style="width: 57%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess5">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
@@ -121,7 +141,7 @@ import {
   updateSystem
 } from '@/api/system'
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
-import { getAreaList, getMsTabDatainfoById, getAreaCatalog } from '@/api/catalog'
+import { getAreaList, getMsTabDatainfoById, getAreaCatalog, uploadImg } from '@/api/catalog'
 import TreeTable from '@/components/tree-table/index'
 import MyTree from '@/components/my-tree/index'
 
@@ -146,6 +166,7 @@ export default {
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298 + 'px',
       uploadUrl: url,
+      appBgArray: [1],
       code: '', // 目录树code
       tabActiveName: '0',
       theme: 'light',
@@ -164,8 +185,11 @@ export default {
         grIspass: '1'
       },
       uploadForm: {
-        file: '',
-        type: ''
+        ios_iphone: '',
+        ios_ipad: '',
+        android_phone: '',
+        android_pad: '',
+        pc: ''
       },
       areaQxList: [],
       dataTree: [],
@@ -233,6 +257,12 @@ export default {
   },
   created() { },
   methods: {
+    addAppBg() {
+      this.appBgArray.push(1)
+    },
+    deleteAppBg(index) {
+      this.appBgArray.splice(index, 1)
+    },
     cancel() {
       this.$emit('cancel')
       this.initFormData()
@@ -280,9 +310,20 @@ export default {
         this._updateRole()
       }
     },
-    // 图片上传成功
-    handleSuccess(res) {
-      this.uploadForm.file = res.data
+    handleSuccess1(res) {
+      this.uploadForm.ios_iphone = res.data
+    },
+    handleSuccess2(res) {
+      this.uploadForm.ios_ipad = res.data
+    },
+    handleSuccess3(res) {
+      this.uploadForm.android_phone = res.data
+    },
+    handleSuccess4(res) {
+      this.uploadForm.android_pad = res.data
+    },
+    handleSuccess5(res) {
+      this.uploadForm.pc = res.data
     },
     selectMapConfig(section, row) {
       // 已选择地图项
@@ -333,7 +374,7 @@ export default {
         if (res.code === 20000) {
           this.areaQxList = res.data.list
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
@@ -357,7 +398,7 @@ export default {
             v._checked = false
           })
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
@@ -376,7 +417,7 @@ export default {
           })
           this.featureList = list
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
@@ -386,13 +427,13 @@ export default {
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum
-      }, this.formItem)
+      }, this.formItem, this.uploadForm)
       addSystem(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`添加${res.message}`)
+          this.$Message.success(`添加${res.message}`)
           this.cancel()
         } else {
-          this._mm.errorTips(`添加${res.message}`)
+          this.$Message.error(`添加${res.message}`)
         }
       })
     },
@@ -406,10 +447,10 @@ export default {
       }, this.formItem)
       updateSystem(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`修改${res.message}`)
+          this.$Message.success(`修改${res.message}`)
           this.cancel()
         } else {
-          this._mm.errorTips(`修改${res.message}`)
+          this.$Message.error(`修改${res.message}`)
         }
       })
     },
@@ -467,7 +508,7 @@ export default {
           }
           this.funNum = res.data.funNum
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
@@ -534,7 +575,7 @@ export default {
           }
           this.funNum = res.data.funNum
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     },
@@ -559,10 +600,10 @@ export default {
       }, this.formRoleItem)
       addRole(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`添加${res.message}`)
+          this.$Message.success(`添加${res.message}`)
           this.cancel()
         } else {
-          this._mm.errorTips(`添加${res.message}`)
+          this.$Message.error(`添加${res.message}`)
         }
       })
     },
@@ -577,11 +618,20 @@ export default {
       }, this.formRoleItem)
       updateRole(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`修改${res.message}`)
+          this.$Message.success(`修改${res.message}`)
           this.cancel()
         } else {
-          this._mm.errorTips(`修改${res.message}`)
+          this.$Message.error(`修改${res.message}`)
         }
+      })
+    },
+    _uploadImg() {
+      let formData = new FormData()
+      // 向 formData 对象中添加文件
+      formData.append('file', this.uploadData.file)
+      formData.append('type', this.uploadData.type)
+      uploadImg(formData).then(res => {
+        console.log(res)
       })
     }
   }
@@ -598,6 +648,9 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+.img-btn {
+  display: inline-block;
+}
 .current-content {
   margin: 16px 0;
 }
@@ -612,7 +665,6 @@ form {
   line-height: 26px;
 }
 .ivu-upload {
-  margin-left: 175px;
-  margin-top: 16px;
+  display: inline;
 }
 </style>

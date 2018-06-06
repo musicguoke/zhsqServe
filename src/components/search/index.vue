@@ -38,7 +38,7 @@ export default {
   methods: {
     handleSearch() {
       if(this.searchContent === '') {
-        this._mm.errorTips('请输入搜索内容')
+        this.$Message.error('请输入搜索内容')
         return
       }
       this.$emit('on-search', this.searchContent)

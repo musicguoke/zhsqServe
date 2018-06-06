@@ -132,10 +132,10 @@ export default {
             if(this.isAdd){
                 addAreaTarget(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('修改成功');
+                        this.$Message.success('修改成功');
                         this._getAreaTarget(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.data);
+                        this.$Message.error(res.data);
                         this._getAreaTarget(this.nowPage)
                     }
                 })
@@ -143,10 +143,10 @@ export default {
                 data.id = this.areaTargetForm.id
                 updateAreaTarget(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('修改成功');
+                        this.$Message.success('修改成功');
                         this._getAreaTarget(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.data);
+                        this.$Message.error(res.data);
                         this._getAreaTarget(this.nowPage)
                     }
                 }) 
@@ -162,11 +162,11 @@ export default {
                     this.areaTargetData.splice(params.$index, 1);
                     deleteAreaTarget(data).then(res => {
                         if (res.code = 20000) {
-                            this._mm.successTips('删除成功')
+                            this.$Message.success('删除成功')
                             this._getAreaTarget(this.nowPage)
                             this.total--
                         }else{
-                            this._mm.errorTips(res.message);
+                            this.$Message.error(res.message);
                         }
                     })
                 },

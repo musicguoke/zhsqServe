@@ -217,11 +217,11 @@ export default {
     _addTopicData(data) {
       addTopicData(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`添加${res.message}`)
+          this.$Message.success(`添加${res.message}`)
           this._getTopicDataTree()
           this.editItemModal = false
         } else {
-          this._mm.errorTips(`添加${res.message}`)
+          this.$Message.error(`添加${res.message}`)
         }
       })
     },
@@ -233,10 +233,10 @@ export default {
     _deleteTopicData(id) {
       deleteTopicData(id).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`删除${res.message}`)
+          this.$Message.success(`删除${res.message}`)
           this._getTopicDataTree()
         } else {
-          this._mm.errorTips(`删除${res.message}`)
+          this.$Message.error(`删除${res.message}`)
         }
       })
     },
@@ -256,17 +256,17 @@ export default {
           this.dpAddtime = this._mm.formatDate(res.data.dpAddtime)
           this.editItemModal = true
         } else {
-          this._mm.errorTips(`获取${res.message}`)
+          this.$Message.error(`获取${res.message}`)
         }
       })
     },
     _updateTopicData(data) {
       updateTopicData(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`修改${res.message}`)
+          this.$Message.success(`修改${res.message}`)
           this._getTopicDataTree()
         } else {
-          this._mm.errorTips(`修改${res.message}`)
+          this.$Message.error(`修改${res.message}`)
         }
       })
     },
@@ -278,10 +278,10 @@ export default {
     _addCatalogToTopic(data) {
       addCatalogToTopic(data).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`添加${res.message}`)
+          this.$Message.success(`添加${res.message}`)
           this._getTopicDataTree()
         } else {
-          this._mm.errorTips(`添加${res.message}`)
+          this.$Message.error(`添加${res.message}`)
         }
       })
     }

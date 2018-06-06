@@ -72,3 +72,14 @@ export function importMsTabFile(data) {
       return Promise.resolve(res.data)
   })
 }
+
+// 图片上传
+export function uploadImg(data) {
+  return axios.post(
+    `${url}/sys/file/uploadEquImage.do`,
+    data,{  
+      headers:{'Content-Type':'multipart/form-data'}  
+    }).then(res => {
+      return Promise.resolve(res.data)
+  })
+}

@@ -231,7 +231,6 @@ export default {
                 this.userForm[i] = '';
                 if (params.row[i] || params.row[i] == 0) {
                     this.userForm[i] = params.row[i]
-                    console.log(i,this.userForm[i])
                 }
             }
             this.$refs.department.selectedSingle = this.userForm.name
@@ -332,11 +331,11 @@ export default {
                     this.userData.splice(params.$index, 1);
                     deleteUser(data).then(res => {
                         if (res.code = 20000) {
-                            this._mm.successTips('删除成功')
+                            this.$Message.success('删除成功')
                             this.total--
                             this._getUserList(this.nowPage)
                         }else{
-                            this._mm.errorTips(res.message);
+                            this.$Message.error(res.message);
                         }
                     })
                 },
@@ -406,20 +405,20 @@ export default {
             if (this.isAdd) {
                 addUser(data).then(res => {
                     if (res.code == 20000) {
-                        this._mm.successTips('添加成功')
+                        this.$Message.success('添加成功')
                         this._getUserList(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message);
+                        this.$Message.error(res.message);
                     }
                 })
             } else {
                 data.arId = this.userForm.arId
                 updateUser(data).then(res => {
                     if (res.code == 20000) {
-                        this._mm.successTips('修改成功')
+                        this.$Message.success('修改成功')
                         this._getUserList(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message);
+                        this.$Message.error(res.message);
                     }
                 })
             }

@@ -131,10 +131,10 @@ export default {
                     this.resource720Data.splice(params.$index, 1);
                     delete720Resource(data).then(res => {
                         if (res.code = 20000) {
-                            this._mm.successTips('删除成功')
+                            this.$Message.success('删除成功')
                             this.total--
                         }else{
-                            this._mm.errorTips(res.message);
+                            this.$Message.error(res.message);
                         }
                     })
                 },

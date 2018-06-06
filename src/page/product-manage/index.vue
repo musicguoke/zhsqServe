@@ -145,17 +145,17 @@ export default {
           })
           this.sysData = res.data.list
         } else {
-          this._mm.errorTips(`${res.message}`)
+          this.$Message.error(`${res.message}`)
         }
       })
     },
     _deleteSingleSystem(id) {
       deleteSingleSystem(id).then(res => {
         if (res.code === 20000) {
-          this._mm.successTips(`删除${res.message}`)
+          this.$Message.success(`删除${res.message}`)
           this._getSystemList()
         } else {
-          this._mm.errorTips(`删除${res.message}`)
+          this.$Message.error(`删除${res.message}`)
         }
       })
     },
@@ -182,7 +182,7 @@ export default {
             this.$refs.authConfig._getMapConfig()
           }
         } else {
-          this._mm.errorTips(res.message)
+          this.$Message.error(res.message)
         }
       })
     }

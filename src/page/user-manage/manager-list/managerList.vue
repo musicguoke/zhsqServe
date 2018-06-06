@@ -184,7 +184,7 @@ export default {
                         this._mm.successTips('添加成功');
                         this._getManagerList(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message);
+                        this.$Message.error(res.message);
                     }
                 })
             }else{
@@ -194,7 +194,7 @@ export default {
                         this._mm.successTips('修改成功');
                         this._getManagerList(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message);
+                        this.$Message.error(res.message);
                     }
                 })
             }
@@ -216,7 +216,7 @@ export default {
                                 this._mm.successTips('删除成功');
                                 this._getManagerList(this.nowPage)
                             }else{
-                                this._mm.errorTips(res.message);
+                                this.$Message.error(res.message);
                             }
                         })
                     },

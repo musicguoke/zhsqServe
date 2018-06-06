@@ -142,7 +142,7 @@ export default {
             }
             updateDataTarget(data).then(res=>{
                 if(res.code == 20000){
-                    this._mm.successTips('修改成功');
+                    this.$Message.success('修改成功');
                     this._getDataTarget(this.nowPage)
                 }
             })  
@@ -161,10 +161,10 @@ export default {
                     this.dataTargetData.splice(params.$index, 1);
                     deleteDataTarget(data).then(res => {
                         if (res.code = 20000) {
-                            this._mm.successTips('删除成功')
+                            this.$Message.success('删除成功')
                             this.total--
                         }else{
-                            this._mm.errorTips(res.message);
+                            this.$Message.error(res.message);
                         }
                     })
                 },

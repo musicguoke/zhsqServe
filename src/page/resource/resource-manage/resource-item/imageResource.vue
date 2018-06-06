@@ -149,11 +149,11 @@ export default {
                     this.imageSourceData.splice(params.$index, 1);
                     deleteImageSource(data).then(res => {
                         if (res.code = 20000) {
-                            this._mm.successTips('删除成功')
+                            this.$Message.success('删除成功')
                             this.total--
                             this._getImageSource(this.nowPage)
                         }else{
-                            this._mm.errorTips(res.message);
+                            this.$Message.error(res.message);
                         }
                     })
                 },

@@ -194,10 +194,10 @@ export default {
       };
         addAndUpdateDepartment(data).then(res => {
           if ((res.code = 20000)) {
-            this._mm.successTips("保存成功");
+            this.$Message.success("保存成功");
             this._getDepartmentList();
           }else{
-            this._mm.errorTips(res.message);
+            this.$Message.error(res.message);
           }
       });
     },
