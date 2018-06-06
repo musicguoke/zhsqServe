@@ -8,6 +8,7 @@
       <div class="card-content">
         <Menu theme="light" active-name="resource-catalog" @on-select="menuChange">
           <MenuItem name="resource-catalog">数据资源目录</MenuItem>
+          <MenuItem name="data-type">数据类型</MenuItem>
           <MenuItem name="720-resource">720资源</MenuItem>
           <MenuItem name="image-resource">图片资源</MenuItem>
           <MenuItem name="area-target">区域指标</MenuItem>

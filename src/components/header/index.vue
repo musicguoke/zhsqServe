@@ -81,7 +81,6 @@ export default {
 .ivu-menu {
   z-index: 901;
 }
-
 .container {
   display: flex;
   justify-content: space-between;

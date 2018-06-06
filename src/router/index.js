@@ -30,16 +30,18 @@ import Personal from "@/page/personal/index";
 
 //resource
 import AreaText from "@/page/resource/resource-manage/resource-item/areaText.vue";
+import DataType from '@/page/resource/resource-manage/resource-item/data-type.vue'
 import MacroData from "@/page/resource/resource-manage/resource-item/macroData.vue";
 import MapConfigure from "@/page/resource/resource-manage/resource-item/mapConfigure.vue";
 import ResourceCatalog from "@/page/resource/resource-manage/resource-item/resourceCatalog.vue";
-import DataTarget from "@/page/resource/resource-manage/resource-item/dataTarget.vue"
-import AreaTarget from "@/page/resource/resource-manage/resource-item/areaTarget.vue"
-import STopicType from "@/page/resource/resource-manage/resource-item/specialTopicType.vue"
+import DataTarget from "@/page/resource/resource-manage/resource-item/dataTarget.vue";
+import AreaTarget from "@/page/resource/resource-manage/resource-item/areaTarget.vue";
+import STopicType from "@/page/resource/resource-manage/resource-item/specialTopicType.vue";
+
 //search
 import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
 import PeripheryHotspot from "@/page/resource/search-manage/search-item/peripheryHotspot.vue";
-import Lexicon from "@/page/resource/search-manage/search-item/searchLexicon.vue"
+import Lexicon from "@/page/resource/search-manage/search-item/searchLexicon.vue";
 
 //system-configure
 import ParameterConfigure from "@/page/system-configure/parameter-configure/parameterConfigure.vue";
@@ -128,6 +130,18 @@ const router = new Router({
                             meta: { title: "数据资源目录" }
                         },
                         {
+                            path: "data-type",
+                            component: DataType,
+                            name: "DataType",
+                            meta: { title: "数据类型" }
+                        },
+                        {
+                            path: "area-target",
+                            component: AreaTarget,
+                            name: "AreaTarget",
+                            meta: { title: "区域指标" }
+                        },
+                        {
                             path: "area-text",
                             component: AreaText,
                             name: "AreaText",
@@ -149,15 +163,11 @@ const router = new Router({
                             meta: { title: "数据指标" }
                         },
                         {
-                            path: "area-target",
-                            component: AreaTarget,
-                            meta: { title: "区域指标" }
-                        },
-                        {
-                            path: "sTopic-type",
+                            path: "STopic-type",
                             component: STopicType,
                             meta: { title: "专题类型" }
                         }
+
                     ]
                 },
                 {

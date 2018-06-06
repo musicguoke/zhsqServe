@@ -66,7 +66,9 @@ export function deleteMsTabDatainfo(id) {
 export function importMsTabFile(data) {
   return axios.post(
     `${url}/sys/msTabDataController/importFile.do`,
-    qs.stringify(data)).then(res => {
+    data,{  
+      headers:{'Content-Type':'multipart/form-data'}  
+    }).then(res => {
       return Promise.resolve(res.data)
   })
 }

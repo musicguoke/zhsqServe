@@ -35,7 +35,7 @@
     </Modal>
     <Modal v-model="importModal" :closable='false' :mask-closable="false" :width="500" @on-ok="saveImport" @on-cancel="cancelModal">
       <h3 slot="header" style="color:#2D8CF0">目录导入</h3>
-      <Form label-position="left" :label-width="80">
+      <Form ref="file_form" label-position="left" :label-width="80">
         <FormItem label="导入类型">
           <Select v-model="importFile.type" placeholder="请选择导入类型">
             <Option value="1">增量导入</Option>
@@ -43,7 +43,7 @@
           </Select>
         </FormItem>
         <FormItem label="选择文件">
-          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccessUpload">
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload">
             <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
           </Upload>
         </FormItem>
@@ -51,7 +51,7 @@
           <div class="importSlotTitle">导入须知</div>
           <p>1、导入文件大小不超过2MB.</p>
           <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
-            <a href="/mouldFile/ms_branch_struct.xlsx" download="ms_branch_struct.xlsx">点此下载.</a>
+            <a :href="`${uploadUrl}/sys/msTabDataController/downloadImportedFile.do`" download="ms_branch_struct.xlsx">点此下载.</a>
           </p>
         </div>
       </Form>
@@ -63,7 +63,14 @@
 import { url } from '@/api/config.js'
 import TreeTable from '@/components/my-tree/index'
 import { getDateTree } from '@/api/system'
-import { getAreaList, getAreaCatalog, getMsTabDatainfoById, updateMsTabDatainfo, deleteMsTabDatainfo, importMsTabFile } from '@/api/catalog'
+import { 
+  getAreaList,
+  getAreaCatalog,
+  getMsTabDatainfoById,
+  updateMsTabDatainfo,
+  deleteMsTabDatainfo,
+  importMsTabFile
+} from '@/api/catalog'
 
 export default {
   components: {
@@ -80,7 +87,8 @@ export default {
       importFile: {
         file: '',
         type: '',
-        areacode: 500000
+        areacode: '',
+        name: ''
       },
       editItemForm: {
         id: '',
@@ -137,7 +145,10 @@ export default {
       this._updateMsTabDatainfo()
     },
     handleSuccessUpload(response, file) {
-      this.importFile.file = response.data
+      console.log('上传成功')
+    },
+    boforeUpload(file) {
+      this.importFile.file = file
     },
     // 上传文件
     saveImport() {
@@ -146,7 +157,12 @@ export default {
       } else if (this.importFile.file === '') {
         this._mm.errorTips('请选择上传文件')
       } else {
-        this._importMsTabFile(this.importFile)
+        let formData = new FormData(this.$refs.file_form)
+        // 向 formData 对象中添加文件
+        formData.append('file', this.importFile.file)
+        formData.append('type', this.importFile.type)
+        formData.append('areaCode', this.importFile.areacode)
+        this._importMsTabFile(formData)
       }
     },
     rowClick(item, e) {
@@ -204,6 +220,7 @@ export default {
       deleteMsTabDatainfo(id).then(res => {
         if (res.code === 20000) {
           this._mm.successTips(`删除${res.message}`)
+          this._getAreaCatalog()
         } else {
           this._mm.errorTips(`删除${res.message}`)
         }
@@ -229,6 +246,7 @@ export default {
       updateMsTabDatainfo(data).then(res => {
         if (res.code === 20000) {
           this._mm.successTips(`修改${res.message}`)
+          this._getAreaCatalog()
         } else {
           this._mm.errorTips(`修改${res.message}`)
         }
