@@ -8,7 +8,7 @@
             <div>
                 <div class="seach_condition">
                     <div class="condition_list">
-                        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @change="_getUserList(1)" disabled ></Input>
+                        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @on-change="_getUserList(1)"></Input>
                         <!-- <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
                         <Option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
@@ -51,10 +51,10 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" @on-change="_getUserList" show-total></Page>
+                <Page :total=total :current="1" @on-change="pageChange" show-total></Page>
             </div>
         </Card>
-        <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser">
+        <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
             <Tabs active-key="key1">
                 <Tab-pane label="基本信息" key="key1">
                     <Form :model="userForm" label-position="left" :label-width="100">
@@ -103,7 +103,7 @@
                             <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index">
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                            <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:10px;" v-show="$index != 0"></Button>
+                            <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
                         </FormItem>
                     </Form>
                 </Tab-pane>
@@ -154,6 +154,7 @@ export default {
             modalTitle: '',
             total: 0,
             isAdd: false,
+            nowPage:1,
             highlightcurrent: true,
             expandonclicknode: true,
             userForm: {
@@ -231,32 +232,26 @@ export default {
             this.userModal = true;
             this.isAdd = true;
             this.modalTitle = '新增用户';
+            this.clearFrom()
             for (let i in this.userForm) {
                 this.userForm[i] = '';
             }
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
-            this.systemList = []
-            this._getSystemList()
-            this.groupList = []
-            this.nowSystemLength = 1
         },
         userEditOpen(params) {
             this.userModal = true;
             this.isAdd = false;
             this.modalTitle = '修改用户';
+            this.clearFrom()
             for (let i in this.userForm) {
                 this.userForm[i] = '';
-                if (params.row[i]) {
+                if (params.row[i] || params.row[i] == 0) {
                     this.userForm[i] = params.row[i]
+                    console.log(i,this.userForm[i])
                 }
             }
             this.$refs.department.selectedSingle = this.userForm.name
-            this.systemList = []
-            this.groupList = []
-            this.nowSystemLength = 1
-            this.sysAndGroupList = []
-            this._getSystemList()
-            if(this.userForm.sysId.toString().indexOf(',') != -1){
+            if(this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',') ){
                 let sysArray = this.userForm.sysId.split(',')
                 let groupArray = this.userForm.grId.split(',')
                 for(let i in sysArray){
@@ -266,7 +261,10 @@ export default {
                     })
                 }
             }else{
-                 this.sysAndGroupList.push({ sysId: this.userForm.sysId, grId:this.userForm.grId })
+                console.log(this.userForm)
+                this.sysAndGroupList.push({ sysId: this.userForm.sysId, grId:this.userForm.grId })
+                console.log(this.sysAndGroupList)
+                this._getRolesList(this.userForm.sysId,0)
             }
         },
         _getDepartmentList() {
@@ -316,6 +314,11 @@ export default {
                 this.systemList.push(array)
             })
         },
+        //分页点击
+        pageChange(page){
+            this.nowPage = page
+            this._getUserList(page)
+        },
         equipmentOpen(params) {
             this.equipmentModal = true
             let data = {
@@ -339,6 +342,7 @@ export default {
                         if (res.code = 20000) {
                             this._mm.successTips('删除成功')
                             this.total--
+                            this._getUserList(this.nowPage)
                         }else{
                             this._mm.errorTips(res.message);
                         }
@@ -360,7 +364,7 @@ export default {
                 methods: 'list',
                 pageNo: page,
                 pageSize: 10,
-                // arTruename:this.searchName
+                arTruename:this.searchName
             }
             getUserList(data).then(res => {
                 this.userData = []
@@ -382,15 +386,16 @@ export default {
                 this.total = res.data.total
             })
         },
+        //点击确定
         addOrUpdateUser() {
+            this.userForm.sysId = ''
+            this.userForm.grId = ''
             this.sysAndGroupList.map(v=>{
                 this.userForm.sysId += v.sysId +','
                 this.userForm.grId += v.grId + ','
             })
-            console.log(this.userForm)
             this.userForm.sysId = this.userForm.sysId.substring(0,this.userForm.sysId.length -1)
             this.userForm.grId = this.userForm.grId.substring(0,this.userForm.grId.length -1)
-            console.log(this.userForm)
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
@@ -410,6 +415,7 @@ export default {
                 addUser(data).then(res => {
                     if (res.code == 20000) {
                         this._mm.successTips('添加成功')
+                        this._getUserList(this.nowPage)
                     }else{
                         this._mm.errorTips(res.message);
                     }
@@ -419,11 +425,20 @@ export default {
                 updateUser(data).then(res => {
                     if (res.code == 20000) {
                         this._mm.successTips('修改成功')
+                        this._getUserList(this.nowPage)
                     }else{
                         this._mm.errorTips(res.message);
                     }
                 })
             }
+        },
+        //点击取消
+        clearFrom(){
+            this.systemList = []
+            this._getSystemList()
+            this.groupList = []
+            this.nowSystemLength = 1
+            this.sysAndGroupList = []
         },
         //跟新设备
         updateEquipment() {
@@ -467,30 +482,33 @@ export default {
                     grId:''
                 }
             }else{
-                if(!id){
-                    return
-                }
-                getRolesList(id).then(res => {
-                    let data = res.data.list
-                    if(data.length == 0){
-                        this.$refs['group' + index][0].notFound = true
-                    }else{
-                        this.$refs['group' + index][0].notFound = false
-                    }
-                    let array = []
-                    for (let i in data) {
-                        array.push({
-                            value: data[i].grId,
-                            label: data[i].grName
-                        })
-                    }
-                    if (this.groupList[index]) {
-                        this.groupList.splice(index, 1, array)
-                    } else {
-                        this.groupList.push(array)
-                    }
-                })
+                this._getRolesList(id,index)
             }
+        },
+        _getRolesList(id,index){
+            if(!id){
+                return
+            }
+            getRolesList(id).then(res => {
+                let data = res.data.list
+                if(data.length == 0){
+                    this.$refs['group' + index][0].notFound = true
+                }else{
+                    this.$refs['group' + index][0].notFound = false
+                }
+                let array = []
+                for (let i in data) {
+                    array.push({
+                        value: data[i].grId,
+                        label: data[i].grName
+                     })
+                 }
+                if (this.groupList[index]) {
+                        this.groupList.splice(index, 1, array)
+                } else {
+                    this.groupList.push(array)
+                }
+            })
         }
     }
 }

@@ -37,6 +37,8 @@ import ResourceCatalog from "@/page/resource/resource-manage/resource-item/resou
 import DataTarget from "@/page/resource/resource-manage/resource-item/dataTarget.vue";
 import AreaTarget from "@/page/resource/resource-manage/resource-item/areaTarget.vue";
 import STopicType from "@/page/resource/resource-manage/resource-item/specialTopicType.vue";
+import STZResource from "@/page/resource/resource-manage/resource-item/720Resource.vue";
+import ImageResource from "@/page/resource/resource-manage/resource-item/ImageResource";
 
 //search
 import HotSeach from "@/page/resource/search-manage/search-item/hotSearch.vue";
@@ -134,6 +136,18 @@ const router = new Router({
                             component: DataType,
                             name: "DataType",
                             meta: { title: "数据类型" }
+                        },
+                        {
+                            path: "720-resource",
+                            component: STZResource,
+                            name: "STZResource",
+                            meta: { title: "720资源" }
+                        },
+                        {
+                            path: "image-resource",
+                            component: ImageResource,
+                            name: "ImageResource",
+                            meta: { title: "图片资源" }
                         },
                         {
                             path: "area-target",
