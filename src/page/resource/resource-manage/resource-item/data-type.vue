@@ -1,13 +1,6 @@
 <template>
   <div class="data-type">
-    <div class="seach_condition">
-      <div class="condition_list">
-        <Input v-model="searchName" placeholder="输入搜索名称"></Input>
-      </div>
-      <div class="search_button">
-        <i-button @click="newData">新增</i-button>
-      </div>
-    </div>
+    <v-search :importShow="false" @on-search="search" @on-build="newData"/>
     <el-table :data="data" border>
       <el-table-column prop="itemid" label="id" sortable=""></el-table-column>
       <el-table-column prop="typename" label="数据名称"></el-table-column>
@@ -46,8 +39,12 @@ import {
   deleteDataType,
   deleteDataTypes
 } from '@/api/data-type'
+import vSearch from '@/components/search/index'
 
 export default {
+  components: {
+    vSearch
+  },
   data() {
     return {
       newOrEdit: true,

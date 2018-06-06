@@ -87,7 +87,7 @@
             <span class="item-title">终端分布</span>
             <div class="circle" ref="cbox"></div>
           </div>
-          <div class="data-item">
+          <div class="data-item data-table-item">
             <span class="item-title">系统运行状态</span>
             <div class="item-table">
               <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
@@ -124,28 +124,7 @@ export default {
           key: 'date'
         }
       ],
-      data1: [
-        {
-          name: 'John Brown',
-          status: 18,
-          date: '2016-10-03'
-        },
-        {
-          name: 'Jim Green',
-          status: 24,
-          date: '2016-10-01'
-        },
-        {
-          name: 'Joe Black',
-          status: 30,
-          date: '2016-10-02'
-        },
-        {
-          name: 'Jon Snow',
-          status: 26,
-          date: '2016-10-04'
-        }
-      ],
+      data1: [],
       result: [],
       accessResult: {},
       dateArray: [],
@@ -379,14 +358,7 @@ export default {
             this.dataArray.push(v.data.data)
             this.loginArray.push(v.data.login)
           })
-          this.result.county = res.data.system[0].value
-          this.result.user = res.data.system[1].value
-          this.result.data = res.data.system[2].value
-          this.result.pc = res.data.system[3].value
-          this.result.android_pad = res.data.system[4].value
-          this.result.android_phone = res.data.system[5].value
-          this.result.ios_ipad = res.data.system[6].value
-          this.result.ios_iphone = res.data.system[7].value
+          this.result  = res.data.system
           this.lineInitial()
           this.pieInitial()
         } else {
@@ -516,6 +488,9 @@ export default {
     border-radius: 2px;
     position: relative;
   }
+  .data-table-item {
+    justify-content: flex-start;
+  }
   .circle {
     height: 300px;
   }
@@ -526,8 +501,7 @@ export default {
   }
 }
 .item-table {
-  padding: 0 15px;
-  padding-bottom: 40px;
+  padding: 20px 15px 40px 15px;
 }
 </style>
 

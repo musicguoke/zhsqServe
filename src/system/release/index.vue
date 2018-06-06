@@ -5,12 +5,7 @@
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
     <Card>
-      <div class="seach_condition">
-        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-        <div class="search_button">
-          <i-button class="marginLeft" @click="build">新增</i-button>
-        </div>
-      </div>
+      <v-search :search-show="false" :import-show="false" @on-build="build"/>
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
@@ -57,19 +52,21 @@
           </tree-table>
         </Form>
       </Modal>
-      
+
     </Card>
   </div>
 </template>
 
 <script>
 import TreeTable from '@/components/my-tree/index'
+import vSearch from '@/components/search/index'
 import { getDateTree } from '@/api/system'
 import { getTopicDataTree, getTopicDataById, addTopicData, updateTopicData, addCatalogToTopic, deleteTopicData } from '@/api/topics'
 
 export default {
   components: {
-    TreeTable
+    TreeTable,
+    vSearch
   },
   data() {
     return {
@@ -293,4 +290,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.seach_condition {
+  justify-content: flex-end;
+}
 </style>
