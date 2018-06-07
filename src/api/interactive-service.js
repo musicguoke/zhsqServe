@@ -21,27 +21,17 @@ export function deletePush(data) {
 }
 //短信
 export function getMessageList(data) {
-    return axios.post(`${url}/sys/msSendMessageController/list.do`, qs.stringify(data)).then(res => {
-        return Promise.resolve(res.data)
-    })
-}
-export function addContacts(data) {
-    return axios.post(`${url}/sys/msSendMessageController/insert.do`, qs.stringify(data)).then(res => {
-        return Promise.resolve(res.data)
-    })
-}
-export function updateContacts(data) {
-    return axios.post(`${url}/sys/msSendMessageController/update.do`, qs.stringify(data)).then(res => {
-        return Promise.resolve(res.data)
-    })
-}
-export function deleteContacts(data) {
-    return axios.post(`${url}/sys/msSendMessageController/delete.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/msSendMessageController/messagelist.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }
 export function sendMessage(data) {
     return axios.post(`${url}/sys/msSendMessageController/send.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function getMessageById(data) {
+    return axios.post(`${url}/sys/msSendMessageController/getMessage.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

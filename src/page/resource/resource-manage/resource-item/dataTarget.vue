@@ -1,11 +1,5 @@
 <template>
     <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @on-change="_getDataTarget(1)"></Input>
-            <div class="search_button">
-                <!-- <i-button @click="openAddModal()">新增</i-button> -->
-            </div>
-        </div>
         <el-table :data="dataTargetData" border style="width: 100%">
              <el-table-column prop="id" label="ID">
             </el-table-column>
@@ -27,7 +21,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="dataTargetModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="dataTargetForm" label-position="left" :label-width="100">

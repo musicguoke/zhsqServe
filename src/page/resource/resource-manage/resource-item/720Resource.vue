@@ -1,23 +1,12 @@
 <template>
     <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @on-change="_getDataTarget(1)"></Input>
-            <div class="search_button">
-                <!-- <i-button @click="openAddModal()">新增</i-button> -->
-            </div>
-        </div>
-        <el-table :data="dataTargetData" border style="width: 100%">
+        <v-search :importShow="false" @on-reset="reset" @on-search="search" @on-build="openAddModal"/>
+        <el-table :data="resource720Data" border style="width: 100%">
              <el-table-column prop="id" label="ID">
             </el-table-column>
-            <el-table-column prop="name" label="数据名称" >
+            <el-table-column prop="name" label="资源名称" >
             </el-table-column>
-            <el-table-column prop="dataId" label="数据编号" sortable>
-            </el-table-column>
-            <el-table-column prop="areacode" label="行政区划编码">
-            </el-table-column>
-            <el-table-column prop="areaname" label="行政区划名称">
-            </el-table-column>
-            <el-table-column prop="year" label="年份" width="80" sortable>
+            <el-table-column prop="path" label="资源路径">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
@@ -27,108 +16,88 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
-        <Modal v-model="dataTargetModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="dataTargetForm" label-position="left" :label-width="100">
-                <FormItem label="数据名称">
-                    <Input v-model="dataTargetForm.name" ></Input>
+        <Modal v-model="resource720Modal" :title=modalTitle @on-ok="addOrUpdate">
+            <Form :model="resource720Form" label-position="left" :label-width="100">
+                <FormItem label="资源名称">
+                    <Input v-model="resource720Form.name" ></Input>
                 </FormItem>
-                <FormItem label="数据编码">
-                    <Input v-model="dataTargetForm.dataId" ></Input>
-                </FormItem>
-                <FormItem label="标题">
-                    <Input v-model="dataTargetForm.title" ></Input>
-                </FormItem>
-                <FormItem label="数据标签">
-                    <Input v-model="dataTargetForm.label" ></Input>
-                </FormItem>
-                <FormItem label="指标">
-                    <Input v-model="dataTargetForm.cityTarget" ></Input>
-                </FormItem>
-                <FormItem label="行政区划">
-                    <Select v-model="dataTargetForm.areacode" :label-in-value=true @on-change="getCodeAndName">
-                        <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="年份">
-                    <Input v-model="dataTargetForm.year" ></Input>
+                <FormItem label="资源路径">
+                    <Input v-model="resource720Form.path" ></Input>
                 </FormItem>
             </Form>
         </Modal>
     </div>
 </template>
 <script>
-import { getAreaCode } from '@/api/user-service'
-import { getDataTarget,updateDataTarget,deleteDataTarget } from '@/api/dataSource-service'
+import { get720Resource,add720Resource,update720Resource,delete720Resource} from '@/api/dataSource-service'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             searchName: '',
             pageLength:0,
             isAdd:true,
             modalTitle:'',
-            dataTargetData:[],
-            dataTargetModal:false,
+            resource720Data:[],
+            resource720Modal:false,
             countyList:[],
-            dataTargetForm:{
+            resource720Form:{
                 id:'',
-                dataId:'',
-                areacode:'',
-                areaname:'',
-                year:'',
-                cityTarget:'',
-                title:'',
-                label:'',
-                name:''
+                name:'',
+                path:''
             },
             nowPage:1
         }
     },
     created(){
-        getAreaCode().then(res => {
-            for (let i in res.data.list) {
-                this.countyList.push({
-                    value: res.data.list[i].areacode,
-                    label: res.data.list[i].areaname
-                })
-            }
-        }),
-        this._getDataTarget(1)
+        this._get720Resource(1)
     },
     methods:{
-        _getDataTarget(page){
+        _get720Resource(page){
             let data ={
                 pageNo:page,
                 pageSize:10, 
                 title:this.searchName 
             }
-            getDataTarget(data).then(res=>{
+            get720Resource(data).then(res=>{
                 this.pageLength = res.data.total
-                this.dataTargetData = res.data.list
+                this.resource720Data = res.data.list
             })
         },
         //分页点击
         pageChange(Page){
             this.nowPage = Page
-            this._getDataTarget(Page)
+            this._get720Resource(Page)
+        },
+        //搜索
+        search(searchName){
+
+        },
+        //清空
+        reset(){
+
         },
         //打开新增模态框
         openAddModal(){
             this.isAdd = true
-            this.dataTargetModal = true
-            for(let i in this.dataTargetForm){
-                this.dataTargetForm[i] = ''
+            this.resource720Modal = true
+            for(let i in this.resource720Form){
+                this.resource720Form[i] = ''
             }
         },
         //打开编辑模态框
         openEditModal(params){
             this.isAdd = false
-            this.dataTargetModal = true
-            for(let i in this.dataTargetForm){
-                this.dataTargetForm[i] = ''
+            this.resource720Modal = true
+            for(let i in this.resource720Form){
+                this.resource720Form[i] = ''
                 if(params.row[i]){
-                    this.dataTargetForm[i] =params.row[i] 
+                    this.resource720Form[i] =params.row[i] 
                 }
              }
         },
@@ -136,26 +105,29 @@ export default {
         addOrUpdate(){
             let data = {}
             data = {
-                id:this.dataTargetForm.id,
-                dataId:this.dataTargetForm.dataId,
-                areacode:this.dataTargetForm.areacode,
-                areaname:this.dataTargetForm.areaname,
-                year:this.dataTargetForm.year,
-                cityTarget:this.dataTargetForm.cityTarget,
-                title:this.dataTargetForm.title,
-                label:this.dataTargetForm.label,
-                name:this.dataTargetForm.name
+                name:this.resource720Form.name,
+                path:this.resource720Form.path
             }
-            updateDataTarget(data).then(res=>{
-                if(res.code == 20000){
-                    this.$Message.success('修改成功');
-                    this._getDataTarget(this.nowPage)
-                }
-            })  
-        },
-        getCodeAndName(data){
-            this.dataTargetForm.areacode = data.value
-            this.dataTargetData.areaname = data.label
+            if(this.isAdd){
+                add720Resource(data).then(res=>{
+                    if(res.code == 20000){
+                        this.$Message.success('添加成功')
+                        this._get720Resource(this.nowPage)
+                    }else{
+                        this.$Message.error(res.message)
+                    }
+                })
+            }else{
+                data.id = this.resource720Form.id
+                update720Resource(data).then(res=>{
+                    if(res.code == 20000){
+                        this.$Message.success('修改成功')
+                        this._get720Resource(this.nowPage)
+                    }else{
+                        this.$Message.error(res.message)
+                    }
+                })
+            }  
         },
         remove(params) {
             let data = {
@@ -164,8 +136,8 @@ export default {
             this.$Modal.confirm({
                 content: '删除后数据无法恢复，是否继续？',
                 onOk: () => {
-                    this.dataTargetData.splice(params.$index, 1);
-                    deleteDataTarget(data).then(res => {
+                    this.resource720Data.splice(params.$index, 1);
+                    delete720Resource(data).then(res => {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this.total--

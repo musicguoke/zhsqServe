@@ -6,12 +6,7 @@
     </Breadcrumb>
     <Card>
   <div>
-      <div class="seach_condition">
-         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-         <div class="search_button">
-            <i-button @click="technicalAddOpen">新增</i-button>
-         </div>
-      </div>
+      <v-search :search-show="false" :import-show="false" @on-build="technicalAddOpen"/>
       <div class="tableSize">
         <el-table :data="technicalData" border style="width: 100%">
             <el-table-column prop="paramname" label="参数名">
@@ -29,7 +24,7 @@
             </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10"></Page>
+        <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
@@ -51,7 +46,11 @@
 
 <script>
 import {getTechnicalSupportList,addTechnicalSupport,updateTechnicalSupport,deleteTechnicalSupport} from '@/api/interactive-service'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             technicalHeight:window.innerHeight - 174 +'px',

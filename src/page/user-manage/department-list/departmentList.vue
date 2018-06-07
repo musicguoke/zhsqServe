@@ -6,12 +6,7 @@
     </Breadcrumb>
     <Card>
     <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <div class="search_button">
-                <i-button class="marginLeft" @click="importModal = true">导入</i-button>
-            </div>
-        </div>
+        <v-search :searchShow="false" :buildShow="false" @on-import="importModal = true"  />
         <div class="tableSize">
             <Row>
                 <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">
@@ -93,7 +88,11 @@ import {
   addAndUpdateDepartment,
   importDepartment
 } from "@/api/department-service";
+import vSearch from '@/components/search/index'
 export default {
+  components: {
+    vSearch
+  },
   data() {
     return {
       searchName: "",

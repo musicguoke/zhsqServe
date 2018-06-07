@@ -132,3 +132,45 @@ export function deleteSTopicType(data) {
         return Promise.resolve(res.data)
     })
 }
+/**720资源**/
+export function get720Resource(data) {
+    return axios.post(`${url}/sys/720Server/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function add720Resource(data) {
+    return axios.post(`${url}/sys/720Server/save.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function update720Resource(data) {
+    return axios.post(`${url}/sys/720Server/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function delete720Resource(data) {
+    return axios.post(`${url}/sys/720Server/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+/**图片资源**/
+export function getImageSource(data) {
+    return axios.post(`${url}/sys/imageSource/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function addImageSource(data) {
+    return axios.post(`${url}/sys/imageSource/save.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function updateImageSource(data) {
+    return axios.post(`${url}/sys/imageSource/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function deleteImageSource(data) {
+    return axios.post(`${url}/sys/imageSource/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

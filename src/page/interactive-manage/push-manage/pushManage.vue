@@ -6,19 +6,14 @@
     </Breadcrumb>
     <Card>
   <div>
-      <div class="seach_condition">
-         <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-         <div class="search_button">
-            <i-button @click="pushAddOpen">新增</i-button>
-         </div>
-      </div>
+      <v-search :search-show="false" :import-show="false" @on-build="pushAddOpen"/>
       <div class="tableSize">
         <el-table :data="pushData" border style="width: 100%">
             <el-table-column prop="pId" label="Id" width="60">
             </el-table-column>
             <el-table-column prop="pRemark" label="推送组/用户">
             </el-table-column>
-            <el-table-column prop="pType" label="推送类型">
+            <el-table-column prop="typeName" label="推送类型">
             </el-table-column>
             <el-table-column prop="pGroup" label="组编号">
             </el-table-column>
@@ -37,26 +32,26 @@
             </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" @on-change="pageChange"></Page>
+        <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
-  <Modal v-model="pushModal" :title=modalTitle>
+  <Modal v-model="pushModal" :title=modalTitle @on-ok="savePushMessage">
         <Form :model="pushForm" label-position="left" :label-width="100">
             <FormItem label="用户组">
                 <Select v-model="pushForm.pGroup">
-                    <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Option v-for="item in roleData" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="推送用户">
-                <Input v-model="pushForm.pRemark" placeholder="请输入推送用户..." style='width:310px'></Input>
-                <Button type="primary" icon="person-add" @click="chooseUserModal = true">添加</Button>
+                <Input v-model="pushForm.pRemark" placeholder="请选择推送用户..." style='width:310px'></Input>
+                <Button type="primary" icon="person-add" @click="_getUserList">添加</Button>
             </FormItem>
             <FormItem label="推送类型">
                 <RadioGroup v-model="pushForm.pType" @on-change="radioChange">
                     <Radio label="0">消息</Radio>
                     <Radio label="1">版本</Radio>
-                    <Radio label="2">文件</Radio>
+                    <!-- <Radio label="2">文件</Radio> -->
                 </RadioGroup>
             </FormItem>
             <FormItem label="文件名" v-show="isFile">
@@ -70,10 +65,10 @@
             </FormItem>
         </Form>
   </Modal>
-  <Modal v-model="chooseUserModal" title="选择推送用户" width="60">
+  <Modal v-model="chooseUserModal" title="选择推送用户" width="60"  @on-ok="saveSelectUser">
       <Row>
         <Col span="8">
-            <Input v-model="searchUserName" placeholder="请输入..." ></Input>
+            <Input v-model="searchUserName" placeholder="请输入..."></Input>
         </Col>
         <Col span="4" style="text-align:center">
              <Button type="primary" icon="ios-search" @click="searchUser(1)">搜索</Button>
@@ -84,7 +79,7 @@
     <br>
     <Row>
         <Col span="24">
-            <el-table :data="userData" border style="width: 100%" @selection-change="selectUser">
+            <el-table :data="userData" border style="width: 100%" @selection-change="selectUser" ref="multipleTable">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
                 <el-table-column prop="arLoginname" label="用户名">
@@ -92,8 +87,6 @@
                 <el-table-column prop="arTruename" label="姓名" >
                 </el-table-column>
                 <el-table-column prop="arMobile" label="电话">
-                </el-table-column>
-                <el-table-column prop="arEmail" label="邮箱">
                 </el-table-column>
                 <el-table-column prop="areaname" label="区县">
                 </el-table-column>
@@ -111,8 +104,13 @@
 
 <script>
 import {getPushList,addPushList,deletePush} from '@/api/interactive-service'
-import {getUserList} from '@/api/user-service'
+import {getUserList,getAreaCode} from '@/api/user-service'
+import {getRolesList} from '@/api/role'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             searchName:'',
@@ -123,38 +121,42 @@ export default {
             modalTitle:'',
             isFile:false,
             pushData:[],
+            roleData:[],
             userData:[],
+            countyList: [],
+            selectUserList:{userName:[],userIds:[]},
             pageLength:0,
             total:0,
-            countyList: [
-                {
-                    value: '',
-                    label: '区县',
-                    key:3
-                },
-                {
-                    value: 'yb',
-                    label: '渝北区',
-                    key:4
-                },
-                {
-                    value: 'wz',
-                    label: '万州区',
-                    key:5
-                }
-            ],
+            nowPage:1,
             pushForm:{
                 pGroup:'',
                 pRemark:'',
                 pType:'0',
                 pFilename:'',
                 pFileurl:'',
-                pContent:''
+                pContent:'',
+                userIds:''
             }
         }
     },
     created(){
         this._getPushList(1)
+        getRolesList("",1).then(res=>{
+            res.data.list.map(v=>{
+                this.roleData.push({
+                    value:v.grId,
+                    label:v.grName
+                })
+            })
+        })
+        getAreaCode().then(res => {
+            for (let i in res.data.list) {
+                this.countyList.push({
+                    value: res.data.list[i].areacode,
+                    label: res.data.list[i].areaname
+                })
+            }
+        })
     },
     methods:{
         _getPushList(Page){
@@ -165,17 +167,28 @@ export default {
             getPushList(data).then(res=>{
                 this.pageLength = res.data.total
                 this.pushData = res.data.list
+                this.pushData.map(v=>{
+                    if(v.pType == 0){
+                        v.typeName = '消息'
+                    }else if(v.pType == 1){
+                        v.typeName = '版本'
+                    }else if(v.pType == 1){
+                        v.typeName = '文件'
+                    }
+                })
             })
         },
         pageChange(page){
+            this.nowPage = page
             this._getPushList(page)
         },
         pushAddOpen(){
             this.pushModal = true;
             for(var i in this.pushForm){
-               this.pushForm[i] = '';
+               this.pushForm[i] = ''
             }
-            this.pushForm.pType = '0';
+            this.pushForm.pType = '0'
+            this.searchUser(1)
         },
         pushEditOpen(params){
              this.pushModal = true;
@@ -184,6 +197,9 @@ export default {
                    this.pushForm[i] =params.row[i] 
                }
             }
+        },
+        _getUserList(){
+            this.chooseUserModal = true
         },
         radioChange(){
            if(this.pushForm.pType == '2'){
@@ -196,8 +212,15 @@ export default {
              this.$Modal.confirm({
                     content: '删除后数据无法恢复，是否继续？',
                     onOk: () => {
-                        this.pushData.splice(index, 1);
-                        this.$Message.success('删除成功');
+                        deletePush(data).then(res=>{
+                            if(res.code == 20000){
+                                this.pushData.splice(index, 1);
+                                this.$Message.success('删除成功');
+                                this._getPushList(1)
+                            }else{
+                                this.$Message.error(res.message);
+                            }
+                        })
                     },
                     onCancel: () => {
                         
@@ -209,19 +232,60 @@ export default {
             let data = {
                 methods: 'list',
                 pageNo: page,
-                pageSize: 10
+                pageSize: 10,
+                arTruename:this.searchUserName
             }
             getUserList(data).then(res => {
                 this.userData = []
-                for (let i in res.data.list) {
-                    this.userData.push(res.data.list[i])
+                let data = res.data.list
+                for (let i in data) {
+                    this.countyList.map(v=>{
+                        if(v.value == data[i].arAreacode){
+                            data[i].areaname = v.label
+                        }
+                    })
+                    this.userData.push(data[i])
                 }
                 this.total = res.data.total
             })
         },
         //选择用户
         selectUser(val){
-            console.log(val)
+            this.selectUserList={
+                userName:[],
+                userIds:[]
+            }
+            val.map(v=>{
+                this.selectUserList.userName.push(v.arLoginname)
+                this.selectUserList.userIds.push(v.arId)
+            })
+        },
+        //用户框点击保存
+        saveSelectUser(){
+            let userName = Array.from(this.selectUserList.userName).join(",")
+            let userIds = Array.from(this.selectUserList.userIds).join(",")
+            this.pushForm.pRemark = userName
+            this.pushForm.userIds = userIds
+        },
+        //推送点击保存
+        savePushMessage(){
+            let data = {
+                pGroup:this.pushForm.pGroup,
+                pRemark:this.pushForm.pRemark,
+                pType:this.pushForm.pType,
+                pFilename:this.pushForm.pFilename,
+                pFileurl:this.pushForm.pFileurl,
+                pContent:this.pushForm.pContent,
+                userIds:this.pushForm.userIds
+            }
+            addPushList(data).then(res=>{
+                if(res.code == 20000){
+                    this.$Message.success('添加成功')
+                    this._getPushList(this.nowPage)
+                }else{
+                    this.$Message.error(res.message)
+                }
+            })
         }
     }
 }

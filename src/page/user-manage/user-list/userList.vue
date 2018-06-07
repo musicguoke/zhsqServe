@@ -5,26 +5,7 @@
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
         <Card>
-            <div>
-                <div class="seach_condition">
-                    <div class="condition_list">
-                        <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @on-change="_getUserList(1)"></Input>
-                        <!-- <Select v-model="searchDepartment" style="width:200px" placeholder="部门" class="marginLeft">
-                        <Option v-for="item in departmentList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="searchCounty" style="width:200px" placeholder="区县" class="marginLeft">
-                        <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="searchSystem" style="width:200px" placeholder="系统选择" class="marginLeft">
-                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select> -->
-                    </div>
-                    <div class="search_button">
-                        <i-button @click="userAddOpen">新增</i-button>
-                        <!-- <i-button class="marginLeft">导入</i-button> -->
-                    </div>
-                </div>
-            </div>
+            <v-search :importShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset"/>
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arLoginname" label="用户名">
@@ -33,7 +14,7 @@
                     </el-table-column>
                     <el-table-column prop="arMobile" label="电话">
                     </el-table-column>
-                    <el-table-column prop="arEmail" label="邮箱" width="180">
+                    <el-table-column prop="arEmail" label="邮箱" width="160">
                     </el-table-column>
                     <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
@@ -41,9 +22,9 @@
                     </el-table-column>
                     <el-table-column prop="addTime" label="注册时间" sortable>
                     </el-table-column>
-                    <el-table-column label="操作" width="160" align="center">
+                    <el-table-column label="操作" width="200" align="center">
                         <template slot-scope="scope">
-                            <!-- <Button type="info" @click="equipmentOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button> -->
+                            <Button type="success" @click="equipmentOpen(scope)" size="small" class="marginRight" title="设备信息">设备</Button>
                             <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight"  title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small"  title="删除">删除</Button>
                         </template>
@@ -51,7 +32,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" @on-change="pageChange" show-total></Page>
+                <Page :total=total :current="1" v-show="total>10" @on-change="pageChange" show-total show-elevator></Page>
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
@@ -140,8 +121,11 @@ import { formatDate } from '@/components/dateChange/dateChange.js'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
-
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data() {
         return {
             userListHeight: window.innerHeight - 136 + 'px',
@@ -249,7 +233,8 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
-            this.$refs.department.selectedSingle = this.userForm.name
+            // this.$refs.department.selectedSingle = this.userForm.name
+            this.$refs.department.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
             if(this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',') ){
                 let sysArray = this.userForm.sysId.split(',')
                 let groupArray = this.userForm.grId.split(',')
@@ -260,9 +245,7 @@ export default {
                     })
                 }
             }else{
-                console.log(this.userForm)
                 this.sysAndGroupList.push({ sysId: this.userForm.sysId, grId:this.userForm.grId })
-                console.log(this.sysAndGroupList)
                 this._getRolesList(this.userForm.sysId,0)
             }
         },
@@ -318,12 +301,23 @@ export default {
             this.nowPage = page
             this._getUserList(page)
         },
+        //点击搜索
+        search(searchName){
+            this.searchName = searchName 
+            this._getUserList(1)
+        },
+        //点击清空
+        searchReset(){
+            this.searchName = ''
+            this._getUserList(1)
+        },
         equipmentOpen(params) {
             this.equipmentModal = true
             let data = {
+                method:'list',
                 pageNo: 1,
                 pageSize: 10,
-                arId: params.row.arId
+                // arId: params.row.arId
             }
             getEquipment(data).then(res => {
                 console.log(res)
@@ -361,7 +355,7 @@ export default {
         _getUserList(page) {
             let data = {
                 methods: 'list',
-                pageNo: page,
+                pageNo: page||tis.nowPage,
                 pageSize: 10,
                 arTruename:this.searchName
             }
@@ -445,7 +439,8 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
-            this.$refs.department.selectedSingle = data.name
+            console.log(this.$refs.department)
+            this.$refs.department.values = [{value:data.id,label:data.name}]
             this.userForm.arBranch = data.id
         },
         //点击添加，新增一行系统角色选择

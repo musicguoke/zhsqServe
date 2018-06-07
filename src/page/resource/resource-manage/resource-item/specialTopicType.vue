@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px" @on-change="_getDataTarget(1)"></Input>
-            <div class="search_button">
-                <i-button @click="openAddModal()">新增</i-button>
-            </div>
-        </div>
+        <v-search :search-show="false" :import-show="false" @on-build="openAddModal"/>
         <el-table :data="sTopicTypeData" border style="width: 100%">
             <el-table-column prop="typeid" label="类型id">
             </el-table-column>
@@ -21,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="sTopicTypeModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="sTopicTypeForm" label-position="left" :label-width="100">
@@ -37,7 +32,11 @@
 </template>
 <script>
 import { getSTopicTypeList,addSTopicType,uspdateSTopicType,deleteSTopicType } from '@/api/dataSource-service'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             searchName: '',

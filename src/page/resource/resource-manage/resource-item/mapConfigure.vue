@@ -1,11 +1,6 @@
 <template>
     <div>
-        <div class="seach_condition">
-            <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input>
-            <div class="search_button">
-                <i-button @click="openAddModal()">新增</i-button>
-            </div>
-        </div>
+        <v-search :importShow="false" :searchShow="false" @on-build="openAddModal"/>
         <el-table :data="mapConfigureData" border style="width: 100%">
             <el-table-column prop="id" label="ID" width="100" sortable>
             </el-table-column>
@@ -25,7 +20,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total ></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="mapConfigureForm" label-position="left" :label-width="100">
@@ -57,7 +52,11 @@
 </template>
 <script>
 import {getMapConfigure,insertMapConfigure,updateMapConfigure,deleteMapConfigureById} from '@/api/dataSource-service'
+import vSearch from '@/components/search/index'
 export default {
+    components: {
+        vSearch
+    },
     data(){
         return{
             searchName: '',
