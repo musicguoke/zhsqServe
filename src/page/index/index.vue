@@ -1,6 +1,6 @@
 <template>
   <Content>
-    <Card style="margin-top: 17px">
+    <Card style="margin-top: 17px" :style="{maxHeight: contentHeight}">
       <div class="card-content">
         <div class="banner" ref="ebox"></div>
         <div class="data-content">
@@ -90,7 +90,7 @@
           <div class="data-item data-table-item">
             <span class="item-title">系统运行状态</span>
             <div class="item-table">
-              <Table :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
+              <Table height="258" :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
             </div>
           </div>
         </div>
@@ -106,6 +106,7 @@ import { getIndex, getLogStatistics, getMetaUrl } from '@/api/service'
 export default {
   data() {
     return {
+      contentHeight: window.innerHeight - 174 + 'px',
       columns1: [
         {
           title: '系统编码',
@@ -371,8 +372,8 @@ export default {
     _getIndex() {
       getIndex().then(res => {
         if (res.code === 20000) {
-          this.accessResult = res.data.aceessStatistical       
-          this.result  = res.data
+          this.accessResult = res.data.aceessStatistical
+          this.result = res.data
           this.pieInitial()
         } else {
           this.$Message.error(res.message)
@@ -381,7 +382,12 @@ export default {
     },
     _getMetaUrl() {
       getMetaUrl().then(res => {
-        if(res.code === 20000 && res.data) {
+        if (res.code === 20000 && res.data) {
+          res.data.result.map(v => {
+            v.cellClassName = {
+              errorSize: 'demo-table-info-cell-age'
+            }
+          })
           this.data1 = res.data.result
         } else {
           this.$Message.error('好像出什么问题了')
@@ -390,7 +396,7 @@ export default {
     },
     _getLogStatistics() {
       getLogStatistics().then(res => {
-        if(res.code === 20000 && res.data) {
+        if (res.code === 20000 && res.data) {
           this.dateArray = []
           this.dataArray = []
           this.loginArray = []
@@ -417,6 +423,10 @@ export default {
   background-color: #4a7fcf;
 }
 .ivu-table .demo-table-error-row td {
+  background-color: #ff6600;
+  color: #fff;
+}
+.ivu-table .demo-table-info-cell-age {
   background-color: #ff6600;
   color: #fff;
 }
@@ -526,6 +536,7 @@ export default {
     border: 1px solid #d8dcdf;
     border-radius: 2px;
     position: relative;
+    overflow: hidden;
   }
   .data-table-item {
     justify-content: flex-start;
@@ -540,6 +551,7 @@ export default {
   }
 }
 .item-table {
+  height: 100%;
   padding: 20px 15px 40px 15px;
 }
 </style>

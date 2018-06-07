@@ -2,7 +2,8 @@
   <div class="card-content" style="min-height: 400px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
-      <Step title="上传欢迎页" content=""></Step>
+      <Step v-if="sysOrRole" title="上传欢迎页" content=""></Step>
+      <Step v-else title="专题配置" content=""></Step>
       <Step title="功能配置" content=""></Step>
       <Step title="数据配置" content=""></Step>
       <Step title="地图配置" content=""></Step>
@@ -10,7 +11,8 @@
     </Steps>
     <Menu mode="horizontal" ref="tab_menu" style="width: 100%" v-if="!newSys" :theme="theme" :active-name="tabActiveName" @on-select="tabChange">
       <MenuItem name="0">基本信息</MenuItem>
-      <MenuItem name="1">上传欢迎页</MenuItem>
+      <MenuItem v-if="sysOrRole" name="1">上传欢迎页</MenuItem>
+      <MenuItem v-else name="1">专题配置</MenuItem>
       <MenuItem name="2">功能配置</MenuItem>
       <MenuItem name="3">数据配置</MenuItem>
       <MenuItem name="4">地图配置</MenuItem>
@@ -87,12 +89,15 @@
           </FormItem>
         </Form>
       </div>
+      <div style="width: 500px" v-show="current == 1 && !sysOrRole">
+        <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
+      </div>
       <div style="width: 400px" v-show="current == 2">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig">
         </Table>
       </div>
       <div v-show="current == 3" class="table-tree-box" :style="{maxHeight: tableHeight}">
-        <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-expand-click="loadData" @on-selection-change="selectDataConfig"></my-tree>
+        <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
       </div>
       <div style="width: 400px" v-show="current == 4">
         <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
@@ -142,6 +147,7 @@ import {
 } from '@/api/system'
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, getAreaCatalog, uploadImg } from '@/api/catalog'
+import { getTopicDataTree } from '@/api/topics'
 import TreeTable from '@/components/tree-table/index'
 import MyTree from '@/components/my-tree/index'
 
@@ -191,14 +197,18 @@ export default {
         android_pad: '',
         pc: ''
       },
+      imageList: [],
       areaQxList: [],
       dataTree: [],
+      topicDataTree: [],
       tempDataTree: [],
+      tempTopicDataTree: [],
       mapConfigList: [],
       featureList: [],
       cilentAuthorityStr: '1',
       tabDataIdStr: '',
       mapIdStr: '',
+      publishIdStr: '',
       funNum: '',
       funAry: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       sysId: '',
@@ -221,6 +231,25 @@ export default {
         }, {
           title: '更新时间',
           key: 'updatetime'
+        }
+      ],
+      topicDataColumns: [
+        {
+          type: 'selection',
+          width: '50',
+        },
+        {
+          title: '数据名称',
+          key: 'dpName'
+        }, {
+          title: '数据类型',
+          key: 'id'
+        }, {
+          title: '排序',
+          key: 'dpListorder'
+        }, {
+          title: '描述',
+          key: 'description'
         }
       ],
       columns4: [
@@ -271,6 +300,7 @@ export default {
     initFormData() {
       Object.assign(this.$data, this.$options.data())
       this._getAreaList()
+      this._getDateTree()
       this._getAreaCatalog()
       this._getFeature()
       this._getMapConfig()
@@ -311,18 +341,48 @@ export default {
       }
     },
     handleSuccess1(res) {
+      let data = {
+        type: "ios_iphone",
+        imagePath: res.data,
+        imageType: "1"
+      }
+      this.imageList.push(data)
       this.uploadForm.ios_iphone = res.data
     },
     handleSuccess2(res) {
+      let data = {
+        type: "ios_ipad",
+        imagePath: res.data,
+        imageType: "1"
+      }
+      this.imageList.push(data)
       this.uploadForm.ios_ipad = res.data
     },
     handleSuccess3(res) {
+      let data = {
+        type: "android_phone",
+        imagePath: res.data,
+        imageType: "1"
+      }
+      this.imageList.push(data)
       this.uploadForm.android_phone = res.data
     },
     handleSuccess4(res) {
+      let data = {
+        type: "android_pad",
+        imagePath: res.data,
+        imageType: "1"
+      }
+      this.imageList.push(data)
       this.uploadForm.android_pad = res.data
     },
     handleSuccess5(res) {
+      let data = {
+        type: "pc",
+        imagePath: res.data,
+        imageType: "1"
+      }
+      this.imageList.push(data)
       this.uploadForm.pc = res.data
     },
     selectMapConfig(section, row) {
@@ -330,6 +390,10 @@ export default {
       let id = []
       section.map(v => id.push(v.id))
       this.mapIdStr = id.toString()
+    },
+    selectTopicDataConfig(section) {
+      // 专题数据选择
+      this.publishIdStr = section.toString()
     },
     selectDataConfig(section) {
       // 数据选择
@@ -361,14 +425,6 @@ export default {
       })
       return list.toString()
     },
-    loadData(item) {
-      if (item.areacode) {
-        if (this.code !== item.areacode) {
-          this._getDateTree(item.areacode)
-        }
-        this.code = item.areacode
-      }
-    },
     _getAreaList() {
       getAreaList().then(res => {
         if (res.code === 20000) {
@@ -387,6 +443,11 @@ export default {
     _getDateTree(id) {
       getDateTree(id).then(res => {
         this.dataTree = this.tempDataTree = res
+      })
+    },
+    _getTopicDataTree() {
+      getTopicDataTree().then(res => {
+        this.topicDataTree = this.tempTopicDataTree = res
       })
     },
     _getMapConfig() {
@@ -426,9 +487,10 @@ export default {
         tabDataIdStr: this.tabDataIdStr,
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
-        funNum: this.funNum
-      }, this.formItem, this.uploadForm)
-      addSystem(data).then(res => {
+        funNum: this.funNum,
+        imageList: this.imageList
+      }, this.formItem)
+      addSystem(JSON.stringify(data)).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`添加${res.message}`)
           this.cancel()
@@ -443,9 +505,10 @@ export default {
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
-        id: this.sysId
+        id: this.sysId,
+        imageList: this.imageList
       }, this.formItem)
-      updateSystem(data).then(res => {
+      updateSystem(JSON.stringify(data)).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`修改${res.message}`)
           this.cancel()
@@ -464,6 +527,12 @@ export default {
             areacode: res.data.areacode,
             enable: res.data.enable.toString()
           }
+          if(res.data.imageList) {
+            res.data.imageList.map(v => {
+              this.uploadForm[v.type] = v.imagePath
+            })
+          }
+          this.uploadForm
           this.sysId = res.data.id
           let list = []
           this.featureList.map(v => {
@@ -499,11 +568,11 @@ export default {
           this.tabDataIdStr = list.toString()
           this.dataTree = this.tempDataTree
           let level = parseInt(res.data.funNum / 10)
-          if(level === 0 ) {
+          if (level === 0) {
             this.qxLevel = '一级权限'
-          } else if(level === 1) {
+          } else if (level === 1) {
             this.qxLevel = '二级权限'
-          } else if(level === 2) {
+          } else if (level === 2) {
             this.qxLevel = '三级权限'
           }
           this.funNum = res.data.funNum
@@ -559,18 +628,25 @@ export default {
           })
           this.mapIdStr = list.toString()
           list = []
+          res.data.publishList.map(v => {
+            this.tempTopicDataTree = this.checkRoleData(this.tempTopicDataTree, v.publishId)
+            list.push(v.publishId)
+          })
+          this.publishIdStr = list.toString()
+          this.topicDataTree = this.tempTopicDataTree
+          list = []
           res.data.msRoleDataList.map(v => {
-            this.tempDataTree = this.checkData(this.tempDataTree, v.sysData)
+            this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
             list.push(v.sysData)
           })
           this.tabDataIdStr = list.toString()
           this.dataTree = this.tempDataTree
           let level = parseInt(res.data.funNum / 10)
-          if(level === 0 ) {
+          if (level === 0) {
             this.qxLevel = '一级权限'
-          } else if(level === 1) {
+          } else if (level === 1) {
             this.qxLevel = '二级权限'
-          } else if(level === 2) {
+          } else if (level === 2) {
             this.qxLevel = '三级权限'
           }
           this.funNum = res.data.funNum
@@ -584,7 +660,7 @@ export default {
         if (id === h.id) {
           h._checked = true
         } else if (h.children) {
-          this.checkData(h.children, id)
+          this.checkRoleData(h.children, id)
         }
         list.splice(index, 1, h)
       })
@@ -596,7 +672,8 @@ export default {
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
-        sysId: this.id
+        sysId: this.id,
+        publishIdStr: this.publishIdStr
       }, this.formRoleItem)
       addRole(data).then(res => {
         if (res.code === 20000) {
@@ -614,7 +691,8 @@ export default {
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         sysId: this.id,
-        grId: this.grId
+        grId: this.grId,
+        publishIdStr: this.publishIdStr
       }, this.formRoleItem)
       updateRole(data).then(res => {
         if (res.code === 20000) {
