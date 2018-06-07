@@ -407,6 +407,7 @@ export default {
     },
     // 权限选择
     qx1Change(value) {
+      console.log(value)
       if (value === '一级权限') {
         this.funAry = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
       } else if (value === '二级权限') {
@@ -567,14 +568,14 @@ export default {
           })
           this.tabDataIdStr = list.toString()
           this.dataTree = this.tempDataTree
-          let level = parseInt(res.data.funNum / 10)
-          if (level === 0) {
+          if (res.data.funNum < 11) {
             this.qxLevel = '一级权限'
-          } else if (level === 1) {
+          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
             this.qxLevel = '二级权限'
-          } else if (level === 2) {
+          } else if (res.data.funNum > 20) {
             this.qxLevel = '三级权限'
           }
+          this.qx1Change(this.qxLevel)
           this.funNum = res.data.funNum
         } else {
           this.$Message.error(res.message)
@@ -641,14 +642,14 @@ export default {
           })
           this.tabDataIdStr = list.toString()
           this.dataTree = this.tempDataTree
-          let level = parseInt(res.data.funNum / 10)
-          if (level === 0) {
+          if (res.data.funNum < 11) {
             this.qxLevel = '一级权限'
-          } else if (level === 1) {
+          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
             this.qxLevel = '二级权限'
-          } else if (level === 2) {
+          } else if (res.data.funNum > 20) {
             this.qxLevel = '三级权限'
           }
+          this.qx1Change(this.qxLevel)
           this.funNum = res.data.funNum
         } else {
           this.$Message.error(res.message)

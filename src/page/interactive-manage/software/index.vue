@@ -5,7 +5,7 @@
       <BreadcrumbItem>软件版本</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
-      <v-search :search-show="false" @on-build="build" @on-import="importFile" />
+      <v-search :search-show="false" :import-show="false" @on-build="build" />
       <div class="tableSize">
         <el-table :data="list" border style="width: 100%">
           <el-table-column prop="vId" label="vId" sortable>
@@ -32,7 +32,7 @@
     </Card>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
       <h3 slot="header" style="color:#2D8CF0">版本信息</h3>
-      <Form :model="versionInfo" :label-width="60">
+      <Form :model="versionInfo" :label-width="90">
         <FormItem label="版本名称">
           <Input v-model="versionInfo.vTitle" placeholder="请输入版本名称"></Input>
         </FormItem>
@@ -48,8 +48,33 @@
             <Option value="pc">pc</Option>
           </Select>
         </FormItem>
-        <FormItem label="文件地址">
-          <Input v-model="versionInfo.vUrl" placeholder="请输入版本号"></Input>
+        <FormItem label="远程地址">
+          <Input v-model="versionInfo.bundle" placeholder="请输入远程地址"></Input>
+        </FormItem>
+        <FormItem label="bundle ID">
+          <Input v-model="versionInfo.bundle" placeholder="请输入bundle ID"></Input>
+        </FormItem>
+        <FormItem label="是否强制更新">
+          <RadioGroup v-model="versionInfo.vIsforced">
+            <Radio label="1">是</Radio>
+            <Radio label="0">否</Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="选择文件">
+          <Input v-model="versionInfo.vUrl" placeholder="文件地址"></Input>
+          <Upload :action="`${uploadUrl}/sys/msVersion/uploadVersion.do`" with-credentials :on-success="handleSuccess">
+            <Button type="ghost" icon="ios-cloud-upload-outline">请选择文件</Button>
+          </Upload>
+          <Alert show-icon>
+            导入须知
+            <template slot="desc">
+              <p>1、导入文件大小不超过100MB.</p>
+              <p>2、支持ipa、apk和app类型.</p>
+            </template>
+          </Alert>
+        </FormItem>
+        <FormItem label="更新说明">
+          <Input v-model="versionInfo.vContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -57,6 +82,7 @@
 </template>
 
 <script>
+import { url } from '@/api/config'
 import vSearch from '@/components/search/index'
 import { getVersionList, addVersion, getVersionById, deleteVersion, deleteVersions, uploadVersion } from '@/api/software-version'
 
@@ -67,6 +93,7 @@ export default {
   data() {
     return {
       contentHeight: window.innerHeight - 174 + 'px',
+      uploadUrl: url,
       modalShow: false,
       list: [],
       listLength: '',
@@ -74,7 +101,14 @@ export default {
         vTitle: '',
         vVersion: '',
         vPlatform: '',
-        vUrl: ''
+        vUrl: '',
+        vIsforced: '0',
+        vContent: '',
+        vSysId: '',
+        vForcedContent: '',
+        vSourcename: '',
+        sysIdStr: '',
+        bundle: ''
       }
     }
   },
@@ -98,13 +132,19 @@ export default {
     _getVersionById(id) {
       getVersionById(id).then(res => {
         if (res.code === 20000) {
-          this.modalShow = true
           this.versionInfo = {
             vTitle: res.data.vTitle,
             vVersion: res.data.vVersion,
             vPlatform: res.data.vPlatform,
-            vUrl: res.data.vUrl
+            vUrl: res.data.vUrl,
+            vIsforced: res.data.vIsforced.toString(),
+            vContent: res.data.vContent,
+            vSysId: res.data.vSysId,
+            vForcedContent: res.data.vForcedContent,
+            vSourcename: res.data.vSourcename,
+            sysIdStr: res.data.sysIdStr
           }
+          this.modalShow = true
         } else {
           this.$Message.error('好像出什么问题了！')
         }
@@ -120,11 +160,26 @@ export default {
         }
       })
     },
+    _uploadVersion(data) {
+      uploadVersion(data).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(res.message)
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
     build() {
       this.modalShow = true
     },
+    handleSuccess(res) {
+      this.versionInfo.vUrl = res.data
+    },
     importFile() {
-
+      let formData = new FormData()
+      // 向 formData 对象中添加文件
+      formData.append('file', this.file)
+      this._up
     },
     detail(row) {
       this._getVersionById(row.vId)
@@ -138,18 +193,29 @@ export default {
         onCancel: () => { }
       })
     },
-    save() {},
+    save() { },
     cancel() {
       this.versionInfo = {
         vTitle: '',
         vVersion: '',
         vPlatform: '',
-        vUrl: ''
+        vUrl: '',
+        vIsforced: '',
+        vContent: '',
+        vSysId: '',
+        vForcedContent: '',
+        vSourcename: '',
+        sysIdStr: '',
+        bundle: ''
       }
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.ivu-alert-with-desc {
+  margin-bottom: 0;
+}
 </style>
+

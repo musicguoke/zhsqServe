@@ -21,7 +21,9 @@ export function getDateTree(id) {
     parentid: id
   }
 
-  return axios.post(`${url}/sys/msTabDataController/getGroupDataTreeByParentid.do`, qs.stringify(data)).then(res => {
+  return axios.post(`${url}/sys/msTabDataController/getGroupDataTreeByParentid.do`, qs.stringify(data), {
+    timeout: 60000
+  }).then(res => {
     return Promise.resolve(res.data)
   })
 }

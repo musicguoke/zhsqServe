@@ -90,7 +90,7 @@
           <div class="data-item data-table-item">
             <span class="item-title">系统运行状态</span>
             <div class="item-table">
-              <Table height="258" :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
+              <Table border height="258" :row-class-name="rowClassName" :columns="columns1" :data="data1"></Table>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@ import { getIndex, getLogStatistics, getMetaUrl } from '@/api/service'
 export default {
   data() {
     return {
-      contentHeight: window.innerHeight - 174 + 'px',
+      contentHeight: window.innerHeight - 137 + 'px',
       columns1: [
         {
           title: '系统编码',
@@ -118,15 +118,18 @@ export default {
         },
         {
           title: '正常',
-          key: 'successRate'
+          key: 'successRate',
+          className: 'normal-column'
         },
         {
           title: '异常',
-          key: 'errorSize'
+          key: 'errorSize',
+          className: 'error-column'
         },
         {
           title: '总量',
-          key: 'totalSize'
+          key: 'totalSize',
+          className: 'total-column'
         }
       ],
       data1: [],
@@ -421,14 +424,6 @@ export default {
   height: 300px;
   margin-bottom: 17px;
   background-color: #4a7fcf;
-}
-.ivu-table .demo-table-error-row td {
-  background-color: #ff6600;
-  color: #fff;
-}
-.ivu-table .demo-table-info-cell-age {
-  background-color: #ff6600;
-  color: #fff;
 }
 .data-content {
   width: 100%;
