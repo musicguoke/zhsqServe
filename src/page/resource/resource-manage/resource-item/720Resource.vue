@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :importShow="false" :searchShow="false" @on-build="openAddModal"/>
+        <v-search :importShow="false" @on-reset="reset" @on-search="search" @on-build="openAddModal"/>
         <el-table :data="resource720Data" border style="width: 100%">
              <el-table-column prop="id" label="ID">
             </el-table-column>
@@ -74,6 +74,14 @@ export default {
             this.nowPage = Page
             this._get720Resource(Page)
         },
+        //搜索
+        search(searchName){
+
+        },
+        //清空
+        reset(){
+
+        },
         //打开新增模态框
         openAddModal(){
             this.isAdd = true
@@ -103,20 +111,20 @@ export default {
             if(this.isAdd){
                 add720Resource(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('添加成功')
+                        this.$Message.success('添加成功')
                         this._get720Resource(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message)
+                        this.$Message.error(res.message)
                     }
                 })
             }else{
                 data.id = this.resource720Form.id
                 update720Resource(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('修改成功')
+                        this.$Message.success('修改成功')
                         this._get720Resource(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message)
+                        this.$Message.error(res.message)
                     }
                 })
             }  

@@ -14,7 +14,7 @@
                     </el-table-column>
                     <el-table-column prop="arMobile" label="电话">
                     </el-table-column>
-                    <el-table-column prop="arEmail" label="邮箱" width="180">
+                    <el-table-column prop="arEmail" label="邮箱" width="160">
                     </el-table-column>
                     <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
@@ -22,9 +22,9 @@
                     </el-table-column>
                     <el-table-column prop="addTime" label="注册时间" sortable>
                     </el-table-column>
-                    <el-table-column label="操作" width="160" align="center">
+                    <el-table-column label="操作" width="200" align="center">
                         <template slot-scope="scope">
-                            <!-- <Button type="info" @click="equipmentOpen(scope)" size="small" class="marginRight" icon="ios-gear" title="设备信息"></Button> -->
+                            <Button type="success" @click="equipmentOpen(scope)" size="small" class="marginRight" title="设备信息">设备</Button>
                             <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight"  title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small"  title="删除">删除</Button>
                         </template>
@@ -233,7 +233,8 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
-            this.$refs.department.selectedSingle = this.userForm.name
+            // this.$refs.department.selectedSingle = this.userForm.name
+            this.$refs.department.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
             if(this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',') ){
                 let sysArray = this.userForm.sysId.split(',')
                 let groupArray = this.userForm.grId.split(',')
@@ -313,9 +314,10 @@ export default {
         equipmentOpen(params) {
             this.equipmentModal = true
             let data = {
+                method:'list',
                 pageNo: 1,
                 pageSize: 10,
-                arId: params.row.arId
+                // arId: params.row.arId
             }
             getEquipment(data).then(res => {
                 console.log(res)
@@ -437,7 +439,8 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
-            this.$refs.department.selectedSingle = data.name
+            console.log(this.$refs.department)
+            this.$refs.department.values = [{value:data.id,label:data.name}]
             this.userForm.arBranch = data.id
         },
         //点击添加，新增一行系统角色选择

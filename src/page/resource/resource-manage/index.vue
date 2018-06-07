@@ -12,11 +12,11 @@
           <MenuItem name="720-resource">720资源</MenuItem>
           <MenuItem name="image-resource">图片资源</MenuItem>
           <MenuItem name="area-target">区域指标</MenuItem>
+          <MenuItem name="data-target">数据指标</MenuItem>
           <MenuItem name="fp-info">扶贫信息</MenuItem>
           <MenuItem name="map-configure">地图配置</MenuItem>
           <MenuItem name="macro-data">宏观数据</MenuItem>
           <MenuItem name="area-text">区域文本</MenuItem>
-          <MenuItem name="data-target">数据指标</MenuItem>
           <MenuItem name="STopic-type">专题类型</MenuItem>
         </Menu>
         <div class="table">

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :importShow="false" :searchShow="false" @on-build="openAddModal"/>
+        <v-search :importShow="false" @on-search="search" @on-reset="reset" @on-build="openAddModal"/>
         <el-table :data="imageSourceData" border style="width: 100%">
              <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
@@ -90,6 +90,13 @@ export default {
             this.nowPage = Page
             this._getImageSource(Page)
         },
+        //搜索
+        search(search){
+
+        },
+        reset(){
+
+        },
         //打开新增模态框
         openAddModal(){
             this.isAdd = true
@@ -121,20 +128,20 @@ export default {
             if(this.isAdd){
                 addImageSource(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('添加成功');
+                        this.$Message.success('添加成功');
                         this._getImageSource(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message)
+                        this.$Message.error(res.message)
                     }
                 })
             }else{
                 data.id = this.imageSourceForm.id
                 updateImageSource(data).then(res=>{
                     if(res.code == 20000){
-                        this._mm.successTips('修改成功');
+                        this.$Message.success('修改成功');
                         this._getImageSource(this.nowPage)
                     }else{
-                        this._mm.errorTips(res.message)
+                        this.$Message.error(res.message)
                     }
                 })  
             }

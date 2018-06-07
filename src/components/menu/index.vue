@@ -21,6 +21,7 @@
       <MenuItem name="user-list">用户列表</MenuItem>
       <MenuItem name="department-list">部门列表</MenuItem>
       <MenuItem name="manager-list">管理员列表</MenuItem>
+      <MenuItem name="contacts-list">联系人列表</MenuItem>
     </Submenu>
     <Submenu name="4">
       <template slot="title">
