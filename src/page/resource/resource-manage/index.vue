@@ -18,6 +18,7 @@
           <MenuItem name="macro-data">宏观数据</MenuItem>
           <MenuItem name="area-text">区域文本</MenuItem>
           <MenuItem name="STopic-type">专题类型</MenuItem>
+          <MenuItem name="statistics">统计配置</MenuItem>
         </Menu>
         <div class="table">
            <router-view/>

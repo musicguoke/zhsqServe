@@ -65,14 +65,3 @@ export function deleteVersions(id) {
       return Promise.resolve(res.data)
   })
 }
-
-// 上传软甲版本
-export function uploadVersion(data) {
-  return axios.post(
-    `${url}/sys/msVersion/uploadVersion.do`,
-    data,{  
-      headers:{'Content-Type':'multipart/form-data'}  
-    }).then(res => {
-      return Promise.resolve(res.data)
-  })
-}

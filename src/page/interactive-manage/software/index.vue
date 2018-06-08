@@ -48,12 +48,6 @@
             <Option value="pc">pc</Option>
           </Select>
         </FormItem>
-        <FormItem label="远程地址">
-          <Input v-model="versionInfo.bundle" placeholder="请输入远程地址"></Input>
-        </FormItem>
-        <FormItem label="bundle ID">
-          <Input v-model="versionInfo.bundle" placeholder="请输入bundle ID"></Input>
-        </FormItem>
         <FormItem label="是否强制更新">
           <RadioGroup v-model="versionInfo.vIsforced">
             <Radio label="1">是</Radio>
@@ -84,7 +78,7 @@
 <script>
 import { url } from '@/api/config'
 import vSearch from '@/components/search/index'
-import { getVersionList, addVersion, getVersionById, deleteVersion, deleteVersions, uploadVersion } from '@/api/software-version'
+import { getVersionList, addVersion, getVersionById, deleteVersion, deleteVersions } from '@/api/software-version'
 
 export default {
   components: {
@@ -107,8 +101,7 @@ export default {
         vSysId: '',
         vForcedContent: '',
         vSourcename: '',
-        sysIdStr: '',
-        bundle: ''
+        sysIdStr: ''
       }
     }
   },
@@ -160,26 +153,11 @@ export default {
         }
       })
     },
-    _uploadVersion(data) {
-      uploadVersion(data).then(res => {
-        if (res.code === 20000) {
-          this.$Message.success(res.message)
-        } else {
-          this.$Message.error(res.message)
-        }
-      })
-    },
     build() {
       this.modalShow = true
     },
     handleSuccess(res) {
       this.versionInfo.vUrl = res.data
-    },
-    importFile() {
-      let formData = new FormData()
-      // 向 formData 对象中添加文件
-      formData.append('file', this.file)
-      this._up
     },
     detail(row) {
       this._getVersionById(row.vId)
@@ -205,8 +183,7 @@ export default {
         vSysId: '',
         vForcedContent: '',
         vSourcename: '',
-        sysIdStr: '',
-        bundle: ''
+        sysIdStr: ''
       }
     }
   }

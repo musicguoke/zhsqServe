@@ -59,6 +59,8 @@ const STZResource = r =>
   require(["@/page/resource/resource-manage/resource-item/720Resource"], r);
 const ImageResource = r =>
   require(["@/page/resource/resource-manage/resource-item/ImageResource"], r);
+const Statistics = r =>
+  require(["@/page/resource/resource-manage/resource-item/statistics"], r);
 
 //search
 const HotSeach = r =>
@@ -177,6 +179,12 @@ const router = new VueRouter({
               component: ImageResource,
               name: "ImageResource",
               meta: { title: "图片资源" }
+            },
+            {
+              path: "statistics",
+              component: Statistics,
+              name: "Statistics",
+              meta: { title: "统计分析" }
             },
             {
               path: "area-target",

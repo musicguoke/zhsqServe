@@ -1,6 +1,6 @@
 <template>
 <Content :style="{maxHeight:managerHeight}">
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{margin: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>管理员列表</BreadcrumbItem>
     </Breadcrumb>
