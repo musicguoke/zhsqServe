@@ -419,7 +419,7 @@ export default {
     renderCheck(data) {
       let arr = []
       data.forEach((item) => {
-        if (item._checked) {
+        if (item.selected) {
           arr.push(item.id)
         }
         if (item.children && item.children.length > 0) {

@@ -63,7 +63,7 @@ export function deleteAuthority(id) {
 // 批量删除统计分析
 export function deleteAuthorities(id) {
   const data = {
-    id: id
+    ids: id
   }
   return axios.post(
     `${url}/sys/msCilentAuthorityController/deletes.do`,

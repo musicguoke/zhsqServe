@@ -148,12 +148,10 @@ import {
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, getAreaCatalog, uploadImg } from '@/api/catalog'
 import { getTopicDataTree } from '@/api/topics'
-import TreeTable from '@/components/tree-table/index'
 import MyTree from '@/components/my-tree/index'
 
 export default {
   components: {
-    TreeTable,
     MyTree
   },
   props: {
@@ -300,8 +298,11 @@ export default {
     initFormData() {
       Object.assign(this.$data, this.$options.data())
       this._getAreaList()
-      this._getDateTree()
-      this._getAreaCatalog()
+      if(!this.sysOrRole) {
+        this._getDateTree()
+      } else {
+        this._getAreaCatalog()
+      }
       this._getFeature()
       this._getMapConfig()
     },
@@ -437,7 +438,6 @@ export default {
     },
     _getAreaCatalog() {
       getAreaCatalog().then(res => {
-        res.map(v => v._checked = false)
         this.dataTree = this.tempDataTree = res
       })
     },
@@ -585,7 +585,7 @@ export default {
     checkData(list, id) {
       list.map((h, index) => {
         if (id === h.id) {
-          h._checked = true
+          h.selected = true
         } else if (h.children) {
           this.checkData(h.children, id)
         }
@@ -659,7 +659,7 @@ export default {
     checkRoleData(list, id) {
       list.map((h, index) => {
         if (id === h.id) {
-          h._checked = true
+          h.selected = true
         } else if (h.children) {
           this.checkRoleData(h.children, id)
         }

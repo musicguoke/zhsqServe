@@ -7,7 +7,7 @@
     </Breadcrumb>
     <Card>
       <div v-show="!isShow">
-        <v-search :search-show="false" :import-show="false" @on-build="show"/>
+        <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="show"/>
         <div class="tableSize">
           <el-table :data="roleList" border style="width: 100%">
             <el-table-column prop="grId" label="Id" width="100" sortable>
