@@ -61,6 +61,8 @@ const ImageResource = r =>
   require(["@/page/resource/resource-manage/resource-item/ImageResource"], r);
 const Statistics = r =>
   require(["@/page/resource/resource-manage/resource-item/statistics"], r);
+const AuthorityConfig = r =>
+  require(["@/page/resource/resource-manage/resource-item/authorityConfig"], r);
 
 //search
 const HotSeach = r =>
@@ -184,6 +186,12 @@ const router = new VueRouter({
               path: "statistics",
               component: Statistics,
               name: "Statistics",
+              meta: { title: "统计分析" }
+            },
+            {
+              path: "authority-config",
+              component: AuthorityConfig,
+              name: "AuthorityConfig",
               meta: { title: "统计分析" }
             },
             {

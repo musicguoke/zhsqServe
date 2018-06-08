@@ -43,13 +43,13 @@
           <Input v-model="itemInfo.sourcelayer" placeholder="请输入版本号"></Input>
         </FormItem>
         <FormItem label="字段">
-          <Input v-model="itemInfo.fieldsName" placeholder="请输入版本号"></Input>
+          <Input v-model="itemInfo.fieldsName"></Input>
         </FormItem>
         <FormItem label="字段别名">
-          <Input v-model="itemInfo.fields" placeholder="请输入版本号"></Input>
+          <Input v-model="itemInfo.fields"></Input>
         </FormItem>
         <FormItem label="字段类型">
-          <Input v-model="itemInfo.fieldsType" placeholder="请输入版本号"></Input>
+          <Input v-model="itemInfo.fieldsType"></Input>
         </FormItem>
       </Form>
     </Modal>
