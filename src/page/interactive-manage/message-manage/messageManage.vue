@@ -50,75 +50,124 @@
             </FormItem>
         </Form>
   </Modal>
+  <Modal v-model="messageSendModal" :title=modalTitle ref="modal">
+        <Form :model="messageSendForm" label-position="left" :label-width="100">
+            <FormItem label="电话">
+                <Input v-model="messageSendForm.phone" placeholder="多个电话用英文逗号隔开..." ></Input>
+            </FormItem>
+            <FormItem label="导入电话">
+                <div style="display:flex">
+                    <Input v-model="messageSendForm.phone" placeholder="请输入电话号码..." style="width:310px;margin-right:5px;"></Input>
+                    <Button type="primary" icon="person-add" @click="importModal=true">导入</Button>
+                </div>
+            </FormItem>
+            <FormItem label="短信内容">
+                <Input v-model="messageSendForm.message" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." ></Input>
+            </FormItem>
+        </Form>
+  </Modal>
+  <Modal v-model="importModal" title='导入电话' @on-ok="saveImport">
+        <Form :model="importForm" label-position="left" :label-width="100">
+            <FormItem label="导入类型">
+                <Select v-model="importForm.type">
+                    <Option value="1">增量导入</Option>
+                    <Option value="2">全量导入</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="选择文件" style="width:100px;">
+                <div style="display:flex">
+                    <div>
+                        <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
+                    </div>
+                    <Upload action="//jsonplaceholder.typicode.com/posts/">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                    </Upload>
+                </div>
+            </FormItem>
+            <div class="importSlot">
+                <div class="importSlotTitle">导入须知</div>
+                <p>1、导入文件大小不超过2MB.</p>
+                <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a>点此下载.</a></p>
+            </div>
+        </Form>
+    </Modal>
   </Content>
 </template>
 
 <script>
-import {getMessageList,sendMessage,getMessageById} from '@/api/interactive-service'
-import vSearch from '@/components/search/index'
+import {
+  getMessageList,
+  sendMessage,
+  getMessageById
+} from "@/api/interactive-service";
+import vSearch from "@/components/search/index";
 export default {
-    components: {
-        vSearch
+  components: {
+    vSearch
+  },
+  data() {
+    return {
+      searchName: "",
+      messageManageHeight: window.innerHeight - 136 + "px",
+      messageModal: false,
+      messageSendModal: false,
+      modalTitle: "",
+      messageData: [],
+      pageLength: 1,
+      messageForm: {
+        phone: "",
+        message: "",
+        type: "",
+        status: "",
+        addTime: "",
+        typeName: ""
+      },
+      messageSendForm: {},
+      importModal: false,
+      importForm: {
+        type: "",
+        file: ""
+      }
+    };
+  },
+  created() {
+    this._getMessageList();
+  },
+  methods: {
+    _getMessageList() {
+      getMessageList().then(res => {
+        this.pageLength = res.data.total;
+        this.messageData = res.data.list;
+        this.messageData.map(v => {
+          v.addTime = this._mm.formatDate(v.addTime);
+          if (v.type == 1) {
+            v.typeName = "手动发送短信";
+          } else if (v.type == 2) {
+            v.typeName = "注册或登录验证短信发送";
+          }
+        });
+      });
     },
-    data(){
-        return{
-            searchName:'',
-            messageManageHeight:window.innerHeight - 136 +'px',
-            messageModal:false,
-            modalTitle:'',
-            isDetail:false,
-            messageData:[],
-            pageLength:1,
-            messageForm:{
-                phone:'',
-                message:'',
-                type:'',
-                status:'',
-                addTime:'',
-                typeName:''
-            }
+    messageAddOpen() {
+      for (var i in this.messageForm) {
+        this.messageForm[i] = "";
+      }
+      this.messageSendModal = true;
+    },
+    messageEditOpen(params) {
+      this.messageModal = true;
+      this.modalTitle = "短信详情";
+      this.$refs.modal.footerHide = true;
+      for (var i in this.messageForm) {
+        if (params.row[i]) {
+          this.messageForm[i] = params.row[i];
         }
+      }
     },
-    created(){
-        this._getMessageList()
-    },
-    methods:{
-        _getMessageList(){
-            getMessageList().then(res=>{
-                this.pageLength = res.data.total
-                this.messageData = res.data.list
-                this.messageData.map(v=>{
-                   v.addTime = this._mm.formatDate(v.addTime)
-                   if(v.type == 1){
-                       v.typeName = '手动发送短信'
-                   }else if(v.type == 2){
-                       v.typeName = '注册或登录验证短信发送'
-                   }
-                })
-            })
-        },
-        messageAddOpen(){
-            this.messageModal = true;
-            this.isDetail = false;
-            for(var i in this.messageForm){
-               this.messageForm[i] = '';
-            }
-        },
-        messageEditOpen(params){
-            this.messageModal = true;
-            this.isDetail = true;
-            this.modalTitle = "短信详情"
-            this.$refs.modal.footerHide = true
-            for(var i in this.messageForm){
-               if(params.row[i]){
-                   this.messageForm[i] =params.row[i] 
-               }
-            }
-        }
-    }
-}
+    saveImport() {}
+  }
+};
 </script>
 
 <style>
-    
 </style>

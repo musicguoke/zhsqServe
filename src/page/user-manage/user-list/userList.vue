@@ -159,7 +159,15 @@ export default {
                 arId:''
             },
             equipmentForm: {
-
+                id:"",
+                arId:"",
+                arActive:"",
+                arOs:"",
+                arRegip:"",
+                arCodeBind:"",
+                arToken:"",
+                arRegip:"",
+                sysId:""
             },
             userData: [],
             departmentData: [],
@@ -182,12 +190,12 @@ export default {
                     label: 'ios_ipad'
                 },
                 {
-                    value: 'android_iphone',
-                    label: 'android_iphone'
+                    value: 'android_phone',
+                    label: 'android_phone'
                 },
                 {
-                    value: 'android_ipad',
-                    label: 'android_ipad'
+                    value: 'android_pad',
+                    label: 'android_pad'
                 }
             ],
             sysAndGroupList: [{ sysId: '', grId: '' }],
@@ -312,15 +320,26 @@ export default {
             this._getUserList(1)
         },
         equipmentOpen(params) {
-            this.equipmentModal = true
             let data = {
                 method:'list',
                 pageNo: 1,
                 pageSize: 10,
-                // arId: params.row.arId
+                arId: params.row.arId
             }
             getEquipment(data).then(res => {
-                console.log(res)
+                if(res.data.total == 0){
+                    this.$Message.info("暂无设备信息")
+                    this.equipmentModal = false
+                }else{
+                    this.equipmentModal = true
+                    let data = res.data.list
+                    for(let i in data){
+                        this.equipmentForm[i] = ""
+                        this.equipmentForm = data[i]
+                    }
+                    this.equipmentForm.arLastlogintime = this._mm.formatDate(this.equipmentForm.arLastlogintime)
+                    this.equipmentForm.arRegtime = this._mm.formatDate(this.equipmentForm.arRegtime)
+                }
             })
         },
         remove(params) {
@@ -435,11 +454,27 @@ export default {
         },
         //跟新设备
         updateEquipment() {
-
+            let data = {
+                id:this.equipmentForm.id,
+                arId:this.equipmentForm.arId,
+                arActive:this.equipmentForm.arActive,
+                arOs:this.equipmentForm.arOs,
+                arRegip:this.equipmentForm.arRegip,
+                arCodeBind:this.equipmentForm.arCodeBind,
+                arToken:this.equipmentForm.arToken,
+                arRegip:this.equipmentForm.arRegip,
+                sysId:this.equipmentForm.sysId
+            }
+            updateEquipment(data).then(res=>{
+                if(res.code == 20000){
+                    this.$Message.success("修改成功")
+                }else{
+                    this.$Message.error(res.message)
+                }
+            })
         },
         //部门树点击
         handleNodeClick(data) {
-            console.log(this.$refs.department)
             this.$refs.department.values = [{value:data.id,label:data.name}]
             this.userForm.arBranch = data.id
         },

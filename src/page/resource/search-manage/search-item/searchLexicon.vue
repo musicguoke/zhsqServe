@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :search-show="false"  @on-build="openAddModal" @on-import="importModal = true"/>
+        <v-search :search-show="false"  @on-build="openAddModal" @on-import="openImportModal"/>
         <el-table :data="lexiconData" border style="width: 100%">
             <el-table-column prop="dataId" label="数据编码" sortable>
             </el-table-column>
@@ -27,27 +27,22 @@
             </Form>
         </Modal>
         <Modal v-model="importModal" title='导入词库' @on-ok="saveImport">
-          <Form :model="importForm" label-position="left" :label-width="100">
+          <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
               <FormItem label="导入类型">
                   <Select v-model="importForm.type">
                       <Option value="1">增量导入</Option>
                       <Option value="2">全量导入</Option>
                   </Select>
               </FormItem>
-              <FormItem label="选择文件" style="width:100px;">
-                  <div style="display:flex">
-                      <div>
-                          <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
-                      </div>
-                      <Upload action="//jsonplaceholder.typicode.com/posts/">
-                          <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
-                      </Upload>
-                  </div>
+              <FormItem label="选择文件">
+                    <Upload :action="`${uploadUrl}/sys/msWordLibraryController/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                    </Upload>
               </FormItem>
                   <div class="importSlot">
                   <div class="importSlotTitle">导入须知</div>
                   <p>1、导入文件大小不超过2MB.</p>
-                  <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a>点此下载.</a></p>
+                  <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a :href="`${uploadUrl}/sys/msWordLibraryController/downloadImportedFile.do`">点此下载.</a></p>
               </div>
           </Form>
         </Modal>
@@ -56,6 +51,7 @@
 <script>
 import {getLexicon,addLexicon,updateLexicon,deleteLexicon,importLexicon} from "@/api/search-service";
 import vSearch from '@/components/search/index'
+import { url } from '@/api/config.js'
 export default {
     components: {
         vSearch
@@ -68,6 +64,7 @@ export default {
       lexiconModal: false,
       importModal:false,
       isAdd: true,
+      uploadUrl:url,
       modalTitle: "",
       nowPage:1,
       lexiconForm: {
@@ -77,7 +74,7 @@ export default {
       },
       importForm:{
           type:'',
-          file:''
+          file:{}
       },
     }
   },
@@ -119,6 +116,13 @@ export default {
           if(params.row[i]){
             this.lexiconForm[i] =params.row[i] 
           }
+        }
+    },
+    //打开导入文件模态框
+    openImportModal(){
+        this.importModal = true
+        for(let i in this.importForm){
+            this.importForm[i] = ""
         }
     },
     //点击确定
@@ -168,15 +172,31 @@ export default {
         }
       });   
     },
+    boforeUpload(file) {
+      this.importForm.file = file
+    },
+    handleSuccessUpload(res) {
+        let formData = new FormData(this.$refs.file_form)
+        // 向 formData 对象中添加文件
+        formData.file = this.importForm.file
+        formData.type = this.importForm.type
+        // formData.append('file', this.importForm.file)
+        // formData.append('type', this.importForm.type)
+    },
      //导入文件保存
     saveImport(){
-      let data = {
-        method:'importFile',
-        type:this.importForm.type,
-        file:this.importForm.file
-      }
-      importHotSearch(data).then(res=>{
-
+        console.log(this.importForm)
+        let data = {
+            type:this.importForm.type,
+            file:this.importForm.file
+        }
+      importLexicon(data).then(res=>{
+          if(res.code == 20000){
+              this.$Message.success("添加成功")
+              this._getLexicon(1)
+          }else{
+              this.$Message.error(res.message)
+          }
       })
     }
   }
