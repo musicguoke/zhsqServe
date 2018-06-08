@@ -10,11 +10,14 @@
     <div class="features-button">
       <i-button class="marginRight" v-if="buildShow" @click="build">新增</i-button>
       <i-button v-if="importShow" @click="importFile">导入</i-button>
+      <a class="ivu-btn" :href="`${uploadUrl}${exportUrl}`">导出</a>
     </div>
   </div>
 </template>
 
 <script>
+import { url } from '@/api/config'
+
 export default {
   props: {
     searchShow: {
@@ -28,11 +31,17 @@ export default {
     importShow: {
       type: Boolean,
       default: true
-    }
+    },
+    exportShow: {
+      type: Boolean,
+      default: false
+    },
+    exportUrl: ''
   },
   data() {
     return {
-      searchContent: ''
+      searchContent: '',
+      uploadUrl: url
     }
   },
   methods: {

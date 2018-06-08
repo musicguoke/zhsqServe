@@ -21,7 +21,9 @@ export function getDateTree(id) {
     parentid: id
   }
 
-  return axios.post(`${url}/sys/msTabDataController/getGroupDataTreeByParentid.do`, qs.stringify(data)).then(res => {
+  return axios.post(`${url}/sys/msTabDataController/getGroupDataTreeByParentid.do`, qs.stringify(data), {
+    timeout: 60000
+  }).then(res => {
     return Promise.resolve(res.data)
   })
 }
@@ -70,7 +72,7 @@ export function enterSystem(id) {
 export function addSystem(data) {
   return axios.post(
     `${url}/sys/msSystemChildController/insert.do`,
-    qs.stringify(data)).then(res => {
+    qs.stringify({jsonStr: data})).then(res => {
       return Promise.resolve(res.data)
   })
 }
@@ -78,8 +80,8 @@ export function addSystem(data) {
 //修改系统
 export function updateSystem(data) {
   return axios.post(
-    `${url}/sys/msSystemChildController/update.do`,
-    qs.stringify(data)).then(res => {
+    `${url}/sys/msSystemChildController/update.do`, 
+    qs.stringify({jsonStr: data})).then(res => {
       return Promise.resolve(res.data)
   })
 }

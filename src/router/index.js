@@ -1,54 +1,85 @@
-const Index = r => require(['@/page/index'], r)
-const Login = r => require(['@/page/login/index'], r)
-const Vindex = r => require(['@/page/index/index'], r)
-    //用户管理
-const DepartmentList = r => require(['@/page/user-manage/department-list/departmentList'], r)
-const UserList = r => require(['@/page/user-manage/user-list/userList'], r)
-const ManagerList = r => require(['@/page/user-manage/manager-list/managerList'], r)
-const ContactsList = r => require(['@/page/user-manage/contacts-list/contactsList'], r)
+const Index = r => require(["@/page/index"], r);
+const Login = r => require(["@/page/login/index"], r);
+const Vindex = r => require(["@/page/index/index"], r);
 
-const SystemManage = r => require(['@/page/product-manage/index'], r)
-const UserVisit = r => require(['@/page/behavior/user-visit/index'], r)
-const DataVisit = r => require(['@/page/behavior/data-visit/index'], r)
-const SearchVisit = r => require(['@/page/behavior/search-visit/index'], r)
-const ResourceManage = r => require(['@/page/resource/resource-manage/index'], r)
-const SearchManage = r => require(['@/page/resource/search-manage/index'], r)
+const DepartmentList = r =>
+    require(["@/page/user-manage/department-list/departmentList"], r);
+const UserList = r => require(["@/page/user-manage/user-list/userList"], r);
+const ManagerList = r =>
+    require(["@/page/user-manage/manager-list/managerList"], r);
+const ContactsList = r => require(['@/page/user-manage/contacts-list/contactsList'], r);
+
+const SystemManage = r => require(["@/page/product-manage/index"], r);
+const UserVisit = r => require(["@/page/behavior/user-visit/index"], r);
+const DataVisit = r => require(["@/page/behavior/data-visit/index"], r);
+const SearchVisit = r => require(["@/page/behavior/search-visit/index"], r);
+const ResourceManage = r =>
+    require(["@/page/resource/resource-manage/index"], r);
+const SearchManage = r => require(["@/page/resource/search-manage/index"], r);
 
 //交互
-const MessageManage = r => require(['@/page/interactive-manage/message-manage/messageManage'], r)
-const PushManage = r => require(['@/page/interactive-manage/push-manage/pushManage'], r)
-const TechnicalSupport = r => require(['@/page/interactive-manage/technical-support/technicalSupport'], r)
+const MessageManage = r =>
+    require(["@/page/interactive-manage/message-manage/messageManage"], r);
+const PushManage = r =>
+    require(["@/page/interactive-manage/push-manage/pushManage"], r);
+const TechnicalSupport = r =>
+    require(["@/page/interactive-manage/technical-support/technicalSupport"], r);
+const SoftWareVersion = r =>
+    require(["@/page/interactive-manage/software/index"], r);
+const VersionDescription = r =>
+    require(["@/page/interactive-manage/version-description/index"], r);
 
 // system
-const SIndex = r => require(['@/system/index'], r)
-const ContentList = r => require(['@/system/content-list/index'], r)
-const SGroupList = r => require(['@/system/role-group/index'], r)
-const Release = r => require(['@/system/release/index'], r)
-const SystemList = r => require(['@/page/system-list/index'], r)
+const SIndex = r => require(["@/system/index"], r);
+const ContentList = r => require(["@/system/content-list/index"], r);
+const SGroupList = r => require(["@/system/role-group/index"], r);
+const Release = r => require(["@/system/release/index"], r);
+const SystemList = r => require(["@/page/system-list/index"], r);
 
 // user
-const Personal = r => require(['@/page/personal/index'], r)
+const Personal = r => require(["@/page/personal/index"], r);
 
 //resource
-const AreaText = r => require(['@/page/resource/resource-manage/resource-item/areaText'], r)
-const DataType = r => require(['@/page/resource/resource-manage/resource-item/data-type'], r)
-const MacroData = r => require(['@/page/resource/resource-manage/resource-item/macroData'], r)
-const MapConfigure = r => require(['@/page/resource/resource-manage/resource-item/mapConfigure'], r)
-const ResourceCatalog = r => require(['@/page/resource/resource-manage/resource-item/resourceCatalog'], r)
-const DataTarget = r => require(['@/page/resource/resource-manage/resource-item/dataTarget'], r)
-const AreaTarget = r => require(['@/page/resource/resource-manage/resource-item/areaTarget'], r)
-const STopicType = r => require(['@/page/resource/resource-manage/resource-item/specialTopicType'], r)
-const STZResource = r => require(['@/page/resource/resource-manage/resource-item/720Resource'], r)
-const ImageResource = r => require(['@/page/resource/resource-manage/resource-item/ImageResource'], r)
+const AreaText = r =>
+    require(["@/page/resource/resource-manage/resource-item/areaText"], r);
+const DataType = r =>
+    require(["@/page/resource/resource-manage/resource-item/data-type"], r);
+const MacroData = r =>
+    require(["@/page/resource/resource-manage/resource-item/macroData"], r);
+const MapConfigure = r =>
+    require(["@/page/resource/resource-manage/resource-item/mapConfigure"], r);
+const ResourceCatalog = r =>
+    require(["@/page/resource/resource-manage/resource-item/resourceCatalog"], r);
+const DataTarget = r =>
+    require(["@/page/resource/resource-manage/resource-item/dataTarget"], r);
+const AreaTarget = r =>
+    require(["@/page/resource/resource-manage/resource-item/areaTarget"], r);
+const STopicType = r =>
+    require([
+        "@/page/resource/resource-manage/resource-item/specialTopicType"
+    ], r);
+const STZResource = r =>
+    require(["@/page/resource/resource-manage/resource-item/720Resource"], r);
+const ImageResource = r =>
+    require(["@/page/resource/resource-manage/resource-item/ImageResource"], r);
+const Statistics = r =>
+    require(["@/page/resource/resource-manage/resource-item/statistics"], r);
 
 //search
-const HotSeach = r => require(['@/page/resource/search-manage/search-item/hotSearch'], r)
-const PeripheryHotspot = r => require(['@/page/resource/search-manage/search-item/peripheryHotspot'], r)
-const Lexicon = r => require(['@/page/resource/search-manage/search-item/searchLexicon'], r)
+const HotSeach = r =>
+    require(["@/page/resource/search-manage/search-item/hotSearch"], r);
+const PeripheryHotspot = r =>
+    require(["@/page/resource/search-manage/search-item/peripheryHotspot"], r);
+const Lexicon = r =>
+    require(["@/page/resource/search-manage/search-item/searchLexicon"], r);
 
 //system-configure
-const ParameterConfigure = r => require(['@/page/system-configure/parameter-configure/parameterConfigure'], r)
-const DataAccess = r => require(['@/page/system-configure/data-access/dataAccess'], r)
+const ParameterConfigure = r =>
+    require([
+        "@/page/system-configure/parameter-configure/parameterConfigure"
+    ], r);
+const DataAccess = r =>
+    require(["@/page/system-configure/data-access/dataAccess"], r);
 
 const router = new VueRouter({
     routes: [{
@@ -105,7 +136,7 @@ const router = new VueRouter({
                     path: "contacts-list",
                     name: "ContactsList",
                     component: ContactsList,
-                    meta: { title: "联系人列表" }
+                    meta: { title: "联系人" }
                 },
                 {
                     path: "user-statistics",
@@ -156,6 +187,12 @@ const router = new VueRouter({
                             meta: { title: "图片资源" }
                         },
                         {
+                            path: "statistics",
+                            component: Statistics,
+                            name: "Statistics",
+                            meta: { title: "统计分析" }
+                        },
+                        {
                             path: "area-target",
                             component: AreaTarget,
                             name: "AreaTarget",
@@ -187,7 +224,6 @@ const router = new VueRouter({
                             component: STopicType,
                             meta: { title: "专题类型" }
                         }
-
                     ]
                 },
                 {
@@ -233,6 +269,18 @@ const router = new VueRouter({
                     name: "TechnicalSupport",
                     component: TechnicalSupport,
                     meta: { title: "技术支持" }
+                },
+                {
+                    path: "software-version",
+                    name: "SoftWareVersion",
+                    component: SoftWareVersion,
+                    meta: { title: "软件版本" }
+                },
+                {
+                    path: "version-description",
+                    name: "VersionDescription",
+                    component: VersionDescription,
+                    meta: { title: "软件描述" }
                 },
                 {
                     path: "parameter-configure",
