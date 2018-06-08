@@ -7,11 +7,11 @@
         </el-table-column>
         <el-table-column prop="target" label="指标名称">
         </el-table-column>
-        <el-table-column prop="targetId" label="指标编码">
+        <el-table-column prop="targetId" label="指标编码" sortable>
         </el-table-column>
         <el-table-column prop="sourceName" label="图层名称">
         </el-table-column>
-        <el-table-column prop="sourceId" label="图层编码">
+        <el-table-column prop="sourceId" label="图层编码" sortable>
         </el-table-column>
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
@@ -63,7 +63,6 @@
           </Select>
         </FormItem>
         <FormItem label="选择文件">
-          <Input v-model="importFile.file" placeholder="文件地址"></Input>
           <Upload 
             :action="`${uploadUrl}/sys/msStatisticalConfigController/importFile.do`"
             with-credentials
