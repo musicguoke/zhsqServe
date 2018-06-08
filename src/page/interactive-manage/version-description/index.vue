@@ -46,12 +46,12 @@
     </Modal>
     <Modal v-model="importModal" :closable='false' :mask-closable="false" :width="500" @on-ok="saveImport" @on-cancel="cancel">
       <h3 slot="header" style="color:#2D8CF0">版本描述信息导入</h3>
-      <Form ref="file_form" label-position="left" :label-width="80">
+      <Form ref="import_form" label-position="left" :label-width="80">
         <FormItem label="版本号">
           <Input v-model="versionInfo.version" disabled></Input>
         </FormItem>
         <FormItem label="选择文件">
-          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload">
+          <Upload :action="`${uploadUrl}/sys/msVersionDescp/uploadImage.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload">
             <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
           </Upload>
         </FormItem>
@@ -165,11 +165,15 @@ export default {
       
     },
     saveImport() {
-      let formData = new FormData()
+      if (this.importFile.file === '') {
+        this.$Message.error('请选择上传文件')
+      } else {
+        let formData = new FormData(this.$refs.import_form)
         // 向 formData 对象中添加文件
-      formData.append('file', this.file)
-      formData.append('version', this.versionInfo.version)
-      this._uploadVersionDesc(formData)
+        formData.append('file', this.file)
+        formData.append('version', this.versionInfo.version)
+        this._uploadVersionDesc(formData)
+      }
     },
     cancel() {
       this.versionInfo = {

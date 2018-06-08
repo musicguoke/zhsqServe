@@ -10,7 +10,7 @@
     <div class="features-button">
       <i-button class="marginRight" v-if="buildShow" @click="build">新增</i-button>
       <i-button v-if="importShow" @click="importFile">导入</i-button>
-      <a class="ivu-btn" :href="`${uploadUrl}${exportUrl}`">导出</a>
+      <a class="ivu-btn marginLeft" v-if="exportShow" :href="`${uploadUrl}${exportUrl}`">导出</a>
     </div>
   </div>
 </template>
