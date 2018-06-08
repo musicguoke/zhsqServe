@@ -1,7 +1,9 @@
 <template>
     <div>
-        <v-search :search-show="false"  @on-build="openAddModal" @on-import="openImportModal"/>
-        <el-table :data="lexiconData" border style="width: 100%">
+        <v-search :search-show="false"  @on-build="openAddModal" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-import="openImportModal"/>
+        <el-table :data="lexiconData" border style="width: 100%"  @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="dataId" label="数据编码" sortable>
             </el-table-column>
             <el-table-column prop="name" label="名称">
@@ -49,7 +51,7 @@
     </div>
 </template>
 <script>
-import {getLexicon,addLexicon,updateLexicon,deleteLexicon,importLexicon} from "@/api/search-service";
+import {getLexicon,addLexicon,updateLexicon,deleteLexicon,deleteLexicons,importLexicon} from "@/api/search-service";
 import vSearch from '@/components/search/index'
 import { url } from '@/api/config.js'
 export default {
@@ -76,6 +78,7 @@ export default {
           type:'',
           file:{}
       },
+      selectedId:[]
     }
   },
   created(){
@@ -175,6 +178,34 @@ export default {
         onCancel: () => {            
         }
       });   
+    },
+    _deleteLexicons(id) {
+        let data = {
+            idStr:id
+        }
+        deleteLexicons(data).then(res => {
+            if (res.code === 20000) {
+                this.$Message.success(res.message)
+                this._getLexicon(this.nowPage)
+            } else {
+                this.$Message.error(res.message)
+            }
+        })
+    },
+    handleSelectionChange(val) {
+        this.selectedId = []
+        val.map(v => {
+            this.selectedId.push(v.id)
+        })
+    },
+    deleteMany() {
+        this.$Modal.confirm({
+            content: '删除后数据无法恢复，是否继续？',
+            onOk: () => {
+                this._deleteLexicons(this.selectedId.toString())
+            },
+            onCancel: () => { }
+        })
     },
     boforeUpload(file) {
       this.importForm.file = file

@@ -113,6 +113,11 @@ export function deleteAreaTarget(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deleteAreaTargets(data) {
+    return axios.post(`${url}/sys/msAreaTarget/deletes.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
 /**专题类型**/
 export function getSTopicTypeList(data) {
     return axios.post(`${url}/sys/MsDataPublishType/list.do`, qs.stringify(data)).then(res => {

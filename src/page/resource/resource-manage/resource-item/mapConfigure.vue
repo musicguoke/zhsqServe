@@ -1,7 +1,9 @@
 <template>
     <div>
-        <v-search :importShow="false" :searchShow="false" @on-build="openAddModal"/>
-        <el-table :data="mapConfigureData" border style="width: 100%">
+        <v-search :importShow="false" :searchShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal" />
+        <el-table :data="mapConfigureData" border style="width: 100%"  @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="id" label="ID" width="100" sortable>
             </el-table-column>
             <el-table-column prop="mName" label="名称">
@@ -51,7 +53,7 @@
     </div>
 </template>
 <script>
-import {getMapConfigure,insertMapConfigure,updateMapConfigure,deleteMapConfigureById} from '@/api/dataSource-service'
+import {getMapConfigure,insertMapConfigure,updateMapConfigure,deleteMapConfigureById,deletesMapConfigureById} from '@/api/dataSource-service'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -72,22 +74,29 @@ export default {
                 mOrder:'',
                 mImage:'',
                 mVersion:''
-            }
+            },
+            nowPage:1,
+            selectedId:[]
         }
     },
     created(){
-        this._getMapConfigure()
+        this._getMapConfigure(1)
     },
     methods:{
         //地图配置
-        _getMapConfigure(){
-            getMapConfigure().then(res=>{
+        _getMapConfigure(page){
+            let data ={
+                pageNo:page,
+                pageSize:10
+            }
+            getMapConfigure(data).then(res=>{
                 this.pageLength = res.data.total
                 this.mapConfigureData = res.data.list
             })
         },
         //分页点击
         pageChange(Page){
+            this.nowPage = Page
             this._getAreaText(Page)
         },
         //打开新增模态框
@@ -122,13 +131,19 @@ export default {
             if(this.isAdd){
                 insertMapConfigure(data).then(res=>{
                     if(res.code == 20000){
+                        this._getMapConfigure(this.nowPage)
                         this.$Message.success('添加成功');
+                    }else{
+                        this.$Message.error(res.message)
                     }
                 })
             }else{
                 updateMapConfigure(data).then(res => {
                     if(res.code == 20000){
+                        this._getMapConfigure(this.nowPage)
                         this.$Message.success('修改成功');
+                    }else{
+                        this.$Message.error(res.message)
                     }
                 })
             }
@@ -139,17 +154,46 @@ export default {
             this.$Modal.confirm({
                 content: '删除后数据无法恢复，是否继续？',
                 onOk: () => {
-                    this.mapConfigureData.splice(params.$index,1)
                     data = {id:params.row.id}
                     deleteMapConfigureById(data).then(res=>{
                     if(res.code == 20000){
-                        this.$Message.success('删除成功');
+                            this.mapConfigureData.splice(params.$index,1)
+                            this._getMapConfigure(this.nowPage)
+                            this.$Message.success('删除成功');
                         }
                     })
                 },
                 onCancel: () => {            
                 }
             });   
+        },
+        _deletesMapConfigureById(id) {
+            let data = {
+                ids:id
+            }
+            deletesMapConfigureById(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getMapConfigure(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.id)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                this._deletesMapConfigureById(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
         }
     }
 }

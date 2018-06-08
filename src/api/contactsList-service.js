@@ -24,3 +24,8 @@ export function deleteContacts(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deletesContacts(data) {
+    return axios.post(`${url}/sys/msSendMessageController/deletes.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

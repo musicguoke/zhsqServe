@@ -6,9 +6,11 @@
     </Breadcrumb>
     <Card>
   <div>
-      <v-search :searchShow="false" :importShow="false" @on-build="contactsAddOpen" />
+      <v-search :searchShow="false" :importShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="contactsAddOpen" />
       <div class="tableSize">
-        <el-table :data="contactsData" border style="width: 100%">
+        <el-table :data="contactsData" border style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="id" label="Id">
             </el-table-column>
             <el-table-column prop="name" label="姓名">
@@ -42,7 +44,7 @@
 </template>
 
 <script>
-import {getContactsList,addContacts,updateContacts,deleteContacts} from '@/api/contactsList-service.js'
+import {getContactsList,addContacts,updateContacts,deleteContacts,deletesContacts} from '@/api/contactsList-service.js'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -63,6 +65,7 @@ export default {
             },
             contactsData:[],
             isAdd:true,
+            selectedId:[]
         }
     },
     created(){
@@ -131,26 +134,54 @@ export default {
         },
         remove (params) {
             this.$Modal.confirm({
-                    content: '删除后数据无法恢复，是否继续？',
-                    onOk: () => {
-                        let data = {
-                            id:params.row.id
-                        }
-                        deleteContacts(data).then(res=>{
-                            if (res.code == 20000) {
-                                this.contactsData.splice(params.$index, 1);
-                                this.$Message.success('删除成功');
-                                this._getContactsList(this.nowPage)
-                            }else{
-                                this.$Message.error(res.message);
-                            }
-                        })
-                    },
-                    onCancel: () => {
-                        
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    let data = {
+                        id:params.row.id
                     }
-                });
-        }
+                    deleteContacts(data).then(res=>{
+                        if (res.code == 20000) {
+                            this.contactsData.splice(params.$index, 1);
+                            this.$Message.success('删除成功');
+                            this._getContactsList(this.nowPage)
+                        }else{
+                             this.$Message.error(res.message);
+                        }
+                    })
+                },
+                onCancel: () => {
+                        
+                }
+            });
+        },
+        _deletesContacts(id) {
+            let data = {
+                ids:id
+            }
+            deletesContacts(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getContactsList(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.id)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                this._deletesContacts(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
+        },
     }
 }
 </script>

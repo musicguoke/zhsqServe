@@ -19,6 +19,11 @@ export function deletePush(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deletePushs(data) {
+    return axios.post(`${url}/sys/msPushController/deletes.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
 //短信
 export function getMessageList(data) {
     return axios.post(`${url}/sys/msSendMessageController/messagelist.do`, qs.stringify(data)).then(res => {
@@ -53,6 +58,11 @@ export function updateTechnicalSupport(data) {
 }
 export function deleteTechnicalSupport(data) {
     return axios.post(`${url}/sys/msCompanyInfo/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function deleteTechnicalSupports(data) {
+    return axios.post(`${url}/sys/msCompanyInfo/deletes.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

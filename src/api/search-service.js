@@ -81,6 +81,11 @@ export function deleteLexicon(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deleteLexicons(data) {
+    return axios.post(`${url}/sys/msWordLibraryController/deletes.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
 export function importLexicon(data) {
     return axios.post(`${url}/sys/msWordLibraryController/importFile.do`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
