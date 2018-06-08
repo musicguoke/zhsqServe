@@ -1,8 +1,18 @@
 <template>
   <div class="statistic">
-    <v-search :search-show="false" :build-show="false" :export-url="'/sys/msStatisticalConfigController/downloadImportedFile.do'" :export-show="true" @on-export="exportFile" @on-import="importShow" />
+    <v-search 
+      :search-show="false" 
+      :build-show="false" 
+      :export-url="'/sys/msStatisticalConfigController/downloadImportedFile.do'" 
+      :export-show="true" 
+      @on-export="exportFile" 
+      @on-import="importShow"
+      :disabled="selectedId.length <= 0"
+      @on-delete="deleteMany"
+    />
     <div class="tableSize">
-      <el-table :data="list" border style="width: 100%">
+      <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="id" label="id" sortable>
         </el-table-column>
         <el-table-column prop="target" label="指标名称">
@@ -100,6 +110,7 @@ export default {
       importModalShow: false,
       list: [],
       listLength: '',
+      selectedId: [],
       itemInfo: {
         id: '',
         targetId: '',
@@ -174,6 +185,16 @@ export default {
         }
       })
     },
+    _deleteStatistics(id) {
+      deleteStatistics(id).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(res.message)
+          this._getVersionList()
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
     _importStatisticFile(data) {
       importStatisticFile(data).then(res => {
         if (res.code === 20000) {
@@ -182,6 +203,21 @@ export default {
         } else {
           this.$Message.error(res.message)
         }
+      })
+    },
+    handleSelectionChange(val) {
+      this.selectedId = []
+      val.map(v => {
+        this.selectedId.push(v.id)
+      })
+    },
+    deleteMany() {
+      this.$Modal.confirm({
+        content: '删除后数据无法恢复，是否继续？',
+        onOk: () => {
+          this._deleteStatistics(this.selectedId.toString())
+        },
+        onCancel: () => { }
       })
     },
     exportFile() {

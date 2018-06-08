@@ -1,13 +1,20 @@
 <template>
   <div class="data-type">
-    <v-search :importShow="false" @on-search="search" @on-build="newData"/>
-    <el-table :data="data" border>
+    <v-search
+      :importShow="false"
+      @on-search="search"
+      @on-build="newData"
+      :disabled="selectedId.length <= 0"
+      @on-delete="deleteMany"
+    />
+    <el-table :data="data" border style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="itemid" label="id" sortable=""></el-table-column>
       <el-table-column prop="typename" label="数据名称"></el-table-column>
       <el-table-column prop="typetime" label="时间"></el-table-column>
       <el-table-column label="操作" width="160" align="center">
         <template slot-scope="scope">
-          <Button type="info" @click="editData(scope)" size="small" class="marginRight" title="编辑">编辑</Button>
+          <Button type="primary" @click="editData(scope)" size="small" class="marginRight" title="编辑">编辑</Button>
           <Button type="error" @click="deleteData(scope)" size="small" title="删除">删除</Button>
         </template>
       </el-table-column>
@@ -50,6 +57,7 @@ export default {
       newOrEdit: true,
       searchName: '',
       data: [],
+      selectedId: [],
       editDataModal: false,
       editItemForm: {
         itemid: '',
@@ -63,6 +71,21 @@ export default {
     this._getDataTypeList()
   },
   methods: {
+    handleSelectionChange(val) {
+      this.selectedId = []
+      val.map(v => {
+        this.selectedId.push(v.id)
+      })
+    },
+    deleteMany() {
+      this.$Modal.confirm({
+        content: '删除后数据无法恢复，是否继续？',
+        onOk: () => {
+          this._deleteStatistics(this.selectedId.toString())
+        },
+        onCancel: () => { }
+      })
+    },
     saveModal() {
       if(this.editItemForm.typeid == '') {
         this.$Message.error('数据类型id不能为空')
