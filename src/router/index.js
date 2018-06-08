@@ -1,14 +1,11 @@
 const Index = r => require(["@/page/index"], r);
 const Login = r => require(["@/page/login/index"], r);
 const Vindex = r => require(["@/page/index/index"], r);
-
 const DepartmentList = r =>
     require(["@/page/user-manage/department-list/departmentList"], r);
 const UserList = r => require(["@/page/user-manage/user-list/userList"], r);
 const ManagerList = r =>
     require(["@/page/user-manage/manager-list/managerList"], r);
-const ContactsList = r => require(['@/page/user-manage/contacts-list/contactsList'], r);
-
 const SystemManage = r => require(["@/page/product-manage/index"], r);
 const UserVisit = r => require(["@/page/behavior/user-visit/index"], r);
 const DataVisit = r => require(["@/page/behavior/data-visit/index"], r);
@@ -64,6 +61,8 @@ const ImageResource = r =>
     require(["@/page/resource/resource-manage/resource-item/ImageResource"], r);
 const Statistics = r =>
     require(["@/page/resource/resource-manage/resource-item/statistics"], r);
+const AuthorityConfig = r =>
+    require(["@/page/resource/resource-manage/resource-item/authorityConfig"], r);
 
 //search
 const HotSeach = r =>
@@ -133,12 +132,6 @@ const router = new VueRouter({
                     meta: { title: "管理员列表" }
                 },
                 {
-                    path: "contacts-list",
-                    name: "ContactsList",
-                    component: ContactsList,
-                    meta: { title: "联系人" }
-                },
-                {
                     path: "user-statistics",
                     name: "UserVisit",
                     component: UserVisit,
@@ -190,6 +183,12 @@ const router = new VueRouter({
                             path: "statistics",
                             component: Statistics,
                             name: "Statistics",
+                            meta: { title: "统计分析" }
+                        },
+                        {
+                            path: "authority-config",
+                            component: AuthorityConfig,
+                            name: "AuthorityConfig",
                             meta: { title: "统计分析" }
                         },
                         {

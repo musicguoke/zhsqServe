@@ -183,7 +183,7 @@ export default {
       let data = {
         name: this.departmentInfoForm.name,
         id: this.departmentInfoForm.id,
-        parentid: this.departmentInfoForm.id,
+        parentid: this.departmentInfoForm.parentid,
         nameA: this.departmentInfoForm.nameA,
         listorder: this.departmentInfoForm.listorder
       };
