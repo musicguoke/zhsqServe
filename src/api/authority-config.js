@@ -4,69 +4,69 @@ import { url } from './config.js'
 
 axios.defaults.withCredentials = true
 
-// 获取统计分析列表
-export function getStatisticList(page) {
+// 获取用户权限列表
+export function getAuthorityList(page) {
   const data = {
     pageNo: page || 1,
     pageSize: 10
   }
 
   return axios.post(
-    `${url}/sys/msStatisticalConfigController/list.do`,
+    `${url}/sys/msCilentAuthorityController/list.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }
 
-// 添加统计分析
-export function addStatistic(data) {
+// 添加用户权限
+export function addAuthority(data) {
   return axios.post(
-    `${url}/sys/msStatisticalConfigController/insert.do`,
+    `${url}/sys/msCilentAuthorityController/insert.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }
 
-// 编辑统计分析
-export function updateStatistic(data) {
+// 编辑用户权限
+export function updateAuthority(data) {
   return axios.post(
-    `${url}/sys/msStatisticalConfigController/update.do`,
+    `${url}/sys/msCilentAuthorityController/update.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }
 
 // 根据编号获取
-export function getStatistic(id) {
+export function getAuthority(id) {
   const data = {
     id: id
   }
   return axios.post(
-    `${url}/sys/msStatisticalConfigController/getMsMapConfig.do`,
+    `${url}/sys/msCilentAuthorityController/getMsMapConfig.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }
 
 // 删除统计分析
-export function deleteStatistic(id) {
+export function deleteAuthority(id) {
   const data = {
     id: id
   }
   return axios.post(
-    `${url}/sys/msStatisticalConfigController/delete.do`,
+    `${url}/sys/msCilentAuthorityController/delete.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }
 
 // 批量删除统计分析
-export function deleteStatistics(id) {
+export function deleteAuthorities(id) {
   const data = {
     id: id
   }
   return axios.post(
-    `${url}/sys/msStatisticalConfigController/deletes.do`,
+    `${url}/sys/msCilentAuthorityController/deletes.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
@@ -77,7 +77,7 @@ export function importStatisticFile(data) {
   return axios.post(
     `${url}/sys/msStatisticalConfigController/importFile.do`,
     data,{  
-      headers:{'Content-Type':'multipart/form-data'}
+      headers:{'Content-Type':'multipart/form-data'}  
     }).then(res => {
       return Promise.resolve(res.data)
   })

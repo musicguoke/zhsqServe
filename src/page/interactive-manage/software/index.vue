@@ -5,9 +5,16 @@
       <BreadcrumbItem>软件版本</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
-      <v-search :search-show="false" :import-show="false" @on-build="build" />
+      <v-search 
+        :search-show="false"
+        :import-show="false"
+        @on-build="build"
+        :disabled="selectedId.length <= 0"
+        @on-delete="deleteMany"
+      />
       <div class="tableSize">
-        <el-table :data="list" border style="width: 100%">
+        <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="vId" label="vId" sortable>
           </el-table-column>
           <el-table-column prop="vTitle" label="版本名称" sortable>
@@ -27,7 +34,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="listLength" @on-change="_getVersionList(page)"></Page>
+        <Page :total="listLength" @on-change="_getVersionList"></Page>
       </div>
     </Card>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
@@ -89,6 +96,7 @@ export default {
       contentHeight: window.innerHeight - 174 + 'px',
       uploadUrl: url,
       modalShow: false,
+      selectedId: [],
       list: [],
       listLength: '',
       versionInfo: {
@@ -151,6 +159,31 @@ export default {
         } else {
           this.$Message.error(res.message)
         }
+      })
+    },
+    _deleteVersions(id) {
+      deleteVersions(id).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(res.message)
+          this._getVersionList()
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
+    handleSelectionChange(val) {
+      this.selectedId = []
+      val.map(v => {
+        this.selectedId.push(v.id)
+      })
+    },
+    deleteMany() {
+      this.$Modal.confirm({
+        content: '删除后数据无法恢复，是否继续？',
+        onOk: () => {
+          this._deleteVersions(this.selectedId.toString())
+        },
+        onCancel: () => { }
       })
     },
     build() {

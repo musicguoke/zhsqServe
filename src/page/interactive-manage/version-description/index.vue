@@ -27,7 +27,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="listLength" @on-change="_getVersionList(page)"></Page>
+        <Page :total="listLength" @on-change="_getVersionList"></Page>
       </div>
     </Card>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
