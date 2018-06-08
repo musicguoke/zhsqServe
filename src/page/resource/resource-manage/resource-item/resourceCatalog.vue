@@ -199,7 +199,6 @@ export default {
     },
     _getAreaCatalog() {
       getAreaCatalog().then(res => {
-        res.map(v => v._checked = false)
         this.data3 = res
       })
     },

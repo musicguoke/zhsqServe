@@ -56,7 +56,7 @@ export function deleteVersion(id) {
 // 批量删除
 export function deleteVersions(id) {
   const data = {
-    vId: id
+    vIds: id
   }
 
   return axios.post(

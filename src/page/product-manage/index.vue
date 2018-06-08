@@ -18,9 +18,9 @@
           </el-table-column>
           <el-table-column prop="sysName" label="系统名称">
           </el-table-column>
-          <el-table-column prop="areaName" label="所属区县" sortable>
+          <el-table-column prop="areaName" label="所属区县">
           </el-table-column>
-          <el-table-column prop="status" label="系统状态" sortable>
+          <el-table-column prop="status" label="系统状态">
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">

@@ -5,7 +5,7 @@
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
     <Card>
-      <v-search :search-show="false" :import-show="false" @on-build="build"/>
+      <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="build"/>
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>

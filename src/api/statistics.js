@@ -63,7 +63,7 @@ export function deleteStatistic(id) {
 // 批量删除统计分析
 export function deleteStatistics(id) {
   const data = {
-    id: id
+    ids: id
   }
   return axios.post(
     `${url}/sys/msStatisticalConfigController/deletes.do`,
