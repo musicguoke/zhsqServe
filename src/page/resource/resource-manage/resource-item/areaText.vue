@@ -45,22 +45,17 @@
             </Form>
         </Modal>
         <Modal v-model="importModal" title='导入区域文本' @on-ok="saveImport">
-            <Form :model="importForm" label-position="left" :label-width="100">
+            <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
                 <FormItem label="导入类型">
                     <Select v-model="importForm.type">
                         <Option value="1">增量导入</Option>
                         <Option value="2">全量导入</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="选择文件" style="width:100px;">
-                    <div style="display:flex">
-                        <div>
-                            <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
-                        </div>
-                        <Upload action="//jsonplaceholder.typicode.com/posts/">
-                            <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
-                        </Upload>
-                    </div>
+                <FormItem label="选择文件">
+                     <Upload :action="`${uploadUrl}/sys/areaText/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                    </Upload>
                 </FormItem>
                 <div class="importSlot">
                     <div class="importSlotTitle">导入须知</div>
@@ -72,8 +67,9 @@
     </div>
 </template>
 <script>
-import { getAreaText,addAreaText,updateAreaText,deleteAreaText } from '@/api/dataSource-service'
+import { getAreaText,addAreaText,updateAreaText,deleteAreaText,importAreaText} from '@/api/dataSource-service'
 import vSearch from '@/components/search/index'
+import { url } from '@/api/config.js'
 export default {
     components: {
         vSearch
@@ -84,6 +80,7 @@ export default {
             searchType: 1,
             pageLength:0,
             isAdd:true,
+            uploadUrl:url,
             modalTitle:'',
             areaTextData:[],
             areaTextModal:false,
@@ -98,7 +95,8 @@ export default {
                 id:''
             },
             importForm:{
-
+                type:"",
+                file:""
             },
             nowPage:1
         }
@@ -201,9 +199,42 @@ export default {
                 }
             });   
         },
+        //打开导入文件模态框
+        openImportModal(){
+            this.importModal = true
+            for(let i in this.importForm){
+                this.importForm[i] = ""
+            }
+            if(this.$refs.upload._data.fileList){
+                this.$refs.upload._data.fileList = []
+            }
+        },
+        boforeUpload(file) {
+            this.importForm.file = file
+        },
         //导入文件保存
         saveImport(){
-
+            if (this.importForm.type === '') {
+                this.$Message.error('请选择导入类型')
+            } else if (this.importForm.file === '') {
+                this.$Message.error('请选择上传文件')
+            } else {
+                let formData = new FormData(this.$refs.file_form)
+                formData.append('type', this.importForm.type)
+                formData.append('file', this.importForm.file)
+                this._importAreaText(formData)
+            }
+        },
+        //导入文件
+        _importAreaText(data){
+            importAreaText(data).then(res=>{
+                if(res.code == 20000){
+                    this.$Message.success("添加成功")
+                    this._getAreaText(1)
+                }else{
+                    this.$Message.error(res.message)
+                }
+            })
         }
     }
 }

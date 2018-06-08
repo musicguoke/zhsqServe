@@ -176,7 +176,7 @@ export default {
                 tel:this.managerForm.tel,
                 email:this.managerForm.email,
                 role:this.managerForm.role,
-                sysId:this.sysId.join(",")
+                sysIdStr:this.sysId.join(",")
             }
             if(this.isAdd){
                 addManager(data).then(res=>{

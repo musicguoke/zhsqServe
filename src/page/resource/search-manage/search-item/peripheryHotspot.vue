@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :search-show="false"  @on-build="openAddModal" @on-import="importModal = true"/>
+        <v-search :search-show="false"  @on-build="openAddModal" @on-import="openImportModal"/>
         <el-table :data="hotspotData" border style="width: 100%">
             <el-table-column prop="dataId" label="Id" sortable>
             </el-table-column>
@@ -35,22 +35,17 @@
             </Form>
         </Modal>
         <Modal v-model="importModal" title='导入周边热点' @on-ok="saveImport">
-          <Form :model="importForm" label-position="left" :label-width="100">
+          <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
               <FormItem label="导入类型">
                   <Select v-model="importForm.type">
                       <Option value="1">增量导入</Option>
                       <Option value="2">全量导入</Option>
                   </Select>
               </FormItem>
-              <FormItem label="选择文件" style="width:100px;">
-                  <div style="display:flex">
-                      <div>
-                          <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
-                      </div>
-                      <Upload action="//jsonplaceholder.typicode.com/posts/">
-                          <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
-                      </Upload>
-                  </div>
+              <FormItem label="选择文件">
+                  <Upload :action="`${uploadUrl}/sys/hotAround/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                    </Upload>
               </FormItem>
                   <div class="importSlot">
                   <div class="importSlotTitle">导入须知</div>
@@ -64,6 +59,7 @@
 <script>
 import {getHotspot,addHotspot,updateHotspot,deleteHotspot,importHotspot} from '@/api/search-service'
 import vSearch from '@/components/search/index'
+import { url } from '@/api/config.js'
 export default {
     components: {
         vSearch
@@ -76,6 +72,7 @@ data() {
         hotSpotModal:false,
         importModal:false,
         isAdd:true,
+        uploadUrl:url,
         modalTitle:'',
         nowPage:1,
         hotSpotForm:{
@@ -169,11 +166,12 @@ data() {
       this.$Modal.confirm({
         content: '删除后数据无法恢复，是否继续？',
         onOk: () => {
-            this.hotspotData.splice(params.$index, 1)
             data = {id:params.row.id,method:'delete'}
             deleteHotspot(data).then(res=>{
               if(res.code == 20000){
+                  this.hotspotData.splice(params.$index, 1)
                   this.$Message.success('删除成功');
+                  this.pageLength--
               }else{
                   this.$Message.error(res.message)
                 }
@@ -183,16 +181,42 @@ data() {
           }
         });   
     },
-    //导入文件保存
+     //打开导入文件模态框
+    openImportModal(){
+        this.importModal = true
+        for(let i in this.importForm){
+            this.importForm[i] = ""
+        }
+        if(this.$refs.upload._data.fileList){
+            this.$refs.upload._data.fileList = []
+        }
+    },
+    boforeUpload(file) {
+      this.importForm.file = file
+    },
+     //导入文件保存
     saveImport(){
-      let data = {
-        method:'importFile',
-        type:this.importForm.type,
-        file:this.importForm.file
-      }
-      importHotSearch(data).then(res=>{
-
-      })
+        if (this.importForm.type === '') {
+            this.$Message.error('请选择导入类型')
+        } else if (this.importForm.file === '') {
+            this.$Message.error('请选择上传文件')
+        } else {
+            let formData = new FormData(this.$refs.file_form)
+            formData.append('type', this.importForm.type)
+            formData.append('file', this.importForm.file)
+            this._importHotSearch(formData)
+        }
+    },
+    //导入文件
+    _importHotSearch(data){
+        importHotSearch(data).then(res=>{
+            if(res.code == 20000){
+                this.$Message.success("添加成功")
+                this._getHotspot(1)
+            }else{
+                this.$Message.error(res.message)
+            }
+        })
     }
   }
 }

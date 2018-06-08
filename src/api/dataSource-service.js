@@ -37,7 +37,9 @@ export function deleteAreaText(data) {
     })
 }
 export function importAreaText(data) {
-    return axios.post(`${url}/sys/areaText/importFile.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/areaText/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
         return Promise.resolve(res.data)
     })
 }

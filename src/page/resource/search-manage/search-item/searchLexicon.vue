@@ -14,7 +14,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" show-total show-elevator></Page>
+            <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
         </div>
         <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="lexiconForm" label-position="left" :label-width="100">
@@ -35,7 +35,7 @@
                   </Select>
               </FormItem>
               <FormItem label="选择文件">
-                    <Upload :action="`${uploadUrl}/sys/msWordLibraryController/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx">
+                    <Upload :action="`${uploadUrl}/sys/msWordLibraryController/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
                         <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
                     </Upload>
               </FormItem>
@@ -124,6 +124,9 @@ export default {
         for(let i in this.importForm){
             this.importForm[i] = ""
         }
+        if(this.$refs.upload._data.fileList){
+            this.$refs.upload._data.fileList = []
+        }
     },
     //点击确定
     addOrUpdate(){
@@ -163,6 +166,7 @@ export default {
             deleteLexicon(data).then(res=>{
                 if(res.code == 20000){
                   this.$Message.success('删除成功');
+                  this.pageLength--
                 }else{
                   this.$Message.error(res.message)
                 }
@@ -175,29 +179,29 @@ export default {
     boforeUpload(file) {
       this.importForm.file = file
     },
-    handleSuccessUpload(res) {
-        let formData = new FormData(this.$refs.file_form)
-        // 向 formData 对象中添加文件
-        formData.file = this.importForm.file
-        formData.type = this.importForm.type
-        // formData.append('file', this.importForm.file)
-        // formData.append('type', this.importForm.type)
-    },
      //导入文件保存
     saveImport(){
-        console.log(this.importForm)
-        let data = {
-            type:this.importForm.type,
-            file:this.importForm.file
+        if (this.importForm.type === '') {
+            this.$Message.error('请选择导入类型')
+        } else if (this.importForm.file === '') {
+            this.$Message.error('请选择上传文件')
+        } else {
+            let formData = new FormData(this.$refs.file_form)
+            formData.append('type', this.importForm.type)
+            formData.append('file', this.importForm.file)
+            this._importLexicon(formData)
         }
-      importLexicon(data).then(res=>{
-          if(res.code == 20000){
-              this.$Message.success("添加成功")
-              this._getLexicon(1)
-          }else{
-              this.$Message.error(res.message)
-          }
-      })
+    },
+    //导入文件
+    _importLexicon(data){
+        importLexicon(data).then(res=>{
+            if(res.code == 20000){
+                this.$Message.success("添加成功")
+                this._getLexicon(1)
+            }else{
+                this.$Message.error(res.message)
+            }
+        })
     }
   }
 }

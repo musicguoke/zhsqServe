@@ -25,7 +25,9 @@ export function deleteHotspot(data) {
     })
 }
 export function importHotspot(data) {
-    return axios.post(`${url}/sys/hotAround/importFile.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/hotAround/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
         return Promise.resolve(res.data)
     })
 }
@@ -52,7 +54,9 @@ export function deleteHotSearch(data) {
     })
 }
 export function importHotSearch(data) {
-    return axios.post(`${url}/sys/hotSearch/importFile.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/hotSearch/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
         return Promise.resolve(res.data)
     })
 }
@@ -78,7 +82,9 @@ export function deleteLexicon(data) {
     })
 }
 export function importLexicon(data) {
-    return axios.post(`${url}/sys/msWordLibraryController/importFile.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/msWordLibraryController/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
         return Promise.resolve(res.data)
     })
 }

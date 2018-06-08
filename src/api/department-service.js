@@ -17,7 +17,9 @@ export function addAndUpdateDepartment(data) {
 }
 //导入
 export function importDepartment(data) {
-    return axios.post(`${url}/sys/msBranchStruct/importFile.do`, qs.stringify(data)).then(res => {
+    return axios.post(`${url}/sys/msBranchStruct/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
         return Promise.resolve(res.data)
     })
 }
