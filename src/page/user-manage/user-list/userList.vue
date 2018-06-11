@@ -4,13 +4,8 @@
             <BreadcrumbItem>用户管理</BreadcrumbItem>
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
-<<<<<<< HEAD
         <Card :style="{maxHeight:userListHeight}">
             <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
-=======
-        <Card>
-            <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset"/>
->>>>>>> 5ef264999f9615e73cce15b0f9fc1be3f3a66ebb
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arId" label="ID" width="60" sortable>
@@ -184,8 +179,8 @@ export default {
             modalTitle: '',
             total: 0,
             isAdd: false,
-            nowPage:1,
-            isProduct:false,
+            nowPage: 1,
+            isProduct: false,
             highlightcurrent: true,
             expandonclicknode: true,
             userForm: {
@@ -227,7 +222,7 @@ export default {
             },
             systemList: [],
             groupList: [],
-            groupSingleList:[],
+            groupSingleList: [],
             equipmentType: [
                 {
                     value: 'ios_iphone',
@@ -265,12 +260,12 @@ export default {
             }
             this._getUserList(1)
         }),
-        this._getDepartmentList()
-        if(this.$route.query.id){
+            this._getDepartmentList()
+        if (this.$route.query.id) {
             this.isProduct = true
             this._getRolesSingleList(this.$route.query.id)
             this.userForm.sysId = this.$route.query.id
-        }else{
+        } else {
             this.isProduct = false
         }
     },
@@ -297,9 +292,9 @@ export default {
                 }
             }
             this.userForm.arPassword = ""
-            this.$refs.department1.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
-            this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
-            if(this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',') ){
+            this.$refs.department1.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
+            this.$refs.department2.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
+            if (this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',')) {
                 let sysArray = this.userForm.sysId.split(',')
                 let groupArray = this.userForm.grId.split(',')
                 for (let i in sysArray) {
@@ -456,7 +451,7 @@ export default {
         },
         //点击确定
         addOrUpdateUser() {
-            if(!this.isProduct){
+            if (!this.isProduct) {
                 this.userForm.sysId = ''
                 this.userForm.grId = ''
                 this.sysAndGroupList.map(v => {
@@ -465,7 +460,7 @@ export default {
                 })
                 this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
                 this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
-            }else{
+            } else {
                 this.userForm.sysId = this.$route.query.id
             }
             let data = {
@@ -600,15 +595,15 @@ export default {
                 }
             })
         },
-        _getRolesSingleList(id){
+        _getRolesSingleList(id) {
             getRolesList(id).then(res => {
                 let data = res.data.list
                 for (let i in data) {
                     this.groupSingleList.push({
                         value: data[i].grId,
                         label: data[i].grName
-                     })
-                 }
+                    })
+                }
             })
         }
     }
