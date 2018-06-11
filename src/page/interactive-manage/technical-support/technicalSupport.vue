@@ -6,9 +6,11 @@
     </Breadcrumb>
     <Card>
   <div>
-      <v-search :search-show="false" :import-show="false" @on-build="technicalAddOpen"/>
+      <v-search :search-show="false" :import-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="technicalAddOpen"/>
       <div class="tableSize">
-        <el-table :data="technicalData" border style="width: 100%">
+        <el-table :data="technicalData" border style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="paramname" label="参数名">
             </el-table-column>
             <el-table-column prop="paramvalue" label="参数值">
@@ -45,7 +47,7 @@
 </template>
 
 <script>
-import {getTechnicalSupportList,addTechnicalSupport,updateTechnicalSupport,deleteTechnicalSupport} from '@/api/interactive-service'
+import {getTechnicalSupportList,addTechnicalSupport,updateTechnicalSupport,deleteTechnicalSupport,deleteTechnicalSupports} from '@/api/interactive-service'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -68,7 +70,8 @@ export default {
                 paramname:'',
                 paramvalue:'',
                 listorder:''
-            }
+            },
+            selectedId:[]
         }
     },
     created(){
@@ -151,7 +154,35 @@ export default {
                         
                 }
             });
-        }
+        },
+        _deleteTechnicalSupports(id) {
+            let data = {
+                ids:id
+            }
+            deleteTechnicalSupports(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getTechnicalSupportList(this.nowPage)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.id)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    this._deleteTechnicalSupports(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
+        },
     }
 }
 </script>

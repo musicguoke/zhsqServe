@@ -24,3 +24,8 @@ export function deleteParameter(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deleteParameters(data) {
+    return axios.post(`${url}/sys/msMetaController/deletes.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

@@ -1,29 +1,25 @@
 <template>
 <Content :style="{maxHeight:managerHeight}">
-    <Breadcrumb :style="{marginBottom: '17px'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
-      <BreadcrumbItem>管理员列表</BreadcrumbItem>
+      <BreadcrumbItem>联系人列表</BreadcrumbItem>
     </Breadcrumb>
     <Card>
   <div>
-      <v-search :searchShow="false" :importShow="false" @on-build="managerAddOpen" />
+      <v-search :searchShow="false" :importShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="contactsAddOpen" />
       <div class="tableSize">
-        <el-table :data="userData" border style="width: 100%">
-            <el-table-column prop="id" label="Id" width="60">
+        <el-table :data="contactsData" border style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
             </el-table-column>
-            <el-table-column prop="userName" label="用户名">
+            <el-table-column prop="id" label="Id">
             </el-table-column>
-            <el-table-column prop="realName" label="姓名">
+            <el-table-column prop="name" label="姓名">
             </el-table-column>
-            <el-table-column prop="tel" label="电话">
-            </el-table-column>
-            <el-table-column prop="email" label="邮箱">
-            </el-table-column>
-            <el-table-column prop="roleName" label="角色" :filters="managerTypeList" :filter-method="filterByRole" filter-placement="bottom-end">
+            <el-table-column prop="phone" label="电话">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
-                    <Button type="info" @click="managerEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <Button type="info" @click="contactsEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
                     <Button type="error" @click="remove(scope)" size="small">删除</Button>
                 </template>
             </el-table-column>
@@ -34,32 +30,13 @@
       </div>
   </div>
   </Card>
-  <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate">
-        <Form :model="managerForm" label-position="left" :label-width="100">
-            <FormItem label="用户名">
-                <Input v-model="managerForm.userName" placeholder="请输入用户名..."></Input>
+  <Modal v-model="contactsModal" :title=modalTitle @on-ok="addOrUpdate">
+        <Form :model="contactsForm" label-position="left" :label-width="100">
+            <FormItem label="姓名">
+                <Input v-model="contactsForm.name" placeholder="请输入用户名..."></Input>
             </FormItem>
-            <FormItem label="真实姓名">
-                <Input v-model="managerForm.realName" placeholder="请输入真实姓名..."></Input>
-            </FormItem>
-            <FormItem label="密码">
-                <Input v-model="managerForm.password" placeholder="请输入密码..." type="password"></Input>
-            </FormItem>
-            <FormItem label="子系统">
-                <Select v-model="sysId" multiple>
-                    <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="手机号">
-                <Input v-model="managerForm.tel" placeholder="请输入手机号..."></Input>
-            </FormItem>
-            <FormItem label="邮箱">
-                <Input v-model="managerForm.email" placeholder="请输入邮箱..."></Input>
-            </FormItem>
-            <FormItem label="管理员类型">
-                <Select v-model="managerForm.role">
-                    <Option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
+            <FormItem label="电话">
+                <Input v-model="contactsForm.phone" placeholder="请输入真实姓名..."></Input>
             </FormItem>
         </Form>
   </Modal>
@@ -67,9 +44,7 @@
 </template>
 
 <script>
-import {getManagerList,addManager,updateManager,deleteManager} from '@/api/manager-service.js'
-import {getSystemList} from '@/api/system.js'
-import MD5 from 'crypto-js/md5'
+import {getContactsList,addContacts,updateContacts,deleteContacts,deletesContacts} from '@/api/contactsList-service.js'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -77,122 +52,76 @@ export default {
     },
     data(){
         return{
-            managerHeight:window.innerHeight - 136 +'px',
+            managerHeight:window.innerHeight - 174 +'px',
             searchName:'',
-            searchManagerType:'',
-            managerModal:false,
+            contactsModal:false,
             modalTitle:'',
             pageLength:0,
             nowPage:1,
-            managerForm:{
-                userName:'',
-                realName:'',
-                password:'',
-                tel:'',
-                email:'',
-                role:'',
-                id:''
+            contactsForm:{
+                id:"",
+                name:"",
+                phone:""
             },
-            sysId:[],
-            userData:[],
-            systemList:[],
+            contactsData:[],
             isAdd:true,
-            managerTypeList: [
-                {
-                    value: 1,
-                    label: '超级管理员',
-                    text:'超级管理员',
-                },
-                {
-                    value: 2,
-                    label: '市级管理员',
-                    text: '市级管理员',
-                },
-                {
-                    value: 3,
-                    label: '普通管理员',
-                    text: '普通管理员',
-                }
-            ]
+            selectedId:[]
         }
     },
     created(){
-        this._getManagerList(1)
-        getSystemList(1).then(res=>{
-            let data = res.data.list
-            for(let i in data){
-                this.systemList.push({
-                    value:data[i].id,
-                    label:data[i].sysName
-                })
-            }
-        })
+        this._getContactsList(1)
     },
     methods:{
-        _getManagerList(page){
+        _getContactsList(page){
             let data = {
                 pageNo:page,
                 pageSize:10
             }
-            getManagerList(data).then(res=>{
-                this.userData = res.data.list
-                this.userData.map(v=>{
-                    if(v.role == 1){
-                        v.roleName = '超级管理员'
-                    }else if(v.role == 2){
-                        v.roleName = '市级管理员'
-                    }else if(v.role == 3){
-                        v.roleName = '普通管理员'
-                    }
-                })
+            getContactsList(data).then(res=>{
+                this.contactsData = res.data.list
                 this.pageLength = res.data.total
             })
         },
-        managerAddOpen(){
+        contactsAddOpen(){
             this.isAdd = true
-            this.managerModal = true
-            this.modalTitle = '新增管理员'
+            this.contactsModal = true
+            this.modalTitle = '新增管联系人'
             this.sysId = []
-            for(var i in this.managerForm){
-               this.managerForm[i] = ''
+            for(var i in this.contactsForm){
+               this.contactsForm[i] = ''
             }
         },
-        managerEditOpen(params){
+        contactsEditOpen(params){
             this.isAdd = false
-            this.managerModal = true;
-            this.modalTitle = '修改管理员';
+            this.contactsModal = true;
+            this.contactsTitle = '修改管理员';
             this.sysId = []
-            for(var i in this.managerForm){
+            for(var i in this.contactsForm){
                if(params.row[i]){
-                   this.managerForm[i] =params.row[i] 
+                   this.contactsForm[i] =params.row[i] 
                }
             }
         },
         addOrUpdate(){
             let data = {
-                userName:this.managerForm.userName,
-                realName:this.managerForm.realName,
-                password:MD5(this.managerForm.password).toString(),
-                tel:this.managerForm.tel,
-                email:this.managerForm.email,
-                role:this.managerForm.role,
-                sysId:Array.from(this.sysId)
+                name:this.contactsForm.name,
+                phone:this.contactsForm.phone
             }
             if(this.isAdd){
-                addManager(data).then(res=>{
+                addContacts(data).then(res=>{
                     if (res.code == 20000) {
                         this.$Message.success('添加成功');
-                        this._getManagerList(this.nowPage)
+                        this._getContactsList(this.nowPage)
                     }else{
                         this.$Message.error(res.message);
                     }
                 })
             }else{
-                data.id = this.managerForm.id
-                updateManager(data).then(res=>{
+                data.id = this.contactsForm.id
+                updateContacts(data).then(res=>{
                     if (res.code == 20000) {
                         this.$Message.success('修改成功');
-                        this._getManagerList(this.nowPage)
+                        this._getContactsList(this.nowPage)
                     }else{
                         this.$Message.error(res.message);
                     }
@@ -201,33 +130,58 @@ export default {
         },
         pageChange(page){
             this.nowPage = page
-            this._getManagerList(page)
+            this._getContactsList(page)
         },
         remove (params) {
             this.$Modal.confirm({
-                    content: '删除后数据无法恢复，是否继续？',
-                    onOk: () => {
-                        let data = {
-                            id:params.row.id
-                        }
-                        deleteManager(data).then(res=>{
-                            if (res.code == 20000) {
-                                this.userData.splice(params.$index, 1);
-                                this.$Message.success('删除成功');
-                                this._getManagerList(this.nowPage)
-                            }else{
-                                this.$Message.error(res.message);
-                            }
-                        })
-                    },
-                    onCancel: () => {
-                        
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    let data = {
+                        id:params.row.id
                     }
-                });
+                    deleteContacts(data).then(res=>{
+                        if (res.code == 20000) {
+                            this.contactsData.splice(params.$index, 1);
+                            this.$Message.success('删除成功');
+                            this._getContactsList(this.nowPage)
+                        }else{
+                             this.$Message.error(res.message);
+                        }
+                    })
+                },
+                onCancel: () => {
+                        
+                }
+            });
         },
-        filterByRole(value, row){
-            return row.role === value
-        }
+        _deletesContacts(id) {
+            let data = {
+                ids:id
+            }
+            deletesContacts(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getContactsList(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.id)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                this._deletesContacts(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
+        },
     }
 }
 </script>

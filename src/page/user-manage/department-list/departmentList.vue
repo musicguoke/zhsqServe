@@ -6,7 +6,7 @@
     </Breadcrumb>
     <Card>
     <div>
-        <v-search :searchShow="false" :buildShow="false" @on-import="importModal = true"  />
+        <v-search :searchShow="false" :buildShow="false" @on-import="openImportModal"  />
         <div class="tableSize">
             <Row>
                 <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">
@@ -42,19 +42,16 @@
     </div>
   </Card>
   <Modal v-model="importModal" title='导入部门' @on-ok="saveImport">
-        <Form :model="importForm" label-position="left" :label-width="100">
+        <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
             <FormItem label="导入类型">
                 <Select v-model="importForm.type">
                     <Option value="1">增量导入</Option>
                     <Option value="2">全量导入</Option>
                 </Select>
             </FormItem>
-            <FormItem label="选择文件" style="width:100px;">
-                <div style="display:flex">
-                    <div>
-                        <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
-                    </div>
-                    <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <FormItem label="选择文件" >
+                <div>
+                    <Upload :action="`${uploadUrl}/sys/msBranchStruct/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
                         <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
                     </Upload>
                 </div>
@@ -83,12 +80,9 @@
 </template>
 
 <script>
-import {
-  getDepartmentList,
-  addAndUpdateDepartment,
-  importDepartment
-} from "@/api/department-service";
+import {getDepartmentList,addAndUpdateDepartment,importDepartment} from "@/api/department-service";
 import vSearch from '@/components/search/index'
+import { url } from '@/api/config.js'
 export default {
   components: {
     vSearch
@@ -99,6 +93,7 @@ export default {
       departmentListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + "px",
       departmentTreeHeight:window.innerHeight - 65 - 60 - 20 - 90 - 18 - 120 + "px",
       departmentData: [],
+      uploadUrl:url,
       defaultProps: {
         label: "name",
         children: "list"
@@ -188,7 +183,7 @@ export default {
       let data = {
         name: this.departmentInfoForm.name,
         id: this.departmentInfoForm.id,
-        parentid: this.departmentInfoForm.id,
+        parentid: this.departmentInfoForm.parentid,
         nameA: this.departmentInfoForm.nameA,
         listorder: this.departmentInfoForm.listorder
       };
@@ -201,16 +196,42 @@ export default {
           }
       });
     },
+    //打开导入文件模态框
+    openImportModal(){
+      this.importModal = true
+      for(let i in this.importForm){
+        this.importForm[i] = ""
+      }
+      if(this.$refs.upload._data.fileList){
+        this.$refs.upload._data.fileList = []
+      }
+    },
+    boforeUpload(file) {
+      this.importForm.file = file
+    },
     //导入文件保存
     saveImport(){
-        let data = {
-            method:'importFile',
-            type:this.importForm.type,
-            file:this.importForm.file
+      if (this.importForm.type === '') {
+        this.$Message.error('请选择导入类型')
+      } else if (this.importForm.file === '') {
+        this.$Message.error('请选择上传文件')
+      } else {
+        let formData = new FormData(this.$refs.file_form)
+        formData.append('type', this.importForm.type)
+        formData.append('file', this.importForm.file)
+        this._importDepartment(formData)
+      }
+    },
+    //导入文件
+    _importDepartment(data){
+      importDepartment(data).then(res=>{
+        if(res.code == 20000){
+          this.$Message.success("添加成功")
+          this._getDepartmentList()
+        }else{
+          this.$Message.error(res.message)
         }
-        importDepartment(data).then(res=>{
-
-        })
+      })
     }
   }
 };

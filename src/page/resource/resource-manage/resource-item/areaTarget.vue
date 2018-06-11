@@ -1,7 +1,9 @@
 <template>
     <div>
-        <v-search :importShow="false" :searchShow="false" @on-build="openAddModal"/>
-        <el-table :data="areaTargetData" border style="width: 100%">
+        <v-search :importShow="false" :searchShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal"/>
+        <el-table :data="areaTargetData" border style="width: 100%"  @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="areaname" label="行政区划名称">
             </el-table-column>
             <el-table-column prop="cityTarget" label="指标">
@@ -40,7 +42,7 @@
 </template>
 <script>
 import { getAreaCode } from '@/api/user-service'
-import { getAreaTarget,addAreaTarget,updateAreaTarget,deleteAreaTarget } from '@/api/dataSource-service'
+import { getAreaTarget,addAreaTarget,updateAreaTarget,deleteAreaTarget,deleteAreaTargets} from '@/api/dataSource-service'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -63,7 +65,8 @@ export default {
                 cityTarget:'',
                 countyTarget:''
             },
-            nowPage:1
+            nowPage:1,
+            selectedId:[]
         }
     },
     created(){
@@ -175,6 +178,34 @@ export default {
                 }
             });
         },
+        _deleteAreaTargets(id) {
+            let data = {
+                ids:id
+            }
+            deleteAreaTargets(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getAreaTarget(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.id)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                this._deleteAreaTargets(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
+        }
     }
 }
 </script>

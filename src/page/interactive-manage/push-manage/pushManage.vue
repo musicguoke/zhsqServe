@@ -6,9 +6,11 @@
     </Breadcrumb>
     <Card>
   <div>
-      <v-search :search-show="false" :import-show="false" @on-build="pushAddOpen"/>
+      <v-search :search-show="false" :import-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="pushAddOpen"/>
       <div class="tableSize">
-        <el-table :data="pushData" border style="width: 100%">
+        <el-table :data="pushData" border style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="pId" label="Id" width="60">
             </el-table-column>
             <el-table-column prop="pRemark" label="推送组/用户">
@@ -26,7 +28,7 @@
              <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
                     <!-- <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button> -->
-                    <Button type="error" @click="remove(scope.$index)" size="small">删除</Button>
+                    <Button type="error" @click="remove(scope)" size="small">删除</Button>
                 </template>
                 </el-table-column>
             </el-table>
@@ -103,7 +105,7 @@
 </template>
 
 <script>
-import {getPushList,addPushList,deletePush} from '@/api/interactive-service'
+import {getPushList,addPushList,deletePush,deletePushs} from '@/api/interactive-service'
 import {getUserList,getAreaCode} from '@/api/user-service'
 import {getRolesList} from '@/api/role'
 import vSearch from '@/components/search/index'
@@ -136,7 +138,8 @@ export default {
                 pFileurl:'',
                 pContent:'',
                 userIds:''
-            }
+            },
+             selectedId:[]
         }
     },
     created(){
@@ -208,13 +211,14 @@ export default {
                this.isFile = false;
            }
         },
-         remove (index) {
+         remove (params) {
              this.$Modal.confirm({
                     content: '删除后数据无法恢复，是否继续？',
                     onOk: () => {
+                        let data = {pId:params.row.pId}
                         deletePush(data).then(res=>{
                             if(res.code == 20000){
-                                this.pushData.splice(index, 1);
+                                this.pushData.splice(params.$index, 1);
                                 this.$Message.success('删除成功');
                                 this._getPushList(1)
                             }else{
@@ -226,6 +230,34 @@ export default {
                         
                     }
                 });
+        },
+        _deletePushs(id) {
+            let data = {
+                pIdStr:id
+            }
+            deletePushs(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getPushList(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.pId)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                this._deletePushs(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
         },
         //搜索用户
         searchUser(page){

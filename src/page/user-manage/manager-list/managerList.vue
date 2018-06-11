@@ -1,6 +1,6 @@
 <template>
 <Content :style="{maxHeight:managerHeight}">
-    <Breadcrumb :style="{margin: '17px 0'}">
+    <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>管理员列表</BreadcrumbItem>
     </Breadcrumb>
@@ -176,7 +176,7 @@ export default {
                 tel:this.managerForm.tel,
                 email:this.managerForm.email,
                 role:this.managerForm.role,
-                sysId:Array.from(this.sysId)
+                sysIdStr:this.sysId.join(",")
             }
             if(this.isAdd){
                 addManager(data).then(res=>{

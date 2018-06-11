@@ -6,9 +6,11 @@
     </Breadcrumb>
     <Card>
   <div>
-      <v-search :search-show="false" :import-show="false" @on-build="parameterAddOpen"/>
+      <v-search :search-show="false" :import-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="parameterAddOpen"/>
       <div class="tableSize">
-        <el-table :data="parameterData" border style="width: 100%">
+        <el-table :data="parameterData" border style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column prop="metaId" label="Id" width="60">
             </el-table-column>
             <el-table-column prop="metaKey" label="变量名">
@@ -62,7 +64,7 @@
 </template>
 
 <script>
-import {getParameterList,addParameter,updateParameter,deleteParameter} from '@/api/systemConfigure-service.js'
+import {getParameterList,addParameter,updateParameter,deleteParameter,deleteParameters} from '@/api/systemConfigure-service.js'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -110,7 +112,8 @@ export default {
                 }
             ],
             parameterData:[],
-            isAdd:true
+            isAdd:true,
+            selectedId:[]
         }
     },
     created(){
@@ -187,22 +190,50 @@ export default {
         },
         remove (params) {
             this.$Modal.confirm({
-                    content: '删除后数据无法恢复，是否继续？',
-                    onOk: () => {
-                        let data = {
-                            metaId:params.row.metaId
-                        }
-                        deleteParameter(data).then(res=>{
-                            if (res.code == 20000) {
-                                this.parameterData.splice(params.$index, 1);
-                                this.$Message.success('删除成功');
-                            }
-                        })
-                    },
-                    onCancel: () => {
-                        
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    let data = {
+                        metaId:params.row.metaId
                     }
-                });
+                    deleteParameter(data).then(res=>{
+                        if (res.code == 20000) {
+                            this.parameterData.splice(params.$index, 1);
+                            this.$Message.success('删除成功');
+                        }
+                    })
+                },
+                onCancel: () => {
+                        
+                }
+            });
+        },
+        _deleteParameters(id) {
+            let data = {
+                metaIdStr:id
+            }
+            deleteParameters(data).then(res => {
+                if (res.code === 20000) {
+                    this.$Message.success(res.message)
+                    this._getParameterList(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        handleSelectionChange(val) {
+            this.selectedId = []
+            val.map(v => {
+                this.selectedId.push(v.metaId)
+            })
+        },
+        deleteMany() {
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                this._deleteParameters(this.selectedId.toString())
+                },
+                onCancel: () => { }
+            })
         }
     }
 }
