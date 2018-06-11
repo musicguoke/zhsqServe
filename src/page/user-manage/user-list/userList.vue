@@ -1,20 +1,22 @@
 <template>
-    <Content :style="{height:userListHeight}">
+    <Content>
         <Breadcrumb :style="{padding: '17px 0'}">
             <BreadcrumbItem>用户管理</BreadcrumbItem>
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
-        <Card>
-            <v-search :importShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
+        <Card :style="{maxHeight:userListHeight}">
+            <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
+                    <el-table-column prop="arId" label="ID" width="60" sortable>
+                    </el-table-column>
                     <el-table-column prop="arLoginname" label="用户名">
                     </el-table-column>
-                    <el-table-column prop="arTruename" label="姓名" width="100">
+                    <el-table-column prop="arTruename" label="姓名">
                     </el-table-column>
                     <el-table-column prop="arMobile" label="电话">
                     </el-table-column>
-                    <el-table-column prop="arEmail" label="邮箱" width="160">
+                    <el-table-column prop="arEmail" label="邮箱">
                     </el-table-column>
                     <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
@@ -22,17 +24,17 @@
                     </el-table-column>
                     <el-table-column prop="addTime" label="注册时间" sortable>
                     </el-table-column>
-                    <el-table-column label="操作" width="200" align="center">
+                    <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
-                            <Button type="success" v-if="$route.query.id" @click="equipmentOpen(scope)" size="small" class="marginRight" title="设备信息">设备</Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" title="编辑">编辑</Button>
+                            <Button type="success" v-if="$route.query.id" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
+                            <Button type="info" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" v-show="total>10" @on-change="pageChange" show-total show-elevator></Page>
+                <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator></Page>
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
@@ -117,7 +119,6 @@
 <script>
 import {    getAreaCode, getUserList, addUser, updateUser, deleteUser,
     getEquipment, updateEquipment, getRolesList} from '@/api/user-service'
-import { formatDate } from '@/components/dateChange/dateChange.js'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
@@ -128,7 +129,7 @@ export default {
     },
     data() {
         return {
-            userListHeight: window.innerHeight - 136 + 'px',
+            userListHeight: window.innerHeight - 174 + 'px',
             searchDepartment: '',
             searchCounty: '',
             searchSystem: '',
@@ -386,7 +387,7 @@ export default {
                         data[i].addTime = Math.abs(data[i].addTime)
                     }
                     if (data[i].addTime) {
-                        data[i].addTime = formatDate(new Date(data[i].addTime * 1000), 'yyyy-MM-dd')
+                        data[i].addTime = this._mm.formatDate(data[i].addTime)
                     }
                     this.countyList.map(v => {
                         if (v.value == data[i].arAreacode) {

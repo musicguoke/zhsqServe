@@ -6,10 +6,10 @@
     </Breadcrumb>
     <Card>
   <div>
-      <v-search :searchShow="false" :importShow="false" @on-build="managerAddOpen" />
+      <v-search :searchShow="false" :deleteShow="false" :importShow="false" @on-build="managerAddOpen" />
       <div class="tableSize">
         <el-table :data="userData" border style="width: 100%">
-            <el-table-column prop="id" label="Id" width="60">
+            <el-table-column prop="id" label="Id" width="60" sortable>
             </el-table-column>
             <el-table-column prop="userName" label="用户名">
             </el-table-column>
@@ -30,7 +30,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
+        <Page :total="pageLength" @on-change="pageChange" show-total></Page>
       </div>
   </div>
   </Card>

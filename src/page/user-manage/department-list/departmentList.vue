@@ -6,7 +6,7 @@
     </Breadcrumb>
     <Card>
     <div>
-        <v-search :searchShow="false" :buildShow="false" @on-import="openImportModal"  />
+        <v-search :searchShow="false" :deleteShow="false" :buildShow="false" @on-import="openImportModal"  />
         <div class="tableSize">
             <Row>
                 <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">

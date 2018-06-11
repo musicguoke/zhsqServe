@@ -6,9 +6,9 @@
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
       <div class="card-content">
-        <Menu theme="light" active-name="resource-catalog" @on-select="menuChange">
-          <MenuItem name="resource-catalog">数据资源目录</MenuItem>
+        <Menu theme="light" active-name="data-type" @on-select="menuChange">
           <MenuItem name="data-type">数据类型</MenuItem>
+          <MenuItem name="resource-catalog">数据资源目录</MenuItem>
           <MenuItem name="720-resource">720资源</MenuItem>
           <MenuItem name="image-resource">图片资源</MenuItem>
           <MenuItem name="area-target">区域指标</MenuItem>
@@ -18,7 +18,7 @@
           <MenuItem name="macro-data">宏观数据</MenuItem>
           <MenuItem name="area-text">区域文本</MenuItem>
           <MenuItem name="STopic-type">专题类型</MenuItem>
-          <MenuItem name="authority-config">用户权限</MenuItem>
+          <MenuItem name="authority-config">功能模块</MenuItem>
           <MenuItem name="statistics">统计配置</MenuItem>
         </Menu>
         <div class="table">

@@ -164,7 +164,7 @@ const router = new VueRouter({
           name: "ResourceManage",
           component: ResourceManage,
           meta: { title: "资源管理" },
-          redirect: { name: "ResourceCatalog" },
+          redirect: { name: "DataType" },
           children: [
             {
               path: "resource-catalog",
