@@ -14,14 +14,10 @@
           @on-delete="deleteMany" />
         <el-table :data="sysData" border style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="id" label="系统编号" sortable>
-          </el-table-column>
-          <el-table-column prop="sysName" label="系统名称">
-          </el-table-column>
-          <el-table-column prop="areaName" label="所属区县">
-          </el-table-column>
-          <el-table-column prop="status" label="系统状态">
-          </el-table-column>
+          <el-table-column prop="id" label="系统编号" sortable></el-table-column>
+          <el-table-column prop="sysName" label="系统名称"></el-table-column>
+          <el-table-column prop="areaName" label="所属区县"></el-table-column>
+          <el-table-column prop="status" label="系统状态"></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <Button type="primary" @click="editSys(scope.row)" size="small">编辑</Button>

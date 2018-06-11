@@ -48,11 +48,8 @@
         </FormItem>
         <FormItem label="运行平台">
           <Select v-model="versionInfo.vPlatform" placeholder="请选择设备类型">
-            <Option value="ios_iphone">ios_iphone</Option>
-            <Option value="ios_ipad">ios_ipad</Option>
             <Option value="android_phone">android_phone</Option>
             <Option value="android_pad">android_pad</Option>
-            <Option value="pc">pc</Option>
           </Select>
         </FormItem>
         <FormItem label="是否强制更新">

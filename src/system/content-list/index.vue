@@ -40,7 +40,7 @@ export default {
     }
   },
   created() {
-    this._getDateTree()
+    this._getDateTree(-1)
   },
   methods: {
     selectDataConfig() {
