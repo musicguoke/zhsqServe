@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
               <template slot-scope="scope">
-                <Button type="info" @click="edit(scope)" size="small" class="marginRight">编辑</Button>
+                <Button type="primary" @click="edit(scope)" size="small" class="marginRight">编辑</Button>
                 <Button type="error" @click="remove(scope)" size="small">删除</Button>
               </template>
             </el-table-column>

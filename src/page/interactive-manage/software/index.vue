@@ -1,7 +1,7 @@
 <template>
   <Content>
     <Breadcrumb :style="{padding: '17px 0'}">
-      <BreadcrumbItem>交互管理</BreadcrumbItem>
+      <BreadcrumbItem>版本管理</BreadcrumbItem>
       <BreadcrumbItem>软件版本</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
@@ -15,7 +15,7 @@
       <div class="tableSize">
         <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="vId" label="vId" sortable>
+          <el-table-column prop="vId" label="ID" sortable>
           </el-table-column>
           <el-table-column prop="vTitle" label="版本名称" sortable>
           </el-table-column>
@@ -27,7 +27,7 @@
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
             <template slot-scope="scope">
-              <Button type="info" @click="detail(scope.row)" size="small" class="marginRight">查看</Button>
+              <Button type="primary" @click="detail(scope.row)" size="small" class="marginRight">查看</Button>
               <Button type="error" @click="remove(scope.row)" size="small">删除</Button>
             </template>
           </el-table-column>
@@ -48,11 +48,8 @@
         </FormItem>
         <FormItem label="运行平台">
           <Select v-model="versionInfo.vPlatform" placeholder="请选择设备类型">
-            <Option value="ios_iphone">ios_iphone</Option>
-            <Option value="ios_ipad">ios_ipad</Option>
             <Option value="android_phone">android_phone</Option>
             <Option value="android_pad">android_pad</Option>
-            <Option value="pc">pc</Option>
           </Select>
         </FormItem>
         <FormItem label="是否强制更新">

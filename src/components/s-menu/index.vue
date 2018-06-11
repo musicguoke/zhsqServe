@@ -31,15 +31,23 @@
     </Submenu>
     <Submenu name="4">
       <template slot="title">
+        <Icon type="loop"></Icon>
+          版本管理
+      </template>
+      <MenuItem name="software-version">软件版本</MenuItem>
+      <!-- <MenuItem name="version-description">版本描述</MenuItem> -->
+    </Submenu>
+    <Submenu name="5">
+      <template slot="title">
         <Icon type="stats-bars"></Icon>
           行为分析
       </template>
       <MenuItem name="user-statistics">用户访问</MenuItem>
       <MenuItem name="data-statistics">数据访问</MenuItem>
       <MenuItem name="search-statistics">搜索访问</MenuItem>
-      <MenuItem name="6-3">用户轨迹</MenuItem>
+      <MenuItem name="5-3">用户轨迹</MenuItem>
     </Submenu>
-    <Submenu name="5">
+    <Submenu name="6">
       <template slot="title">
         <Icon type="disc"></Icon>
           系统监控
