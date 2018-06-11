@@ -50,14 +50,14 @@
             </FormItem>
         </Form>
   </Modal>
-  <Modal v-model="messageSendModal" :title=modalTitle ref="modal">
+  <Modal v-model="messageSendModal" :title=modalTitle @on-ok="_sendMessage"> 
         <Form :model="messageSendForm" label-position="left" :label-width="100">
             <FormItem label="电话">
-                <Input v-model="messageSendForm.phone" placeholder="多个电话用英文逗号隔开..." ></Input>
+                <Input v-model="messageSendForm.phoneStr" placeholder="多个电话用英文逗号隔开..." ></Input>
             </FormItem>
             <FormItem label="导入电话">
                 <div style="display:flex">
-                    <Input v-model="messageSendForm.phone" placeholder="请输入电话号码..." style="width:310px;margin-right:5px;"></Input>
+                    <Input v-model="messageSendForm.Fileurl" placeholder="请输入电话号码..." style="width:310px;margin-right:5px;"></Input>
                     <Button type="primary" icon="person-add" @click="importModal=true">导入</Button>
                 </div>
             </FormItem>
@@ -68,21 +68,10 @@
   </Modal>
   <Modal v-model="importModal" title='导入电话' @on-ok="saveImport">
         <Form :model="importForm" label-position="left" :label-width="100">
-            <FormItem label="导入类型">
-                <Select v-model="importForm.type">
-                    <Option value="1">增量导入</Option>
-                    <Option value="2">全量导入</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="选择文件" style="width:100px;">
-                <div style="display:flex">
-                    <div>
-                        <Input v-model="importForm.file" placeholder="请选择excel" style="width:300px;"></Input>
-                    </div>
-                    <Upload action="//jsonplaceholder.typicode.com/posts/">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
-                    </Upload>
-                </div>
+            <FormItem label="选择文件">
+              <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials  :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+                <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+              </Upload>
             </FormItem>
             <div class="importSlot">
                 <div class="importSlotTitle">导入须知</div>
@@ -101,6 +90,7 @@ import {
   getMessageById
 } from "@/api/interactive-service";
 import vSearch from "@/components/search/index";
+import { url } from '@/api/config.js'
 export default {
   components: {
     vSearch
@@ -112,6 +102,7 @@ export default {
       messageModal: false,
       messageSendModal: false,
       modalTitle: "",
+      uploadUrl:url,
       messageData: [],
       pageLength: 1,
       messageForm: {
@@ -122,20 +113,27 @@ export default {
         addTime: "",
         typeName: ""
       },
-      messageSendForm: {},
+      messageSendForm: {
+        phoneStr:"",
+        Fileurl:"",
+        message:""
+      },
       importModal: false,
       importForm: {
-        type: "",
         file: ""
       }
     };
   },
   created() {
-    this._getMessageList();
+    this._getMessageList(1);
   },
   methods: {
-    _getMessageList() {
-      getMessageList().then(res => {
+    _getMessageList(page) {
+      let data = {
+        pageNo:page,
+        pageSize:10
+      }
+      getMessageList(data).then(res => {
         this.pageLength = res.data.total;
         this.messageData = res.data.list;
         this.messageData.map(v => {
@@ -148,23 +146,53 @@ export default {
         });
       });
     },
+    pageChange(page){
+      this._getMessageList(page)
+    },
     messageAddOpen() {
       for (var i in this.messageForm) {
-        this.messageForm[i] = "";
+        this.messageForm[i] = ""
       }
-      this.messageSendModal = true;
+      this.importForm.file = ""
+      this.messageSendModal = true
+      if(this.$refs.upload._data.fileList){
+        this.$refs.upload._data.fileList = []
+      }
     },
     messageEditOpen(params) {
-      this.messageModal = true;
-      this.modalTitle = "短信详情";
-      this.$refs.modal.footerHide = true;
+      this.messageModal = true
+      this.modalTitle = "短信详情"
+      this.$refs.modal.footerHide = true
       for (var i in this.messageForm) {
         if (params.row[i]) {
-          this.messageForm[i] = params.row[i];
+          this.messageForm[i] = params.row[i]
         }
       }
     },
-    saveImport() {}
+    handleSuccessUpload(data){
+      if(data.code == 20000){
+        this.importForm.file = data.data
+        this.$Message.success(data.message)
+      }else{
+        this.$Message.error(data.message)
+      }
+    },
+    //发送短信
+    _sendMessage(){
+      let data = {
+        phoneStr:this.messageSendForm.phoneStr,
+        message:this.messageSendForm.message,
+        Fileurl:this.messageSendForm.Fileurl
+      }
+      sendMessage(data).then(res=>{
+        if(res.code == 20000){
+          this.$Message.success(res.message)
+        }
+      })
+    },
+    saveImport() {
+      this.messageSendForm.Fileurl = this.importForm.file
+    }
   }
 };
 </script>
