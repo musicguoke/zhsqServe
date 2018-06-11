@@ -167,6 +167,7 @@ export default {
                    this.managerForm[i] =params.row[i] 
                }
             }
+            this.managerForm.password = ""
         },
         addOrUpdate(){
             let data = {

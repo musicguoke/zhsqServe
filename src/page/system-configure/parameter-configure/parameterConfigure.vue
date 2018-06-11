@@ -23,7 +23,8 @@
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
-                    <Button type="info" @click="parameterEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
+                    <Button type="info" @click="parameterEditOpen(scope)" size="small"  class="marginRight" v-show="scope.row.metaIskeep != 1">编辑</Button>
+                    <Button type="info" @click="parameterDetailOpen(scope)" size="small"  class="marginRight" v-show="scope.row.metaIskeep == 1">查看</Button>
                     <Button type="error" @click="remove(scope)" size="small">删除</Button>
                 </template>
             </el-table-column>
@@ -34,7 +35,7 @@
       </div>
   </div>
   </Card>
-  <Modal v-model="parameterModal" :title=modalTitle @on-ok="addOrUpdate">
+  <Modal v-model="parameterModal" :title=modalTitle @on-ok="addOrUpdate" ref="modal">
         <Form :model="parameterForm" label-position="left" :label-width="100">
             <FormItem label="变量名">
                 <Input v-model="parameterForm.metaKey" placeholder="请输入变量名..."></Input>
@@ -78,6 +79,7 @@ export default {
             parameterModal:false,
             modalTitle:'',
             pageLength:0,
+            nowPage:1,
             parameterForm:{
                 metaKey:'',
                 metaType:'',
@@ -131,6 +133,7 @@ export default {
             })
         },
         pageChange(page){
+            this.nowPage = page
             this._getParameterList(page)
         },
         parameterAddOpen(){
@@ -151,10 +154,18 @@ export default {
                }
             }
         },
+        parameterDetailOpen(params){
+            this.parameterModal = true;
+            this.modalTitle = '查看详情';
+            for(var i in this.parameterForm){
+               if(params.row[i]){
+                   this.parameterForm[i] =params.row[i] 
+               }
+            }
+            this.$refs.modal.footerHide = true
+        },
         addOrUpdate(){
-            let data = {}
-            if(this.isAdd){
-                data = {
+            let data = {
                     metaKey:this.parameterForm.metaKey,
                     metaDec:this.parameterForm.metaDec,
                     metaType:this.parameterForm.metaType,
@@ -164,26 +175,23 @@ export default {
                     metaValue:this.parameterForm.metaValue,
                     metaSelectvalue:this.parameterForm.metaSelectvalue,
                 }
+            if(this.isAdd){
                 addParameter(data).then(res=>{
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this.$Message.success('添加成功');
+                        this._getParameterList(1)
+                    }else{
+                        this.$Message.error(res.message)
                     }
                 })
             }else{
-                data = {
-                    metaKey:this.parameterForm.metaKey,
-                    metaDec:this.parameterForm.metaDec,
-                    metaType:this.parameterForm.metaType,
-                    metaIskeep:this.parameterForm.metaIskeep,
-                    weiboPic:this.parameterForm.weiboPic,
-                    weiboTxt:this.parameterForm.weiboTxt,
-                    metaValue:this.parameterForm.metaValue,
-                    metaSelectvalue:this.parameterForm.metaSelectvalue,
-                    metaId:this.parameterForm.metaId,
-                }
+                data.metaId = this.parameterForm.metaId
                 updateParameter(data).then(res=>{
                     if (res.code == 20000) {
-                        this.$Message.info('添加成功');
+                        this.$Message.success('修改成功');
+                        this._getParameterList(this.nowPage)
+                    }else{
+                        this.$Message.error(res.message)
                     }
                 })
             }
@@ -197,8 +205,8 @@ export default {
                     }
                     deleteParameter(data).then(res=>{
                         if (res.code == 20000) {
-                            this.parameterData.splice(params.$index, 1);
                             this.$Message.success('删除成功');
+                            this._getParameterList(this.nowPage)
                         }
                     })
                 },

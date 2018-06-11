@@ -5,7 +5,7 @@
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
         <Card>
-            <v-search :importShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset"/>
+            <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset"/>
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arLoginname" label="用户名">
@@ -58,6 +58,11 @@
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
+                        <FormItem label="角色" v-show="isProduct">
+                            <Select v-model="userForm.grId">
+                                <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            </Select>
+                        </FormItem>
                         <FormItem label="手机号">
                             <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
                         </FormItem>
@@ -69,7 +74,7 @@
                         </FormItem>
                     </Form>
                 </Tab-pane>
-                <Tab-pane label="选择系统" key="key2">
+                <Tab-pane label="选择系统" key="key2" v-show="!isProduct">
                     <div class="chooseSystemTitle">
                         <span class="chooseSystemSpan">系统角色选择&nbsp;&nbsp;
                             <small style="color:red">(注:同一个系统下只能选择一个角色)</small>
@@ -139,6 +144,7 @@ export default {
             total: 0,
             isAdd: false,
             nowPage:1,
+            isProduct:false,
             highlightcurrent: true,
             expandonclicknode: true,
             userForm: {
@@ -180,6 +186,7 @@ export default {
             },
             systemList: [],
             groupList: [],
+            groupSingleList:[],
             equipmentType: [
                 {
                     value: 'ios_iphone',
@@ -218,6 +225,12 @@ export default {
             this._getUserList(1)
         }),
         this._getDepartmentList()
+        if(this.$route.query.id){
+            this.isProduct = true
+        }else{
+            this.isProduct = false
+        }
+        console.log(this.$route.query)
     },
     methods: {
         userAddOpen() {
@@ -241,7 +254,7 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
-            // this.$refs.department.selectedSingle = this.userForm.name
+            this.userForm.arPassword = ""
             this.$refs.department.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
             if(this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',') ){
                 let sysArray = this.userForm.sysId.split(',')
@@ -537,6 +550,17 @@ export default {
                 } else {
                     this.groupList.push(array)
                 }
+            })
+        },
+        _getRolesSingleList(id){
+            getRolesList(id).then(res => {
+                let data = res.data.list
+                for (let i in data) {
+                    this.groupSingleList.push({
+                        value: data[i].grId,
+                        label: data[i].grName
+                     })
+                 }
             })
         }
     }
