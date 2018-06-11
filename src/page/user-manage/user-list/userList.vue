@@ -4,8 +4,13 @@
             <BreadcrumbItem>用户管理</BreadcrumbItem>
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
+<<<<<<< HEAD
         <Card :style="{maxHeight:userListHeight}">
             <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
+=======
+        <Card>
+            <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset"/>
+>>>>>>> 5ef264999f9615e73cce15b0f9fc1be3f3a66ebb
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arId" label="ID" width="60" sortable>
@@ -38,7 +43,7 @@
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
-            <Tabs active-key="key1">
+            <Tabs active-key="key1" v-show="!isProduct">
                 <Tab-pane label="基本信息" key="key1">
                     <Form :model="userForm" label-position="left" :label-width="100">
                         <FormItem label="用户名">
@@ -51,13 +56,18 @@
                             <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                         </FormItem>
                         <FormItem label="部门">
-                            <Select v-model="userForm.arBranch" ref="department">
+                            <Select v-model="userForm.arBranch" ref="department1">
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
                         <FormItem label="区县">
                             <Select v-model="userForm.arAreacode">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="角色" v-show="isProduct">
+                            <Select v-model="userForm.grId">
+                                <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="手机号">
@@ -91,6 +101,41 @@
                     </Form>
                 </Tab-pane>
             </Tabs>
+            <Form :model="userForm" label-position="left" :label-width="100" v-show="isProduct">
+                <FormItem label="用户名">
+                    <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
+                </FormItem>
+                <FormItem label="真实姓名">
+                    <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."></Input>
+                </FormItem>
+                <FormItem label="密码">
+                    <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
+                </FormItem>
+                <FormItem label="部门">
+                    <Select v-model="userForm.arBranch" ref="department2">
+                        <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
+                    </Select>
+                </FormItem>
+                <FormItem label="区县">
+                    <Select v-model="userForm.arAreacode">
+                        <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="角色" v-show="isProduct">
+                    <Select v-model="userForm.grId">
+                        <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="手机号">
+                    <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
+                </FormItem>
+                <FormItem label="座机">
+                    <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
+                </FormItem>
+                <FormItem label="邮箱">
+                    <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
+                </FormItem>
+            </Form>
         </Modal>
         <Modal v-model="equipmentModal" :title=modalTitle @on-ok="updateEquipment">
             <Form :model="equipmentForm" label-position="left" :label-width="100">
@@ -139,7 +184,8 @@ export default {
             modalTitle: '',
             total: 0,
             isAdd: false,
-            nowPage: 1,
+            nowPage:1,
+            isProduct:false,
             highlightcurrent: true,
             expandonclicknode: true,
             userForm: {
@@ -181,6 +227,7 @@ export default {
             },
             systemList: [],
             groupList: [],
+            groupSingleList:[],
             equipmentType: [
                 {
                     value: 'ios_iphone',
@@ -218,7 +265,14 @@ export default {
             }
             this._getUserList(1)
         }),
-            this._getDepartmentList()
+        this._getDepartmentList()
+        if(this.$route.query.id){
+            this.isProduct = true
+            this._getRolesSingleList(this.$route.query.id)
+            this.userForm.sysId = this.$route.query.id
+        }else{
+            this.isProduct = false
+        }
     },
     methods: {
         userAddOpen() {
@@ -242,9 +296,10 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
-            // this.$refs.department.selectedSingle = this.userForm.name
-            this.$refs.department.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
-            if (this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',')) {
+            this.userForm.arPassword = ""
+            this.$refs.department1.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
+            this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
+            if(this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',') ){
                 let sysArray = this.userForm.sysId.split(',')
                 let groupArray = this.userForm.grId.split(',')
                 for (let i in sysArray) {
@@ -401,14 +456,18 @@ export default {
         },
         //点击确定
         addOrUpdateUser() {
-            this.userForm.sysId = ''
-            this.userForm.grId = ''
-            this.sysAndGroupList.map(v => {
-                this.userForm.sysId += v.sysId + ','
-                this.userForm.grId += v.grId + ','
-            })
-            this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
-            this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
+            if(!this.isProduct){
+                this.userForm.sysId = ''
+                this.userForm.grId = ''
+                this.sysAndGroupList.map(v => {
+                    this.userForm.sysId += v.sysId + ','
+                    this.userForm.grId += v.grId + ','
+                })
+                this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
+                this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
+            }else{
+                this.userForm.sysId = this.$route.query.id
+            }
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
@@ -476,7 +535,8 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
-            this.$refs.department.values = [{ value: data.id, label: data.name }]
+            this.$refs.department1.values = [{ value: data.id, label: data.name }]
+            this.$refs.department2.values = [{ value: data.id, label: data.name }]
             this.userForm.arBranch = data.id
         },
         //点击添加，新增一行系统角色选择
@@ -538,6 +598,17 @@ export default {
                 } else {
                     this.groupList.push(array)
                 }
+            })
+        },
+        _getRolesSingleList(id){
+            getRolesList(id).then(res => {
+                let data = res.data.list
+                for (let i in data) {
+                    this.groupSingleList.push({
+                        value: data[i].grId,
+                        label: data[i].grName
+                     })
+                 }
             })
         }
     }

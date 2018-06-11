@@ -153,6 +153,9 @@ export default {
       for (var i in this.messageForm) {
         this.messageForm[i] = ""
       }
+      for (var i in this.messageSendForm) {
+        this.messageSendForm[i] = ""
+      }
       this.importForm.file = ""
       this.messageSendModal = true
       if(this.$refs.upload._data.fileList){
@@ -182,11 +185,13 @@ export default {
       let data = {
         phoneStr:this.messageSendForm.phoneStr,
         message:this.messageSendForm.message,
-        Fileurl:this.messageSendForm.Fileurl
+        fileurl:this.messageSendForm.Fileurl
       }
       sendMessage(data).then(res=>{
         if(res.code == 20000){
           this.$Message.success(res.message)
+        }else{
+          this.$Message.error(res.message)
         }
       })
     },

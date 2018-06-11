@@ -37,29 +37,34 @@
   <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate">
         <Form :model="managerForm" label-position="left" :label-width="100">
             <FormItem label="用户名">
-                <Input v-model="managerForm.userName" placeholder="请输入用户名..."></Input>
+                <Input v-model="managerForm.userName" placeholder="请输入用户名"></Input>
             </FormItem>
             <FormItem label="真实姓名">
-                <Input v-model="managerForm.realName" placeholder="请输入真实姓名..."></Input>
+                <Input v-model="managerForm.realName" placeholder="请输入真实姓名"></Input>
             </FormItem>
             <FormItem label="密码">
-                <Input v-model="managerForm.password" placeholder="请输入密码..." type="password"></Input>
-            </FormItem>
-            <FormItem label="子系统">
-                <Select v-model="sysId" multiple>
-                    <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="手机号">
-                <Input v-model="managerForm.tel" placeholder="请输入手机号..."></Input>
-            </FormItem>
-            <FormItem label="邮箱">
-                <Input v-model="managerForm.email" placeholder="请输入邮箱..."></Input>
+                <Input v-model="managerForm.password" placeholder="请输入密码" type="password"></Input>
             </FormItem>
             <FormItem label="管理员类型">
                 <Select v-model="managerForm.role">
                     <Option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
+            </FormItem>
+            <FormItem label="子系统" v-show="managerForm.role == 3">
+                <div style="display:flex">
+                    <Select v-model="sysId" multiple placeholder="请选择系统类型" style="width:50%">
+                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="sysId" multiple  placeholder="请选择系统" style="width:50%">
+                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </div>
+            </FormItem>
+            <FormItem label="手机号">
+                <Input v-model="managerForm.tel" placeholder="请输入手机号"></Input>
+            </FormItem>
+            <FormItem label="邮箱">
+                <Input v-model="managerForm.email" placeholder="请输入邮箱"></Input>
             </FormItem>
         </Form>
   </Modal>
@@ -164,9 +169,15 @@ export default {
             this.sysId = []
             for(var i in this.managerForm){
                if(params.row[i]){
-                   this.managerForm[i] =params.row[i] 
+                   this.managerForm[i] = params.row[i] 
                }
             }
+            if(params.row.list.length > 0){
+                params.row.list.map(v=>{
+                    this.sysId.push(v.id)
+                })
+            }
+            this.managerForm.password = ""
         },
         addOrUpdate(){
             let data = {

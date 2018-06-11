@@ -36,10 +36,9 @@
                     <Input v-model="mapConfigureForm.mOrder" ></Input>
                 </FormItem>
                 <FormItem label="地图图例"> 
-                    <Upload
-                        multiple
-                        action="//jsonplaceholder.typicode.com/posts/">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">点击上传</Button>
+                    <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccessUpload" accept=".jpg,.png" :max-size="2048" ref="upload">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                         <div slot="tip" >只能上传jpg/png文件，且不超过2M</div>
                     </Upload>
                 </FormItem>
                 <FormItem label="图例地址">
@@ -55,6 +54,7 @@
 <script>
 import {getMapConfigure,insertMapConfigure,updateMapConfigure,deleteMapConfigureById,deletesMapConfigureById} from '@/api/dataSource-service'
 import vSearch from '@/components/search/index'
+import { url } from '@/api/config.js'
 export default {
     components: {
         vSearch
@@ -68,7 +68,9 @@ export default {
             modalTitle:'',
             mapConfigureData:[],
             mapConfigureModal:false,
+            uploadUrl:url,
             mapConfigureForm:{
+                id:'',
                 mName:'',
                 mUrl:'',
                 mOrder:'',
@@ -106,6 +108,9 @@ export default {
             for(let i in this.mapConfigureForm){
                 this.mapConfigureForm[i] = ''
             }
+            if(this.$refs.upload._data.fileList){
+                this.$refs.upload._data.fileList = []
+            }
         },
         //打开编辑模态框
         openEditModal(params){
@@ -116,7 +121,10 @@ export default {
                 if(params.row[i]){
                     this.mapConfigureForm[i] = params.row[i]
                 }
-            }   
+            } 
+            if(this.$refs.upload._data.fileList){
+                this.$refs.upload._data.fileList = []
+            }  
         },
         //点击确定
         addOrUpdate(){
@@ -138,6 +146,7 @@ export default {
                     }
                 })
             }else{
+                data.id = this.mapConfigureForm.id
                 updateMapConfigure(data).then(res => {
                     if(res.code == 20000){
                         this._getMapConfigure(this.nowPage)
@@ -190,10 +199,18 @@ export default {
             this.$Modal.confirm({
                 content: '删除后数据无法恢复，是否继续？',
                 onOk: () => {
-                this._deletesMapConfigureById(this.selectedId.toString())
+                    this._deletesMapConfigureById(this.selectedId.toString())
                 },
                 onCancel: () => { }
             })
+        },
+        handleSuccessUpload(data){
+            if(data.code == 20000){
+                this.mapConfigureForm.mImage = data.data
+                this.$Message.success(data.message)
+            }else{
+                this.$Message.error(data.message)
+            }
         }
     }
 }

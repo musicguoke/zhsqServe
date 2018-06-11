@@ -158,7 +158,7 @@ export default {
       })
     },
     save() {
-      if(isNew) {
+      if(this.isNew) {
         this._addAuthority(this.itemInfo)
       } else {
         this._updateAuthority(this.itemInfo)
