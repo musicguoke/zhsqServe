@@ -39,8 +39,6 @@
       <MenuItem name="push-manage">推送管理</MenuItem>
       <MenuItem name="message-manage">短信管理</MenuItem>
       <MenuItem name="technical-support">技术支持</MenuItem>
-      <MenuItem name="software-version">软件版本</MenuItem>
-      <MenuItem name="version-description">版本描述</MenuItem>
     </Submenu>
     <Submenu name="6">
       <template slot="title">

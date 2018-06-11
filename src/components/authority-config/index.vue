@@ -125,7 +125,7 @@
     <div class="btn" v-if="newSys">
       <Button type="error" @click="cancel">取消</Button>
       <Button type="primary" @click="pre" v-if="this.current !== 0">上一步</Button>
-      <Button type="primary" @click="next">{{btnContent}}</Button>
+      <Button type="primary" @click="next('formItem')">{{btnContent}}</Button>
     </div>
     <div class="btn" v-if="!newSys">
       <Button type="error" @click="cancel">取消</Button>
@@ -298,7 +298,7 @@ export default {
     initFormData() {
       Object.assign(this.$data, this.$options.data())
       this._getAreaList()
-      if(!this.sysOrRole) {
+      if (!this.sysOrRole) {
         this._getDateTree()
       } else {
         this._getAreaCatalog()
@@ -528,7 +528,7 @@ export default {
             areacode: res.data.areacode,
             enable: res.data.enable.toString()
           }
-          if(res.data.imageList) {
+          if (res.data.imageList) {
             res.data.imageList.map(v => {
               this.uploadForm[v.type] = v.imagePath
             })
