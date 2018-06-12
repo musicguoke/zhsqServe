@@ -114,6 +114,7 @@ export default {
             for(let i in this.dataTargetForm){
                 this.dataTargetForm[i] = ''
             }
+            this.modalTitle = '新增数据指标'
         },
         //打开编辑模态框
         openEditModal(params){
@@ -125,6 +126,7 @@ export default {
                     this.dataTargetForm[i] =params.row[i] 
                 }
              }
+             this.modalTitle = '修改数据指标'
         },
         //点击确定
         addOrUpdate(){

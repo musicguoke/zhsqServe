@@ -117,6 +117,7 @@ export default {
         for(let i in this.hotSearchForm){
           this.hotSearchForm[i] = '';
         }
+        this.modalTitle = '新增热搜'
     },
     //打开编辑模态框
     openEditModal(params){
@@ -128,6 +129,7 @@ export default {
             this.hotSearchForm[i] =params.row[i] 
           }
         }
+        this.modalTitle = '修改热搜'
     },
     //点击确定
     addOrUpdate(){

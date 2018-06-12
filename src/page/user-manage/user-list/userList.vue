@@ -26,8 +26,8 @@
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
-                            <Button type="success" v-if="$route.query.id" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
+                            <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" class="marginRight" title="设备信息">设备</Button>
+                            <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
                     </el-table-column>
@@ -132,7 +132,20 @@
                 </FormItem>
             </Form>
         </Modal>
-        <Modal v-model="equipmentModal" :title=modalTitle @on-ok="updateEquipment">
+        <Modal v-model="equipmentModal" :title=modalTitle >
+            <el-table :data="equipmentData" border style="width: 100%">
+                <el-table-column prop="arOs" label="设备类型" width="100">
+                </el-table-column>
+                <el-table-column prop="arCodeBind" label="绑定码" >
+                </el-table-column>
+                <el-table-column label="操作" width="80" align="center">
+                    <template slot-scope="scope">
+                        <Button type="info" @click="equipmentEditOpen(scope)" size="small" title="编辑">编辑</Button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </Modal>
+        <Modal v-model="equipmentEditModal" :title=modalTitle @on-ok="updateEquipment">
             <Form :model="equipmentForm" label-position="left" :label-width="100">
                 <FormItem label="设备类型">
                     <Select v-model="equipmentForm.arOs" placeholder="请选择...">
@@ -158,7 +171,7 @@
 
 <script>
 import {    getAreaCode, getUserList, addUser, updateUser, deleteUser,
-    getEquipment, updateEquipment, getRolesList} from '@/api/user-service'
+    getEquipment, updateEquipment, getRolesList,getUserSysAndRole} from '@/api/user-service'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
@@ -176,6 +189,7 @@ export default {
             searchName: '',
             userModal: false,
             equipmentModal: false,
+            equipmentEditModal:false,
             modalTitle: '',
             total: 0,
             isAdd: false,
@@ -211,6 +225,7 @@ export default {
                 arRegip: "",
                 sysId: ""
             },
+            equipmentData:[],
             userData: [],
             departmentData: [],
             departmentFilterList: [],
@@ -292,21 +307,26 @@ export default {
                 }
             }
             this.userForm.arPassword = ""
-            this.$refs.department1.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
-            this.$refs.department2.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
-            if (this.userForm.sysId.toString().indexOf(',') != -1 && this.userForm.grId.toString().indexOf(',')) {
-                let sysArray = this.userForm.sysId.split(',')
-                let groupArray = this.userForm.grId.split(',')
-                for (let i in sysArray) {
-                    this.sysAndGroupList.push({
-                        sysId: sysArray[i],
-                        grId: groupArray[i]
-                    })
+            this.$refs.department1.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
+            this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
+             getUserSysAndRole(this.userForm.arId).then(res=>{
+                 if(!this.isProduct){
+                     for(let i = 0;i<res.data.length;i++){
+                        this.sysAndGroupList.push({
+                            sysId: res.data[i].sysId,
+                            grId: res.data[i].grId
+                        })
+                        this._getSystemList()
+                        this._getRolesList(res.data[i].sysId,i)
+                    }
+                } else {
+                    this.sysAndGroupList.push({ sysId: res.data[0].sysId, grId: res.data[0].grId })
+                    this.userForm.sysId = res.data[0].sysId
+                    this.userForm.grId = res.data[0].grId
+                    this._getRolesList(res.data[0].sysId, 0)
                 }
-            } else {
-                this.sysAndGroupList.push({ sysId: this.userForm.sysId, grId: this.userForm.grId })
-                this._getRolesList(this.userForm.sysId, 0)
-            }
+            
+            })
         },
         _getDepartmentList() {
             let data = {
@@ -370,6 +390,7 @@ export default {
             this.searchName = ''
             this._getUserList(1)
         },
+        //设备列表
         equipmentOpen(params) {
             let data = {
                 method: 'list',
@@ -383,15 +404,20 @@ export default {
                     this.equipmentModal = false
                 } else {
                     this.equipmentModal = true
-                    let data = res.data.list
-                    for (let i in data) {
-                        this.equipmentForm[i] = ""
-                        this.equipmentForm = data[i]
-                    }
-                    this.equipmentForm.arLastlogintime = this._mm.formatDate(this.equipmentForm.arLastlogintime)
-                    this.equipmentForm.arRegtime = this._mm.formatDate(this.equipmentForm.arRegtime)
+                    this.equipmentData = res.data.list
+                    for(let i in this.equipmentData){
+                        this.equipmentData[i].arLastlogintime = this._mm.formatDate(this.equipmentData[i].arLastlogintime)
+                        this.equipmentData[i].arRegtime = this._mm.formatDate(this.equipmentData[i].arRegtime)
+                    }  
                 }
             })
+        },
+        //修改设备
+        equipmentEditOpen(params){
+            this.equipmentEditModal = true
+            for(let i in params.row){
+                this.equipmentForm[i] = params.row[i] 
+            }
         },
         remove(params) {
             let data = {
@@ -523,6 +549,7 @@ export default {
             updateEquipment(data).then(res => {
                 if (res.code == 20000) {
                     this.$Message.success("修改成功")
+                    this.equipmentModal = false
                 } else {
                     this.$Message.error(res.message)
                 }
@@ -554,14 +581,14 @@ export default {
         //系统改变，获取对应系统下的角色
         systemChange(id, index) {
             let list = []
+            this.sysAndGroupList[index].grId = ''
             this.sysAndGroupList.map(v => {
                 list.push(v.sysId)
             })
             let setList = Array.from(new Set(list))
             if (list.length > setList.length) {
                 this.$Message.warning('同一个系统下只能选择一个角色')
-                this.$refs['item' + index][0].selectedSingle = ''
-                this.$refs['item' + index][0].model = ''
+                this.$refs['item' + index][0].values = []
                 this.sysAndGroupList[index] = {
                     sysId: '',
                     grId: ''

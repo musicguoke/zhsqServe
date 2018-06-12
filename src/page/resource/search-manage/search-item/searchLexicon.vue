@@ -109,6 +109,7 @@ export default {
         for(let i in this.lexiconForm){
           this.lexiconForm[i] = '';
         }
+        this.modalTitle = '新增搜索词库'
     },
     //打开编辑模态框
     openEditModal(params){
@@ -120,6 +121,7 @@ export default {
             this.lexiconForm[i] =params.row[i] 
           }
         }
+        this.modalTitle = '修改搜索词库'
     },
     //打开导入文件模态框
     openImportModal(){

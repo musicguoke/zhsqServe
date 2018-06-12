@@ -83,6 +83,7 @@ export default {
             for(let i in this.sTopicTypeForm){
                 this.sTopicTypeForm[i] = ''
             }
+            this.modalTitle = '新增专题类型'
         },
         //打开编辑模态框
         openEditModal(params){
@@ -94,6 +95,7 @@ export default {
                     this.sTopicTypeForm[i] =params.row[i] 
                 }
              }
+             this.modalTitle = '修改专题类型'
         },
         //点击确定
         addOrUpdate(){

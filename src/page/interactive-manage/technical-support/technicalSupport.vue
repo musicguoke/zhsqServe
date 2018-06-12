@@ -98,6 +98,7 @@ export default {
             for(var i in this.technicalForm){
                this.technicalForm[i] = '';
             }
+            this.modalTitle = '新增技术支持参数'
         },
         technicalEditOpen(params){
             this.isAdd = false
@@ -107,6 +108,7 @@ export default {
                    this.technicalForm[i] =params.row[i] 
                }
             }
+            this.modalTitle = '修改技术支持参数'
         },        
         addOrUpdateUser(){
             let data = {
