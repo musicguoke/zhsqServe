@@ -136,17 +136,13 @@
 <script>
 import { url } from '@/api/config'
 import {
-  getAreaQx,
-  getDateTree,
-  getMapConfig,
-  getFeature,
+  getBuildConfig,
   addSystem,
   searchSysById,
   updateSystem
 } from '@/api/system'
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
-import { getAreaList, getMsTabDatainfoById, getAreaCatalog, uploadImg } from '@/api/catalog'
-import { getTopicDataTree } from '@/api/topics'
+import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
 
 export default {
@@ -297,13 +293,7 @@ export default {
     initFormData() {
       Object.assign(this.$data, this.$options.data())
       this._getAreaList()
-      if (!this.sysOrRole) {
-        this._getDateTree()
-      } else {
-        this._getAreaCatalog()
-      }
-      this._getFeature()
-      this._getMapConfig()
+      this._getBuildConfig()
     },
     tabChange(name) {
       this.tabActiveName = name
@@ -426,57 +416,35 @@ export default {
       })
       return list.toString()
     },
+    _getBuildConfig() {
+      getBuildConfig().then(res => {
+        this.mapConfigList = res.mapConfigList
+        this.mapConfigList.map(v => {
+          v.name = v.mName
+          v._checked = false
+        })
+        //
+        let list = []
+        res.cilentAuthorityList.map(v => {
+          v.name = v.moduleName
+          v._checked = false
+          if (v.id === 1) {
+            v._checked = true
+            v._disabled = true
+          }
+          list.push(v)
+        })
+        this.featureList = list
+        //
+        this.dataTree = this.tempDataTree = res.tabDataTreeJson
+        //
+        this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+      })
+    },
     _getAreaList() {
       getAreaList().then(res => {
         if (res.code === 20000) {
           this.areaQxList = res.data.list
-        } else {
-          this.$Message.error(res.message)
-        }
-      })
-    },
-    _getAreaCatalog() {
-      getAreaCatalog().then(res => {
-        this.dataTree = this.tempDataTree = res
-      })
-    },
-    _getDateTree(id) {
-      getDateTree(id).then(res => {
-        this.dataTree = this.tempDataTree = res
-      })
-    },
-    _getTopicDataTree() {
-      getTopicDataTree().then(res => {
-        this.topicDataTree = this.tempTopicDataTree = res
-      })
-    },
-    _getMapConfig() {
-      getMapConfig().then(res => {
-        if (res.code === 20000) {
-          this.mapConfigList = res.data.list
-          this.mapConfigList.map(v => {
-            v.name = v.mName
-            v._checked = false
-          })
-        } else {
-          this.$Message.error(res.message)
-        }
-      })
-    },
-    _getFeature(id) {
-      getFeature(id).then(res => {
-        if (res.code === 20000) {
-          let list = []
-          res.data.list.map(v => {
-            v.name = v.moduleName
-            v._checked = false
-            if (v.id === 1) {
-              v._checked = true
-              v._disabled = true
-            }
-            list.push(v)
-          })
-          this.featureList = list
         } else {
           this.$Message.error(res.message)
         }

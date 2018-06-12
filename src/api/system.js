@@ -4,6 +4,17 @@ import { url } from './config.js'
 
 axios.defaults.withCredentials = true
 
+export function getBuildConfig() {
+  const data = {
+    pageNo: 1,
+    pageSize: 50
+  }
+
+  return axios.post(`${url}/sys/msSystemChildController/index.do`, qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
 export function getAreaQx() {
   const data = {
     pageNo: 1,

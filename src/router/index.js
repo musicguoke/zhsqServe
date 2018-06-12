@@ -65,6 +65,8 @@ const Statistics = r =>
   require(["@/page/resource/resource-manage/resource-item/statistics"], r);
 const AuthorityConfig = r =>
   require(["@/page/resource/resource-manage/resource-item/authorityConfig"], r);
+const ZhEn = r =>
+  require(["@/page/resource/resource-manage/resource-item/zh-en"], r);
 
 //search
 const HotSeach = r =>
@@ -201,6 +203,12 @@ const router = new VueRouter({
               component: AuthorityConfig,
               name: "AuthorityConfig",
               meta: { title: "统计分析" }
+            },
+            {
+              path: "zh-en",
+              component: ZhEn,
+              name: "ZhEn",
+              meta: { title: "中英文对照" }
             },
             {
               path: "area-target",

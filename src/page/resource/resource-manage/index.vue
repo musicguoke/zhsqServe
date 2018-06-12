@@ -20,6 +20,7 @@
           <MenuItem name="STopic-type">专题类型</MenuItem>
           <MenuItem name="authority-config">功能模块</MenuItem>
           <MenuItem name="statistics">统计配置</MenuItem>
+          <MenuItem name="zh-en">中英文对照</MenuItem>
         </Menu>
         <div class="table">
            <router-view/>

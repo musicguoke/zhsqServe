@@ -2,7 +2,7 @@
   <Header>
     <div class="container">
       <div class="navbar-logo">
-        <router-link tag="span" to="/zhsq_admin" class="layout-logo"></router-link>
+        <router-link tag="span" to="/zhsq_admin/system-manage" class="layout-logo"></router-link>
         <span class="navbar-title">
           {{title}} —
           <small>管理平台</small>

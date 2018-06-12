@@ -60,10 +60,7 @@ export default {
     this.sysId = this.$route.query.id
   },
   mounted() {
-    this.$refs.authConfig._getTopicDataTree()
-    this.$refs.authConfig._getDateTree()
-    this.$refs.authConfig._getFeature()
-    this.$refs.authConfig._getMapConfig()
+    this.$refs.authConfig._getBuildConfig()
   },
   methods: {
     show() {
