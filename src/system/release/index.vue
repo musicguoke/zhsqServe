@@ -31,8 +31,8 @@
             <Input v-model="dpAddtime" disabled></Input>
           </FormItem>
           <FormItem v-if="!isAdd" label="图片地址">
-            <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath" style="width: 72%"></Input>
-            <Upload action="//jsonplaceholder.typicode.com/posts/">
+            <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
@@ -48,7 +48,9 @@
           <FormItem label="数据名称">
             <Input v-model="editItemForm.dpName" disabled></Input>
           </FormItem>
-          <tree-table :items='catalogData' :columns='catalogColumns' @on-row-click="rowClick" @on-selection-change="selectDataConfig">
+          <div :style="modalStyle">
+            <tree-table :items='catalogData' :columns='catalogColumns' @on-row-click="rowClick" @on-selection-change="selectDataConfig" />
+          </div>
           </tree-table>
         </Form>
       </Modal>
@@ -58,6 +60,7 @@
 </template>
 
 <script>
+import { url } from '@/api/config'
 import TreeTable from '@/components/my-tree/index'
 import vSearch from '@/components/search/index'
 import { getDateTree } from '@/api/system'
@@ -72,10 +75,15 @@ export default {
     return {
       data3: [],
       code: '',
+      uploadUrl: url,
       searchName: '',
       savePassLoading: false,
       editItemModal: false,
       editCatalogModal: false,
+      modalStyle: {
+        maxHeight: '400px',
+        overflow: 'auto'
+      },
       isAdd: false,
       dpAddtime: '',
       editItemForm: {
@@ -169,6 +177,9 @@ export default {
       } else {
         this._updateTopicData(this.editItemForm)
       }
+    },
+    handleSuccess(res) {
+      this.editItemForm.dpImagePath = res.data
     },
     // 保存数据目录
     saveCatalog() {
@@ -264,6 +275,7 @@ export default {
       updateTopicData(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`修改${res.message}`)
+          this.editItemModal = false
           this._getTopicDataTree()
         } else {
           this.$Message.error(`修改${res.message}`)

@@ -15,10 +15,7 @@
         </FormItem>
         <FormItem label="数据类型" prop="type">
           <Select v-model="editItemForm.type">
-            <Option value="1">目录</Option>
-            <Option value="2">矢量</Option>
-            <Option value="3">文本</Option>
-            <Option value="4">720</Option>
+            <Option v-for="(item, index) in dataTypeList" :value="item.typeid" :key="index">{{item.typename}}</Option>
           </Select>
         </FormItem>
         <FormItem label="数据更新时间" prop="time">
@@ -68,6 +65,7 @@ import {
   deleteMsTabDatainfo,
   importMsTabFile
 } from '@/api/catalog'
+import { getDataTypeList } from '@/api/data-type'
 
 export default {
   components: {
@@ -81,6 +79,7 @@ export default {
       editItemModal: false,
       importModal: false,
       uploadUrl: url,
+      dataTypeList: [],
       importFile: {
         file: '',
         type: '',
@@ -132,6 +131,7 @@ export default {
   },
   created() {
     this._getAreaCatalog()
+    this._getDataTypeList()
   },
   methods: {
     cancelModal() {
@@ -245,6 +245,15 @@ export default {
           this._getAreaCatalog()
         } else {
           this.$Message.error(`修改${res.message}`)
+        }
+      })
+    },
+    _getDataTypeList() {
+      getDataTypeList().then(res => {
+        if (res.code === 20000) {
+          this.dataTypeList = res.data.list
+        } else {
+          this.$Message.error()
         }
       })
     },
