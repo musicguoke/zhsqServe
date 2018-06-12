@@ -86,6 +86,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.resource720Modal = true
+            this.modalTitle = "新增720资源"
             for(let i in this.resource720Form){
                 this.resource720Form[i] = ''
             }
@@ -94,6 +95,7 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.resource720Modal = true
+            this.modalTitle = "修改720资源"
             for(let i in this.resource720Form){
                 this.resource720Form[i] = ''
                 if(params.row[i]){

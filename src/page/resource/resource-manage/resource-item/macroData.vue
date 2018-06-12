@@ -125,6 +125,7 @@ export default {
             for(let i in this.macroDataForm){
                 this.macroDataForm[i] = ''
             }
+             this.modalTitle = "新增宏观数据"
         },
         //打开编辑模态框
         openEditModal(params){
@@ -136,6 +137,7 @@ export default {
                     this.macroDataForm[i] =params.row[i] 
                 }
              }
+              this.modalTitle = "修改宏观数据"
         },
         //点击确定
         addOrUpdate(){
