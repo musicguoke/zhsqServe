@@ -36,7 +36,7 @@
   </div>
   </Card>
   <Modal v-model="parameterModal" :title=modalTitle @on-ok="addOrUpdate" ref="modal">
-        <Form :model="parameterForm" label-position="left" :label-width="100">
+        <Form :model="parameterForm"  :label-width="70">
             <FormItem label="变量名">
                 <Input v-model="parameterForm.metaKey" placeholder="请输入变量名..."></Input>
             </FormItem>

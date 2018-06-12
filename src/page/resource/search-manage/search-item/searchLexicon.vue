@@ -19,7 +19,7 @@
             <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
         </div>
         <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="lexiconForm" label-position="left" :label-width="100">
+            <Form :model="lexiconForm"  :label-width="80">
                 <FormItem label="数据编码">
                     <Input v-model="lexiconForm.dataId" placeholder="请输入..."></Input>
                 </FormItem>

@@ -23,7 +23,7 @@
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="imageSourceModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="imageSourceForm" label-position="left" :label-width="100">
+            <Form :model="imageSourceForm" :label-width="80">
                 <FormItem label="图片名称">
                     <Input v-model="imageSourceForm.fileName" ></Input>
                 </FormItem>

@@ -23,7 +23,7 @@
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
           </div>
         <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="areaTextForm" label-position="left" :label-width="100">
+            <Form :model="areaTextForm"  :label-width="100">
                 <FormItem label="行政区划编码">
                     <Input v-model="areaTextForm.areacode" ></Input>
                 </FormItem>

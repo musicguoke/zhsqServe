@@ -30,7 +30,7 @@
         </Card>
         <Modal v-model="contactsModal" :closable='false' :mask-closable="false" :title=modalTitle @on-ok="addOrUpdate">
             <h3 slot="header" style="color:#2D8CF0">联系人信息</h3>
-            <Form :model="contactsForm" label-position="left" :label-width="100">
+            <Form :model="contactsForm" :label-width="60">
                 <FormItem label="姓名">
                     <Input v-model="contactsForm.name" placeholder="请输入用户名..."></Input>
                 </FormItem>

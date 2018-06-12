@@ -25,7 +25,7 @@
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="mapConfigureForm" label-position="left" :label-width="100">
+            <Form :model="mapConfigureForm" :label-width="80">
                 <FormItem label="名称">
                     <Input v-model="mapConfigureForm.mName" ></Input>
                 </FormItem>

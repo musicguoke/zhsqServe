@@ -35,7 +35,7 @@
   </div>
   </Card>
   <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" >
-        <Form :model="managerForm" label-position="left" :label-width="100">
+        <Form :model="managerForm" :label-width="80">
             <FormItem label="用户名">
                 <Input v-model="managerForm.userName" placeholder="请输入用户名"></Input>
             </FormItem>

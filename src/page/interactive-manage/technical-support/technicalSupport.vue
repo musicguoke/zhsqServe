@@ -31,7 +31,7 @@
   </div>
   </Card>
   <Modal v-model="technicalModal" :title=modalTitle @on-ok="addOrUpdateUser">
-        <Form :model="technicalForm" label-position="left" :label-width="100">
+        <Form :model="technicalForm" :label-width="80">
             <FormItem label="参数名">
                 <Input v-model="technicalForm.paramname"  placeholder="请输入..."></Input>
             </FormItem>

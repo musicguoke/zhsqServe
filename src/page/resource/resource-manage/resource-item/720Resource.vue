@@ -19,7 +19,7 @@
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="resource720Modal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="resource720Form" label-position="left" :label-width="100">
+            <Form :model="resource720Form" :label-width="80">
                 <FormItem label="资源名称">
                     <Input v-model="resource720Form.name" ></Input>
                 </FormItem>

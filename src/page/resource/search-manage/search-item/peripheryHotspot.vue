@@ -19,7 +19,7 @@
             <Page :total="pageLength" @on-change="pageChange" show-total show-elevator></Page>
         </div>
         <Modal v-model="hotSpotModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="hotSpotForm" label-position="left" :label-width="100">
+            <Form :model="hotSpotForm" :label-width="80">
                 <FormItem label="名称">
                     <Input v-model="hotSpotForm.name" placeholder="请输入名称..."></Input>
                 </FormItem>

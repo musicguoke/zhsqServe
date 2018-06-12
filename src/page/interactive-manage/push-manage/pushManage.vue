@@ -39,14 +39,14 @@
   </div>
   </Card>
   <Modal v-model="pushModal" :title=modalTitle @on-ok="savePushMessage">
-        <Form :model="pushForm" label-position="left" :label-width="100">
+        <Form :model="pushForm" :label-width="80">
             <FormItem label="用户组">
                 <Select v-model="pushForm.pGroup">
                     <Option v-for="item in roleData" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="推送用户">
-                <Input v-model="pushForm.pRemark" placeholder="请选择推送用户..." style='width:310px'></Input>
+                <Input v-model="pushForm.pRemark" placeholder="请选择推送用户..." style='width:330px'></Input>
                 <Button type="primary" icon="person-add" @click="_getUserList">添加</Button>
             </FormItem>
             <FormItem label="推送类型">

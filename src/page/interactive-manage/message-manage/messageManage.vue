@@ -35,7 +35,7 @@
   </div>
   </Card>
   <Modal v-model="messageModal" :title=modalTitle ref="modal">
-        <Form :model="messageForm" label-position="left" :label-width="100">
+        <Form :model="messageForm"  :label-width="100">
             <FormItem label="电话">
                 <Input v-model="messageForm.phone" placeholder="请输入电话号码..." ></Input>
             </FormItem>
@@ -51,13 +51,13 @@
         </Form>
   </Modal>
   <Modal v-model="messageSendModal" :title=modalTitle @on-ok="_sendMessage"> 
-        <Form :model="messageSendForm" label-position="left" :label-width="100">
+        <Form :model="messageSendForm"  :label-width="80">
             <FormItem label="电话">
                 <Input v-model="messageSendForm.phoneStr" placeholder="多个电话用英文逗号隔开..." ></Input>
             </FormItem>
             <FormItem label="导入电话">
                 <div style="display:flex">
-                    <Input v-model="messageSendForm.Fileurl" placeholder="请输入电话号码..." style="width:310px;margin-right:5px;"></Input>
+                    <Input v-model="messageSendForm.Fileurl" placeholder="请输入电话号码..." style="width:330px;margin-right:5px;"></Input>
                     <Button type="primary" icon="person-add" @click="importModal=true">导入</Button>
                 </div>
             </FormItem>
@@ -67,7 +67,7 @@
         </Form>
   </Modal>
   <Modal v-model="importModal" title='导入电话' @on-ok="saveImport">
-        <Form :model="importForm" label-position="left" :label-width="100">
+        <Form :model="importForm"  :label-width="100">
             <FormItem label="选择文件">
               <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials  :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
                 <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>

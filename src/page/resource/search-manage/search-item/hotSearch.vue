@@ -19,7 +19,7 @@
             <Page :total="pageLength" @on-change="pageChange" show-total show-elevator></Page>
         </div>
         <Modal v-model="hotSearchModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="hotSearchForm" label-position="left" :label-width="100">
+            <Form :model="hotSearchForm" :label-width="80">
                 <FormItem label="热搜名">
                     <Input v-model="hotSearchForm.dataname" placeholder="请输入热搜名..."></Input>
                 </FormItem>

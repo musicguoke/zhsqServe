@@ -21,7 +21,7 @@
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="areaTargetModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="areaTargetForm" label-position="left" :label-width="100">
+            <Form :model="areaTargetForm"  :label-width="80">
                 <FormItem label="行政区划">
                     <Select v-model="areaTargetForm.areacode">
                         <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>

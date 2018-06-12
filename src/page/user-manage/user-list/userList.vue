@@ -26,8 +26,8 @@
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
-                            <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" class="marginRight" title="设备信息">设备</Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" title="编辑">编辑</Button>
+                            <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
+                            <Button type="info" @click="userEditOpen(scope)" size="small"  title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
                     </el-table-column>
@@ -40,7 +40,7 @@
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
             <Tabs active-key="key1" v-show="!isProduct">
                 <Tab-pane label="基本信息" key="key1">
-                    <Form :model="userForm" label-position="left" :label-width="100">
+                    <Form :model="userForm" :label-width="80">
                         <FormItem label="用户名">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                         </FormItem>
@@ -83,7 +83,7 @@
                         </span>
                         <Button type="info" icon="plus" title="新增系统角色选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
                     </div>
-                    <Form label-position="left">
+                    <Form >
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
                             <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
                                 <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -96,7 +96,7 @@
                     </Form>
                 </Tab-pane>
             </Tabs>
-            <Form :model="userForm" label-position="left" :label-width="100" v-show="isProduct">
+            <Form :model="userForm"  :label-width="80" v-show="isProduct">
                 <FormItem label="用户名">
                     <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                 </FormItem>
@@ -132,7 +132,7 @@
                 </FormItem>
             </Form>
         </Modal>
-        <Modal v-model="equipmentModal" :title=modalTitle >
+        <Modal v-model="equipmentModal" :title=modalTitle>
             <el-table :data="equipmentData" border style="width: 100%">
                 <el-table-column prop="arOs" label="设备类型" width="100">
                 </el-table-column>
@@ -146,7 +146,7 @@
             </el-table>
         </Modal>
         <Modal v-model="equipmentEditModal" :title=modalTitle @on-ok="updateEquipment">
-            <Form :model="equipmentForm" label-position="left" :label-width="100">
+            <Form :model="equipmentForm" :label-width="80">
                 <FormItem label="设备类型">
                     <Select v-model="equipmentForm.arOs" placeholder="请选择...">
                         <Option v-for="item in equipmentType" :value="item.value" :key="item.key">{{ item.label }}</Option>
