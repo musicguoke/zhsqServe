@@ -19,15 +19,15 @@
         </Breadcrumb>
         <Row :gutter="10" class="margin-top-10">
           <Col :md="24" :lg="6" :style="{marginBottom: '10px'}" v-for="(item, index) in sysList" :key="index">
-            <Card>
-              <p slot="title" class="card-title">
-                <Icon type="android-map"></Icon>
-                {{item.sysName}}
-              </p>
-              <div class="data-source-row">
-                <Tag type="border" color="blue" @click.native="linkTo(item)">点击进入</Tag>
-              </div>
-            </Card>
+          <Card>
+            <p slot="title" class="card-title">
+              <Icon type="android-map"></Icon>
+              {{item.sysName}}
+            </p>
+            <div class="data-source-row">
+              <Tag type="border" color="blue" @click.native="linkTo(item)">点击进入</Tag>
+            </div>
+          </Card>
           </Col>
         </Row>
       </Content>
@@ -49,15 +49,20 @@ export default {
   },
   methods: {
     linkTo(item) {
-      if(item.id) {
-        this._enterSystem(item.id)
-        this.$router.replace('/zhsq_admin')
+      if (item.id) {
+        this._enterSystem(item)
       }
     },
-    _enterSystem(id) {
-      enterSystem(id).then(res => {
-        if(res.code) {
-          this.$router.replace('/zhsq_admin')
+    _enterSystem(item) {
+      enterSystem(item.id).then(res => {
+        if (res.code) {
+          this.$router.push({
+            path: '/system',
+            query: {
+              id: item.id,
+              systemname: item.sysName
+            }
+          })
         }
       })
     }

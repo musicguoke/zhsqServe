@@ -78,8 +78,8 @@ export default {
               if (res.data && res.data.userInfo) {
                 localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
               }
-              if (res.data && res.data.sysUserChildList.length > 0 && res.data.role == 3) {
-                localStorage.setItem('sysUserList', JSON.stringify(res.data.sysUserChildList))
+              if (res.data && res.data.sysUserChildList.length > 0 && res.data.userInfo.role == 3) {
+                localStorage.setItem('sysUserList', JSON.stringify(res.data.userInfo.list))
                 this.$router.replace('/system-list')
               } else {
                 // 单个系统自动选择
