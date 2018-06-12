@@ -21,10 +21,10 @@
             </el-table-column>
             <el-table-column prop="pContent" label="内容">
             </el-table-column>
-            <el-table-column prop="pFilename" label="文件名">
+            <!-- <el-table-column prop="pFilename" label="文件名">
             </el-table-column>
             <el-table-column prop="pFileurl" label="文件地址">
-            </el-table-column>
+            </el-table-column> -->
              <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
                     <!-- <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button> -->

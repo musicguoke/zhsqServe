@@ -34,7 +34,7 @@
       </div>
   </div>
   </Card>
-  <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate">
+  <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" >
         <Form :model="managerForm" label-position="left" :label-width="100">
             <FormItem label="用户名">
                 <Input v-model="managerForm.userName" placeholder="请输入用户名"></Input>
@@ -46,17 +46,17 @@
                 <Input v-model="managerForm.password" placeholder="请输入密码" type="password"></Input>
             </FormItem>
             <FormItem label="管理员类型">
-                <Select v-model="managerForm.role">
+                <Select v-model="managerForm.role" @on-change="managerChange">
                     <Option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="子系统" v-show="managerForm.role == 3">
                 <div style="display:flex">
-                    <Select v-model="sysId" multiple placeholder="请选择系统类型" style="width:50%">
-                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Select v-model="sysType" multiple  placeholder="请选择系统类型" style="width:50%" @on-change="typeChange">
+                        <Option v-for="item in systemTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <Select v-model="sysId" multiple  placeholder="请选择系统" style="width:50%">
-                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        <Option v-for="item in systemFilterList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </div>
             </FormItem>
@@ -99,8 +99,20 @@ export default {
                 id:''
             },
             sysId:[],
+            sysType:[],
             userData:[],
             systemList:[],
+            systemFilterList:[],
+            systemTypeList:[{
+                value:1,
+                label:'综合市情'
+            },{
+                value:2,
+                label:'综合区情'
+            },{
+                value:3,
+                label:'规划定位'
+            }],
             isAdd:true,
             managerTypeList: [
                 {
@@ -128,7 +140,8 @@ export default {
             for(let i in data){
                 this.systemList.push({
                     value:data[i].id,
-                    label:data[i].sysName
+                    label:data[i].sysName,
+                    type:data[i].type
                 })
             }
         })
@@ -158,6 +171,7 @@ export default {
             this.managerModal = true
             this.modalTitle = '新增管理员'
             this.sysId = []
+            this.sysType = []
             for(var i in this.managerForm){
                this.managerForm[i] = ''
             }
@@ -167,6 +181,7 @@ export default {
             this.managerModal = true;
             this.modalTitle = '修改管理员';
             this.sysId = []
+            this.sysType = []
             for(var i in this.managerForm){
                if(params.row[i]){
                    this.managerForm[i] = params.row[i] 
@@ -175,9 +190,29 @@ export default {
             if(params.row.list.length > 0){
                 params.row.list.map(v=>{
                     this.sysId.push(v.id)
+                    this.sysType.push(v.type)
                 })
             }
             this.managerForm.password = ""
+        },
+        managerChange(){
+            this.sysId = []
+            this.sysType = []
+        },
+        typeChange(){
+            let array = []
+            if(this.sysType.length >0){
+                this.sysType.map(a=>{
+                    this.systemList.map(b=>{
+                        if(a == b.type){
+                            array.push(b)
+                        }
+                    })
+                })
+                this.systemFilterList = array
+            }else{
+                this.systemFilterList = this.systemList
+            }
         },
         addOrUpdate(){
             let data = {

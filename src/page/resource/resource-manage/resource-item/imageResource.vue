@@ -101,6 +101,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.imageSourceModal = true
+            this.modalTitle = "新增图片资源"
             for(let i in this.imageSourceForm){
                 this.imageSourceForm[i] = ''
             }
@@ -109,6 +110,7 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.imageSourceModal = true
+            this.modalTitle = "修改图片资源"
             for(let i in this.imageSourceForm){
                 this.imageSourceForm[i] = ''
                 if(params.row[i]){

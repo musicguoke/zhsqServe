@@ -84,7 +84,7 @@ export default {
         contactsAddOpen() {
             this.isAdd = true
             this.contactsModal = true
-            this.modalTitle = '新增管联系人'
+            this.modalTitle = '新增联系人'
             this.sysId = []
             for (var i in this.contactsForm) {
                 this.contactsForm[i] = ''
@@ -93,7 +93,7 @@ export default {
         contactsEditOpen(params) {
             this.isAdd = false
             this.contactsModal = true;
-            this.contactsTitle = '修改管理员';
+            this.modalTitle = '修改联系人';
             this.sysId = []
             for (var i in this.contactsForm) {
                 if (params.row[i]) {
