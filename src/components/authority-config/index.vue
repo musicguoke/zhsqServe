@@ -92,11 +92,10 @@
       <div style="width: 500px" v-show="current == 1 && !sysOrRole">
         <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
-      <div style="width: 400px" v-show="current == 2">
-        <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig">
-        </Table>
+      <div style="width: 400px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 2">
+        <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
       </div>
-      <div v-show="current == 3" class="table-tree-box" :style="{maxHeight: tableHeight}">
+      <div v-show="current == 3" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
       </div>
       <div style="width: 400px" v-show="current == 4">
@@ -168,7 +167,7 @@ export default {
   data() {
     return {
       contentHeight: window.innerHeight - 136 + 'px',
-      tableHeight: window.innerHeight - 298 + 'px',
+      tableHeight: window.innerHeight - 298,
       uploadUrl: url,
       appBgArray: [1],
       code: '', // 目录树code
