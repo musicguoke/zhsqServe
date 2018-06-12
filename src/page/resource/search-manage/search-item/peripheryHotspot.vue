@@ -117,6 +117,7 @@ data() {
       for(let i in this.hotSpotForm){
         this.hotSpotForm[i] = '';
      }
+     this.modalTitle = '新增周边热点'
     },
     //打开编辑模态框
     openEditModal(params){
@@ -128,6 +129,7 @@ data() {
             this.hotSpotForm[i] =params.row[i] 
           }
         }
+        this.modalTitle = '修改周边热点'
     },
     //点击确定
     addOrUpdate(){

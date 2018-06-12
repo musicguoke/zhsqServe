@@ -112,6 +112,7 @@ export default {
             for(let i in this.areaTargetForm){
                 this.areaTargetForm[i] = ''
             }
+            this.modalTitle = '新增区域指标'
         },
         //打开编辑模态框
         openEditModal(params){
@@ -123,6 +124,7 @@ export default {
                     this.areaTargetForm[i] =params.row[i] 
                 }
              }
+             this.modalTitle = '修改区域指标'
         },
         //点击确定
         addOrUpdate(){

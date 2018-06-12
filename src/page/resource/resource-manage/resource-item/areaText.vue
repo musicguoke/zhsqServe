@@ -130,17 +130,19 @@ export default {
             for(let i in this.areaTextForm){
                 this.areaTextForm[i] = ''
             }
+            this.modalTitle = '新增区域文本'
         },
         //打开编辑模态框
         openEditModal(params){
             this.isAdd = false
             this.areaTextModal = true
             for(let i in this.areaTextForm){
-            this.areaTextForm[i] = ''
+                this.areaTextForm[i] = ''
                 if(params.row[i]){
                     this.areaTextForm[i] =params.row[i] 
                 }
             } 
+            this.modalTitle = '修改区域文本'
         },
         //打开导入模态框
         openImportModal(){

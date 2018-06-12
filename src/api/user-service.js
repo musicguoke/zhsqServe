@@ -46,7 +46,7 @@ export function updateEquipment(data) {
         return Promise.resolve(res.data)
     })
 }
-//获取用户角色
+//获取用户角色列表
 export function getRolesList(sysId) {
     const data = {
         pageNo: 1,
@@ -59,6 +59,15 @@ export function getRolesList(sysId) {
     return axios.post(
         `${url}/sys/msMembersGroup/list.do`,
         qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+//根据用户id获取对应的系统和角色
+export function getUserSysAndRole(id) {
+    const data = {
+        arId: id
+    }
+    return axios.post(`${url}/sys/msSystemMembers/list.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })
 }

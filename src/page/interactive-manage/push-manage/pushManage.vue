@@ -192,6 +192,7 @@ export default {
             }
             this.pushForm.pType = '0'
             this.searchUser(1)
+            this.modalTitle = '新增推送'
         },
         pushEditOpen(params){
              this.pushModal = true;

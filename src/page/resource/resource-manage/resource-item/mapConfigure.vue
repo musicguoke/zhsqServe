@@ -111,6 +111,7 @@ export default {
             if(this.$refs.upload._data.fileList){
                 this.$refs.upload._data.fileList = []
             }
+            this.modalTitle = '新增地图配置'
         },
         //打开编辑模态框
         openEditModal(params){
@@ -124,7 +125,8 @@ export default {
             } 
             if(this.$refs.upload._data.fileList){
                 this.$refs.upload._data.fileList = []
-            }  
+            }
+            this.modalTitle = '修改地图配置'  
         },
         //点击确定
         addOrUpdate(){

@@ -150,6 +150,7 @@ export default {
       this._getMessageList(page)
     },
     messageAddOpen() {
+      this.modalTitle = '发送短信'
       for (var i in this.messageForm) {
         this.messageForm[i] = ""
       }
