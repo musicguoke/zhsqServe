@@ -26,8 +26,8 @@
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
-                            <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" class="marginRight" title="设备信息">设备</Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small" class="marginRight" title="编辑">编辑</Button>
+                            <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
+                            <Button type="info" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
                     </el-table-column>

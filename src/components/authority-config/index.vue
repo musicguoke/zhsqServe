@@ -55,34 +55,34 @@
           </Select>
         </FormItem>
       </Form>
-      <div style="width: 500px" v-show="current == 1 && sysOrRole">
+      <div style="width: 570px" v-show="current == 1 && sysOrRole">
         <Form :model="uploadForm" :label-width="100">
           <FormItem label="ios_iphone">
-            <Input v-model="uploadForm.ios_iphone" placeholder="上传后的地址" style="width: 57%"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess1">
+            <Input v-model="uploadForm.ios_iphone" placeholder="上传后的地址" style="width: 75%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess1">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
           <FormItem label="ios_ipad">
-            <Input v-model="uploadForm.ios_ipad" placeholder="上传后的地址" style="width: 57%"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess2">
+            <Input v-model="uploadForm.ios_ipad" placeholder="上传后的地址" style="width: 75%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess2">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
           <FormItem label="android_phone">
-            <Input v-model="uploadForm.android_phone" placeholder="上传后的地址" style="width: 57%"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess3">
+            <Input v-model="uploadForm.android_phone" placeholder="上传后的地址" style="width: 75%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess3">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
           <FormItem label="android_pad">
-            <Input v-model="uploadForm.android_pad" placeholder="上传后的地址" style="width: 57%"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess4">
+            <Input v-model="uploadForm.android_pad" placeholder="上传后的地址" style="width: 75%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess4">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
           <FormItem label="pc">
-            <Input v-model="uploadForm.pc" placeholder="上传后的地址" style="width: 57%"></Input>
+            <Input v-model="uploadForm.pc" placeholder="上传后的地址" style="width: 75%"></Input>
             <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess5">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>

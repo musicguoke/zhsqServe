@@ -60,7 +60,12 @@
         </FormItem>
         <FormItem label="选择文件">
           <Input v-model="versionInfo.vUrl" placeholder="文件地址"></Input>
-          <Upload :action="`${uploadUrl}/sys/msVersion/uploadVersion.do`" with-credentials :on-success="handleSuccess">
+          <Upload 
+            :action="`${uploadUrl}/sys/msVersion/uploadVersion.do`" 
+            with-credentials
+            accept=".apk"
+            :on-success="handleSuccess"
+          >
             <Button type="ghost" icon="ios-cloud-upload-outline">请选择文件</Button>
           </Upload>
           <Alert show-icon>
@@ -122,6 +127,16 @@ export default {
           })
           this.list = res.data.list
           this.listLength = res.data.total
+        } else {
+          this.$Message.error('好像出什么问题了！')
+        }
+      })
+    },
+    _addVersion(data) {
+      addVersion(data).then(res => {
+        if (res.code === 20000) {
+          this._getVersionList()
+          this.$Message.success(res.message)
         } else {
           this.$Message.error('好像出什么问题了！')
         }
@@ -201,7 +216,11 @@ export default {
         onCancel: () => { }
       })
     },
-    save() { },
+    save() {
+      this.versionInfo.sysIdStr = this.$route.query.id
+      this.versionInfo.bundle = 111
+      this._addVersion(this.versionInfo)
+    },
     cancel() {
       this.versionInfo = {
         vTitle: '',
