@@ -217,8 +217,6 @@ export default {
       })
     },
     save() {
-      this.versionInfo.sysIdStr = this.$route.query.id
-      this.versionInfo.bundle = 111
       this._addVersion(this.versionInfo)
     },
     cancel() {

@@ -74,7 +74,7 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           login(this.formInline).then(res => {
-            if (res.code) {
+            if (res.code === 20000) {
               if (res.data && res.data.userInfo) {
                 localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
               }
@@ -85,6 +85,8 @@ export default {
                 // 单个系统自动选择
                 this.$router.replace('/zhsq_admin')
               }
+            } else {
+              this.$Message.error(res.message)
             }
           })
         } else {

@@ -10,7 +10,7 @@
       </div>
       <div class="layout-nav">
         <div class="user-info">
-          <span class="user-img"></span>
+          <Avatar style="background-color: #87d068" icon="person" />
           <Dropdown trigger="hover" @on-click="userClick" style="margin: 0 10px">
             <a href="javascript:void(0)" style="color: #fff;">
               {{userInfo.realName}}
@@ -21,9 +21,13 @@
               <DropdownItem name="logout">安全退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Badge dot>
-            <Icon type="ios-bell-outline" size="26"></Icon>
-          </Badge>
+          <div @click="showMessage" class="message-con">
+            <Tooltip content="Here is the prompt text">
+              <Badge dot>
+                <Icon type="ios-bell-outline" size="26"></Icon>
+              </Badge>
+            </Tooltip>
+          </div>
         </div>
       </div>
     </div>
@@ -50,6 +54,11 @@ export default {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
   },
   methods: {
+    showMessage() {
+      this.$router.push({
+        name: 'Message'
+      });
+    },
     userClick(name) {
       if (name === 'logout') {
         this.$Modal.confirm({
@@ -60,13 +69,13 @@ export default {
           }
         })
       }
-      if(name === 'personal-center') {
+      if (name === 'personal-center') {
         this.$router.push(`/zhsq_admin/${name}`)
       }
     },
     _logout() {
       logout(this.formInline).then(res => {
-        if(res.code === 20000) {
+        if (res.code === 20000) {
           this.$router.replace('/')
         } else {
           this.$Message.error(res.message)
@@ -85,18 +94,14 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+.message-con {
+  cursor: pointer;
+}
 .user-info {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   color: #fff;
-  .user-img {
-    display: block;
-    width: 39px;
-    height: 39px;
-    background-color: #fff;
-    border-radius: 100%;
-  }
   .user-name {
     font-weight: bold;
     margin-left: 10px;
