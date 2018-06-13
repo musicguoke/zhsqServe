@@ -78,9 +78,19 @@ export default {
               if (res.data && res.data.userInfo) {
                 localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
               }
-              if (res.data && res.data.sysUserChildList.length > 0 && res.data.userInfo.role == 3) {
-                localStorage.setItem('sysUserList', JSON.stringify(res.data.userInfo.list))
-                this.$router.replace('/system-list')
+              if (res.data && res.data.sysUserChildList && res.data.userInfo.role == 3) {
+                if (res.data.sysUserChildList.length > 1) {
+                  localStorage.setItem('sysUserList', JSON.stringify(res.data.userInfo.list))
+                  this.$router.replace('/system-list')
+                } else if (res.data.sysUserChildList.length === 1) {
+                  this.$router.push({
+                    path: '/system',
+                    query: {
+                      id: res.data.userInfo.list[0].id,
+                      systemname: res.data.userInfo.list[0].sysName
+                    }
+                  })
+                }
               } else {
                 // 单个系统自动选择
                 this.$router.replace('/zhsq_admin')
