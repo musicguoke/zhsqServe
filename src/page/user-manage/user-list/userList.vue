@@ -37,41 +37,39 @@
                 <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator></Page>
             </div>
         </Card>
-        <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false">
+        <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
             <Tabs active-key="key1" v-show="!isProduct">
                 <Tab-pane label="基本信息" key="key1">
-                    <Form :model="userForm" :label-width="80">
-                        <FormItem label="用户名">
+                    <Form :model="userForm" :label-width="80" :rules="userInfoRule" ref="userInfoRule">
+                        <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                         </FormItem>
-                        <FormItem label="真实姓名">
+                        <FormItem label="真实姓名" prop="arTruename">
                             <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."></Input>
                         </FormItem>
-                        <FormItem label="密码">
+                        <FormItem label="密码" prop="arPassword" v-show="isAdd">
                             <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                         </FormItem>
-                        <FormItem label="部门">
+                        <FormItem label="密码" v-show="!isAdd">
+                            <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
+                        </FormItem>
+                        <FormItem label="部门" prop="arBranch">
                             <Select v-model="userForm.arBranch" ref="department1">
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
-                        <FormItem label="区县">
+                        <FormItem label="区县" prop="arAreacode">
                             <Select v-model="userForm.arAreacode">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="角色" v-show="isProduct">
-                            <Select v-model="userForm.grId">
-                                <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem label="手机号">
+                        <FormItem label="手机号" prop="arMobile">
                             <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
                         </FormItem>
                         <FormItem label="座机">
                             <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
                         </FormItem>
-                        <FormItem label="邮箱">
+                        <FormItem label="邮箱" prop="arEmail">
                             <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
                         </FormItem>
                     </Form>
@@ -83,7 +81,7 @@
                         </span>
                         <Button type="info" icon="plus" title="新增系统角色选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
                     </div>
-                    <Form >
+                    <Form :rules="userSysRule">
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
                             <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
                                 <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -258,7 +256,35 @@ export default {
             ],
             sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
-            nowSystemLength: 1
+            nowSystemLength: 1,
+            userInfoRule: {
+                arLoginname: [
+                    { required: true, message: '登录名不能为空', trigger: 'blur' }
+                ],
+                arTruename: [
+                    { required: true, message: '真实姓名不能为空', trigger: 'blur' }
+                ],
+                arMobile: [
+                    { required: true, message: '用户手机不能为空', trigger: 'blur' }
+                ],
+                arEmail: [
+                    { required: true, message: '用户邮箱不能为空', trigger: 'blur' },
+                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+                ],
+                arBranch: [
+                    { required: true, message: '请选择部门', trigger: 'blur' }
+                ],
+                arAreacode: [
+                    { required: true, message: '请选择区县', trigger: 'change' }
+                ],
+                arPassword:[
+                    { required: true, message: '用户密码不能为空', trigger: 'blur' },
+                    { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
+                ]
+            },
+            userSysRule:{
+
+            }
         }
     },
     created() {
@@ -286,6 +312,7 @@ export default {
     },
     methods: {
         userAddOpen() {
+            this.$refs.userInfoRule.resetFields()
             this.userModal = true;
             this.isAdd = true;
             this.modalTitle = '新增用户';
@@ -296,6 +323,7 @@ export default {
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
         },
         userEditOpen(params) {
+            this.$refs.userInfoRule.resetFields()
             this.userModal = true;
             this.isAdd = false;
             this.modalTitle = '修改用户';
@@ -477,12 +505,30 @@ export default {
         },
         //点击确定
         addOrUpdateUser() {
+            let sysNum = 0
+            this.$refs.userInfoRule.validate((valid) => {
+                if(!valid){
+                    this.$refs.userModal.visible = true;
+                    this.userModal = true;
+                    return
+                }
+            })
+            this.sysAndGroupList.map(v=>{
+                if(v.sysId){
+                    sysNum ++
+                }
+            })
+            if(sysNum == 0){
+                this.$Message.error('请至少选择一个系统角色')
+            }
             if (!this.isProduct) {
                 this.userForm.sysId = ''
                 this.userForm.grId = ''
                 this.sysAndGroupList.map(v => {
-                    this.userForm.sysId += v.sysId + ','
-                    this.userForm.grId += v.grId + ','
+                    if(v.sysId){
+                        this.userForm.sysId += v.sysId + ','
+                        this.userForm.grId += v.grId + ','
+                    }
                 })
                 this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
                 this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
@@ -557,6 +603,7 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
+            console.log(this.$refs.department1)
             this.$refs.department1.values = [{ value: data.id, label: data.name }]
             this.$refs.department2.values = [{ value: data.id, label: data.name }]
             this.userForm.arBranch = data.id
@@ -589,6 +636,7 @@ export default {
             if (list.length > setList.length) {
                 this.$Message.warning('同一个系统下只能选择一个角色')
                 this.$refs['item' + index][0].values = []
+                this.$refs['group' + index][0].values = []
                 this.sysAndGroupList[index] = {
                     sysId: '',
                     grId: ''
