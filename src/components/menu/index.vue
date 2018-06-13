@@ -48,7 +48,7 @@
       <MenuItem name="user-statistics">用户访问</MenuItem>
       <MenuItem name="data-statistics">数据访问</MenuItem>
       <MenuItem name="search-statistics">搜索访问</MenuItem>
-      <MenuItem name="6-3">用户轨迹</MenuItem>
+      <!-- <MenuItem name="6-3">用户轨迹</MenuItem> -->
     </Submenu>
     <Submenu name="7">
       <template slot="title">

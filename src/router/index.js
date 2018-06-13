@@ -1,6 +1,7 @@
 const Index = r => require(["@/page/index"], r);
 const Login = r => require(["@/page/login/index"], r);
 const Vindex = r => require(["@/page/index/index"], r);
+const Message = r => require(["@/page/message/index"], r);
 const DepartmentList = r =>
   require(["@/page/user-manage/department-list/departmentList"], r);
 const UserList = r => require(["@/page/user-manage/user-list/userList"], r);
@@ -112,6 +113,12 @@ const router = new VueRouter({
           name: "Personal",
           component: Personal,
           meta: { title: "个人中心" }
+        },
+        {
+          path: "message",
+          name: "Message",
+          component: Message,
+          meta: { title: "消息中心" }
         },
         {
           path: "system-manage",
