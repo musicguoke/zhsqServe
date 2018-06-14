@@ -1,30 +1,46 @@
 <template>
-  <div style="margin-top: 17px">
+  <Content>
+    <Breadcrumb :style="{padding: '17px 0'}">
+      <BreadcrumbItem>首页</BreadcrumbItem>
+      <BreadcrumbItem>个人中心</BreadcrumbItem>
+    </Breadcrumb>
     <Card>
       <p slot="title">
         <Icon type="person"></Icon>
         个人信息
       </p>
       <div>
-        <Form ref="userForm" :model="userForm" :label-width="100" label-position="right" :rules="inforValidate">
-          <FormItem label="用户姓名：" prop="name">
+        <Form 
+          ref="userForm" 
+          :model="userForm" 
+          :label-width="100" 
+          label-position="right" 
+          :rules="inforValidate"
+        >
+          <FormItem label="用户姓名：" prop="realName">
             <div style="display:inline-block;width:300px;">
-              <Input v-model="userForm.name"></Input>
+              <Input v-model="userForm.realName"></Input>
             </div>
           </FormItem>
           <FormItem label="登录名：">
-            <span>{{userForm.username}}</span>
+            <div style="display:inline-block;width:300px;">
+              <Input v-model="userForm.userName" readonly></Input>
+            </div>
           </FormItem>
-          <FormItem label="用户手机：" prop="cellphone">
-            <div style="display:inline-block;width:204px;">
-              <Input v-model="userForm.cellphone" @on-keydown="hasChangePhone"></Input>
+          <FormItem label="用户手机：" prop="tel">
+            <div style="display:inline-block;width:300px;">
+              <Input v-model="userForm.tel" @on-keydown="hasChangePhone"></Input>
             </div>
           </FormItem>
           <FormItem label="email：">
-            <span>{{ userForm.email?userForm.email:'暂无'}}</span>
+            <div style="display:inline-block;width:300px;">
+              <Input v-model="userForm.email" @on-keydown="hasChangeEmail"></Input>
+            </div>
           </FormItem>
-          <FormItem label="登录密码：">
-            <Button type="primary" size="small" @click="showEditPassword">修改密码</Button>
+          <FormItem label="新密码" prop="password">
+            <div style="display:inline-block;width:300px;">
+              <Input type="password" v-model="userForm.password" placeholder="请输入新密码，至少6位字符"></Input>
+            </div>
           </FormItem>
           <div>
             <Button type="text" style="width: 100px;" @click="cancelEditUserInfor">取消</Button>
@@ -33,92 +49,85 @@
         </Form>
       </div>
     </Card>
-    <Modal v-model="editPasswordModal" :closable='false' :mask-closable=false :width="500">
-      <h3 slot="header" style="color:#2D8CF0">修改密码</h3>
-      <Form ref="editPasswordForm" :model="editPasswordForm" :label-width="100" label-position="right" :rules="passwordValidate">
-        <FormItem label="原密码" prop="oldPass" :error="oldPassError">
-          <Input v-model="editPasswordForm.oldPass" placeholder="请输入现在使用的密码"></Input>
-        </FormItem>
-        <FormItem label="新密码" prop="newPass">
-          <Input v-model="editPasswordForm.newPass" placeholder="请输入新密码，至少6位字符"></Input>
-        </FormItem>
-        <FormItem label="确认新密码" prop="rePass">
-          <Input v-model="editPasswordForm.rePass" placeholder="请再次输入新密码"></Input>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="text" @click="cancelEditPass">取消</Button>
-        <Button type="primary" :loading="savePassLoading" @click="saveEditPass">保存</Button>
-      </div>
-    </Modal>
-  </div>
+  </Content>
 </template>
 
 <script>
+import { updateManager, getManagerById } from '@/api/manager-service'
+import MD5 from 'crypto-js/md5'
+
 export default {
   name: 'ownspace_index',
   data() {
     const validePhone = (rule, value, callback) => {
-      var re = /^1[0-9]{10}$/;
+      var re = /^1[0-9]{10}$/
       if (!re.test(value)) {
-        callback(new Error('请输入正确格式的手机号'));
+        callback(new Error('请输入正确格式的手机号'))
       } else {
-        callback();
+        callback()
       }
-    };
-    const valideRePassword = (rule, value, callback) => {
-      if (value !== this.editPasswordForm.newPass) {
-        callback(new Error('两次输入密码不一致'));
+    }
+    const valideEmail = (rule, value, callback) => {
+      var re = /^1[0-9]{10}$/
+      if (!re.test(value)) {
+        callback(new Error('请输入正确格式的email'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       userForm: {
+        id: 1,
         name: '',
-        cellphone: '',
-        username: '',
-        email: ''
+        password: '',
+        realName: '',
+        tel: '',
+        userName: '',
+        email: '',
+        role: '',
+        sysIdStr: []
       },
-      phoneHasChanged: false, // 是否编辑了手机
+      password: '',
+      userInfo: '',
       save_loading: false,
-      editPasswordModal: false, // 修改密码模态框显示
-      savePassLoading: false,
-      oldPassError: '',
       inforValidate: {
-        name: [
+        realName: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        cellphone: [
+        tel: [
           { required: true, message: '请输入手机号码' },
           { validator: validePhone }
-        ]
-      },
-      editPasswordForm: {
-        oldPass: '',
-        newPass: '',
-        rePass: ''
-      },
-      passwordValidate: {
-        oldPass: [
-          { required: true, message: '请输入原密码', trigger: 'blur' }
         ],
-        newPass: [
+        password: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
           { min: 6, message: '请至少输入6个字符', trigger: 'blur' },
           { max: 32, message: '最多输入32个字符', trigger: 'blur' }
-        ],
-        rePass: [
-          { required: true, message: '请再次输入新密码', trigger: 'blur' },
-          { validator: valideRePassword, trigger: 'blur' }
         ]
       },
       initPhone: ''
     }
   },
   methods: {
-    showEditPassword() {
-      this.editPasswordModal = true;
+    _updateManager(data) {
+      updateManager(data).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(`保存${res.message}`)
+        } else {
+          this.$Message.error(`保存${res.message}`)
+        }
+      })
+    },
+    _getManagerById(id) {
+      getManagerById(id).then(res => {
+        if (res.code === 20000) {
+          this.sysIdStr = []
+          res.data.list.map(v => this.sysIdStr.push(v.sysId))
+          this.userForm = res.data
+          this.password = res.data.password
+        } else {
+          this.$Message.error(`${res.message}`)
+        }
+      })
     },
     cancelEditUserInfor() {
       this.$router.go(-1)
@@ -126,48 +135,31 @@ export default {
     saveEdit() {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
-          this.saveInfoAjax()
+          let data = {
+            id: this.userForm.id,
+            password: this.password,
+            realName: this.userForm.realName,
+            tel: this.userForm.tel,
+            userName: this.userForm.userName,
+            email: this.userForm.email,
+            role: this.userForm.role,
+          }
+          data.sysIdStr = this.userForm.sysIdStr ? this.userForm.sysIdStr.toString() : ''
+          if(this.password !== this.userForm.password) {
+            data.password = MD5(this.userForm.password).toString()
+          }
+          this._updateManager(data)
         }
-      });
-    },
-    cancelEditPass() {
-      this.editPasswordModal = false;
-    },
-    saveEditPass() {
-      this.$refs['editPasswordForm'].validate((valid) => {
-        if (valid) {
-          this.savePassLoading = true;
-          // you can write ajax request here
-        }
-      });
-    },
-    init() {
-      let userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
-      this.userForm.name = userInfo.realName;
-      this.userForm.username = userInfo.userName;
-      this.userForm.cellphone = userInfo.tel;
-      this.initPhone = userInfo.tel;
-      this.userForm.email = userInfo.email;
+      })
     },
     cancelInputCodeBox() {
-      this.inputCodeVisible = false;
-      this.userForm.cellphone = this.initPhone;
-    },
-    hasChangePhone() {
-      this.phoneHasChanged = true;
-      this.hasGetIdentifyCode = false;
-      this.identifyCodeRight = false;
-    },
-    saveInfoAjax() {
-      this.save_loading = true;
-      setTimeout(() => {
-        this.$Message.success('保存成功');
-        this.save_loading = false;
-      }, 1000);
+      this.inputCodeVisible = false
+      this.userForm.cellphone = this.initPhone
     }
   },
   mounted() {
-    this.init()
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
+    this._getManagerById(this.userInfo.id)
   }
-};
+}
 </script>

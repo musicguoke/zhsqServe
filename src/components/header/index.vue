@@ -2,7 +2,8 @@
   <Header>
     <div class="container">
       <div class="navbar-logo">
-        <router-link tag="span" to="/zhsq_admin/system-manage" class="layout-logo"></router-link>
+        <span class="layout-logo" @click="linkTo"></span>
+        <!-- <router-link tag="span" to="/zhsq_admin/system-manage"></router-link> -->
         <span class="navbar-title">
           {{title}} —
           <small>管理平台</small>
@@ -54,6 +55,11 @@ export default {
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
   },
   methods: {
+    linkTo() {
+      if(this.userInfo.role !== 3) {
+        this.$route.push('/zhsq_admin/system-manage')
+      }
+    },
     showMessage() {
       this.$router.push({
         name: 'Message'

@@ -14,6 +14,14 @@ export function addManager(data) {
         return Promise.resolve(res.data)
     })
 }
+export function getManagerById(id) {
+    const data = {
+        id: id
+    }
+    return axios.post(`${url}/sys/sysUser/get.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
 export function updateManager(data) {
     return axios.post(`${url}/sys/sysUser/update.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)

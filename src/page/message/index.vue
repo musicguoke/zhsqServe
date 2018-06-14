@@ -1,405 +1,223 @@
 <template>
   <Content>
     <Breadcrumb :style="{padding: '17px 0'}">
-      <BreadcrumbItem>消息中心</BreadcrumbItem>
+      <BreadcrumbItem>首页</BreadcrumbItem>
+      <BreadcrumbItem>意见处理</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
-      <div class="message-main-con">
-        <div class="message-mainlist-con">
-          <div>
-            <Button @click="setCurrentMesType('unread')" size="large" long type="text">
-              <transition name="mes-current-type-btn">
-                <Icon v-show="currentMessageType === 'unread'" type="checkmark"></Icon>
-              </transition>
-              <span class="mes-type-btn-text">未读消息</span>
-              <Badge class="message-count-badge-outer" class-name="message-count-badge" :count="unreadCount"></Badge>
-            </Button>
-          </div>
-          <div>
-            <Button @click="setCurrentMesType('hasread')" size="large" long type="text">
-              <transition name="mes-current-type-btn">
-                <Icon v-show="currentMessageType === 'hasread'" type="checkmark"></Icon>
-              </transition>
-              <span class="mes-type-btn-text">已读消息</span>
-              <Badge class="message-count-badge-outer" class-name="message-count-badge" :count="hasreadCount"></Badge>
-            </Button>
-          </div>
-          <div>
-            <Button @click="setCurrentMesType('recyclebin')" size="large" long type="text">
-              <transition name="mes-current-type-btn">
-                <Icon v-show="currentMessageType === 'recyclebin'" type="checkmark"></Icon>
-              </transition>
-              <span class="mes-type-btn-text">回收站</span>
-              <Badge class="message-count-badge-outer" class-name="message-count-badge" :count="recyclebinCount"></Badge>
-            </Button>
-          </div>
-        </div>
-        <div class="message-content-con">
-          <transition name="view-message">
-            <div v-if="showMesTitleList" class="message-title-list-con">
-              <Table ref="messageList" :columns="mesTitleColumns" :data="currentMesList" :no-data-text="noDataText"></Table>
-            </div>
-          </transition>
-          <transition name="back-message-list">
-            <div v-if="!showMesTitleList" class="message-view-content-con">
-              <div class="message-content-top-bar">
-                <span class="mes-back-btn-con">
-                  <Button type="text" @click="backMesTitleList">
-                    <Icon type="chevron-left"></Icon>&nbsp;&nbsp;返回</Button>
-                </span>
-                <h3 class="mes-title">{{ mes.title }}</h3>
-              </div>
-              <p class="mes-time-con">
-                <Icon type="android-time"></Icon>&nbsp;&nbsp;{{ mes.time }}</p>
-              <div class="message-content-body">
-                <p class="message-content">{{ mes.content }}</p>
-              </div>
-            </div>
-          </transition>
+      <div class="table">
+        <el-table :data="list" border style="width: 100%">
+          <el-table-column prop="id" label="ID" sortable></el-table-column>
+          <el-table-column prop="contact" label="联系人"></el-table-column>
+          <el-table-column prop="suggest" label="建议"></el-table-column>
+          <el-table-column prop="suggestReply" label="意见回复"></el-table-column>
+          <el-table-column prop="replyDescp" label="回复描述"></el-table-column>
+          <el-table-column prop="status" label="系统状态"></el-table-column>
+          <el-table-column prop="addtime" width="180" label="添加时间"></el-table-column>
+          <el-table-column label="操作" align="center">
+            <template slot-scope="scope">
+              <Button type="primary" @click="editSys(scope.row)" size="small">编辑</Button>
+              <Button type="error" @click="deleteSys(scope.row)" size="small">删除</Button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="tablePage">
+          <Page :total="listLength" @on-change="_getSuggestList"></Page>
         </div>
       </div>
     </Card>
+    <Modal 
+      v-model="modalShow"
+      :closable='false'
+      :mask-closable='false'
+      :width="500"
+    >
+      <h3 slot="header" style="color:#2D8CF0">意见信息</h3>
+      <Form ref="itemInfo" :model="itemInfo" :label-width="80" :rules="rules">
+        <FormItem label="UID">
+          <Input v-model="itemInfo.uid" readonly></Input>
+        </FormItem>
+        <FormItem label="联系人">
+          <Input v-model="itemInfo.contact" readonly></Input>
+        </FormItem>
+        <FormItem label="处理状态">
+          <Select v-model="itemInfo.status">
+            <Option value="0">未处理</Option>
+            <Option value="1">处理并查看</Option>
+            <Option value="3">忽略</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="反馈类型">
+          <Input v-model="type" readonly></Input>
+        </FormItem>
+        <FormItem label="设备码">
+          <Input v-model="itemInfo.clientCode" readonly></Input>
+        </FormItem>
+        <FormItem label="添加时间">
+          <Input v-model="addtime" readonly></Input>
+        </FormItem>
+        <FormItem label="回复时间">
+          <Input v-model="replyTime" readonly></Input>
+        </FormItem>
+        <FormItem label="IP">
+          <Input v-model="itemInfo.addip" readonly></Input>
+        </FormItem>
+        <FormItem label="建议">
+          <Input v-model="itemInfo.suggest" readonly type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
+        </FormItem>
+        <FormItem label="意见回复" prop="suggestReply">
+          <Input v-model="itemInfo.suggestReply" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
+        </FormItem>
+        <FormItem label="回复描述">
+          <Input v-model="itemInfo.replyDescp" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancelEditPass">取消</Button>
+        <Button type="warning" @click="ignore">忽略</Button>
+        <Button type="primary" @click="save">保存</Button>
+      </div>
+    </Modal>
   </Content>
 </template>
 
 <script>
+import {
+  getSuggestList,
+  updateSuggest,
+  deleteSuggest,
+  searchSuggestById
+} from '@/api/suggest'
+
 export default {
-  name: 'message_index',
   data() {
-    const markAsreadBtn = (h, params) => {
-      return h('Button', {
-        props: {
-          size: 'small'
-        },
-        on: {
-          click: () => {
-            this.hasreadMesList.unshift(this.currentMesList.splice(params.index, 1)[0]);
-            this.$store.commit('setMessageCount', this.unreadMesList.length);
-          }
-        }
-      }, '标为已读');
-    };
-    const deleteMesBtn = (h, params) => {
-      return h('Button', {
-        props: {
-          size: 'small',
-          type: 'error'
-        },
-        on: {
-          click: () => {
-            this.recyclebinList.unshift(this.hasreadMesList.splice(params.index, 1)[0]);
-          }
-        }
-      }, '删除');
-    };
-    const restoreBtn = (h, params) => {
-      return h('Button', {
-        props: {
-          size: 'small'
-        },
-        on: {
-          click: () => {
-            this.hasreadMesList.unshift(this.recyclebinList.splice(params.index, 1)[0]);
-          }
-        }
-      }, '还原');
-    };
     return {
       contentHeight: window.innerHeight - 174 + 'px',
-      currentMesList: [],
-      unreadMesList: [],
-      hasreadMesList: [],
-      recyclebinList: [],
-      currentMessageType: 'unread',
-      showMesTitleList: true,
-      unreadCount: 0,
-      hasreadCount: 0,
-      recyclebinCount: 0,
-      noDataText: '暂无未读消息',
-      mes: {
-        title: '',
-        time: '',
-        content: ''
+      modalShow: false,
+      list: [],
+      addtime: '',
+      replyTime: '',
+      type: '',
+      rules: {
+        suggestReply: [
+          { required: true, message: '回复不能为空', trigger: 'blur' }
+        ]
       },
-      mesTitleColumns: [
-        // {
-        //     type: 'selection',
-        //     width: 50,
-        //     align: 'center'
-        // },
-        {
-          title: ' ',
-          key: 'title',
-          align: 'left',
-          ellipsis: true,
-          render: (h, params) => {
-            return h('a', {
-              on: {
-                click: () => {
-                  this.showMesTitleList = false;
-                  this.mes.title = params.row.title;
-                  this.mes.time = this._mm.formatDate(params.row.time);
-                  this.getContent(params.index);
-                }
-              }
-            }, params.row.title);
-          }
-        },
-        {
-          title: ' ',
-          key: 'time',
-          align: 'center',
-          width: 180,
-          render: (h, params) => {
-            return h('span', [
-              h('Icon', {
-                props: {
-                  type: 'android-time',
-                  size: 12
-                },
-                style: {
-                  margin: '0 5px'
-                }
-              }),
-              h('span', {
-                props: {
-                  type: 'android-time',
-                  size: 12
-                }
-              }, this._mm.formatDate(params.row.time))
-            ]);
-          }
-        },
-        {
-          title: ' ',
-          key: 'asread',
-          align: 'center',
-          width: 100,
-          render: (h, params) => {
-            if (this.currentMessageType === 'unread') {
-              return h('div', [
-                markAsreadBtn(h, params)
-              ]);
-            } else if (this.currentMessageType === 'hasread') {
-              return h('div', [
-                deleteMesBtn(h, params)
-              ]);
-            } else {
-              return h('div', [
-                restoreBtn(h, params)
-              ]);
-            }
-          }
-        }
-      ]
-    };
+      itemInfo: {
+        id: '',
+        uid: '',
+        contact: '',
+        suggest: '',
+        clientCode: '',
+        addtime: '',
+        addip: '',
+        suggestReply: '',
+        replyDescp: '',
+        userManage: '',
+        replyTime: '',
+        status: -1,
+        type: '',
+        sysId: '',
+      }
+    }
+  },
+  created() {
+    this._getSuggestList()
   },
   methods: {
-    backMesTitleList() {
-      this.showMesTitleList = true;
+    save() {
+      this.$refs['itemInfo'].validate((valid) => {
+        if (valid) {
+          this._updateSuggest(this.itemInfo)
+        }
+      })
     },
-    setCurrentMesType(type) {
-      if (this.currentMessageType !== type) {
-        this.showMesTitleList = true;
-      }
-      this.currentMessageType = type;
-      if (type === 'unread') {
-        this.noDataText = '暂无未读消息';
-        this.currentMesList = this.unreadMesList;
-      } else if (type === 'hasread') {
-        this.noDataText = '暂无已读消息';
-        this.currentMesList = this.hasreadMesList;
-      } else {
-        this.noDataText = '回收站无消息';
-        this.currentMesList = this.recyclebinList;
-      }
+    ignore() {
+      this.itemInfo.status = 3
+      this._updateSuggest(this.itemInfo)
     },
-    getContent(index) {
-      // you can write ajax request here to get message content
-      let mesContent = '';
-      switch (this.currentMessageType + index) {
-        case 'unread0': mesContent = '这是您点击的《欢迎登录iView-admin后台管理系统，来了解他的用途吧》的相关内容。'; break;
-        case 'unread1': mesContent = '这是您点击的《使用iView-admin和iView-ui组件库快速搭建你的后台系统吧》的相关内容。'; break;
-        case 'unread2': mesContent = '这是您点击的《喜欢iView-admin的话，欢迎到github主页给个star吧》的相关内容。'; break;
-        case 'hasread0': mesContent = '这是您点击的《这是一条您已经读过的消息》的相关内容。'; break;
-        default: mesContent = '这是您点击的《这是一条被删除的消息》的相关内容。'; break;
-      }
-      this.mes.content = mesContent;
-    }
-  },
-  mounted() {
-    this.currentMesList = this.unreadMesList = [
-      {
-        title: '欢迎登录iView-admin后台管理系统，来了解他的用途吧',
-        time: 1507390106000
-      },
-      {
-        title: '使用iView-admin和iView-ui组件库快速搭建你的后台系统吧',
-        time: 1507390106000
-      },
-      {
-        title: '喜欢iView-admin的话，欢迎到github主页给个star吧',
-        time: 1507390106000
-      }
-    ];
-    this.hasreadMesList = [
-      {
-        title: '这是一条您已经读过的消息',
-        time: 1507330106000
-      }
-    ];
-    this.recyclebinList = [
-      {
-        title: '这是一条被删除的消息',
-        time: 1506390106000
-      }
-    ];
-    this.unreadCount = this.unreadMesList.length;
-    this.hasreadCount = this.hasreadMesList.length;
-    this.recyclebinCount = this.recyclebinList.length;
-  },
-  watch: {
-    unreadMesList(arr) {
-      this.unreadCount = arr.length;
+    cancelEditPass() {
+      this.modalShow = false
     },
-    hasreadMesList(arr) {
-      this.hasreadCount = arr.length;
+    deleteSys(row) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '确认删除这条数据吗？',
+        onOk: () => {
+          this._deleteSuggest(row.id)
+        }
+      })
     },
-    recyclebinList(arr) {
-      this.recyclebinCount = arr.length;
+    editSys(row) {
+      this._searchSuggestById(row.id)
+    },
+    _getSuggestList(page) {
+      getSuggestList(page).then(res => {
+        if (res.code === 20000) {
+          res.data.list.map(v => {
+            if (v.status == 0) {
+              v.status = '未处理'
+            } else if (v.status === 3) {
+              v.status = '已忽略'
+            } else {
+              v.status = '已处理并查看'
+            }
+            v.addtime = this._mm.formatDate(v.addtime)
+          })
+          this.list = res.data.list
+          this.listLength = res.data.total
+        } else {
+          this.$Message.error(`${res.message}`)
+        }
+      })
+    },
+    _searchSuggestById(id) {
+      searchSuggestById(id).then(res => {
+        if (res.code === 20000) {
+          this.itemInfo = res.data
+          this.addtime = this._mm.formatDate(this.itemInfo.addtime)
+          this.replyTime = this._mm.formatDate(this.itemInfo.replyTime)
+          this.itemInfo.status = res.data.status.toString()
+          if (this.itemInfo.type === 0) {
+            this.type = '意见'
+          } else if (this, itemInfo.type === 1) {
+            this.type = 'bug'
+          } else {
+            this.type = '数据问题'
+          }
+          this.modalShow = true
+        } else {
+          this.$Message.error(`${res.message}`)
+        }
+      })
+    },
+    _deleteSuggest(id) {
+      deleteSuggest(id).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(`删除${res.message}`)
+          this._getSuggestList()
+        } else {
+          this.$Message.error(`删除${res.message}`)
+        }
+      })
+    },
+    _updateSuggest(data) {
+      updateSuggest(data).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(`${res.message}`)
+          this.modalShow = false
+          this._getSuggestList()
+        } else {
+          this.$Message.error(`${res.message}`)
+        }
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.message {
-  &-main-con {
-  }
-  &-mainlist-con {
-    float: left;
-    width: 300px;
-    padding: 10px 0;
-    div {
-      padding: 10px;
-      margin: 0 20px;
-      border-bottom: 1px dashed #d2d3d2;
-      &:last-child {
-        border: none;
-      }
-      .message-count-badge-outer {
-        float: right;
-      }
-      .message-count-badge {
-        background: #d2d3d2;
-      }
-      &:first-child .message-count-badge {
-        background: #ed3f14;
-      }
-      .mes-type-btn-text {
-        margin-left: 10px;
-      }
-    }
-  }
-  &-content-con {
-    width: 866px;
-    float: left;
-    background: white;
-    border-radius: 3px;
-    overflow: auto;
-    .message-title-list-con {
-      width: 100%;
-      height: 100%;
-    }
-    .message-content-top-bar {
-      height: 40px;
-      width: 100%;
-      background: white;
-      position: absolute;
-      left: 0;
-      top: 0;
-      border-bottom: 1px solid #dededb;
-      .mes-back-btn-con {
-        position: absolute;
-        width: 70px;
-        height: 30px;
-        left: 0;
-        top: 5px;
-      }
-      .mes-title {
-        position: absolute;
-        top: 0;
-        right: 70px;
-        bottom: 0;
-        left: 70px;
-        line-height: 40px;
-        padding: 0 30px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
-      }
-    }
-    .mes-time-con {
-      position: absolute;
-      width: 100%;
-      top: 40px;
-      left: 0;
-      padding: 20px 0;
-      text-align: center;
-      font-size: 14px;
-      color: #b7b7b5;
-    }
-    .message-content-body {
-      position: absolute;
-      top: 90px;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      overflow: auto;
-      .message-content {
-        padding: 10px 20px;
-      }
-    }
-  }
-}
-.back-message-list-enter,
-.back-message-list-leave-to {
-  opacity: 0;
-}
-.back-message-list-enter-active,
-.back-message-list-leave-active {
-  transition: all 0.5s;
-}
-.back-message-list-enter-to,
-.back-message-list-leave {
-  opacity: 1;
-}
-.view-message-enter,
-.view-message-leave-to {
-  opacity: 0;
-}
-.view-message-enter-active,
-.view-message-leave-active {
-  transition: all 0.5s;
-}
-.view-message-enter-to,
-.view-message-leave {
-  opacity: 1;
-}
-
-.mes-current-type-btn-enter,
-.mes-current-type-btn-leave-to {
-  opacity: 0;
-  width: 0;
-}
-.mes-current-type-btn-enter-active,
-.mes-current-type-btn-leave-active {
-  transition: all 0.3s;
-}
-.mes-current-type-btn-enter-to,
-.mes-current-type-btn-leave {
-  opacity: 1;
-  width: 12px;
+.ivu-form-item {
+  margin-bottom: 12px;
 }
 </style>
