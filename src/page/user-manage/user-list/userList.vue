@@ -40,7 +40,7 @@
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
             <Tabs active-key="key1" v-show="!isProduct">
                 <Tab-pane label="基本信息" key="key1">
-                    <Form :model="userForm" :label-width="80" :rules="userInfoRule" ref="userInfoRule">
+                    <Form :model="userForm" :label-width="80" :rules="userRule" ref="userRule">
                         <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                         </FormItem>
@@ -51,7 +51,7 @@
                             <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                         </FormItem>
                         <FormItem label="密码" v-show="!isAdd">
-                            <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
+                            <Input v-model="userForm.arEditPassword" placeholder="请输入密码..." type="password"></Input>
                         </FormItem>
                         <FormItem label="部门" prop="arBranch">
                             <Select v-model="userForm.arBranch" ref="department1">
@@ -62,6 +62,7 @@
                             <Select v-model="userForm.arAreacode">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
+                        </FormItem>
                         </FormItem>
                         <FormItem label="手机号" prop="arMobile">
                             <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
@@ -81,7 +82,7 @@
                         </span>
                         <Button type="info" icon="plus" title="新增系统角色选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
                     </div>
-                    <Form :rules="userSysRule">
+                    <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
                             <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
                                 <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -94,38 +95,41 @@
                     </Form>
                 </Tab-pane>
             </Tabs>
-            <Form :model="userForm"  :label-width="80" v-show="isProduct">
-                <FormItem label="用户名">
+            <Form :model="userForm"  :label-width="80" v-show="isProduct" :rules="userRuleProduct" ref="userRuleProduct">
+                <FormItem label="用户名" prop="arLoginname">
                     <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                 </FormItem>
-                <FormItem label="真实姓名">
+                <FormItem label="真实姓名" prop="arTruename">
                     <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."></Input>
                 </FormItem>
-                <FormItem label="密码">
+                <FormItem label="密码" prop="arPassword" v-show="isAdd">
                     <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                 </FormItem>
-                <FormItem label="部门">
+                <FormItem label="密码" v-show="!isAdd">
+                    <Input v-model="userForm.arEditPassword" placeholder="请输入密码..." type="password"></Input>
+                </FormItem>
+                <FormItem label="部门" prop="arBranch">
                     <Select v-model="userForm.arBranch" ref="department2">
                         <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                     </Select>
                 </FormItem>
-                <FormItem label="区县">
+                <FormItem label="区县" prop="arAreacode">
                     <Select v-model="userForm.arAreacode">
                         <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="角色" v-show="isProduct">
-                    <Select v-model="userForm.grId">
+                <FormItem label="角色" prop="role">
+                    <Select v-model="userForm.grIdProduct">
                         <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="手机号">
+                <FormItem label="手机号" prop="arMobile">
                     <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
                 </FormItem>
                 <FormItem label="座机">
                     <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
                 </FormItem>
-                <FormItem label="邮箱">
+                <FormItem label="邮箱" prop="arEmail">
                     <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
                 </FormItem>
             </Form>
@@ -168,7 +172,7 @@
 </template>
 
 <script>
-import {    getAreaCode, getUserList, addUser, updateUser, deleteUser,
+import {getAreaCode, getUserList, addUser, updateUser, deleteUser,
     getEquipment, updateEquipment, getRolesList,getUserSysAndRole} from '@/api/user-service'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
@@ -179,6 +183,15 @@ export default {
         vSearch
     },
     data() {
+        //对角色字段单独验证
+        const validateRole = (rule, value, callback) => {
+            // if (!value) {
+            //     return callback(new Error('请选择角色'));
+            // }else{
+               
+            // }
+             callback();
+        }
         return {
             userListHeight: window.innerHeight - 174 + 'px',
             searchDepartment: '',
@@ -199,6 +212,7 @@ export default {
                 arLoginname: '',
                 arTruename: '',
                 arPassword: '',
+                arEditPassword:'',//编辑时的密码
                 arTel: '',//座机
                 arMobile: '',//手机
                 arEmail: '',
@@ -210,7 +224,8 @@ export default {
                 name: '',
                 sysId: '',//系统编号
                 grId: '',//角色编号
-                arId: ''
+                arId: '',
+                grIdProduct:''
             },
             equipmentForm: {
                 id: "",
@@ -257,9 +272,9 @@ export default {
             sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
             nowSystemLength: 1,
-            userInfoRule: {
+            userRule: {
                 arLoginname: [
-                    { required: true, message: '登录名不能为空', trigger: 'blur' }
+                    { required: true, message: '用户名不能为空', trigger: 'blur' }
                 ],
                 arTruename: [
                     { required: true, message: '真实姓名不能为空', trigger: 'blur' }
@@ -282,8 +297,33 @@ export default {
                     { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
                 ]
             },
-            userSysRule:{
-
+            userRuleProduct:{
+                arLoginname: [
+                    { required: true, message: '用户名不能为空', trigger: 'blur' }
+                ],
+                arTruename: [
+                    { required: true, message: '真实姓名不能为空', trigger: 'blur' }
+                ],
+                arMobile: [
+                    { required: true, message: '用户手机不能为空', trigger: 'blur' }
+                ],
+                arEmail: [
+                    { required: true, message: '用户邮箱不能为空', trigger: 'blur' },
+                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+                ],
+                arBranch: [
+                    { required: true, message: '请选择部门', trigger: 'blur' }
+                ],
+                arAreacode: [
+                    { required: true, message: '请选择区县', trigger: 'change' }
+                ],
+                role:[
+                    { type:'number',required: true, validator: validateRole, trigger:'change'}
+                ],
+                arPassword:[
+                    { required: true, message: '用户密码不能为空', trigger: 'blur' },
+                    { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -312,7 +352,8 @@ export default {
     },
     methods: {
         userAddOpen() {
-            this.$refs.userInfoRule.resetFields()
+            this.$refs.userRule.resetFields()
+            this.$refs.userRuleProduct.resetFields()
             this.userModal = true;
             this.isAdd = true;
             this.modalTitle = '新增用户';
@@ -323,21 +364,22 @@ export default {
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
         },
         userEditOpen(params) {
-            this.$refs.userInfoRule.resetFields()
-            this.userModal = true;
-            this.isAdd = false;
-            this.modalTitle = '修改用户';
+            this.$refs.userRule.resetFields()
+            this.$refs.userRuleProduct.resetFields()
+            this.userModal = true
+            this.isAdd = false
+            this.modalTitle = '修改用户'
             this.clearFrom()
+            this.userForm.arEditPassword = ''
             for (let i in this.userForm) {
                 this.userForm[i] = '';
                 if (params.row[i] || params.row[i] == 0) {
                     this.userForm[i] = params.row[i]
                 }
             }
-            this.userForm.arPassword = ""
             this.$refs.department1.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
             this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
-             getUserSysAndRole(this.userForm.arId).then(res=>{
+            getUserSysAndRole(this.userForm.arId).then(res=>{
                  if(!this.isProduct){
                      for(let i = 0;i<res.data.length;i++){
                         this.sysAndGroupList.push({
@@ -348,10 +390,12 @@ export default {
                         this._getRolesList(res.data[i].sysId,i)
                     }
                 } else {
-                    this.sysAndGroupList.push({ sysId: res.data[0].sysId, grId: res.data[0].grId })
-                    this.userForm.sysId = res.data[0].sysId
-                    this.userForm.grId = res.data[0].grId
-                    this._getRolesList(res.data[0].sysId, 0)
+                    for(let i in res.data){
+                        if(res.data[i].sysId == this.$route.query.id){
+                            this.sysAndGroupList.push({ sysId: res.data[i].sysId, grId: res.data[i].grId })
+                            this.userForm.grIdProduct = res.data[i].grId
+                        }
+                    }
                 }
             
             })
@@ -506,21 +550,36 @@ export default {
         //点击确定
         addOrUpdateUser() {
             let sysNum = 0
-            this.$refs.userInfoRule.validate((valid) => {
-                if(!valid){
-                    this.$refs.userModal.visible = true;
-                    this.userModal = true;
-                    return
-                }
-            })
-            this.sysAndGroupList.map(v=>{
-                if(v.sysId){
-                    sysNum ++
-                }
-            })
-            if(sysNum == 0){
-                this.$Message.error('请至少选择一个系统角色')
+            if(!this.isProduct){
+                this.$refs.userRule.validate((valid) => {
+                    if(!valid){
+                        this.$refs.userModal.visible = true;
+                        this.userModal = true;
+                    }else{
+                        this.sysAndGroupList.map(v=>{
+                            if(v.sysId){
+                                sysNum ++
+                            }
+                        })
+                        if(sysNum == 0){
+                            this.$Message.error('请至少选择一个系统角色')
+                        }else{
+                            this.addOrUpdateFun()
+                        }
+                    }
+                })
+            }else{
+                this.$refs.userRuleProduct.validate((valid) => {
+                    if(!valid){
+                        this.$refs.userModal.visible = true;
+                        this.userModal = true;
+                    }else{
+                        this.addOrUpdateFun()
+                    }
+                })
             }
+        },
+        addOrUpdateFun(){
             if (!this.isProduct) {
                 this.userForm.sysId = ''
                 this.userForm.grId = ''
@@ -534,11 +593,12 @@ export default {
                 this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
             } else {
                 this.userForm.sysId = this.$route.query.id
+                this.userForm.grId = this.userForm.grIdProduct
             }
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
-                arPassword: MD5(this.userForm.arPassword).toString(),
+                arPassword: '',
                 arTel: this.userForm.arTel,//座机
                 arMobile: this.userForm.arMobile,//手机
                 arEmail: this.userForm.arEmail,
@@ -551,16 +611,22 @@ export default {
                 grIds: this.userForm.grId,//多个用用角色编号
             }
             if (this.isAdd) {
+                data.arPassword = MD5(this.userForm.arPassword).toString()
                 addUser(data).then(res => {
                     if (res.code == 20000) {
                         this.$Message.success('添加成功')
                         this._getUserList(this.nowPage)
-                    } else {
+                     } else {
                         this.$Message.error(res.message);
                     }
                 })
             } else {
                 data.arId = this.userForm.arId
+                if(this.userForm.arEditPassword){
+                    data.arPassword = MD5(this.userForm.arEditPassword).toString()
+                }else{
+                    data.arPassword = this.userForm.arPassword
+                }
                 updateUser(data).then(res => {
                     if (res.code == 20000) {
                         this.$Message.success('修改成功')
@@ -603,7 +669,6 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
-            console.log(this.$refs.department1)
             this.$refs.department1.values = [{ value: data.id, label: data.name }]
             this.$refs.department2.values = [{ value: data.id, label: data.name }]
             this.userForm.arBranch = data.id
@@ -672,11 +737,10 @@ export default {
         },
         _getRolesSingleList(id) {
             getRolesList(id).then(res => {
-                let data = res.data.list
-                for (let i in data) {
+                for (let i in  res.data.list) {
                     this.groupSingleList.push({
-                        value: data[i].grId,
-                        label: data[i].grName
+                        value: parseInt( res.data.list[i].grId),
+                        label: res.data.list[i].grName
                     })
                 }
             })

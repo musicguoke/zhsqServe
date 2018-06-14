@@ -34,18 +34,21 @@
       </div>
   </div>
   </Card>
-  <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" >
-        <Form :model="managerForm" :label-width="80">
-            <FormItem label="用户名">
+  <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" ref="managerModal">
+        <Form :model="managerForm" :label-width="100"  :rules="manageRule" ref="manageRule">
+            <FormItem label="用户名" prop="userName">
                 <Input v-model="managerForm.userName" placeholder="请输入用户名"></Input>
             </FormItem>
-            <FormItem label="真实姓名">
+            <FormItem label="真实姓名" prop="realName">
                 <Input v-model="managerForm.realName" placeholder="请输入真实姓名"></Input>
             </FormItem>
-            <FormItem label="密码">
+            <FormItem label="密码" prop="password" v-show="isAdd">
                 <Input v-model="managerForm.password" placeholder="请输入密码" type="password"></Input>
             </FormItem>
-            <FormItem label="管理员类型">
+             <FormItem label="密码" v-show="!isAdd">
+                <Input v-model="managerForm.editPassword" placeholder="请输入密码" type="password"></Input>
+            </FormItem>
+            <FormItem label="管理员类型" prop="role">
                 <Select v-model="managerForm.role" @on-change="managerChange">
                     <Option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
@@ -60,10 +63,10 @@
                     </Select>
                 </div>
             </FormItem>
-            <FormItem label="手机号">
+            <FormItem label="手机号" prop="tel">
                 <Input v-model="managerForm.tel" placeholder="请输入手机号"></Input>
             </FormItem>
-            <FormItem label="邮箱">
+            <FormItem label="邮箱" prop="email">
                 <Input v-model="managerForm.email" placeholder="请输入邮箱"></Input>
             </FormItem>
         </Form>
@@ -93,6 +96,7 @@ export default {
                 userName:'',
                 realName:'',
                 password:'',
+                editPassword:'',
                 tel:'',
                 email:'',
                 role:'',
@@ -130,7 +134,29 @@ export default {
                     label: '普通管理员',
                     text: '普通管理员',
                 }
-            ]
+            ],
+            manageRule: {
+                userName: [
+                    { required: true, message: '用户名不能为空', trigger: 'blur' }
+                ],
+                realName: [
+                    { required: true, message: '真实姓名不能为空', trigger: 'blur' }
+                ],
+                tel: [
+                    { required: true, message: '用户手机不能为空', trigger: 'blur' }
+                ],
+                email: [
+                    { required: true, message: '用户邮箱不能为空', trigger: 'blur' },
+                    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+                ],
+                role: [
+                    { required: true, message: '请选择用户类型', trigger: 'change',type:'number'}
+                ],
+                password:[
+                    { required: true, message: '用户密码不能为空', trigger: 'blur' },
+                    { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
+                ]
+            },
         }
     },
     created(){
@@ -167,6 +193,7 @@ export default {
             })
         },
         managerAddOpen(){
+            this.$refs.manageRule.resetFields()
             this.isAdd = true
             this.managerModal = true
             this.modalTitle = '新增管理员'
@@ -177,6 +204,7 @@ export default {
             }
         },
         managerEditOpen(params){
+            this.$refs.manageRule.resetFields()
             this.isAdd = false
             this.managerModal = true;
             this.modalTitle = '修改管理员';
@@ -193,7 +221,6 @@ export default {
                     this.sysType.push(v.type)
                 })
             }
-            this.managerForm.password = ""
         },
         managerChange(){
             this.sysId = []
@@ -218,32 +245,47 @@ export default {
             let data = {
                 userName:this.managerForm.userName,
                 realName:this.managerForm.realName,
-                password:MD5(this.managerForm.password).toString(),
+                password:'',
                 tel:this.managerForm.tel,
                 email:this.managerForm.email,
                 role:this.managerForm.role,
                 sysIdStr:this.sysId.join(",")
             }
-            if(this.isAdd){
-                addManager(data).then(res=>{
-                    if (res.code == 20000) {
-                        this.$Message.success('添加成功');
-                        this._getManagerList(this.nowPage)
+            this.$refs.manageRule.validate((valid) => {
+                if(!valid){
+                    this.$refs.managerModal.visible = true;
+                    this.managerModal = true;
+                }else{
+                    if(this.managerForm.role == 3&&this.sysId.length == 0){
+                        this.$Message.error('请至少选择一个系统')
+                        this.$refs.managerModal.visible = true;
+                        this.managerModal = true; 
                     }else{
-                        this.$Message.error(res.message);
+                        if(this.isAdd){
+                            data.password = MD5(this.managerForm.password).toString()
+                            addManager(data).then(res=>{
+                                if (res.code == 20000) {
+                                    this.$Message.success('添加成功');
+                                    this._getManagerList(this.nowPage)
+                                }else{
+                                    this.$Message.error(res.message);
+                                }
+                            })
+                        }else{
+                            data.password = MD5(this.managerForm.editPassword).toString()
+                            data.id = this.managerForm.id
+                            updateManager(data).then(res=>{
+                                if (res.code == 20000) {
+                                    this.$Message.success('修改成功');
+                                    this._getManagerList(this.nowPage)
+                                }else{
+                                    this.$Message.error(res.message);
+                                }
+                            })
+                        }
                     }
-                })
-            }else{
-                data.id = this.managerForm.id
-                updateManager(data).then(res=>{
-                    if (res.code == 20000) {
-                        this.$Message.success('修改成功');
-                        this._getManagerList(this.nowPage)
-                    }else{
-                        this.$Message.error(res.message);
-                    }
-                })
-            }
+                }
+            })
         },
         pageChange(page){
             this.nowPage = page
