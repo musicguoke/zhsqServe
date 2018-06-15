@@ -8,9 +8,9 @@
             </el-table-column>
             <el-table-column prop="year" label="年份" width="80">
             </el-table-column>
-            <el-table-column prop="title" label="标题" width="200">
+            <el-table-column prop="title" label="标题" width="200" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="filePath" label="文件地址">
+            <el-table-column prop="filePath" label="文件地址" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">

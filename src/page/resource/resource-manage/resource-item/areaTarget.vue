@@ -4,9 +4,9 @@
         <el-table :data="areaTargetData" border style="width: 100%"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
             </el-table-column>
-            <el-table-column prop="areaname" label="行政区划名称">
+            <el-table-column prop="areaname" label="行政区划名称" width="160">
             </el-table-column>
-            <el-table-column prop="cityTarget" label="指标">
+            <el-table-column prop="cityTarget" label="指标" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="year" label="年份" width="80" sortable>
             </el-table-column>
