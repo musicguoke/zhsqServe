@@ -1,7 +1,6 @@
 <template>
     <div class="map-config">
         <v-search :importShow="false" :searchShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal" />
-<<<<<<< HEAD
         <div class="tableSize">
             <el-table :data="mapConfigureData" border style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55">
@@ -19,24 +18,6 @@
                 <el-table-column label="操作" width="120" align="center">
                     <template slot-scope="scope">
                         <Button type="primary" size="small" @click="openEditModal(scope)">编辑</Button>
-=======
-        <el-table :data="mapConfigureData" border style="width: 100%"  @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55">
-            </el-table-column>
-            <el-table-column prop="id" label="ID" width="100" sortable>
-            </el-table-column>
-            <el-table-column prop="mName" label="名称">
-            </el-table-column>
-            <el-table-column prop="mUrl" label="地图地址" width="300" :show-overflow-tooltip="true">
-            </el-table-column>
-            <el-table-column prop="mImage" label="地图图例" width="300" :show-overflow-tooltip="true">
-            </el-table-column>
-            <el-table-column prop="mVersion" label="版本" sortable>
-            </el-table-column>
-            <el-table-column label="操作" width="120" align="center">
-                <template slot-scope="scope">
-                        <Button type="info"  size="small"  @click="openEditModal(scope)">编辑</Button>
->>>>>>> b63dab63ea77d867e398929a7cb6eed25bf3d443
                         <Button type="error" size="small" @click="remove(scope)">删除</Button>
                     </template>
                 </el-table-column>
