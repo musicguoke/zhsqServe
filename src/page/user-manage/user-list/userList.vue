@@ -358,6 +358,7 @@ export default {
             this.isAdd = true;
             this.modalTitle = '新增用户';
             this.clearFrom()
+            this._getSystemList()
             for (let i in this.userForm) {
                 this.userForm[i] = '';
             }
@@ -381,11 +382,14 @@ export default {
             this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
             getUserSysAndRole(this.userForm.arId).then(res=>{
                  if(!this.isProduct){
-                     for(let i = 0;i<res.data.length;i++){
+                    this.nowSystemLength = res.data.length
+                    for(let i = 0;i<res.data.length;i++){
                         this.sysAndGroupList.push({
                             sysId: res.data[i].sysId,
                             grId: res.data[i].grId
                         })
+                    }
+                    for(let i = 0;i<res.data.length;i++){
                         this._getSystemList()
                         this._getRolesList(res.data[i].sysId,i)
                     }
@@ -733,6 +737,7 @@ export default {
                 } else {
                     this.groupList.push(array)
                 }
+                console.log(id,this.groupList)
             })
         },
         _getRolesSingleList(id) {
