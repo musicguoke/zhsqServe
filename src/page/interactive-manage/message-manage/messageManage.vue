@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column prop="message" label="短信内容">
             </el-table-column>
-            <el-table-column prop="addTime" label="添加时间">
+            <el-table-column prop="addTime" label="发送时间">
             </el-table-column>
             <el-table-column prop="typeName" label="发送类型">
             </el-table-column>
@@ -42,7 +42,7 @@
             <FormItem label="短信内容">
                 <Input v-model="messageForm.message" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." ></Input>
             </FormItem>
-            <FormItem label="添加时间">
+            <FormItem label="发送时间">
                 <Input v-model="messageForm.addTime" ></Input>
             </FormItem>
             <FormItem label="发送类型">
@@ -57,7 +57,7 @@
             </FormItem>
             <FormItem label="导入电话">
                 <div style="display:flex">
-                    <Input v-model="messageSendForm.Fileurl" placeholder="请输入电话号码..." style="width:330px;margin-right:5px;"></Input>
+                    <Input v-model="messageSendForm.Fileurl" placeholder="导入文件地址..." style="width:330px;margin-right:5px;"></Input>
                     <Button type="primary" icon="person-add" @click="importModal=true">导入</Button>
                 </div>
             </FormItem>
