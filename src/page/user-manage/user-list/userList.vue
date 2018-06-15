@@ -51,7 +51,7 @@
                             <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                         </FormItem>
                         <FormItem label="密码" v-show="!isAdd">
-                            <Input v-model="userForm.arEditPassword" placeholder="请输入密码..." type="password"></Input>
+                            <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
                         </FormItem>
                         <FormItem label="部门" prop="arBranch">
                             <Select v-model="userForm.arBranch" ref="department1">
@@ -106,7 +106,7 @@
                     <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
                 </FormItem>
                 <FormItem label="密码" v-show="!isAdd">
-                    <Input v-model="userForm.arEditPassword" placeholder="请输入密码..." type="password"></Input>
+                    <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
                 </FormItem>
                 <FormItem label="部门" prop="arBranch">
                     <Select v-model="userForm.arBranch" ref="department2">
@@ -640,7 +640,7 @@ export default {
         //点击取消
         clearFrom() {
             this.systemList = []
-            this._getSystemList()
+            // this._getSystemList()
             this.groupList = []
             this.nowSystemLength = 1
             this.sysAndGroupList = []
