@@ -143,6 +143,7 @@ export default {
             for (var i in this.parameterForm) {
                 this.parameterForm[i] = ''
             }
+             this.$refs.modal.footerHide = false
         },
         parameterEditOpen(params) {
             this.isAdd = false
@@ -150,15 +151,18 @@ export default {
             this.modalTitle = '修改参数';
             for (var i in this.parameterForm) {
                 if (params.row[i]) {
+                    this.parameterForm[i] = ''
                     this.parameterForm[i] = params.row[i]
                 }
             }
+             this.$refs.modal.footerHide = false
         },
         parameterDetailOpen(params) {
             this.parameterModal = true;
             this.modalTitle = '查看详情';
             for (var i in this.parameterForm) {
                 if (params.row[i]) {
+                    this.parameterForm[i] = ''
                     this.parameterForm[i] = params.row[i]
                 }
             }
@@ -179,7 +183,7 @@ export default {
                 addParameter(data).then(res => {
                     if (res.code == 20000) {
                         this.$Message.success('添加成功');
-                        this._getParameterList(1)
+                        this._getParameterList(this.nowPage)
                     } else {
                         this.$Message.error(res.message)
                     }
