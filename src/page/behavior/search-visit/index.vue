@@ -4,7 +4,7 @@
             <BreadcrumbItem>资源管理</BreadcrumbItem>
             <BreadcrumbItem>资源列表</BreadcrumbItem>
         </Breadcrumb>
-        <Card>
+        <Card :style="{maxHeight: contentHeight}">
             <div id="service-analysis">
                 <div class="head">
                     <ul class="clearfix" v-if="config.bId && config.userId">
@@ -195,6 +195,7 @@ export default {
     name: 'service-analysis',
     data: function () {
         return {
+            contentHeight: window.innerHeight - 174 + 'px',
             tabs: [
                 { title: '全部', day: '-1' },
                 { title: '今日', day: '0' },

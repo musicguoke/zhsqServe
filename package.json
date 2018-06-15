@@ -36,6 +36,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
+    "crypto": "^1.0.1",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
@@ -72,5 +73,11 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".postcssrc.js",
+  "repository": {
+    "type": "git",
+    "url": "http://192.168.11.158/zhsq/zhsq_web/zhsq_server_web.git"
+  },
+  "license": "ISC"
 }

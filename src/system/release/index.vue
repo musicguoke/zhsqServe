@@ -4,14 +4,14 @@
       <BreadcrumbItem>目录管理</BreadcrumbItem>
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
-    <Card>
+    <Card :style="{maxHeight: contentHeight}">
       <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="build"/>
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
         <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right" :rules="catalogValidate">
           <FormItem v-if="!isAdd" label="id" prop="dpId">
-            <Input v-model="editItemForm.dpId"></Input>
+            <Input v-model="editItemForm.dpId" readonly></Input>
           </FormItem>
           <FormItem label="名称" prop="dpName">
             <Input v-model="editItemForm.dpName" placeholder="请输入名称"></Input>
@@ -28,7 +28,7 @@
             </Select>
           </FormItem>
           <FormItem v-if="!isAdd" label="添加时间">
-            <Input v-model="dpAddtime" disabled></Input>
+            <Input v-model="dpAddtime" readonly></Input>
           </FormItem>
           <FormItem v-if="!isAdd" label="图片地址">
             <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath"></Input>
@@ -46,7 +46,7 @@
         <h3 slot="header" style="color:#2D8CF0">数据目录</h3>
         <Form :label-width="100" label-position="right">
           <FormItem label="数据名称">
-            <Input v-model="editItemForm.dpName" disabled></Input>
+            <Input v-model="editItemForm.dpName" readonly></Input>
           </FormItem>
           <div :style="modalStyle">
             <tree-table :items='catalogData' :columns='catalogColumns' @on-row-click="rowClick" @on-selection-change="selectDataConfig" />
@@ -73,10 +73,10 @@ export default {
   },
   data() {
     return {
+      contentHeight: window.innerHeight - 174 + 'px',
       data3: [],
       code: '',
       uploadUrl: url,
-      searchName: '',
       savePassLoading: false,
       editItemModal: false,
       editCatalogModal: false,

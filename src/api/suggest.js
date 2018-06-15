@@ -50,3 +50,10 @@ export function searchSuggestById(id) {
       return Promise.resolve(res.data)
   })
 }
+
+// 未读意见数量
+export function unreadSuggestList(id) {
+  return axios.post(`${url}/sys/msSuggest/count.do`).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
