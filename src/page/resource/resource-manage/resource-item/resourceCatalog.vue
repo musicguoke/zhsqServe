@@ -5,7 +5,7 @@
       <h3 slot="header" style="color:#2D8CF0">修改目录</h3>
       <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right">
         <FormItem label="id" prop="id">
-          <Input v-model="editItemForm.id" placeholder="数据id"></Input>
+          <Input v-model="editItemForm.id" readonly placeholder="数据id"></Input>
         </FormItem>
         <FormItem label="数据名称" prop="name">
           <Input v-model="editItemForm.name" placeholder="请输入输入数据名称"></Input>
@@ -19,7 +19,7 @@
           </Select>
         </FormItem>
         <FormItem label="数据更新时间" prop="time">
-          <Input v-model="editItemForm.time" placeholder="数据更新时间"></Input>
+          <Input v-model="editItemForm.time" readonly placeholder="数据更新时间"></Input>
         </FormItem>
       </Form>
       <div slot="footer">

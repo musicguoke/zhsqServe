@@ -1,67 +1,69 @@
 <template>
-<Content :style="{height:departmentListHeight}">
+  <Content>
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>部门列表</BreadcrumbItem>
     </Breadcrumb>
-    <Card>
-    <div>
-        <v-search :searchShow="false" :deleteShow="false" :buildShow="false" @on-import="openImportModal"  />
+    <Card :style="{maxHeight: departmentListHeight}">
+      <div>
+        <v-search :searchShow="false" :deleteShow="false" :buildShow="false" @on-import="openImportModal" />
         <div class="tableSize">
-            <Row>
-                <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">
-                    <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
-                </Col>
-                <Col span="14" class="departmentInfo" :style="{height:departmentTreeHeight}">
-                    <div class="fontSize">{{operationType}}</div>
-                    <Form :model="departmentInfoForm" label-position="left">
-                        <FormItem label="部门名" :label-width="100">
-                            <Input v-model="departmentInfoForm.name"></Input>
-                        </FormItem>
-                        <FormItem label="部门简称" :label-width="100">
-                            <Input v-model="departmentInfoForm.nameA"></Input>
-                        </FormItem>
-                        <FormItem label="部门编码" :label-width="100">
-                            <Input v-model="departmentInfoForm.id"></Input>
-                        </FormItem>
-                        <FormItem label="父级编码" :label-width="100">
-                            <Input v-model="departmentInfoForm.parentid"></Input>
-                        </FormItem>
-                        <FormItem label="序号" :label-width="100">
-                            <Input v-model="departmentInfoForm.listorder"></Input>
-                        </FormItem>
-                        <FormItem>
-                          <div style="text-align:center;width:100%">
-                            <Button type="primary"  icon="document" @click="saveDepartment">保存</Button>
-                          </div>
-                        </FormItem>
-                    </Form>
-                </Col>
-            </Row>
-        </div>
-    </div>
-  </Card>
-  <Modal v-model="importModal" title='导入部门' @on-ok="saveImport">
-        <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
-            <FormItem label="导入类型">
-                <Select v-model="importForm.type">
-                    <Option value="1">增量导入</Option>
-                    <Option value="2">全量导入</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="选择文件" >
-                <div>
-                    <Upload :action="`${uploadUrl}/sys/msBranchStruct/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
-                    </Upload>
+          <Row>
+            <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">
+            <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
+            </Col>
+            <Col span="14" class="departmentInfo" :style="{height:departmentTreeHeight}">
+            <div class="fontSize">{{operationType}}</div>
+            <Form :model="departmentInfoForm" label-position="left">
+              <FormItem label="部门名" :label-width="100">
+                <Input v-model="departmentInfoForm.name"></Input>
+              </FormItem>
+              <FormItem label="部门简称" :label-width="100">
+                <Input v-model="departmentInfoForm.nameA"></Input>
+              </FormItem>
+              <FormItem label="部门编码" :label-width="100">
+                <Input v-model="departmentInfoForm.id"></Input>
+              </FormItem>
+              <FormItem label="父级编码" :label-width="100">
+                <Input v-model="departmentInfoForm.parentid"></Input>
+              </FormItem>
+              <FormItem label="序号" :label-width="100">
+                <Input v-model="departmentInfoForm.listorder"></Input>
+              </FormItem>
+              <FormItem>
+                <div style="text-align:center;width:100%">
+                  <Button type="primary" icon="document" @click="saveDepartment">保存</Button>
                 </div>
-            </FormItem>
-                <div class="importSlot">
-                <div class="importSlotTitle">导入须知</div>
-                <p>1、导入文件大小不超过2MB.</p>
-                <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a href="/mouldFile/ms_branch_struct.xlsx" download="ms_branch_struct.xlsx">点此下载.</a></p>
-            </div>
-        </Form>
+              </FormItem>
+            </Form>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </Card>
+    <Modal v-model="importModal" title='导入部门' @on-ok="saveImport">
+      <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
+        <FormItem label="导入类型">
+          <Select v-model="importForm.type">
+            <Option value="1">增量导入</Option>
+            <Option value="2">全量导入</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="选择文件">
+          <div>
+            <Upload :action="`${uploadUrl}/sys/msBranchStruct/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+              <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+            </Upload>
+          </div>
+        </FormItem>
+        <div class="importSlot">
+          <div class="importSlotTitle">导入须知</div>
+          <p>1、导入文件大小不超过2MB.</p>
+          <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
+            <a href="/mouldFile/ms_branch_struct.xlsx" download="ms_branch_struct.xlsx">点此下载.</a>
+          </p>
+        </div>
+      </Form>
     </Modal>
     <!-- <span style="float:right;padding-right:5px;display:block">
             <i
@@ -76,11 +78,11 @@
               style="color:#ff3800"
             />
       </span> -->
-</Content>
+  </Content>
 </template>
 
 <script>
-import {getDepartmentList,addAndUpdateDepartment,importDepartment} from "@/api/department-service";
+import { getDepartmentList, addAndUpdateDepartment, importDepartment } from "@/api/department-service";
 import vSearch from '@/components/search/index'
 import { url } from '@/api/config.js'
 export default {
@@ -90,20 +92,20 @@ export default {
   data() {
     return {
       searchName: "",
-      departmentListHeight: window.innerHeight - 65 - 60 - 20 - 90 - 18 + "px",
-      departmentTreeHeight:window.innerHeight - 65 - 60 - 20 - 90 - 18 - 120 + "px",
+      departmentListHeight: window.innerHeight - 174 + "px",
+      departmentTreeHeight: window.innerHeight - 260 + "px",
       departmentData: [],
-      uploadUrl:url,
+      uploadUrl: url,
       defaultProps: {
         label: "name",
         children: "list"
       },
       highlightcurrent: true,
       expandonclicknode: true,
-      importModal:false,
-      importForm:{
-          type:'',
-          file:''
+      importModal: false,
+      importForm: {
+        type: '',
+        file: ''
       },
       departmentInfoForm: {
         name: "",
@@ -174,8 +176,8 @@ export default {
       event.cancelBubble = true;
       this.$Modal.confirm({
         content: "删除时该节点下的所有子节点也将删除，是否继续？",
-        onOk: () => {},
-        onCancel: () => {}
+        onOk: () => { },
+        onCancel: () => { }
       });
     },
     //点击保存
@@ -187,22 +189,22 @@ export default {
         nameA: this.departmentInfoForm.nameA,
         listorder: this.departmentInfoForm.listorder
       };
-        addAndUpdateDepartment(data).then(res => {
-          if ((res.code = 20000)) {
-            this.$Message.success("保存成功");
-            this._getDepartmentList();
-          }else{
-            this.$Message.error(res.message);
-          }
+      addAndUpdateDepartment(data).then(res => {
+        if ((res.code = 20000)) {
+          this.$Message.success("保存成功");
+          this._getDepartmentList();
+        } else {
+          this.$Message.error(res.message);
+        }
       });
     },
     //打开导入文件模态框
-    openImportModal(){
+    openImportModal() {
       this.importModal = true
-      for(let i in this.importForm){
+      for (let i in this.importForm) {
         this.importForm[i] = ""
       }
-      if(this.$refs.upload._data.fileList){
+      if (this.$refs.upload._data.fileList) {
         this.$refs.upload._data.fileList = []
       }
     },
@@ -210,7 +212,7 @@ export default {
       this.importForm.file = file
     },
     //导入文件保存
-    saveImport(){
+    saveImport() {
       if (this.importForm.type === '') {
         this.$Message.error('请选择导入类型')
       } else if (this.importForm.file === '') {
@@ -223,12 +225,12 @@ export default {
       }
     },
     //导入文件
-    _importDepartment(data){
-      importDepartment(data).then(res=>{
-        if(res.code == 20000){
+    _importDepartment(data) {
+      importDepartment(data).then(res => {
+        if (res.code == 20000) {
           this.$Message.success("添加成功")
           this._getDepartmentList()
-        }else{
+        } else {
           this.$Message.error(res.message)
         }
       })

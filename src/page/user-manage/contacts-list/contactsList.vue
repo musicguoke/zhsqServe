@@ -1,10 +1,10 @@
 <template>
-    <Content :style="{maxHeight:managerHeight}">
+    <Content>
         <Breadcrumb :style="{padding: '17px 0'}">
             <BreadcrumbItem>用户管理</BreadcrumbItem>
             <BreadcrumbItem>联系人列表</BreadcrumbItem>
         </Breadcrumb>
-        <Card>
+        <Card :style="{maxHeight:managerHeight}">
             <v-search :searchShow="false" :importShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="contactsAddOpen" />
             <div class="tableSize">
                 <el-table :data="contactsData" border style="width: 100%" @selection-change="handleSelectionChange">

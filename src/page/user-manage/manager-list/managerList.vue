@@ -75,8 +75,8 @@
 </template>
 
 <script>
-import {getManagerList,addManager,updateManager,deleteManager} from '@/api/manager-service.js'
-import {getSystemList} from '@/api/system.js'
+import { getManagerList, addManager, updateManager, deleteManager } from '@/api/manager-service.js'
+import { getSystemList } from '@/api/system.js'
 import MD5 from 'crypto-js/md5'
 import vSearch from '@/components/search/index'
 export default {
@@ -85,7 +85,7 @@ export default {
     },
     data(){
         return{
-            managerHeight:window.innerHeight - 136 +'px',
+            managerHeight:window.innerHeight - 174 +'px',
             searchName:'',
             searchManagerType:'',
             managerModal:false,
@@ -102,27 +102,27 @@ export default {
                 role:'',
                 id:''
             },
-            sysId:[],
-            sysType:[],
-            userData:[],
-            systemList:[],
-            systemFilterList:[],
-            systemTypeList:[{
-                value:1,
-                label:'综合市情'
-            },{
-                value:2,
-                label:'综合区情'
-            },{
-                value:3,
-                label:'规划定位'
+            sysId: [],
+            sysType: [],
+            userData: [],
+            systemList: [],
+            systemFilterList: [],
+            systemTypeList: [{
+                value: 1,
+                label: '综合市情'
+            }, {
+                value: 2,
+                label: '综合区情'
+            }, {
+                value: 3,
+                label: '规划定位'
             }],
-            isAdd:true,
+            isAdd: true,
             managerTypeList: [
                 {
                     value: 1,
                     label: '超级管理员',
-                    text:'超级管理员',
+                    text: '超级管理员',
                 },
                 {
                     value: 2,
@@ -159,33 +159,33 @@ export default {
             },
         }
     },
-    created(){
+    created() {
         this._getManagerList(1)
-        getSystemList(1).then(res=>{
+        getSystemList(1).then(res => {
             let data = res.data.list
-            for(let i in data){
+            for (let i in data) {
                 this.systemList.push({
-                    value:data[i].id,
-                    label:data[i].sysName,
-                    type:data[i].type
+                    value: data[i].id,
+                    label: data[i].sysName,
+                    type: data[i].type
                 })
             }
         })
     },
-    methods:{
-        _getManagerList(page){
+    methods: {
+        _getManagerList(page) {
             let data = {
-                pageNo:page,
-                pageSize:10
+                pageNo: page,
+                pageSize: 10
             }
-            getManagerList(data).then(res=>{
+            getManagerList(data).then(res => {
                 this.userData = res.data.list
-                this.userData.map(v=>{
-                    if(v.role == 1){
+                this.userData.map(v => {
+                    if (v.role == 1) {
                         v.roleName = '超级管理员'
-                    }else if(v.role == 2){
+                    } else if (v.role == 2) {
                         v.roleName = '市级管理员'
-                    }else if(v.role == 3){
+                    } else if (v.role == 3) {
                         v.roleName = '普通管理员'
                     }
                 })
@@ -199,8 +199,8 @@ export default {
             this.modalTitle = '新增管理员'
             this.sysId = []
             this.sysType = []
-            for(var i in this.managerForm){
-               this.managerForm[i] = ''
+            for (var i in this.managerForm) {
+                this.managerForm[i] = ''
             }
         },
         managerEditOpen(params){
@@ -210,38 +210,38 @@ export default {
             this.modalTitle = '修改管理员';
             this.sysId = []
             this.sysType = []
-            for(var i in this.managerForm){
-               if(params.row[i]){
-                   this.managerForm[i] = params.row[i] 
-               }
+            for (var i in this.managerForm) {
+                if (params.row[i]) {
+                    this.managerForm[i] = params.row[i]
+                }
             }
-            if(params.row.list.length > 0){
-                params.row.list.map(v=>{
+            if (params.row.list.length > 0) {
+                params.row.list.map(v => {
                     this.sysId.push(v.id)
                     this.sysType.push(v.type)
                 })
             }
         },
-        managerChange(){
+        managerChange() {
             this.sysId = []
             this.sysType = []
         },
-        typeChange(){
+        typeChange() {
             let array = []
-            if(this.sysType.length >0){
-                this.sysType.map(a=>{
-                    this.systemList.map(b=>{
-                        if(a == b.type){
+            if (this.sysType.length > 0) {
+                this.sysType.map(a => {
+                    this.systemList.map(b => {
+                        if (a == b.type) {
                             array.push(b)
                         }
                     })
                 })
                 this.systemFilterList = array
-            }else{
+            } else {
                 this.systemFilterList = this.systemList
             }
         },
-        addOrUpdate(){
+        addOrUpdate() {
             let data = {
                 userName:this.managerForm.userName,
                 realName:this.managerForm.realName,
@@ -287,33 +287,33 @@ export default {
                 }
             })
         },
-        pageChange(page){
+        pageChange(page) {
             this.nowPage = page
             this._getManagerList(page)
         },
-        remove (params) {
+        remove(params) {
             this.$Modal.confirm({
-                    content: '删除后数据无法恢复，是否继续？',
-                    onOk: () => {
-                        let data = {
-                            id:params.row.id
-                        }
-                        deleteManager(data).then(res=>{
-                            if (res.code == 20000) {
-                                this.userData.splice(params.$index, 1);
-                                this.$Message.success('删除成功');
-                                this._getManagerList(this.nowPage)
-                            }else{
-                                this.$Message.error(res.message);
-                            }
-                        })
-                    },
-                    onCancel: () => {
-                        
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    let data = {
+                        id: params.row.id
                     }
-                });
+                    deleteManager(data).then(res => {
+                        if (res.code == 20000) {
+                            this.userData.splice(params.$index, 1);
+                            this.$Message.success('删除成功');
+                            this._getManagerList(this.nowPage)
+                        } else {
+                            this.$Message.error(res.message);
+                        }
+                    })
+                },
+                onCancel: () => {
+
+                }
+            });
         },
-        filterByRole(value, row){
+        filterByRole(value, row) {
             return row.role === value
         }
     }

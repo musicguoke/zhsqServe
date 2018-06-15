@@ -1,17 +1,17 @@
 <template>
-<Content :style="{height:messageManageHeight}">
+  <Content>
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>短信管理</BreadcrumbItem>
     </Breadcrumb>
-    <Card>
-  <div>
-      <div class="seach_condition" style="margin-bottom:10px">
-         <!-- <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input> -->
-        <i-button @click="messageAddOpen">发送短信</i-button>
-      </div>
-      <div class="tableSize">
-        <el-table :data="messageData" border style="width: 100%">
+    <Card :style="{maxHeight:messageManageHeight}">
+      <div>
+        <div class="seach_condition" style="margin-bottom:10px">
+          <!-- <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input> -->
+          <i-button @click="messageAddOpen">发送短信</i-button>
+        </div>
+        <div class="tableSize">
+          <el-table :data="messageData" border style="width: 100%">
             <el-table-column prop="id" label="Id" width="60">
             </el-table-column>
             <el-table-column prop="phone" label="电话">
@@ -23,14 +23,15 @@
             <el-table-column prop="typeName" label="发送类型">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
-                <template slot-scope="scope">
-                    <Button type="info" @click="messageEditOpen(scope)" size="small">详情</Button>
-                </template>
-                </el-table-column>
-        </el-table>
-      </div>
-      <div class="tablePage">
-        <Page :total="pageLength"  @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+              <template slot-scope="scope">
+                <Button type="info" @click="messageEditOpen(scope)" size="small">详情</Button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="tablePage">
+          <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+        </div>
       </div>
   </div>
   </Card>
@@ -98,11 +99,11 @@ export default {
   data() {
     return {
       searchName: "",
-      messageManageHeight: window.innerHeight - 136 + "px",
+      messageManageHeight: window.innerHeight - 174 + "px",
       messageModal: false,
       messageSendModal: false,
       modalTitle: "",
-      uploadUrl:url,
+      uploadUrl: url,
       messageData: [],
       pageLength: 1,
       messageForm: {
@@ -114,9 +115,9 @@ export default {
         typeName: ""
       },
       messageSendForm: {
-        phoneStr:"",
-        Fileurl:"",
-        message:""
+        phoneStr: "",
+        Fileurl: "",
+        message: ""
       },
       importModal: false,
       importForm: {
@@ -130,8 +131,8 @@ export default {
   methods: {
     _getMessageList(page) {
       let data = {
-        pageNo:page,
-        pageSize:10
+        pageNo: page,
+        pageSize: 10
       }
       getMessageList(data).then(res => {
         this.pageLength = res.data.total;
@@ -146,7 +147,7 @@ export default {
         });
       });
     },
-    pageChange(page){
+    pageChange(page) {
       this._getMessageList(page)
     },
     messageAddOpen() {
@@ -159,7 +160,7 @@ export default {
       }
       this.importForm.file = ""
       this.messageSendModal = true
-      if(this.$refs.upload._data.fileList){
+      if (this.$refs.upload._data.fileList) {
         this.$refs.upload._data.fileList = []
       }
     },
@@ -173,25 +174,25 @@ export default {
         }
       }
     },
-    handleSuccessUpload(data){
-      if(data.code == 20000){
+    handleSuccessUpload(data) {
+      if (data.code == 20000) {
         this.importForm.file = data.data
         this.$Message.success(data.message)
-      }else{
+      } else {
         this.$Message.error(data.message)
       }
     },
     //发送短信
-    _sendMessage(){
+    _sendMessage() {
       let data = {
-        phoneStr:this.messageSendForm.phoneStr,
-        message:this.messageSendForm.message,
-        fileurl:this.messageSendForm.Fileurl
+        phoneStr: this.messageSendForm.phoneStr,
+        message: this.messageSendForm.message,
+        fileurl: this.messageSendForm.Fileurl
       }
-      sendMessage(data).then(res=>{
-        if(res.code == 20000){
+      sendMessage(data).then(res => {
+        if (res.code == 20000) {
           this.$Message.success(res.message)
-        }else{
+        } else {
           this.$Message.error(res.message)
         }
       })

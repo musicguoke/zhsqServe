@@ -23,7 +23,7 @@
             </DropdownMenu>
           </Dropdown>
           <div @click="showMessage" class="message-con">
-            <Tooltip content="Here is the prompt text">
+            <Tooltip :content="`你共有${unread}条未处理建议`">
               <Badge dot>
                 <Icon type="ios-bell-outline" size="26"></Icon>
               </Badge>
@@ -37,11 +37,13 @@
 
 <script>
 import { logout } from '@/api/service'
+import { unreadSuggestList } from '@/api/suggest'
 
 export default {
   data() {
     return {
-      userInfo: ''
+      userInfo: '',
+      unread: 0
     }
   },
   props: {
@@ -51,13 +53,14 @@ export default {
     }
   },
   created() {
+    this._unreadSuggestList()
     // 用户权限信息
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
   },
   methods: {
     linkTo() {
       if(this.userInfo.role !== 3) {
-        this.$route.push('/zhsq_admin/system-manage')
+        this.$router.push('/zhsq_admin/system-manage')
       }
     },
     showMessage() {
@@ -85,6 +88,15 @@ export default {
           this.$router.replace('/')
         } else {
           this.$Message.error(res.message)
+        }
+      })
+    },
+    _unreadSuggestList(page) {
+      unreadSuggestList(page).then(res => {
+        if (res.code === 20000) {
+          this.unread = res.data
+        } else {
+          this.$Message.error(`${res.message}`)
         }
       })
     }
