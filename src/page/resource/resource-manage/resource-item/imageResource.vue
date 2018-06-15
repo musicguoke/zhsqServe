@@ -4,13 +4,13 @@
         <el-table :data="imageSourceData" border style="width: 100%">
              <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
-            <el-table-column prop="fileName" label="图片名称" >
+            <el-table-column prop="fileName" label="图片名称" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="filePath" label="图片路径">
+            <el-table-column prop="filePath" label="图片路径" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="fileQuality" label="压缩图">
+            <el-table-column prop="fileQuality" label="压缩图" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="thumbnailName" label="缩略图">
+            <el-table-column prop="thumbnailName" label="缩略图" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">

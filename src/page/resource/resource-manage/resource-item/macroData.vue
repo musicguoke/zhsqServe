@@ -4,7 +4,7 @@
         <el-table :data="macroData" border style="width: 100%">
             <el-table-column prop="id" label="ID" width="100" sortable>
             </el-table-column>
-            <el-table-column prop="name" label="数据名称" width="200">
+            <el-table-column prop="name" label="数据名称" width="200" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="dataId" label="数据ID">
             </el-table-column>

@@ -18,12 +18,12 @@
                     </el-table-column>
                     <el-table-column prop="arEmail" label="邮箱">
                     </el-table-column>
-                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
+                    <el-table-column prop="areaname" label="区县"  :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
-                    <el-table-column prop="name" label="部门" :filters="departmentFilterList" :filter-method="filterByDepartment" filter-placement="bottom-end">
+                    <el-table-column prop="name" label="部门" :filters="departmentFilterList" :filter-method="filterByDepartment" filter-placement="bottom-end" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="addTime" label="注册时间" sortable>
-                    </el-table-column>
+                    <!-- <el-table-column prop="addTime" label="注册时间" sortable>
+                    </el-table-column> -->
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>

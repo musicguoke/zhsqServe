@@ -17,7 +17,7 @@
                         </el-table-column>
                         <el-table-column prop="metaValue" label="值">
                         </el-table-column>
-                        <el-table-column prop="metaDec" label="描述">
+                        <el-table-column prop="metaDec" label="描述" :show-overflow-tooltip="true">
                         </el-table-column>
                         <el-table-column prop="metaType" label="类型">
                         </el-table-column>

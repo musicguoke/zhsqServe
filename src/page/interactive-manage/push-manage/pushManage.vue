@@ -19,7 +19,7 @@
                         </el-table-column>
                         <el-table-column prop="pGroup" label="组编号">
                         </el-table-column>
-                        <el-table-column prop="pContent" label="内容">
+                        <el-table-column prop="pContent" label="内容" :show-overflow-tooltip="true">
                         </el-table-column>
                         <!-- <el-table-column prop="pFilename" label="文件名">
             </el-table-column>

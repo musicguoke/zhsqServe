@@ -8,9 +8,9 @@
             </el-table-column>
             <el-table-column prop="mName" label="名称">
             </el-table-column>
-            <el-table-column prop="mUrl" label="地图地址" width="300">
+            <el-table-column prop="mUrl" label="地图地址" width="300" :show-overflow-tooltip="true">
             </el-table-column>
-            <el-table-column prop="mImage" label="地图图例" width="300">
+            <el-table-column prop="mImage" label="地图图例" width="300" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="mVersion" label="版本" sortable>
             </el-table-column>

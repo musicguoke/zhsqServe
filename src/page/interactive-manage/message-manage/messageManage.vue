@@ -16,7 +16,7 @@
             </el-table-column>
             <el-table-column prop="phone" label="电话">
             </el-table-column>
-            <el-table-column prop="message" label="短信内容">
+            <el-table-column prop="message" label="短信内容" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="addTime" label="发送时间">
             </el-table-column>
