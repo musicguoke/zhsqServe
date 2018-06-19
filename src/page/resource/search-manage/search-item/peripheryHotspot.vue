@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :search-show="false"  @on-build="openAddModal" @on-import="openImportModal"/>
+        <v-search @on-search="search" @on-reset="reset"  @on-build="openAddModal" @on-import="openImportModal"/>
         <el-table :data="hotspotData" border style="width: 100%">
             <el-table-column prop="dataId" label="Id" sortable>
             </el-table-column>
@@ -98,7 +98,7 @@ data() {
         method:'list',
         pageNo:Page ,
         pageSize:10 ,
-        name:''
+        name:this.searchName
       }
       getHotspot(data).then(res=>{
          this.hotspotData = res.data.list
@@ -161,6 +161,14 @@ data() {
             }
           })
       }
+    },
+    search(searchName){
+        this.searchName = searchName
+        this._getHotspot(1)
+    },
+    reset(){
+        this.searchName = ''
+        this._getHotspot(1)
     },
     //删除
     remove (params) {

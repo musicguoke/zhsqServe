@@ -91,11 +91,13 @@ export default {
             this._getImageSource(Page)
         },
         //搜索
-        search(search){
-
+        search(searchName){
+            this.searchName = searchName
+            this._getImageSource(1)
         },
         reset(){
-
+            this.searchName = ''
+            this._getImageSource(1)
         },
         //打开新增模态框
         openAddModal(){

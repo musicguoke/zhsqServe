@@ -76,11 +76,13 @@ export default {
         },
         //搜索
         search(searchName){
-
+            this.searchName = searchName
+            this._get720Resource(1)
         },
         //清空
         reset(){
-
+            this.searchName = ''
+            this._get720Resource(1)
         },
         //打开新增模态框
         openAddModal(){

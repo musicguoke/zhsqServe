@@ -7,9 +7,9 @@
     <Card>
       <div class="card-content">
         <Menu theme="light" active-name="periphery-hotspot" @on-select="menuChange">
-          <MenuItem name="periphery-search">周边搜索</MenuItem>
-          <MenuItem name="search-lexicon">搜索词库</MenuItem>
+          <!-- <MenuItem name="periphery-search">周边搜索</MenuItem> -->
           <MenuItem name="periphery-hotspot">周边热点</MenuItem>
+          <MenuItem name="search-lexicon">搜索词库</MenuItem>
           <MenuItem name="hot-search">热搜</MenuItem>
         </Menu>
         <div class="table">

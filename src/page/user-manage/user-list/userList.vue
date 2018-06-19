@@ -38,8 +38,8 @@
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
-            <Tabs active-key="key1" v-show="!isProduct">
-                <Tab-pane label="基本信息" key="key1">
+            <Tabs v-show="!isProduct">
+                <Tab-pane label="基本信息" name="key1">
                     <Form :model="userForm" :label-width="80" :rules="userRule" ref="userRule">
                         <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
@@ -75,7 +75,7 @@
                         </FormItem>
                     </Form>
                 </Tab-pane>
-                <Tab-pane label="选择系统" key="key2">
+                <Tab-pane label="选择系统" name="key2">
                     <div class="chooseSystemTitle">
                         <span class="chooseSystemSpan">系统角色选择&nbsp;&nbsp;
                             <small style="color:red">(注:同一个系统下只能选择一个角色)</small>
@@ -85,7 +85,7 @@
                     <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
                             <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
-                                <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index">
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -371,6 +371,7 @@ export default {
             this.isAdd = false
             this.modalTitle = '修改用户'
             this.clearFrom()
+            this._getSystemList()
             this.userForm.arEditPassword = ''
             for (let i in this.userForm) {
                 this.userForm[i] = '';
@@ -390,7 +391,7 @@ export default {
                         })
                     }
                     for(let i = 0;i<res.data.length;i++){
-                        this._getSystemList()
+                        this.groupList.push([])
                         this._getRolesList(res.data[i].sysId,i)
                     }
                 } else {
@@ -443,12 +444,11 @@ export default {
                 let array = []
                 this.systemLength = res.data.total
                 for (let i in data) {
-                    array.push({
+                    this.systemList.push({
                         value: data[i].id,
                         label: data[i].sysName
                     })
                 }
-                this.systemList.push(array)
             })
         },
         //分页点击
@@ -644,7 +644,6 @@ export default {
         //点击取消
         clearFrom() {
             this.systemList = []
-            // this._getSystemList()
             this.groupList = []
             this.nowSystemLength = 1
             this.sysAndGroupList = []
@@ -684,7 +683,6 @@ export default {
             } else {
                 this.nowSystemLength++
                 this.sysAndGroupList.push({ sysId: '', grId: '' })
-                this._getSystemList()
             }
         },
         //移除当前行的选择框
@@ -737,7 +735,6 @@ export default {
                 } else {
                     this.groupList.push(array)
                 }
-                console.log(id,this.groupList)
             })
         },
         _getRolesSingleList(id) {
