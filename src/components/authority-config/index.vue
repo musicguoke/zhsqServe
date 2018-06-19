@@ -2,32 +2,32 @@
   <div class="card-content" style="min-height: 400px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
-      <Step v-if="sysOrRole" title="上传欢迎页" content=""></Step>
-      <Step v-else title="专题配置" content=""></Step>
+      <!-- <Step v-if="sysOrRole" title="上传欢迎页" content=""></Step> -->
+      <Step v-if="!sysOrRole" title="专题配置" content=""></Step>
+      <Step v-else title="数据配置" content=""></Step>
       <Step title="功能配置" content=""></Step>
-      <Step title="数据配置" content=""></Step>
       <Step title="地图配置" content=""></Step>
       <Step title="字段权限" content=""></Step>
     </Steps>
     <Menu mode="horizontal" ref="tab_menu" style="width: 100%" v-if="!newSys" :theme="theme" :active-name="tabActiveName" @on-select="tabChange">
       <MenuItem name="0">基本信息</MenuItem>
-      <MenuItem v-if="sysOrRole" name="1">上传欢迎页</MenuItem>
-      <MenuItem v-else name="1">专题配置</MenuItem>
-      <MenuItem name="2">功能配置</MenuItem>
-      <MenuItem name="3">数据配置</MenuItem>
+      <!-- <MenuItem v-if="sysOrRole" name="1">上传欢迎页</MenuItem> -->
+      <MenuItem v-if="type!==3" name="1">专题配置</MenuItem>
+      <MenuItem v-else name="1">数据配置</MenuItem>
+      <MenuItem name="3">功能配置</MenuItem>
       <MenuItem name="4">地图配置</MenuItem>
       <MenuItem name="5">字段权限</MenuItem>
     </Menu>
     <div class="current-content">
-      <Form :model="formItem" :label-width="80" style="width: 400px" v-show="current == 0 && sysOrRole">
+      <Form :model="formItem" :label-width="120" style="width: 560px" v-show="current == 0 && sysOrRole">
         <FormItem label="系统名称">
           <Input v-model="formItem.sysName" placeholder="请输入系统名称"></Input>
         </FormItem>
         <FormItem label="系统类别">
           <Select v-model="formItem.type">
             <Option value="1">综合市情</Option>
-            <Option value="2">综合区情</Option>
-            <Option value="3">规划定位</Option>
+            <Option value="2">规划定位</Option>
+            <Option value="3">综合区情</Option>
           </Select>
         </FormItem>
         <FormItem label="地区选择">
@@ -43,6 +43,36 @@
             <Option value="0">暂不启用</Option>
           </Select>
         </FormItem>
+        <FormItem label="ios_iphone封面">
+          <Input v-model="formItem.ios_iphone" placeholder="上传后的地址" style="width: 77%"></Input>
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess1">
+            <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+          </Upload>
+        </FormItem>
+        <FormItem label="ios_ipad封面">
+          <Input v-model="formItem.ios_ipad" placeholder="上传后的地址" style="width: 77%"></Input>
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess2">
+            <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+          </Upload>
+        </FormItem>
+        <FormItem label="android_phone封面">
+          <Input v-model="formItem.android_phone" placeholder="上传后的地址" style="width: 77%"></Input>
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess3">
+            <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+          </Upload>
+        </FormItem>
+        <FormItem label="android_pad封面">
+          <Input v-model="formItem.android_pad" placeholder="上传后的地址" style="width: 77%"></Input>
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess4">
+            <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+          </Upload>
+        </FormItem>
+        <FormItem label="pc封面">
+          <Input v-model="formItem.pc" placeholder="上传后的地址" style="width: 77%"></Input>
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess5">
+            <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
+          </Upload>
+        </FormItem>
       </Form>
       <Form :model="formRoleItem" :label-width="80" style="width: 400px" v-show="current == 0 && !sysOrRole">
         <FormItem label="角色名称">
@@ -55,7 +85,7 @@
           </Select>
         </FormItem>
       </Form>
-      <div style="width: 570px" v-show="current == 1 && sysOrRole">
+      <!-- <div style="width: 570px" v-show="current == 1 && sysOrRole">
         <Form :model="uploadForm" :label-width="100">
           <FormItem label="ios_iphone">
             <Input v-model="uploadForm.ios_iphone" placeholder="上传后的地址" style="width: 75%"></Input>
@@ -88,24 +118,33 @@
             </Upload>
           </FormItem>
         </Form>
-      </div>
-      <div style="width: 500px" v-show="current == 1 && !sysOrRole">
+      </div> -->
+      <div style="width: 500px" v-show="current == 1 && !sysOrRole && type !== 3">
         <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
-      <div style="width: 400px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 2">
-        <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
-      </div>
-      <div v-show="current == 3" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
+      <div v-show="current == 1 && type == 3" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
       </div>
-      <div style="width: 400px" v-show="current == 4">
+      <div
+        style="width: 400px;overflow:auto"
+        :style="{maxHeight: tableHeight + 'px'}"
+        v-show="current == 2"
+      >
+        <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
+      </div>
+      <div style="width: 400px" v-show="current == 3">
         <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
         </Table>
       </div>
-      <div style="width: 400px" class="select-box" v-show="current == 5">
+      <div style="width: 400px" class="select-box" v-show="current == 4">
         <Form :label-width="80">
           <FormItem label="权限等级">
-            <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
+            <Select v-if="sys" v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
+              <Option v-if="funNum < 11 || funNum < 21" value="一级权限">一级权限</Option>
+              <Option v-if="funNum < 21" value="二级权限">二级权限</Option>
+              <Option v-if="funNum > 20" value="三级权限">三级权限</Option>
+            </Select>
+            <Select v-else v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option value="一级权限">一级权限</Option>
               <Option value="二级权限">二级权限</Option>
               <Option value="三级权限">三级权限</Option>
@@ -171,13 +210,20 @@ export default {
       theme: 'light',
       uploadType: '',
       qxLevel: '一级权限',
+      sys: '',
+      sysType: '',
       current: 0,
       btnContent: '下一步',
       formItem: {
         sysName: "",
         type: "",
         areacode: "",
-        enable: '0'
+        enable: '0',
+        ios_iphone: '',
+        ios_ipad: '',
+        android_phone: '',
+        android_pad: '',
+        pc: ''
       },
       formRoleItem: {
         grName: '',
@@ -277,7 +323,10 @@ export default {
       })
     }
   },
-  created() { },
+  created() {
+    this.sys = this.$route.query.id || ''
+    this.type = this.$route.query.type || ''
+  },
   methods: {
     addAppBg() {
       this.appBgArray.push(1)
@@ -300,13 +349,13 @@ export default {
       this.current = parseInt(name)
     },
     next() {
-      if (this.current == 4) {
+      if (this.current == 3) {
         this.btnContent = '完成'
       }
-      if (this.current == 5) {
+      if (this.current == 4) {
         this.done()
       }
-      if (this.current < 5) {
+      if (this.current < 4) {
         this.current += 1
       }
     },
@@ -337,7 +386,7 @@ export default {
         imageType: "1"
       }
       this.imageList.push(data)
-      this.uploadForm.ios_iphone = res.data
+      this.formItem.ios_iphone = res.data
     },
     handleSuccess2(res) {
       let data = {
@@ -346,7 +395,7 @@ export default {
         imageType: "1"
       }
       this.imageList.push(data)
-      this.uploadForm.ios_ipad = res.data
+      this.formItem.ios_ipad = res.data
     },
     handleSuccess3(res) {
       let data = {
@@ -355,7 +404,7 @@ export default {
         imageType: "1"
       }
       this.imageList.push(data)
-      this.uploadForm.android_phone = res.data
+      this.formItem.android_phone = res.data
     },
     handleSuccess4(res) {
       let data = {
@@ -364,7 +413,7 @@ export default {
         imageType: "1"
       }
       this.imageList.push(data)
-      this.uploadForm.android_pad = res.data
+      this.formItem.android_pad = res.data
     },
     handleSuccess5(res) {
       let data = {
@@ -373,7 +422,7 @@ export default {
         imageType: "1"
       }
       this.imageList.push(data)
-      this.uploadForm.pc = res.data
+      this.formItem.pc = res.data
     },
     selectMapConfig(section, row) {
       // 已选择地图项
@@ -474,8 +523,12 @@ export default {
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         id: this.sysId,
-        imageList: this.imageList
-      }, this.formItem)
+        imageList: this.imageList,
+        sysName: this.formItem.sysName,
+        type: this.formItem.type,
+        areacode: this.formItem.areacode,
+        enable: this.formItem.enable,
+      })
       updateSystem(JSON.stringify(data)).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`修改${res.message}`)
@@ -497,10 +550,9 @@ export default {
           }
           if (res.data.imageList) {
             res.data.imageList.map(v => {
-              this.uploadForm[v.type] = v.imagePath
+              this.formItem[v.type] = v.imagePath
             })
           }
-          this.uploadForm
           this.sysId = res.data.id
           let list = []
           this.featureList.map(v => {

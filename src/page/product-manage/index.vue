@@ -10,6 +10,7 @@
           :importShow="false"
           @on-search="search"
           @on-build="show"
+          @on-reset="reset"
           :disabled="selectedId.length <= 0"
           @on-delete="deleteMany" />
         <el-table :data="sysData" border style="width: 100%" @selection-change="handleSelectionChange">
@@ -61,6 +62,12 @@ export default {
     this._enterSystem()
   },
   methods: {
+    search(content) {
+      this._getSystemList('', content)
+    },
+    reset() {
+      this._getSystemList()
+    },
     editSys(row) {
       this.$refs.authConfig._searchSysById(row.id)
       this.isShow = true
@@ -105,8 +112,8 @@ export default {
       this.newSys = false
       this.name = '系统列表'
     },
-    _getSystemList(page) {
-      getSystemList(page).then(res => {
+    _getSystemList(page, name) {
+      getSystemList(page, name).then(res => {
         if (res.code === 20000) {
           res.data.list.filter(v => {
             if (v.enable === 0) {
@@ -153,6 +160,7 @@ export default {
               path: '/system',
               query: {
                 id: id,
+                type: data.type,
                 systemname: data.sysName
               }
             })

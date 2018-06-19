@@ -5,10 +5,15 @@ import { url } from './config.js'
 axios.defaults.withCredentials = true
 
 // 获取数据类型列表
-export function getDataTypeList() {
+export function getDataTypeList(page, name) {
+  const data = {
+    pageNo: page ||1,
+    pageSize: 10,
+    typename: name
+  }
 
   return axios.post(
-    `${url}/sys/msBaseContentTypeController/list.do`).then(res => {
+    `${url}/sys/msBaseContentTypeController/list.do`, qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }
