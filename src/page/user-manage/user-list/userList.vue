@@ -38,8 +38,8 @@
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
-            <Tabs v-show="!isProduct">
-                <Tab-pane label="基本信息" name="key1">
+            <Tabs v-show="!isProduct" ref="tab">
+                <Tab-pane label="基本信息" name="baseInfo">
                     <Form :model="userForm" :label-width="80" :rules="userRule" ref="userRule">
                         <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
@@ -75,7 +75,7 @@
                         </FormItem>
                     </Form>
                 </Tab-pane>
-                <Tab-pane label="选择系统" name="key2">
+                <Tab-pane label="选择系统" name="system">
                     <div class="chooseSystemTitle">
                         <span class="chooseSystemSpan">系统角色选择&nbsp;&nbsp;
                             <small style="color:red">(注:同一个系统下只能选择一个角色)</small>
@@ -354,13 +354,14 @@ export default {
         userAddOpen() {
             this.$refs.userRule.resetFields()
             this.$refs.userRuleProduct.resetFields()
-            this.userModal = true;
-            this.isAdd = true;
-            this.modalTitle = '新增用户';
+            this.userModal = true
+            this.isAdd = true
+            this.$refs.tab.activeKey = 'baseInfo'
+            this.modalTitle = '新增用户'
             this.clearFrom()
             this._getSystemList()
             for (let i in this.userForm) {
-                this.userForm[i] = '';
+                this.userForm[i] = ''
             }
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
         },
@@ -369,6 +370,7 @@ export default {
             this.$refs.userRuleProduct.resetFields()
             this.userModal = true
             this.isAdd = false
+            this.$refs.tab.activeKey = 'baseInfo'
             this.modalTitle = '修改用户'
             this.clearFrom()
             this._getSystemList()
@@ -559,6 +561,7 @@ export default {
                     if(!valid){
                         this.$refs.userModal.visible = true;
                         this.userModal = true;
+                        this.$refs.tab.activeKey = 'baseInfo'
                     }else{
                         this.sysAndGroupList.map(v=>{
                             if(v.sysId){

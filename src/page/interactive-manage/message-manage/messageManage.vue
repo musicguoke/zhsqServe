@@ -6,8 +6,14 @@
     </Breadcrumb>
     <Card :style="{maxHeight:messageManageHeight}">
       <div>
-        <div class="seach_condition" style="margin-bottom:10px">
-          <!-- <Input v-model="searchName" placeholder="输入搜索名称" style="width: 200px"></Input> -->
+        <div  style="margin-bottom:10px;display:flex;justify-content: space-between">
+          <div class="search-box">
+            <Input v-model="searchName" placeholder="请输入电话号码查询..." style="width: 200px" />
+            <span style="margin: 0 10px;">
+              <Button type="primary" icon="search" @click="search">搜索</Button>
+            </span>
+            <Button @click="reset" type="ghost">清空</Button>
+          </div>
           <i-button @click="messageAddOpen">发送短信</i-button>
         </div>
         <div class="tableSize">
@@ -93,9 +99,6 @@ import {
 import vSearch from "@/components/search/index";
 import { url } from '@/api/config.js'
 export default {
-  components: {
-    vSearch
-  },
   data() {
     return {
       searchName: "",
@@ -132,7 +135,8 @@ export default {
     _getMessageList(page) {
       let data = {
         pageNo: page,
-        pageSize: 10
+        pageSize: 10,
+        phone:this.searchName
       }
       getMessageList(data).then(res => {
         this.pageLength = res.data.total;
@@ -149,6 +153,17 @@ export default {
     },
     pageChange(page) {
       this._getMessageList(page)
+    },
+    search(){
+      if(this.searchName){
+        this._getMessageList(1)
+      }else{
+        this.$Message.error('请输入搜索号码')
+      }
+    },
+    reset(){
+      this.searchName = ''
+      this._getMessageList(1)
     },
     messageAddOpen() {
       this.modalTitle = '发送短信'

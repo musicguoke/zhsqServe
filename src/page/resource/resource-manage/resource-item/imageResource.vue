@@ -78,7 +78,7 @@ export default {
             let data ={
                 pageNo:page,
                 pageSize:10, 
-                title:this.searchName 
+                name:this.searchName 
             }
             getImageSource(data).then(res=>{
                 this.pageLength = res.data.total
