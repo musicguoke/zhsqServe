@@ -5,10 +5,11 @@ import { url } from './config.js'
 axios.defaults.withCredentials = true
 
 // 获取统计分析列表
-export function getStatisticList(page) {
+export function getStatisticList(page, name) {
   const data = {
     pageNo: page || 1,
-    pageSize: 10
+    pageSize: 10,
+    target: name
   }
 
   return axios.post(

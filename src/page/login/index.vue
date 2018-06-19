@@ -46,7 +46,9 @@
   </div>
 </template>
 <script>
-import { login } from '@/api/service'
+import axios from '@/util/http'
+import qs from 'qs'
+import { url } from '@/api/config'
 
 export default {
   data() {
@@ -70,10 +72,17 @@ export default {
     document.title = '系统登录'
   },
   methods: {
+    login(loginInfo) {
+      return axios
+        .post(`${url}/sys/sysUser/login.do`, qs.stringify(loginInfo))
+        .then(res => {
+          return Promise.resolve(res.data);
+        })
+    },
     _login(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          login(this.formInline).then(res => {
+          this.login(this.formInline).then(res => {
             if (res.code === 20000) {
               if (res.data && res.data.userInfo) {
                 localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))

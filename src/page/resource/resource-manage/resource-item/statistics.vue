@@ -1,10 +1,11 @@
 <template>
   <div class="statistic">
-    <v-search 
-      :search-show="false" 
+    <v-search
       :build-show="false" 
       :export-url="'/sys/msStatisticalConfigController/downloadImportedFile.do'" 
-      :export-show="true" 
+      :export-show="true"
+      @on-search="search"
+      @on-reset="reset"
       @on-export="exportFile" 
       @on-import="importShow"
       :disabled="selectedId.length <= 0"
@@ -38,7 +39,7 @@
       <h3 slot="header" style="color:#2D8CF0">统计配置</h3>
       <Form ref="import_form" :model="itemInfo" :label-width="90">
         <FormItem label="ID">
-          <Input v-model="itemInfo.id" placeholder="请输入版本名称"></Input>
+          <Input v-model="itemInfo.id" placeholder="请输入版本名称" readonly></Input>
         </FormItem>
         <FormItem label="指标编码">
           <Input v-model="itemInfo.targetId" placeholder="请输入版本名称"></Input>
@@ -135,8 +136,14 @@ export default {
     this._getStatisticList()
   },
   methods: {
-    _getStatisticList(page) {
-      getStatisticList(page).then(res => {
+    search(name) {
+      this._getStatisticList('', name)
+    },
+    reset() {
+      this._getStatisticList()
+    },
+    _getStatisticList(page, name) {
+      getStatisticList(page, name).then(res => {
         if (res.code === 20000) {
           this.list = res.data.list
           this.listLength = res.data.total

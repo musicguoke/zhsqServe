@@ -1,32 +1,22 @@
-import axios from "@/util/http"
-import qs from "qs"
-import { url } from "./config.js"
+import axios from "@/util/http";
+import qs from "qs";
+import { url } from "./config.js";
 
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 
-export function login(loginInfo) {
-  return axios
-    .post(`${url}/sys/sysUser/login.do`, qs.stringify(loginInfo))
-    .then(res => {
-      return Promise.resolve(res.data);
-    })
-}
-
-export function logout(loginInfo) {
-  return axios
-    .post(`${url}/sys/sysUser/logout.do`)
-    .then(res => {
-      return Promise.resolve(res.data);
-    })
+export function logout() {
+  return axios.post(`${url}/sys/sysUser/logout.do`).then(res => {
+    return Promise.resolve(res.data);
+  });
 }
 
 //首页指标
 export function getIndex() {
   return axios
-    .post(`${url}/sys/msHomepageStatistical/statistics.do`)
+    .post(`${url}/sys/msHomepageStatistical/statistics.do`,)
     .then(res => {
       return Promise.resolve(res.data);
-    })
+    });
 }
 
 // 首页监控统计
@@ -35,7 +25,7 @@ export function getMetaUrl() {
     .post(`${url}/sys/msHomepageStatistical/getMetaUrl.do`)
     .then(res => {
       return Promise.resolve(res.data);
-    })
+    });
 }
 
 // 首页图表统计
@@ -44,14 +34,13 @@ export function getLogStatistics() {
     .post(`${url}/sys/msHomepageStatistical/getLogStatistics.do`)
     .then(res => {
       return Promise.resolve(res.data);
-    })
+    });
 }
 
-
-export function getMenu(id) {
+export function getMenu() {
   const data = {
     typeid: 13
-  }
+  };
 
   return axios
     .post(
@@ -60,5 +49,5 @@ export function getMenu(id) {
     )
     .then(res => {
       return Promise.resolve(res.data);
-    })
+    });
 }

@@ -28,19 +28,22 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-show="isShow" ref="authConfig" :id="sysId" :sysOrRole="false" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-show="isShow&&type!==1" ref="authConfig" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config1 v-show="isShow&&type==1" ref="authConfig" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
 
 <script>
 import { getRolesList, updateRole, deleteRole, updateRoleMap } from '@/api/role'
+import AuthorityConfig1 from '@/components/authority-config/index1'
 import AuthorityConfig from '@/components/authority-config/index'
 import vSearch from '@/components/search/index'
 
 export default {
   components: {
     AuthorityConfig,
+    AuthorityConfig1,
     vSearch
   },
   data() {
@@ -52,12 +55,14 @@ export default {
       name: '',
       total: 0,
       page: 1,
-      sysId: ''
+      sysId: '',
+      type: ''
     }
   },
   created() {
     this._getRolesList()
     this.sysId = this.$route.query.id
+    this.type = this.$route.query.type || ''
   },
   mounted() {
     this.$refs.authConfig._getBuildConfig()

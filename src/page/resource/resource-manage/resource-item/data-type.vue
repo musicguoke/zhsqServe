@@ -3,6 +3,7 @@
     <v-search
       :importShow="false"
       @on-search="search"
+      @on-reset="reset"
       @on-build="newData"
       :disabled="selectedId.length <= 0"
       @on-delete="deleteMany"
@@ -71,6 +72,12 @@ export default {
     this._getDataTypeList()
   },
   methods: {
+    search(name) {
+      this._getDataTypeList('', name)
+    },
+    reset() {
+      this._getDataTypeList()
+    },
     handleSelectionChange(val) {
       this.selectedId = []
       val.map(v => {
@@ -121,8 +128,8 @@ export default {
       this.newOrEdit = true
       this.editDataModal = true
     },
-    _getDataTypeList() {
-      getDataTypeList().then(res => {
+    _getDataTypeList(page, name) {
+      getDataTypeList(page, name).then(res => {
         if (res.code === 20000) {
           res.data.list.map(v => {
             v.typetime = this._mm.formatDate(v.typetime)
