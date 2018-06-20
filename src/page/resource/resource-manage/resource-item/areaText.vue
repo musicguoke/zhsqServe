@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search  @on-search="_getAreaText(1)" @on-build="openAddModal" @on-import="openImportModal"/>
+        <v-search  @on-build="openAddModal" @on-import="openImportModal" @on-search="search" @on-reset="reset"/>
         <el-table :data="areaTextData" border style="width: 100%">
             <el-table-column prop="areacode" label="区域编码" sortable>
             </el-table-column>
@@ -111,7 +111,7 @@ export default {
                 pageNo:page,
                 pageSize:10, 
                 method:'list', 
-                title:''  
+                title:this.searchName  
             }
             getAreaText(data).then(res=>{
                 this.pageLength = res.data.total
@@ -237,6 +237,14 @@ export default {
                     this.$Message.error(res.message)
                 }
             })
+        },
+        search(searchName){
+            this.searchName = searchName
+            this._getAreaText(1)
+        },
+        reset(){
+            this.searchName = ''
+            this._getAreaText(1)
         }
     }
 }

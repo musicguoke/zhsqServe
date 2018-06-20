@@ -38,8 +38,8 @@
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
-            <Tabs active-key="key1" v-show="!isProduct">
-                <Tab-pane label="基本信息" key="key1">
+            <Tabs v-show="!isProduct" ref="tab">
+                <Tab-pane label="基本信息" name="baseInfo">
                     <Form :model="userForm" :label-width="80" :rules="userRule" ref="userRule">
                         <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
@@ -75,7 +75,7 @@
                         </FormItem>
                     </Form>
                 </Tab-pane>
-                <Tab-pane label="选择系统" key="key2">
+                <Tab-pane label="选择系统" name="system">
                     <div class="chooseSystemTitle">
                         <span class="chooseSystemSpan">系统角色选择&nbsp;&nbsp;
                             <small style="color:red">(注:同一个系统下只能选择一个角色)</small>
@@ -85,7 +85,7 @@
                     <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
                             <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
-                                <Option v-for="item in systemList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index">
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -354,12 +354,14 @@ export default {
         userAddOpen() {
             this.$refs.userRule.resetFields()
             this.$refs.userRuleProduct.resetFields()
-            this.userModal = true;
-            this.isAdd = true;
-            this.modalTitle = '新增用户';
+            this.userModal = true
+            this.isAdd = true
+            this.$refs.tab.activeKey = 'baseInfo'
+            this.modalTitle = '新增用户'
             this.clearFrom()
+            this._getSystemList()
             for (let i in this.userForm) {
-                this.userForm[i] = '';
+                this.userForm[i] = ''
             }
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
         },
@@ -368,8 +370,10 @@ export default {
             this.$refs.userRuleProduct.resetFields()
             this.userModal = true
             this.isAdd = false
+            this.$refs.tab.activeKey = 'baseInfo'
             this.modalTitle = '修改用户'
             this.clearFrom()
+            this._getSystemList()
             this.userForm.arEditPassword = ''
             for (let i in this.userForm) {
                 this.userForm[i] = '';
@@ -381,12 +385,15 @@ export default {
             this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
             getUserSysAndRole(this.userForm.arId).then(res=>{
                  if(!this.isProduct){
-                     for(let i = 0;i<res.data.length;i++){
+                    this.nowSystemLength = res.data.length
+                    for(let i = 0;i<res.data.length;i++){
                         this.sysAndGroupList.push({
                             sysId: res.data[i].sysId,
                             grId: res.data[i].grId
                         })
-                        this._getSystemList()
+                    }
+                    for(let i = 0;i<res.data.length;i++){
+                        this.groupList.push([])
                         this._getRolesList(res.data[i].sysId,i)
                     }
                 } else {
@@ -439,12 +446,11 @@ export default {
                 let array = []
                 this.systemLength = res.data.total
                 for (let i in data) {
-                    array.push({
+                    this.systemList.push({
                         value: data[i].id,
                         label: data[i].sysName
                     })
                 }
-                this.systemList.push(array)
             })
         },
         //分页点击
@@ -555,6 +561,7 @@ export default {
                     if(!valid){
                         this.$refs.userModal.visible = true;
                         this.userModal = true;
+                        this.$refs.tab.activeKey = 'baseInfo'
                     }else{
                         this.sysAndGroupList.map(v=>{
                             if(v.sysId){
@@ -640,7 +647,6 @@ export default {
         //点击取消
         clearFrom() {
             this.systemList = []
-            // this._getSystemList()
             this.groupList = []
             this.nowSystemLength = 1
             this.sysAndGroupList = []
@@ -680,7 +686,6 @@ export default {
             } else {
                 this.nowSystemLength++
                 this.sysAndGroupList.push({ sysId: '', grId: '' })
-                this._getSystemList()
             }
         },
         //移除当前行的选择框

@@ -78,7 +78,7 @@ export default {
             let data ={
                 pageNo:page,
                 pageSize:10, 
-                title:this.searchName 
+                name:this.searchName 
             }
             getImageSource(data).then(res=>{
                 this.pageLength = res.data.total
@@ -91,11 +91,13 @@ export default {
             this._getImageSource(Page)
         },
         //搜索
-        search(search){
-
+        search(searchName){
+            this.searchName = searchName
+            this._getImageSource(1)
         },
         reset(){
-
+            this.searchName = ''
+            this._getImageSource(1)
         },
         //打开新增模态框
         openAddModal(){

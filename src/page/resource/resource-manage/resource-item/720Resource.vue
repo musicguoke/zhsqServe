@@ -62,7 +62,7 @@ export default {
             let data ={
                 pageNo:page,
                 pageSize:10, 
-                title:this.searchName 
+                name:this.searchName 
             }
             get720Resource(data).then(res=>{
                 this.pageLength = res.data.total
@@ -76,11 +76,13 @@ export default {
         },
         //搜索
         search(searchName){
-
+            this.searchName = searchName
+            this._get720Resource(1)
         },
         //清空
         reset(){
-
+            this.searchName = ''
+            this._get720Resource(1)
         },
         //打开新增模态框
         openAddModal(){

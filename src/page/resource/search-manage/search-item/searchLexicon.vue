@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :search-show="false"  @on-build="openAddModal" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-import="openImportModal"/>
+        <v-search @on-search="search" @on-reset="reset" @on-build="openAddModal" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-import="openImportModal"/>
         <el-table :data="lexiconData" border style="width: 100%"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
             </el-table-column>
@@ -90,7 +90,8 @@ export default {
       let data = {
         method:'list',
         pageNo:Page ,
-        pageSize:10 
+        pageSize:10,
+        name:this.searchName 
       }
       getLexicon(data).then(res=>{
          this.lexiconData = res.data.list
@@ -159,6 +160,14 @@ export default {
             }
         }) 
       }
+    },
+    search(searchName){
+        this.searchName = searchName
+        this._getLexicon(1)
+    },
+    reset(){
+        this.searchName = ''
+        this._getLexicon(1)
     },
     //删除
     remove (params) {

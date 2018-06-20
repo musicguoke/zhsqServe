@@ -30,7 +30,7 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="pageLength" @on-change="pageChange" show-total></Page>
+        <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
       </div>
   </div>
   </Card>
@@ -46,7 +46,7 @@
                 <Input v-model="managerForm.password" placeholder="请输入密码" type="password"></Input>
             </FormItem>
              <FormItem label="密码" v-show="!isAdd">
-                <Input v-model="managerForm.editPassword" placeholder="请输入密码" type="password"></Input>
+                <Input v-model="managerForm.editPassword" placeholder="无新密码输入则保持原密码不变" type="password"></Input>
             </FormItem>
             <FormItem label="管理员类型" prop="role">
                 <Select v-model="managerForm.role" @on-change="managerChange">
@@ -112,10 +112,10 @@ export default {
                 label: '综合市情'
             }, {
                 value: 2,
-                label: '综合区情'
+                label: '规划定位'
             }, {
                 value: 3,
-                label: '规划定位'
+                label: '综合区情'
             }],
             isAdd: true,
             managerTypeList: [
@@ -215,6 +215,7 @@ export default {
                     this.managerForm[i] = params.row[i]
                 }
             }
+            this.managerForm.editPassword = ''
             if (params.row.list.length > 0) {
                 params.row.list.map(v => {
                     this.sysId.push(v.id)
@@ -272,7 +273,11 @@ export default {
                                 }
                             })
                         }else{
-                            data.password = MD5(this.managerForm.editPassword).toString()
+                            if(this.managerForm.editPassword){
+                                data.password = MD5(this.managerForm.editPassword).toString()
+                            }else{
+                                data.password = this.managerForm.password
+                            }
                             data.id = this.managerForm.id
                             updateManager(data).then(res=>{
                                 if (res.code == 20000) {

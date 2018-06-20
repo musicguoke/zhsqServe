@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :search-show="false"  @on-build="openAddModal" @on-import="openImportModal"/>
+        <v-search @on-search="search" @on-reset="reset"  @on-build="openAddModal" @on-import="openImportModal"/>
         <el-table :data="hotSearchData" border style="width: 100%">
             <el-table-column prop="dataCode" label="数据编码" sortable>
             </el-table-column>
@@ -98,7 +98,7 @@ export default {
         method:'list',
         pageNo:Page ,
         pageSize:10 ,
-        dataname:''
+        dataname:this.searchName
       }
       getHotSearch(data).then(res=>{
          this.hotSearchData = res.data.list
@@ -159,6 +159,14 @@ export default {
             }
         }) 
       }
+    },
+    search(searchName){
+        this.searchName = searchName
+        this._getHotSearch(1)
+    },
+    reset(){
+        this.searchName = ''
+        this._getHotSearch(1)
     },
     //删除
     remove (params) {

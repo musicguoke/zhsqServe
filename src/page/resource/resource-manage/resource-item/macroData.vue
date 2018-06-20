@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-search :importShow="false" :buildShow="false" @on-search="_getMacroData(1)" />
+    <div> 
+        <v-search :importShow="false" :buildShow="false" @on-search="search" @on-reset="reset"/>
         <el-table :data="macroData" border style="width: 100%">
             <el-table-column prop="id" label="ID" width="100" sortable>
             </el-table-column>
@@ -106,7 +106,7 @@ export default {
                 pageNo:page,
                 pageSize:10, 
                 method:'list', 
-                title:''  
+                title:this.searchName
             }
             getMacroData(data).then(res=>{
                 this.pageLength = res.data.total
@@ -174,6 +174,14 @@ export default {
                 })
             }
         },
+        search(searchName){
+            this.searchName = searchName
+            this._getMacroData(1)
+        },
+        reset(){    
+            this.searchName = ''
+            this._getMacroData(1)
+        }
     }
 }
 </script>
