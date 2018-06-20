@@ -69,3 +69,16 @@ export function deleteTopicData(id) {
       return Promise.resolve(res.data)
   })
 }
+
+// 获取专题下数据目录
+export function getTopicDataCatalogById(id) {
+  const data = {
+    dpId: id
+  }
+
+  return axios.post(
+    `${url}/sys/msDataPublish/getTabDataByPublish.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}

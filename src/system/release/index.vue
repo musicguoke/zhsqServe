@@ -72,7 +72,7 @@ import TreeTable from '@/components/my-tree/index'
 import vSearch from '@/components/search/index'
 import { getDateTree } from '@/api/system'
 import { getAreaList } from '@/api/catalog'
-import { getTopicDataTree, getTopicDataById, addTopicData, updateTopicData, addCatalogToTopic, deleteTopicData } from '@/api/topics'
+import { getTopicDataTree, getTopicDataCatalogById, getTopicDataById, addTopicData, updateTopicData, addCatalogToTopic, deleteTopicData } from '@/api/topics'
 
 export default {
   components: {
@@ -83,6 +83,7 @@ export default {
     return {
       contentHeight: window.innerHeight - 174 + 'px',
       data3: [],
+      tempDataTree: [],
       code: '',
       uploadUrl: url,
       savePassLoading: false,
@@ -150,7 +151,8 @@ export default {
             text: '编辑'
           }, {
             type: 'warning',
-            text: '数据目录'
+            text: '数据目录',
+            key: 'parentid'
           }, {
             type: 'success',
             text: '添加'
@@ -165,11 +167,11 @@ export default {
   },
   created() {
     this._getTopicDataTree()
-    this._getAreaList()
     this.editItemForm.sysId = this.$route.query.id
   },
   methods: {
     build() {
+      this._getAreaList()
       this.isAdd = true
       this.editItemModal = true
     },
@@ -215,7 +217,7 @@ export default {
         })
       } else if (e.target.innerText === '编辑') {
         this.isAdd = false
-        this._getTopicDataById(item.id)
+        this._getAreaList(item.id)
       } else if (e.target.innerText === '添加') {
         this.editItemForm.dpParentid = item.id
         this.isAdd = true
@@ -224,7 +226,7 @@ export default {
         this.editItemForm.dpId = item.id
         this.editItemForm.dpName = item.dpName
         this.editCatalogModal = true
-        this._getDateTree()
+        this._getDateTree(item.id)
       }
     },
     initData(list) {
@@ -295,8 +297,33 @@ export default {
     },
     _getDateTree(id) {
       getDateTree().then(res => {
-        this.catalogData = res
+        this.catalogData = this.tempDataTree = res
+        this._getTopicDataCatalogById(id)
       })
+    },
+    _getTopicDataCatalogById(id) {
+      getTopicDataCatalogById(id).then(res => {
+        if (res.code === 20000) {
+          let list = []
+          res.data.map(v => {
+            this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
+            list.push(v.dataId)
+          })
+          this.catalogData = this.tempDataTree
+          this.dataIdStr = list.toString()
+        }
+      })
+    },
+    checkData(list, id) {
+      list.map((h, index) => {
+        if (id === h.id) {
+          h.selected = true
+        } else if (h.children) {
+          this.checkData(h.children, id)
+        }
+        list.splice(index, 1, h)
+      })
+      return list
     },
     _addCatalogToTopic(data) {
       addCatalogToTopic(data).then(res => {
@@ -308,10 +335,13 @@ export default {
         }
       })
     },
-    _getAreaList() {
+    _getAreaList(id) {
       getAreaList().then(res => {
         if (res.code === 20000) {
           this.areaQxList = res.data.list
+          if(id) {
+            this._getTopicDataById(id)
+          }
         } else {
           this.$Message.error(res.message)
         }

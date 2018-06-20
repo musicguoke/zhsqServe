@@ -35,6 +35,7 @@ const ContentList = r => require(["@/system/content-list/index"], r);
 const SGroupList = r => require(["@/system/role-group/index"], r);
 const Release = r => require(["@/system/release/index"], r);
 const SystemList = r => require(["@/page/system-list/index"], r);
+const Panorama = r => require(["@/system/720/index"], r);
 
 // user
 const Personal = r => require(["@/page/personal/index"], r);
@@ -324,6 +325,11 @@ const router = new VueRouter({
           path: "content-list",
           component: ContentList,
           meta: { title: "目录管理" }
+        },
+        {
+          path: "720",
+          component: Panorama,
+          meta: { title: "720" }
         },
         {
           path: "release",
