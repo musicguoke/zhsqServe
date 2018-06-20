@@ -23,7 +23,7 @@
             v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
             <!-- 市县不让选择 -->
             <label v-if="column.type === 'selection'">
-              <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
+              <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item, item.isChecked, $event,index)">
             </label>
             <div class="btn-td" v-if="column.type === 'action'"> 
               <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' v-if="checkBtn(item, action)" :key="action.text">
@@ -239,7 +239,12 @@ export default {
             "isShow": true
           });
         }
-        if ((typeof item.isChecked) == "undefined") {
+        if (item.selected) {
+          item = Object.assign({}, item, {
+            "isChecked": true
+          });
+        }
+        if (!item.selected) {
           item = Object.assign({}, item, {
             "isChecked": false
           });
@@ -420,6 +425,7 @@ export default {
       let arr = []
       data.forEach((item) => {
         if (item.selected) {
+          item.isChecked = true
           arr.push(item.id)
         }
         if (item.children && item.children.length > 0) {

@@ -1,6 +1,7 @@
 import router from "../router"
 
 axios.defaults.timeout = 30000
+axios.defaults.withCredentials = true
 
 // 拦截请求
 axios.interceptors.request.use(
