@@ -28,8 +28,8 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-show="isShow&&type!==1" ref="authConfig" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
-      <authority-config1 v-show="isShow&&type==1" ref="authConfig" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-if="type!==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config1 v-else-if="type==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -64,25 +64,25 @@ export default {
     this.sysId = this.$route.query.id
     this.type = this.$route.query.type || ''
   },
-  mounted() {
-    this.$refs.authConfig._getBuildConfig()
-  },
+  mounted() {},
   methods: {
     show() {
-      this.isShow = true
       this.newRole = true
       this.name = '新建角色'
+      this.$refs.authConfig._getBuildConfig('new')
     },
     cancel() {
-      this._getRolesList()
       this.isShow = false
       this.newRole = false
       this.name = ''
     },
     edit(scope) {
       this.name = '编辑角色'
-      this.isShow = true
-      this.$refs.authConfig._getRoleMapById(scope.row.grId)
+      this.$refs.authConfig._getBuildConfig(Number(scope.row.grId), 'role')
+    },
+    // 子组件控制table显示隐藏
+    tableShow(isShow) {
+      this.isShow = isShow                                          
     },
     remove(scope) {
       this.$Modal.confirm({

@@ -5,7 +5,7 @@
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
-      <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="build"/>
+      <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="build" />
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
@@ -27,12 +27,19 @@
               <Option value="4">720</Option>
             </Select>
           </FormItem>
+          <FormItem label="地区选择">
+            <Select v-model="editItemForm.dpAreacode">
+              <Option v-for="(item, index) in areaQxList" :value="item.areacode" :key="index">
+                {{item.areaname}}
+              </Option>
+            </Select>
+          </FormItem>
           <FormItem v-if="!isAdd" label="添加时间">
             <Input v-model="dpAddtime" readonly></Input>
           </FormItem>
           <FormItem v-if="!isAdd" label="图片地址">
-            <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess">
+            <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath" style="width: 70%"></Input>
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials show-upload-list="false" :on-success="handleSuccess">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
@@ -64,6 +71,7 @@ import { url } from '@/api/config'
 import TreeTable from '@/components/my-tree/index'
 import vSearch from '@/components/search/index'
 import { getDateTree } from '@/api/system'
+import { getAreaList } from '@/api/catalog'
 import { getTopicDataTree, getTopicDataById, addTopicData, updateTopicData, addCatalogToTopic, deleteTopicData } from '@/api/topics'
 
 export default {
@@ -86,10 +94,12 @@ export default {
       },
       isAdd: false,
       dpAddtime: '',
+      areaQxList: [],
       editItemForm: {
         dpId: '',
         dpName: '',
         dpType: '',
+        dpAreacode: '',
         dpListorder: '',
         dpAreacode: '',
         dpImagePath: '',
@@ -155,6 +165,7 @@ export default {
   },
   created() {
     this._getTopicDataTree()
+    this._getAreaList()
     this.editItemForm.sysId = this.$route.query.id
   },
   methods: {
@@ -296,13 +307,26 @@ export default {
           this.$Message.error(`添加${res.message}`)
         }
       })
+    },
+    _getAreaList() {
+      getAreaList().then(res => {
+        if (res.code === 20000) {
+          this.areaQxList = res.data.list
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .seach_condition {
   justify-content: flex-end;
+}
+.ivu-form-item-content {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

@@ -28,7 +28,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <authority-config v-show="isShow" ref="authConfig" :newSys="newSys" @cancel="cancel" />
+      <authority-config ref="authConfig" @isShow="tableShow" :newSys="newSys" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -69,10 +69,13 @@ export default {
       this._getSystemList()
     },
     editSys(row) {
-      this.$refs.authConfig._searchSysById(row.id)
-      this.isShow = true
       this.newSys = false
       this.name = '编辑系统'
+      this.$refs.authConfig._getBuildConfig(Number(row.id), 'sys')
+    },
+    // 子组件控制table显示隐藏
+    tableShow(isShow) {
+      this.isShow = isShow                                          
     },
     enterSys(row) {
       this._enterSystem(row)
@@ -102,12 +105,11 @@ export default {
       })
     },
     show() {
-      this.isShow = true
       this.newSys = true
       this.name = '新建系统'
+      this.$refs.authConfig._getBuildConfig('new')
     },
     cancel() {
-      this._getSystemList()
       this.isShow = false
       this.newSys = false
       this.name = '系统列表'
@@ -166,8 +168,6 @@ export default {
             })
           } else {
             this._getSystemList()
-            this.$refs.authConfig._getBuildConfig()
-            this.$refs.authConfig._getAreaList()
           }
         } else {
           this.$Message.error(res.message)

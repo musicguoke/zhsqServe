@@ -1,5 +1,5 @@
 <template>
-  <div class="card-content" style="min-height: 400px;">
+  <div class="card-content" v-show="isShow" style="min-height: 400px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
       <Step title="专题配置" content=""></Step>
@@ -110,6 +110,7 @@ export default {
   },
   data() {
     return {
+      isShow: false,
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298,
       uploadUrl: url,
@@ -243,8 +244,6 @@ export default {
     // 数据初始化
     initFormData() {
       Object.assign(this.$data, this.$options.data())
-      this._getAreaList()
-      this._getBuildConfig()
     },
     tabChange(name) {
       this.tabActiveName = name
@@ -367,7 +366,7 @@ export default {
       })
       return list.toString()
     },
-    _getBuildConfig() {
+    _getBuildConfig(id) {
       getBuildConfig().then(res => {
         this.mapConfigList = res.mapConfigList
         this.mapConfigList.map(v => {
@@ -390,6 +389,9 @@ export default {
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         //
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+        if(typeof(id) === 'number') {
+          this._getRoleMapById(id)
+        }
       })
     },
     _getAreaList() {
@@ -572,6 +574,8 @@ export default {
           }
           this.qx1Change(this.qxLevel)
           this.funNum = res.data.funNum
+          this.isShow = true
+          this.$emit('isShow', this.isShow)
         } else {
           this.$Message.error(res.message)
         }

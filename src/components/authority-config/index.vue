@@ -1,5 +1,5 @@
 <template>
-  <div class="card-content" style="min-height: 400px;">
+  <div class="card-content" v-show="isShow" style="min-height: 400px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
       <Step v-if="type!==2" title="数据配置" content=""></Step>
@@ -83,7 +83,7 @@
           </Select>
         </FormItem>
       </Form>
-      <div style="width: 500px" v-show="current == 1 && !sysOrRole">
+      <div style="width: 500px" v-show="current == 1 && !sysOrRole && type == 2">
         <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
       <div v-show="current == 1 && type !== 2" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
@@ -165,6 +165,7 @@ export default {
   },
   data() {
     return {
+      isShow: false,
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298,
       uploadUrl: url,
@@ -298,8 +299,6 @@ export default {
     // 数据初始化
     initFormData() {
       Object.assign(this.$data, this.$options.data())
-      this._getAreaList()
-      this._getBuildConfig()
     },
     tabChange(name) {
       this.tabActiveName = name
@@ -422,7 +421,7 @@ export default {
       })
       return list.toString()
     },
-    _getBuildConfig() {
+    _getBuildConfig(id, str) {
       getBuildConfig().then(res => {
         this.mapConfigList = res.mapConfigList
         this.mapConfigList.map(v => {
@@ -445,6 +444,15 @@ export default {
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         //
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+        if(typeof(id) === 'number' && str === 'role') { //获取角色信息
+          this._getRoleMapById(id)
+        } else if(typeof(id) === 'number' && str === 'sys') { //获取系统信息
+          this._getAreaList() //区域列表
+          this._searchSysById(id)
+        } else if(typeof(id) === 'string') {
+          this.isShow = true
+          this.$emit('isShow', this.isShow)
+        }
       })
     },
     _getAreaList() {
@@ -553,6 +561,8 @@ export default {
           }
           this.qx1Change(this.qxLevel)
           this.funNum = res.data.funNum
+          this.isShow = true
+          this.$emit('isShow', this.isShow)
         } else {
           this.$Message.error(res.message)
         }
@@ -627,6 +637,8 @@ export default {
           }
           this.qx1Change(this.qxLevel)
           this.funNum = res.data.funNum
+          this.isShow = true
+          this.$emit('isShow', this.isShow)
         } else {
           this.$Message.error(res.message)
         }
