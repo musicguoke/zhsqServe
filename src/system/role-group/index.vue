@@ -28,8 +28,9 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-if="type!==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
-      <authority-config1 v-else-if="type==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-if="type==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <ghdw-role-config v-if="type==2" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config1 v-if="type==3" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -38,12 +39,14 @@
 import { getRolesList, updateRole, deleteRole, updateRoleMap } from '@/api/role'
 import AuthorityConfig1 from '@/components/authority-config/index1'
 import AuthorityConfig from '@/components/authority-config/index'
+import ghdwRoleConfig from '@/components/authority-config/gh-role'
 import vSearch from '@/components/search/index'
 
 export default {
   components: {
     AuthorityConfig,
     AuthorityConfig1,
+    ghdwRoleConfig,
     vSearch
   },
   data() {

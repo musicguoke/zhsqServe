@@ -43,25 +43,25 @@
         </FormItem>
         <FormItem label="ios_iphone封面">
           <Input v-model="formItem.ios_iphone" placeholder="上传后的地址" style="width: 77%"></Input>
-          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess1">
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess1">
             <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
           </Upload>
         </FormItem>
         <FormItem label="ios_ipad封面">
           <Input v-model="formItem.ios_ipad" placeholder="上传后的地址" style="width: 77%"></Input>
-          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess2">
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess2">
             <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
           </Upload>
         </FormItem>
         <FormItem label="android_phone封面">
           <Input v-model="formItem.android_phone" placeholder="上传后的地址" style="width: 77%"></Input>
-          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess3">
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess3">
             <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
           </Upload>
         </FormItem>
         <FormItem label="android_pad封面">
           <Input v-model="formItem.android_pad" placeholder="上传后的地址" style="width: 77%"></Input>
-          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="false" :on-success="handleSuccess4">
+          <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :on-success="handleSuccess4">
             <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
           </Upload>
         </FormItem>
@@ -183,12 +183,7 @@ export default {
         sysName: "",
         type: "",
         areacode: "",
-        enable: '0',
-        ios_iphone: '',
-        ios_ipad: '',
-        android_phone: '',
-        android_pad: '',
-        pc: ''
+        enable: '0'
       },
       formRoleItem: {
         grName: '',
@@ -206,6 +201,7 @@ export default {
       tabDataIdStr: '',
       mapIdStr: '',
       publishIdStr: '',
+      ms720Str: '',
       funNum: '',
       funAry: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       sysId: '',
@@ -341,8 +337,12 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      this.imageList.push(data)
-      this.formItem.ios_iphone = res.data
+      if(res.code == 20000) {
+        this.imageList.push(data)
+        this.$set(this.formItem, 'ios_iphone', res.data)
+      } else {
+        this.$Message.error(res.message)
+      }
     },
     handleSuccess2(res) {
       let data = {
@@ -350,8 +350,12 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      this.imageList.push(data)
-      this.formItem.ios_ipad = res.data
+      if(res.code == 20000) {
+        this.imageList.push(data)
+        this.$set(this.formItem, 'ios_ipad', res.data)
+      } else {
+        this.$Message.error(res.message)
+      }
     },
     handleSuccess3(res) {
       let data = {
@@ -359,8 +363,12 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      this.imageList.push(data)
-      this.formItem.android_phone = res.data
+      if(res.code == 20000) {
+        this.imageList.push(data)
+        this.$set(this.formItem, 'android_phone', res.data)
+      } else {
+        this.$Message.error(res.message)
+      }
     },
     handleSuccess4(res) {
       let data = {
@@ -368,8 +376,12 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      this.imageList.push(data)
-      this.formItem.android_pad = res.data
+      if(res.code == 20000) {
+        this.imageList.push(data)
+        this.$set(this.formItem, 'android_pad', res.data)
+      } else {
+        this.$Message.error(res.message)
+      }
     },
     handleSuccess5(res) {
       let data = {
@@ -377,8 +389,12 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      this.imageList.push(data)
-      this.formItem.pc = res.data
+      if(res.code == 20000) {
+        this.imageList.push(data)
+        this.$set(this.formItem, 'pc', res.data)
+      } else {
+        this.$Message.error(res.message)
+      }
     },
     selectMapConfig(section, row) {
       // 已选择地图项
@@ -572,6 +588,7 @@ export default {
       list.map((h, index) => {
         if (id === h.id) {
           h.selected = true
+          h.isChecked = true
         } else if (h.children) {
           this.checkData(h.children, id)
         }
@@ -614,6 +631,11 @@ export default {
             this.mapConfigList.splice(index, 1, v)
           })
           this.mapIdStr = list.toString()
+          // 720已选
+          res.data.ms720ServerList.map(v => {
+
+          })
+          this.ms720Str = list
           list = []
           res.data.publishList.map(v => {
             this.tempTopicDataTree = this.checkRoleData(this.tempTopicDataTree, v.publishId)
@@ -662,7 +684,8 @@ export default {
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         sysId: this.id,
-        publishIdStr: this.publishIdStr
+        publishIdStr: this.publishIdStr,
+        ms720Str: this.ms720Str
       }, this.formRoleItem)
       addRole(data).then(res => {
         if (res.code === 20000) {
@@ -681,7 +704,8 @@ export default {
         funNum: this.funNum,
         sysId: this.id,
         grId: this.grId,
-        publishIdStr: this.publishIdStr
+        publishIdStr: this.publishIdStr,
+        ms720Str: this.ms720Str
       }, this.formRoleItem)
       updateRole(data).then(res => {
         if (res.code === 20000) {

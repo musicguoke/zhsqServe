@@ -668,72 +668,72 @@ export default {
     _filterCommon(data) {
       filterCommon(data).then((res) => {
         this.userData = []
-        this.type = res.type
-        this.data = res.data
-        this.total = res.total
+        this.type = res.data.type
+        this.data = res.data.data
+        this.total = res.data.total
       })
     },
     _getSysGroup(data) {
       getSysGroup(data).then((res) => {
         this.userData = []
         this.type = 4
-        this.data = res.data
-        this.total = res.total
+        this.data = res.data.data
+        this.total = res.data.total
       })
     },
     _getSoftGroup(data) {
       getSoftGroup(data).then((res) => {
         this.userData = []
         this.type = 5
-        this.data = res.data
-        this.total = res.total
+        this.data = res.data.data
+        this.total = res.data.total
       })
     },
     _getDataCount(data) {
       getDataCount(data).then((res) => {
         this.userData = []
-        this.type = res.type
-        this.data = res.data
-        this.total = res.data.length
+        this.type = res.data.type
+        this.data = res.data.data
+        this.total = res.data.data.length
       })
     },
     _getDateData(data) {
       dateData(data).then((res) => {
         this.userData = []
-        this.type = res.type
-        this.data = res.data
-        this.total = res.total
+        this.type = res.data.type
+        this.data = res.data.data
+        this.total = res.data.total
       })
     },
     _getDateLogData(data) {
       dateLogData(data).then((res) => {
         this.data = []
         this.type = 2
-        this.userData = res.data
-        this.total = res.total
+        this.userData = res.data.data
+        this.total = res.data.total
       })
     },
     _getDateUserLogData(data) {
       dateUserLogData(data).then((res) => {
         this.data = []
-        this.userData = res.data
-        this.total = res.total
+        this.userData = res.data.data
+        this.total = res.data.total
       })
     },
     _getUserGroupSearchByDate(data) {
       getUserGroupSearchByDate(data).then((res) => {
         this.userData = []
         this.userObj = null
-        this.data = res.data
-        this.total = res.total
+        this.data = res.data.data
+        this.total = res.data.total
       })
     },
     _getBranchSearchByDate(data) {
       getBranchSearchByDate(data).then((res) => {
         this.userData = []
         this.departmentObj = null
-        this.data = res.data
-        this.total = res.total
+        this.data = res.data.data
+        this.total = res.data.total
       })
     }
   }

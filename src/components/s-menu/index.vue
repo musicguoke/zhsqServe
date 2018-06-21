@@ -12,7 +12,6 @@
       </template>
       <MenuItem name="content-list">资源目录</MenuItem>
       <MenuItem name="release">发布目录</MenuItem>
-      <MenuItem name="720" v-if="query.type == 2">720</MenuItem>
     </Submenu>
     <Submenu name="2">
       <template slot="title">

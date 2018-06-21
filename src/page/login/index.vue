@@ -74,7 +74,9 @@ export default {
   methods: {
     login(loginInfo) {
       return axios
-        .post(`${url}/sys/sysUser/login.do`, qs.stringify(loginInfo))
+        .post(`${url}/sys/sysUser/login.do`, qs.stringify(loginInfo), {
+          withCredentials: true
+        })
         .then(res => {
           return Promise.resolve(res.data);
         })

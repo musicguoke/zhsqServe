@@ -21,10 +21,7 @@
           </FormItem>
           <FormItem label="数据类型" prop="dpType">
             <Select v-model="editItemForm.dpType">
-              <Option value="1">目录</Option>
-              <Option value="2">矢量</Option>
-              <Option value="3">文本</Option>
-              <Option value="4">720</Option>
+              <Option v-for="(item, index) in dataTypeList" :value="item.typeid" :key="index">{{item.typename}}</Option>
             </Select>
           </FormItem>
           <FormItem label="地区选择">
@@ -73,6 +70,7 @@ import vSearch from '@/components/search/index'
 import { getDateTree } from '@/api/system'
 import { getAreaList } from '@/api/catalog'
 import { getTopicDataTree, getTopicDataCatalogById, getTopicDataById, addTopicData, updateTopicData, addCatalogToTopic, deleteTopicData } from '@/api/topics'
+import { getSTopicTypeList } from '@/api/dataSource-service'
 
 export default {
   components: {
@@ -109,6 +107,7 @@ export default {
       },
       catalogData: [],
       dataIdStr: '',
+      dataTypeList: [],
       catalogValidate: {
         dpName: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -172,6 +171,7 @@ export default {
   methods: {
     build() {
       this._getAreaList()
+      this._getSTopicTypeList()
       this.isAdd = true
       this.editItemModal = true
     },
@@ -339,11 +339,21 @@ export default {
       getAreaList().then(res => {
         if (res.code === 20000) {
           this.areaQxList = res.data.list
+          this._getSTopicTypeList(id)
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
+    _getSTopicTypeList(id) {
+      getSTopicTypeList().then(res => {
+        if (res.code === 20000) {
+          this.dataTypeList = res.data.list
           if(id) {
             this._getTopicDataById(id)
           }
         } else {
-          this.$Message.error(res.message)
+          this.$Message.error()
         }
       })
     }

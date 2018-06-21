@@ -607,74 +607,74 @@ export default {
         _getDataCount(data) {
             getDataCount(data).then((res) => {
                 this.userData = []
-                this.type = res.type
-                this.data = res.data
-                this.total = res.total
+                this.type = res.data.type
+                this.data = res.data.data
+                this.total = res.data.total
             })
         },
         _filterCommon(data) {
             filterCommon(data).then((res) => {
                 this.userData = []
-                this.type = res.type
-                this.data = res.data
-                this.total = res.total
+                this.type = res.data.type
+                this.data = res.data.data
+                this.total = res.data.total
             })
         },
         _getDateData(data) {
             dateData(data).then((res) => {
                 this.userData = []
-                this.type = res.type
-                this.data = res.data
-                this.total = res.total
+                this.type = res.data.type
+                this.data = res.data.data
+                this.total = res.data.total
             })
         },
         _getDateLogData(data) {
             dateLogData(data).then((res) => {
                 this.data = []
                 this.type = 1
-                this.userData = res.data
-                this.total = res.total
+                this.userData = res.data.data
+                this.total = res.data.total
             })
         },
         _getDateUserLogData(data) {
             dateUserLogData(data).then((res) => {
                 this.data = []
                 this.config.level = 2
-                this.userData = res.data
-                this.total = res.total
+                this.userData = res.data.data
+                this.total = res.data.total
             })
         },
         _getUserGroupSearchByDate(data) {
             getUserGroupSearchByDate(data).then((res) => {
                 this.userData = []
                 this.userObj = null
-                this.type = res.type
-                this.data = res.data
-                this.total = res.total
+                this.type = res.data.type
+                this.data = res.data.data
+                this.total = res.data.total
             })
         },
         _getBranchSearchByDate(data) {
             getBranchSearchByDate(data).then((res) => {
                 this.userData = []
-                this.data = res.data
-                this.total = res.total
+                this.data = res.data.data
+                this.total = res.data.total
             })
         },
         _getWordCountByDate(data) {
             getWordCountByDate(data).then((res) => {
                 this.userData = []
-                this.data = res.data
-                this.type = res.type
-                this.total = res.total
+                this.data = res.data.data
+                this.type = res.data.type
+                this.total = res.data.total
             })
         },
         _getWordSearchCountByDate(data) {
             getWordSearchCountByDate(data).then((res) => {
                 this.userData = []
                 this.config.level = 1
-                this.data = res.data
-                this.type = res.type
-                this.total = res.total
+                this.data = res.data.data
+                this.type = res.data.type
+                this.total = res.data.total
             })
         }
     }

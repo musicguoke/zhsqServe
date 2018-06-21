@@ -5,7 +5,11 @@ import { url } from "./config.js";
 axios.defaults.withCredentials = true;
 
 export function logout() {
-  return axios.post(`${url}/sys/sysUser/logout.do`).then(res => {
+  const data = {
+    type: 1
+  }
+
+  return axios.post(`${url}/sys/sysUser/logout.do`, qs.stringify(data)).then(res => {
     return Promise.resolve(res.data);
   });
 }

@@ -140,8 +140,6 @@ export default {
     checkBtn(row, column) {
       if(column.key && column.key === 'parentId') {
         return row[column.key] === '-1' ? true : false
-      } else if(column.key && column.key === 'parentid') {
-        return row[column.key] == '-1' ? false : true
       } else {
         return true
       }
@@ -241,16 +239,16 @@ export default {
             "isShow": true
           });
         }
-        if (item.selected) {
-          item = Object.assign({}, item, {
-            "isChecked": true
-          });
-        }
-        if (!item.selected) {
-          item = Object.assign({}, item, {
-            "isChecked": false
-          });
-        }
+        // if (item.selected) {
+        //   item = Object.assign({}, item, {
+        //     "isChecked": true
+        //   });
+        // }
+        // if (!item.selected) {
+        //   item = Object.assign({}, item, {
+        //     "isChecked": false
+        //   });
+        // }
         item = Object.assign({}, item, {
           "load": (item.expand ? true : false)
         });
