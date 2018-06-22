@@ -98,7 +98,8 @@ export default {
                     path: '/system',
                     query: {
                       id: res.data.userInfo.list[0].id,
-                      systemname: res.data.userInfo.list[0].sysName
+                      systemname: res.data.userInfo.list[0].sysName,
+                      type: res.data.userInfo.list[0].type
                     }
                   })
                 }

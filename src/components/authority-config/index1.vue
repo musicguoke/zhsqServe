@@ -82,13 +82,7 @@
 </template>
 
 <script>
-import { url } from '@/api/config'
-import {
-  getBuildConfig,
-  addSystem,
-  searchSysById,
-  updateSystem
-} from '@/api/system'
+import { getBuildConfig } from '@/api/system'
 import { addRole, updateRole, getRoleMapById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
@@ -102,10 +96,6 @@ export default {
       type: Boolean,
       default: false
     },
-    sysOrRole: {
-      type: Boolean,
-      default: true
-    },
     id: ''
   },
   data() {
@@ -113,7 +103,6 @@ export default {
       isShow: false,
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298,
-      uploadUrl: url,
       appBgArray: [1],
       code: '', // 目录树code
       tabActiveName: '0',
@@ -128,12 +117,7 @@ export default {
         sysName: "",
         type: "",
         areacode: "",
-        enable: '0',
-        ios_iphone: '',
-        ios_ipad: '',
-        android_phone: '',
-        android_pad: '',
-        pc: ''
+        enable: '0'
       },
       formRoleItem: {
         grName: '',
@@ -280,51 +264,6 @@ export default {
         this._updateRole()
       }
     },
-    handleSuccess1(res) {
-      let data = {
-        type: "ios_iphone",
-        imagePath: res.data,
-        imageType: "1"
-      }
-      this.imageList.push(data)
-      this.formItem.ios_iphone = res.data
-    },
-    handleSuccess2(res) {
-      let data = {
-        type: "ios_ipad",
-        imagePath: res.data,
-        imageType: "1"
-      }
-      this.imageList.push(data)
-      this.formItem.ios_ipad = res.data
-    },
-    handleSuccess3(res) {
-      let data = {
-        type: "android_phone",
-        imagePath: res.data,
-        imageType: "1"
-      }
-      this.imageList.push(data)
-      this.formItem.android_phone = res.data
-    },
-    handleSuccess4(res) {
-      let data = {
-        type: "android_pad",
-        imagePath: res.data,
-        imageType: "1"
-      }
-      this.imageList.push(data)
-      this.formItem.android_pad = res.data
-    },
-    handleSuccess5(res) {
-      let data = {
-        type: "pc",
-        imagePath: res.data,
-        imageType: "1"
-      }
-      this.imageList.push(data)
-      this.formItem.pc = res.data
-    },
     selectMapConfig(section, row) {
       // 已选择地图项
       let id = []
@@ -389,132 +328,15 @@ export default {
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         //
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+        //
+        this.checkFunNum(this.$route.query.funNum)
         if(typeof(id) === 'number') {
           this._getRoleMapById(id)
+        } else if(typeof(id) === 'string') {
+          this.isShow = true
+          this.$emit('isShow', this.isShow)
         }
       })
-    },
-    _getAreaList() {
-      getAreaList().then(res => {
-        if (res.code === 20000) {
-          this.areaQxList = res.data.list
-        } else {
-          this.$Message.error(res.message)
-        }
-      })
-    },
-    _addSystem() {
-      let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
-        cilentAuthorityStr: this.cilentAuthorityStr,
-        mapIdStr: this.mapIdStr,
-        funNum: this.funNum,
-        imageList: this.imageList
-      }, this.formItem)
-      addSystem(JSON.stringify(data)).then(res => {
-        if (res.code === 20000) {
-          this.$Message.success(`添加${res.message}`)
-          this.cancel()
-        } else {
-          this.$Message.error(`添加${res.message}`)
-        }
-      })
-    },
-    _updateSystem() {
-      let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
-        cilentAuthorityStr: this.cilentAuthorityStr,
-        mapIdStr: this.mapIdStr,
-        funNum: this.funNum,
-        id: this.sysId,
-        imageList: this.imageList,
-        sysName: this.formItem.sysName,
-        type: this.formItem.type,
-        areacode: this.formItem.areacode,
-        enable: this.formItem.enable,
-      })
-      updateSystem(JSON.stringify(data)).then(res => {
-        if (res.code === 20000) {
-          this.$Message.success(`修改${res.message}`)
-          this.cancel()
-        } else {
-          this.$Message.error(`修改${res.message}`)
-        }
-      })
-    },
-    _searchSysById(id) {
-      this.current = 0
-      searchSysById(id).then(res => {
-        if (res.code === 20000) {
-          this.formItem = {
-            sysName: res.data.sysName,
-            type: res.data.type.toString(),
-            areacode: res.data.areacode,
-            enable: res.data.enable.toString()
-          }
-          if (res.data.imageList) {
-            res.data.imageList.map(v => {
-              this.formItem[v.type] = v.imagePath
-            })
-          }
-          this.sysId = res.data.id
-          let list = []
-          this.featureList.map(v => {
-            // 判断该系统的已选功能项
-            v._checked = false
-            list = []
-            res.data.cilentAuthorityList.map(h => {
-              if (v.id === h.funId) {
-                v._checked = true
-              }
-              list.push(h.funId)
-            })
-          })
-          this.cilentAuthorityStr = list.toString()
-          this.mapConfigList.map((v, index) => {
-            // 判断该系统的已选地图项
-            v._checked = false
-            list = []
-            res.data.mapList.map(h => {
-              if (v.id === h.funId) {
-                v._checked = true
-              }
-              list.push(h.funId)
-            })
-            this.mapConfigList.splice(index, 1, v)
-          })
-          this.mapIdStr = list.toString()
-          list = []
-          res.data.msSystemDatainfoList.map(v => {
-            this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
-            list.push(v.dataId)
-          })
-          this.tabDataIdStr = list.toString()
-          this.dataTree = this.tempDataTree
-          if (res.data.funNum < 11) {
-            this.qxLevel = '一级权限'
-          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
-            this.qxLevel = '二级权限'
-          } else if (res.data.funNum > 20) {
-            this.qxLevel = '三级权限'
-          }
-          this.qx1Change(this.qxLevel)
-          this.funNum = res.data.funNum
-        } else {
-          this.$Message.error(res.message)
-        }
-      })
-    },
-    checkData(list, id) {
-      list.map((h, index) => {
-        if (id === h.id) {
-          h.selected = true
-        } else if (h.children) {
-          this.checkData(h.children, id)
-        }
-        list.splice(index, 1, h)
-      })
-      return list
     },
     //获得角色详细信息
     _getRoleMapById(id) {
@@ -560,20 +382,12 @@ export default {
           this.topicDataTree = this.tempTopicDataTree
           list = []
           res.data.msRoleDataList.map(v => {
-            this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
+            // this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
             list.push(v.sysData)
           })
           this.tabDataIdStr = list.toString()
-          this.dataTree = this.tempDataTree
-          if (res.data.funNum < 11) {
-            this.qxLevel = '一级权限'
-          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
-            this.qxLevel = '二级权限'
-          } else if (res.data.funNum > 20) {
-            this.qxLevel = '三级权限'
-          }
-          this.qx1Change(this.qxLevel)
-          this.funNum = res.data.funNum
+          // this.dataTree = this.tempDataTree
+          this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
         } else {
@@ -592,6 +406,17 @@ export default {
       })
       return list
     },
+    checkFunNum(funNum) {
+      if (funNum < 11) {
+        this.qxLevel = '一级权限'
+      } else if (funNum > 10 && funNum < 21) {
+        this.qxLevel = '二级权限'
+      } else if (funNum > 20) {
+        this.qxLevel = '三级权限'
+      }
+      this.qx1Change(this.qxLevel)
+      this.funNum = funNum
+    },
     _addRole() {
       let data = Object.assign({}, {
         tabDataIdStr: this.tabDataIdStr,
@@ -599,7 +424,8 @@ export default {
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         sysId: this.id,
-        publishIdStr: this.publishIdStr
+        publishIdStr: this.publishIdStr,
+        ms720Str: ''
       }, this.formRoleItem)
       addRole(data).then(res => {
         if (res.code === 20000) {
@@ -618,7 +444,8 @@ export default {
         funNum: this.funNum,
         sysId: this.id,
         grId: this.grId,
-        publishIdStr: this.publishIdStr
+        publishIdStr: this.publishIdStr,
+        ms720Str: ''
       }, this.formRoleItem)
       updateRole(data).then(res => {
         if (res.code === 20000) {
@@ -627,15 +454,6 @@ export default {
         } else {
           this.$Message.error(`修改${res.message}`)
         }
-      })
-    },
-    _uploadImg() {
-      let formData = new FormData()
-      // 向 formData 对象中添加文件
-      formData.append('file', this.uploadData.file)
-      formData.append('type', this.uploadData.type)
-      uploadImg(formData).then(res => {
-        console.log(res)
       })
     }
   }

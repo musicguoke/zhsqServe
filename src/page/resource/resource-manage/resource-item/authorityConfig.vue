@@ -25,7 +25,7 @@
       <h3 slot="header" style="color:#2D8CF0">权限信息</h3>
       <Form ref="import_form" :model="itemInfo" :label-width="90">
         <FormItem label="ID">
-          <Input v-model="itemInfo.id" placeholder="请输入版本名称"></Input>
+          <Input v-model="itemInfo.id" readonly></Input>
         </FormItem>
         <FormItem label="模块名称">
           <Input v-model="itemInfo.moduleName" placeholder="请输入模块名称"></Input>

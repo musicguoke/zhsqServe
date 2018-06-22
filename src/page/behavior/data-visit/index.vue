@@ -2,7 +2,7 @@
   <Content>
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>资源管理</BreadcrumbItem>
-      <BreadcrumbItem>资源列表</BreadcrumbItem>
+      <BreadcrumbItem>数据访问</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
       <div id="service-analysis">
@@ -186,12 +186,12 @@
                 <td>{{index + params.start + 1}}</td>
                 <td v-if="type == 2 || type == 3">{{item.visitCode}}</td>
                 <td v-if="type == 2 || type == 3">{{item.visitName}}</td>
-                <td>{{item.arTrueName}}</td>
+                <td>{{item.userName}}</td>
                 <td>{{item.system}}</td>
                 <td>{{item.visitType}}</td>
                 <td v-if="type == 1">{{item.sysVersion}}</td>
                 <td v-if="type == 1">{{item.softVersion}}</td>
-                <td>{{item.arBranchName}}</td>
+                <td>{{item.branchName}}</td>
                 <td>{{format(item.visitTime)}}</td>
               </tr>
             </tbody>

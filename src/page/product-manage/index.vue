@@ -163,6 +163,7 @@ export default {
               query: {
                 id: id,
                 type: data.type,
+                funNum: data.funNum,
                 systemname: data.sysName
               }
             })

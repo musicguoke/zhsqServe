@@ -10,8 +10,14 @@
         <FormItem label="数据名称" prop="name">
           <Input v-model="editItemForm.name" placeholder="请输入输入数据名称"></Input>
         </FormItem>
+        <FormItem label="数据排序" prop="listorder">
+          <Input v-model="editItemForm.listorder" placeholder="请输入数据描述"></Input>
+        </FormItem>
         <FormItem label="数据描述" prop="description">
           <Input v-model="editItemForm.description" placeholder="请输入数据描述"></Input>
+        </FormItem>
+        <FormItem label="访问地址" prop="datapath">
+          <Input v-model="editItemForm.datapath" placeholder="请输入数据描述"></Input>
         </FormItem>
         <FormItem label="数据类型" prop="type">
           <Select v-model="editItemForm.type">
@@ -86,13 +92,7 @@ export default {
         areacode: '',
         name: ''
       },
-      editItemForm: {
-        id: '',
-        name: '',
-        type: '',
-        description: '',
-        time: ''
-      },
+      editItemForm: {},
       dataColumns: [
         {
           type: 'selection',
@@ -139,7 +139,15 @@ export default {
       this.importModal = false
     },
     saveEditPass() {
-      this._updateMsTabDatainfo()
+      const data = {
+        id: this.editItemForm.id,
+        name: this.editItemForm.name,
+        type: this.editItemForm.type,
+        listorder: this.editItemForm.listorder,
+        datapath: this.editItemForm.datapath,
+        description: this.editItemForm.description
+      }
+      this._updateMsTabDatainfo(data)
     },
     handleSuccessUpload(response, file) {
       console.log('上传成功')
@@ -225,13 +233,8 @@ export default {
     _getMsTabDatainfoById(id) {
       getMsTabDatainfoById(id).then(res => {
         if (res.code === 20000) {
-          this.editItemForm = {
-            id: res.data.id,
-            name: res.data.name,
-            type: res.data.type,
-            description: res.data.description,
-            time: this._mm.formatDate(res.data.updatetime)
-          }
+          this.editItemForm = res.data
+          this.editItemForm.time = this._mm.formatDate(res.data.updatetime)
           this.editItemModal = true
         } else {
           this.$Message.error(`获取${res.message}`)
@@ -242,6 +245,7 @@ export default {
       updateMsTabDatainfo(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`修改${res.message}`)
+          this.editItemModal = false
           this._getAreaCatalog()
         } else {
           this.$Message.error(`修改${res.message}`)

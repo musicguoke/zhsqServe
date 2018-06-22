@@ -418,7 +418,7 @@ export default {
     },
     // 权限选择
     qx1Change(value) {
-      console.log(value)
+      this.funNum = ''
       if (value === '一级权限') {
         this.funAry = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
       } else if (value === '二级权限') {
@@ -460,12 +460,15 @@ export default {
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         //
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+        //
+        this.checkFunNum(this.$route.query.funNum)
         if(typeof(id) === 'number' && str === 'role') { //获取角色信息
           this._getRoleMapById(id)
         } else if(typeof(id) === 'number' && str === 'sys') { //获取系统信息
           this._getAreaList() //区域列表
           this._searchSysById(id)
         } else if(typeof(id) === 'string') {
+          this._getAreaList() //区域列表
           this.isShow = true
           this.$emit('isShow', this.isShow)
         }
@@ -563,20 +566,12 @@ export default {
           this.mapIdStr = list.toString()
           list = []
           res.data.msSystemDatainfoList.map(v => {
-            this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
+            // this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
             list.push(v.dataId)
           })
           this.tabDataIdStr = list.toString()
-          this.dataTree = this.tempDataTree
-          if (res.data.funNum < 11) {
-            this.qxLevel = '一级权限'
-          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
-            this.qxLevel = '二级权限'
-          } else if (res.data.funNum > 20) {
-            this.qxLevel = '三级权限'
-          }
-          this.qx1Change(this.qxLevel)
-          this.funNum = res.data.funNum
+          // this.dataTree = this.tempDataTree
+          this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
         } else {
@@ -645,20 +640,12 @@ export default {
           this.topicDataTree = this.tempTopicDataTree
           list = []
           res.data.msRoleDataList.map(v => {
-            this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
+            // this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
             list.push(v.sysData)
           })
           this.tabDataIdStr = list.toString()
-          this.dataTree = this.tempDataTree
-          if (res.data.funNum < 11) {
-            this.qxLevel = '一级权限'
-          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
-            this.qxLevel = '二级权限'
-          } else if (res.data.funNum > 20) {
-            this.qxLevel = '三级权限'
-          }
-          this.qx1Change(this.qxLevel)
-          this.funNum = res.data.funNum
+          // this.dataTree = this.tempDataTree
+          this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
         } else {
@@ -676,6 +663,17 @@ export default {
         list.splice(index, 1, h)
       })
       return list
+    },
+    checkFunNum(funNum) {
+      if (funNum < 11) {
+        this.qxLevel = '一级权限'
+      } else if (funNum > 10 && funNum < 21) {
+        this.qxLevel = '二级权限'
+      } else if (funNum > 20) {
+        this.qxLevel = '三级权限'
+      }
+      this.qx1Change(this.qxLevel)
+      this.funNum = funNum
     },
     _addRole() {
       let data = Object.assign({}, {
@@ -714,15 +712,6 @@ export default {
         } else {
           this.$Message.error(`修改${res.message}`)
         }
-      })
-    },
-    _uploadImg() {
-      let formData = new FormData()
-      // 向 formData 对象中添加文件
-      formData.append('file', this.uploadData.file)
-      formData.append('type', this.uploadData.type)
-      uploadImg(formData).then(res => {
-        console.log(res)
       })
     }
   }

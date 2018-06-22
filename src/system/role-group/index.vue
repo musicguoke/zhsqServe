@@ -28,9 +28,9 @@
           <Page :total="total" :current="page" @on-change="_getRolesList"></Page>
         </div>
       </div>
-      <authority-config v-if="type==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
-      <ghdw-role-config v-if="type==2" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
-      <authority-config1 v-if="type==3" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config v-if="type==3" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <ghdw-role-config v-if="type==2" ref="authConfig" @isShow="tableShow" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config1 v-if="type==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
