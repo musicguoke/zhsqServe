@@ -35,7 +35,7 @@
                 </div>
             </div>
         </Card>
-        <Modal v-model="parameterModal" :title=modalTitle @on-ok="addOrUpdate" ref="modal">
+        <Modal v-model="parameterModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="parameterForm" :label-width="70">
                 <FormItem label="变量名">
                     <Input v-model="parameterForm.metaKey" placeholder="请输入变量名..."></Input>
@@ -61,6 +61,28 @@
                 </FormItem>
             </Form>
         </Modal>
+        <Modal v-model="parameterDetailModal" :title=modalTitle ref="modal">
+            <Form :model="parameterForm" :label-width="70">
+                <FormItem label="变量名">
+                    <Input v-model="parameterForm.metaKey"  readonly></Input>
+                </FormItem>
+                <FormItem label="类型">
+                    <Input v-model="parameterForm.metaType"  readonly></Input>
+                </FormItem>
+                <FormItem label="值">
+                    <Input v-model="parameterForm.metaValue"  readonly></Input>
+                </FormItem>
+                <FormItem label="能否编辑">
+                    <Input v-model="parameterForm.metaIskeepName" readonly></Input>
+                </FormItem>
+                <FormItem label="预选值（用|分割）" v-show="parameterForm.metaType == 'select'">
+                    <Input v-model="parameterForm.metaSelectvalue"  readonly></Input>
+                </FormItem>
+                <FormItem label="描述">
+                    <Input v-model="parameterForm.metaDec"  readonly></Input>
+                </FormItem>
+            </Form>
+        </Modal>
     </Content>
 </template>
 
@@ -77,6 +99,7 @@ export default {
             searchName: '',
             searchManagerType: '',
             parameterModal: false,
+            parameterDetailModal:false,
             modalTitle: '',
             pageLength: 0,
             nowPage: 1,
@@ -85,6 +108,7 @@ export default {
                 metaType: '',
                 metaValue: '',
                 metaIskeep: '',
+                metaIskeepName:'',
                 metaSelectvalue: '',
                 metaDec: '',
                 metaId: ''
@@ -143,7 +167,6 @@ export default {
             for (var i in this.parameterForm) {
                 this.parameterForm[i] = ''
             }
-             this.$refs.modal.footerHide = false
         },
         parameterEditOpen(params) {
             this.isAdd = false
@@ -155,10 +178,9 @@ export default {
                     this.parameterForm[i] = params.row[i]
                 }
             }
-             this.$refs.modal.footerHide = false
         },
         parameterDetailOpen(params) {
-            this.parameterModal = true;
+            this.parameterDetailModal = true;
             this.modalTitle = '查看详情';
             for (var i in this.parameterForm) {
                 if (params.row[i]) {
@@ -166,6 +188,7 @@ export default {
                     this.parameterForm[i] = params.row[i]
                 }
             }
+            this.parameterForm.metaIskeepName = this.parameterForm.metaIskeep == 1?'不能编辑':'能编辑'
             this.$refs.modal.footerHide = true
         },
         addOrUpdate() {
@@ -210,7 +233,7 @@ export default {
                     deleteParameter(data).then(res => {
                         if (res.code == 20000) {
                             this.$Message.success('删除成功');
-                            this._getParameterList(this.nowPage)
+                            this._getParameterList(1)
                         }
                     })
                 },

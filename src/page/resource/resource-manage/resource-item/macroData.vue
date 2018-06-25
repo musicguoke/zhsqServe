@@ -25,7 +25,7 @@
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
         <Modal v-model="macroDataModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="macroDataForm"  :label-width="80">
+            <Form :model="macroDataForm"  :label-width="100" style="max-height:400px;overflow:auto">
                 <FormItem label="数据名称">
                     <Input v-model="macroDataForm.name" ></Input>
                 </FormItem>

@@ -21,13 +21,8 @@
                         </el-table-column>
                         <el-table-column prop="pContent" label="内容" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <!-- <el-table-column prop="pFilename" label="文件名">
-            </el-table-column>
-            <el-table-column prop="pFileurl" label="文件地址">
-            </el-table-column> -->
                         <el-table-column label="操作" width="160" align="center">
                             <template slot-scope="scope">
-                                <!-- <Button type="info" @click="pushEditOpen(scope)" size="small"  class="marginRight">编辑</Button> -->
                                 <Button type="error" @click="remove(scope)" size="small">删除</Button>
                             </template>
                         </el-table-column>
@@ -40,27 +35,32 @@
         </Card>
         <Modal v-model="pushModal" :title=modalTitle @on-ok="savePushMessage">
             <Form :model="pushForm" :label-width="80">
-                <FormItem label="用户组">
-                    <Select v-model="pushForm.pGroup">
+                <FormItem label="选择系统" v-if="!$route.query.id">
+                    <Select v-model="pushForm.pSysList" multiple :label-in-value="true" @on-change="filterGroup">
+                        <Option v-for="item in sysData" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="推送目标">
+                    <RadioGroup v-model="pushForm.pGoalType" @on-change="radioChange">
+                        <Radio label="0">用户组</Radio>
+                        <Radio label="1">用户</Radio>
+                    </RadioGroup>
+                </FormItem>
+                <FormItem label="用户组" v-show="isGroup">
+                    <Select v-model="pushForm.pGroupList" multiple :label-in-value="true" @on-change="getGroupInfo">
                         <Option v-for="item in roleData" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="推送用户">
-                    <Input v-model="pushForm.pRemark" placeholder="请选择推送用户..." style='width:330px'></Input>
-                    <Button type="primary" icon="person-add" @click="_getUserList">添加</Button>
+                <FormItem label="推送用户" v-show="!isGroup">
+                    <Input v-model="pushForm.pRemark" readonly placeholder="请选择推送用户..." style='width:330px'></Input>
+                    <Button type="primary" icon="person-add" @click="openGetUser">添加</Button>
                 </FormItem>
                 <FormItem label="推送类型">
-                    <RadioGroup v-model="pushForm.pType" @on-change="radioChange">
+                    <RadioGroup v-model="pushForm.pType">
                         <Radio label="0">消息</Radio>
                         <Radio label="1">版本</Radio>
                         <!-- <Radio label="2">文件</Radio> -->
                     </RadioGroup>
-                </FormItem>
-                <FormItem label="文件名" v-show="isFile">
-                    <Input v-model="pushForm.pFilename" placeholder="请输入文件名..."></Input>
-                </FormItem>
-                <FormItem label="文件路径" v-show="isFile">
-                    <Input v-model="pushForm.pFileurl" placeholder="请输入文件路径..."></Input>
                 </FormItem>
                 <FormItem label="内容">
                     <Input v-model="pushForm.pContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
@@ -106,8 +106,9 @@
 
 <script>
 import { getPushList, addPushList, deletePush, deletePushs } from '@/api/interactive-service'
+import { getRolesList } from '@/api/user-service'
 import { getUserList, getAreaCode } from '@/api/user-service'
-import { getRolesList } from '@/api/role'
+import { getSystemList } from '@/api/system'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -121,9 +122,11 @@ export default {
             pushModal: false,
             chooseUserModal: false,
             modalTitle: '',
-            isFile: false,
+            isGroup: true,
             pushData: [],
+            sysData:[],
             roleData: [],
+            sysData:[],
             userData: [],
             countyList: [],
             selectUserList: { userName: [], userIds: [] },
@@ -131,27 +134,39 @@ export default {
             total: 0,
             nowPage: 1,
             pushForm: {
-                pGroup: '',
+                pSysList:[],
+                pGroupList:[],
+                pGroup:'',
                 pRemark: '',
-                pType: '0',
-                pFilename: '',
-                pFileurl: '',
+                pType:'',
                 pContent: '',
-                userIds: ''
+                userIds: '',
+                pGoalType:''
             },
             selectedId: []
         }
     },
     created() {
         this._getPushList(1)
-        getRolesList("", 1).then(res => {
-            res.data.list.map(v => {
-                this.roleData.push({
-                    value: v.grId,
-                    label: v.grName
+        getSystemList(1).then(res => {
+            let data = res.data.list
+            for (let i in data) {
+                this.sysData.push({
+                    value: data[i].id,
+                    label: data[i].sysName
+                })
+            }
+        })
+        if(this.$route.query.id){
+            getRolesList().then(res => {
+                res.data.list.map(v => {
+                    this.roleData.push({
+                        value: v.grId,
+                        label: v.grName
+                    })
                 })
             })
-        })
+        }
         getAreaCode().then(res => {
             for (let i in res.data.list) {
                 this.countyList.push({
@@ -186,12 +201,14 @@ export default {
             this._getPushList(page)
         },
         pushAddOpen() {
-            this.pushModal = true;
+            this.pushModal = true
+            this.isGroup = true
             for (var i in this.pushForm) {
                 this.pushForm[i] = ''
             }
             this.pushForm.pType = '0'
-            this.searchUser(1)
+            this.pushForm.pGoalType = '0'
+            this.pushForm.pGroupList = []
             this.modalTitle = '新增推送'
         },
         pushEditOpen(params) {
@@ -202,14 +219,46 @@ export default {
                 }
             }
         },
-        _getUserList() {
-            this.chooseUserModal = true
+        openGetUser(){
+            if(this.pushForm.pSysList.length != 0 || this.$route.query.id){
+                this.chooseUserModal = true
+                this.searchUserName = ''
+                this._getUserList(1)
+            }else{
+                this.$Message.error('请先选择系统')
+            }
+        },
+        _getUserList(page) {
+            let data = {
+                methods: 'list',
+                pageNo: page,
+                pageSize: 10,
+                arTruename: this.searchUserName,
+                sysIdList:this.pushForm.pSysList?this.pushForm.pSysList.join(','):''
+            }
+            getUserList(data).then(res => {
+                this.userData = []
+                let data = res.data.list
+                for (let i in data) {
+                    this.countyList.map(v => {
+                        if (v.value == data[i].arAreacode) {
+                            data[i].areaname = v.label
+                        }
+                    })
+                    this.userData.push(data[i])
+                }
+                this.total = res.data.total
+            })
         },
         radioChange() {
-            if (this.pushForm.pType == '2') {
-                this.isFile = true;
+            if (this.pushForm.pGoalType == '0') {
+                this.isGroup = true
+                this.pushForm.pRemark = ''
+                this.pushForm.pGroup = ''
             } else {
-                this.isFile = false;
+                this.isGroup = false
+                this.pushForm.userIds = ''
+                this.pushForm.pRemark = ''
             }
         },
         remove(params) {
@@ -260,27 +309,34 @@ export default {
                 onCancel: () => { }
             })
         },
+        //通过系统id过滤角色
+        filterGroup(){
+            this.roleData = []
+            this.pushForm.pSysList.map(v=>{
+                getRolesList(v).then(res => {
+                    res.data.list.map(v => {
+                        this.roleData.push({
+                            value: v.grId,
+                            label: v.grName
+                        })
+                    })
+                })
+            })
+        },
+        //选择用户组
+        getGroupInfo(data){
+            let id = []
+            let name = []
+            data.map(v=>{
+                id.push(v.value)
+                name.push(v.label)
+            })
+            this.pushForm.pGroup = Array.from(id).join(",")
+            this.pushForm.pRemark = Array.from(name).join(",")
+        },
         //搜索用户
         searchUser(page) {
-            let data = {
-                methods: 'list',
-                pageNo: page,
-                pageSize: 10,
-                arTruename: this.searchUserName
-            }
-            getUserList(data).then(res => {
-                this.userData = []
-                let data = res.data.list
-                for (let i in data) {
-                    this.countyList.map(v => {
-                        if (v.value == data[i].arAreacode) {
-                            data[i].areaname = v.label
-                        }
-                    })
-                    this.userData.push(data[i])
-                }
-                this.total = res.data.total
-            })
+            this._getUserList(page)
         },
         //选择用户
         selectUser(val) {
@@ -306,8 +362,8 @@ export default {
                 pGroup: this.pushForm.pGroup,
                 pRemark: this.pushForm.pRemark,
                 pType: this.pushForm.pType,
-                pFilename: this.pushForm.pFilename,
-                pFileurl: this.pushForm.pFileurl,
+                // pFilename: this.pushForm.pFilename,
+                // pFileurl: this.pushForm.pFileurl,
                 pContent: this.pushForm.pContent,
                 userIds: this.pushForm.userIds
             }

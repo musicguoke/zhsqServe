@@ -148,23 +148,21 @@
             </el-table>
         </Modal>
         <Modal v-model="equipmentEditModal" :title=modalTitle @on-ok="updateEquipment">
-            <Form :model="equipmentForm" :label-width="80">
+            <Form :model="equipmentForm" :label-width="100">
                 <FormItem label="设备类型">
-                    <Select v-model="equipmentForm.arOs" placeholder="请选择...">
-                        <Option v-for="item in equipmentType" :value="item.value" :key="item.key">{{ item.label }}</Option>
-                    </Select>
+                    <Input v-model="equipmentForm.arOs" readonly placeholder="请输入..."></Input>
                 </FormItem>
                 <FormItem label="绑定码">
                     <Input v-model="equipmentForm.arCodeBind" placeholder="请输入..."></Input>
                 </FormItem>
                 <FormItem label="登陆次数">
-                    <Input v-model="equipmentForm.arLogincount" placeholder="请输入..."></Input>
+                    <Input v-model="equipmentForm.arLogincount" readonly placeholder="请输入..."></Input>
                 </FormItem>
                 <FormItem label="注册时间">
-                    <Input v-model="equipmentForm.arRegtime" placeholder="请输入..."></Input>
+                    <Input v-model="equipmentForm.arRegtime" readonly placeholder="请输入..."></Input>
                 </FormItem>
                 <FormItem label="最后登陆时间">
-                    <Input v-model="equipmentForm.arLastlogintime" placeholder="请输入..."></Input>
+                    <Input v-model="equipmentForm.arLastlogintime" readonly	placeholder="请输入..."></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -185,11 +183,6 @@ export default {
     data() {
         //对角色字段单独验证
         const validateRole = (rule, value, callback) => {
-            // if (!value) {
-            //     return callback(new Error('请选择角色'));
-            // }else{
-               
-            // }
              callback();
         }
         return {
@@ -251,24 +244,6 @@ export default {
             systemList: [],
             groupList: [],
             groupSingleList: [],
-            equipmentType: [
-                {
-                    value: 'ios_iphone',
-                    label: 'ios_iphone'
-                },
-                {
-                    value: 'ios_ipad',
-                    label: 'ios_ipad'
-                },
-                {
-                    value: 'android_phone',
-                    label: 'android_phone'
-                },
-                {
-                    value: 'android_pad',
-                    label: 'android_pad'
-                }
-            ],
             sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
             nowSystemLength: 1,
@@ -605,7 +580,6 @@ export default {
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
-                arPassword: '',
                 arTel: this.userForm.arTel,//座机
                 arMobile: this.userForm.arMobile,//手机
                 arEmail: this.userForm.arEmail,
@@ -631,8 +605,6 @@ export default {
                 data.arId = this.userForm.arId
                 if(this.userForm.arEditPassword){
                     data.arPassword = MD5(this.userForm.arEditPassword).toString()
-                }else{
-                    data.arPassword = this.userForm.arPassword
                 }
                 updateUser(data).then(res => {
                     if (res.code == 20000) {
@@ -692,7 +664,7 @@ export default {
         removeChooseSystem(index) {
             this.nowSystemLength--
             this.sysAndGroupList.splice(index, 1)
-            this.systemList.splice(index, 1)
+            // this.systemList.splice(index, 1)
             this.groupList.splice(index, 1)
         },
         //系统改变，获取对应系统下的角色
