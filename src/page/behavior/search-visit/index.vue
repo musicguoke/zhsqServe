@@ -2,7 +2,7 @@
     <Content>
         <Breadcrumb :style="{padding: '17px 0'}">
             <BreadcrumbItem>资源管理</BreadcrumbItem>
-            <BreadcrumbItem>资源列表</BreadcrumbItem>
+            <BreadcrumbItem>搜索访问</BreadcrumbItem>
         </Breadcrumb>
         <Card :style="{maxHeight: contentHeight}">
             <div id="service-analysis">
@@ -162,15 +162,15 @@
                                 </td>
                                 <td v-else class="hover" @click="getServiceDetail(item.id, item.type, item.name)">{{item.total}}</td>
                             </tr>
-                            <tr v-for="(item, index) in userData">
+                            <tr v-for="(item, index) in userData" :key="index">
                                 <td>{{index + params.start + 1}}</td>
-                                <td>{{item.arTrueName}}</td>
+                                <td>{{item.userName}}</td>
                                 <td>{{item.system}}</td>
                                 <td>{{item.searchName}}</td>
                                 <td>{{item.visitType}}</td>
                                 <td v-if="type == 1">{{item.sysVersion}}</td>
                                 <td v-if="type == 1">{{item.softVersion}}</td>
-                                <td>{{item.arBranchName}}</td>
+                                <td>{{item.branchName}}</td>
                                 <td>{{format(item.visitTime)}}</td>
                             </tr>
                         </tbody>

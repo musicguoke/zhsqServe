@@ -101,6 +101,7 @@ export default {
       selectedId: [],
       list: [],
       listLength: '',
+      isNew: false,
       versionInfo: {
         vTitle: '',
         vVersion: '',
@@ -128,7 +129,7 @@ export default {
           this.list = res.data.list
           this.listLength = res.data.total
         } else {
-          this.$Message.error('好像出什么问题了！')
+          this.$Message.error(res.message)
         }
       })
     },
@@ -157,6 +158,7 @@ export default {
             vSourcename: res.data.vSourcename,
             sysIdStr: res.data.sysIdStr
           }
+          this.isNew = false
           this.modalShow = true
         } else {
           this.$Message.error('好像出什么问题了！')
@@ -199,6 +201,7 @@ export default {
       })
     },
     build() {
+      this.isNew = true
       this.modalShow = true
     },
     handleSuccess(res) {
@@ -217,7 +220,11 @@ export default {
       })
     },
     save() {
-      this._addVersion(this.versionInfo)
+      if(this.isNew) {
+        this._addVersion(this.versionInfo)
+      } else {
+        this.cancel()
+      }
     },
     cancel() {
       this.versionInfo = {

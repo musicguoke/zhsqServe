@@ -28,7 +28,13 @@
           </el-table-column>
         </el-table>
       </div>
-      <authority-config ref="authConfig" @isShow="tableShow" :newSys="newSys" @cancel="cancel" />
+      <authority-config 
+        ref="authConfig"
+        @isShow="tableShow"
+        :newSys="newSys"
+        :buildSys="true"
+        @cancel="cancel"
+      />
     </Card>
   </Content>
 </template>
@@ -107,12 +113,13 @@ export default {
     show() {
       this.newSys = true
       this.name = '新建系统'
-      this.$refs.authConfig._getBuildConfig('new')
+      this.$refs.authConfig._getBuildConfig('new', 'sys')
     },
     cancel() {
       this.isShow = false
       this.newSys = false
       this.name = '系统列表'
+      this._getSystemList()
     },
     _getSystemList(page, name) {
       getSystemList(page, name).then(res => {
@@ -163,6 +170,7 @@ export default {
               query: {
                 id: id,
                 type: data.type,
+                funNum: data.funNum,
                 systemname: data.sysName
               }
             })

@@ -18,12 +18,25 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
-          <td :class="{'label-box': column.type === 'selection'}" 
-            v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
+        <tr 
+          v-for="(item,index) in initItems"
+          :key="item.id" v-show="show(item)"
+          :class="{'child-tr':item.parent}"
+        >
+          <td
+            :class="{'label-box': column.type === 'selection'}" 
+            v-for="(column,snum) in columns"
+            :key="column.key"
+            :style="tdStyle(column)"
+          >
             <!-- 市县不让选择 -->
             <label v-if="column.type === 'selection'">
-              <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item, item.isChecked, $event,index)">
+              <input 
+                type="checkbox" 
+                :value="item.id"
+                v-model="checkGroup"
+                @click="handleCheckClick(item, item.isChecked, $event,index)"
+              >
             </label>
             <div class="btn-td" v-if="column.type === 'action'"> 
               <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' v-if="checkBtn(item, action)" :key="action.text">
@@ -60,6 +73,10 @@ export default {
       default: function () {
         return [];
       }
+    },
+    buildSys: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -239,21 +256,20 @@ export default {
             "isShow": true
           });
         }
-        // if (item.selected) {
-        //   item = Object.assign({}, item, {
-        //     "isChecked": true
-        //   });
-        // }
-        // if (!item.selected) {
-        //   item = Object.assign({}, item, {
-        //     "isChecked": false
-        //   });
-        // }
+        if (item.selected) {
+          item = Object.assign({}, item, {
+            "isChecked": true
+          });
+        }
+        if (!item.selected) {
+          item = Object.assign({}, item, {
+            "isChecked": false
+          });
+        }
         item = Object.assign({}, item, {
           "load": (item.expand ? true : false)
         });
         this.initItems.push(item)
-        // this.pushInitItems(item)
         if (item.children && item.expand) {
           this.initData(item.children, level + 1, item);
         }
@@ -328,8 +344,33 @@ export default {
     },
     //点击check勾选框,判断是否有children节点 如果有就一并勾选
     handleCheckClick(data, status) {
-      data.isChecked = !data.isChecked
+      //判断节点是否被选中，是状态为true，否为false
+      let bol = false
+      this.checkGroup.map((v, i) => {
+        if (v == data.id) {
+          bol = true
+        }
+      })
+      data.isChecked = !bol
+      //所有父级节点也改变状态
+      if(this.buildSys && data.parent) {
+        this.handleParentCheck(data.parent, data.isChecked)
+      }
       this.handleCheck(data, data.isChecked)
+    },
+    handleParentCheck(data, status) {
+      if(data) {
+        data.isChecked = status
+      }
+      if(data && data.isChecked) {
+        let index = this.checkGroup.findIndex(v => v === data.id)
+        if(index < 0) {
+          this.checkGroup.push(data.id)
+        }
+        if(data.parent) {
+          this.handleParentCheck(data.parent, status)
+        }
+      }
     },
     handleCheck(data, status) {
       if(data.children) {

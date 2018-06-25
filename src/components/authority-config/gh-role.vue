@@ -34,11 +34,7 @@
       <div v-show="current == 1" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
       </div>
-      <div
-        style="width: 400px;overflow:auto"
-        :style="{maxHeight: tableHeight + 'px'}"
-        v-show="current == 3"
-      >
+      <div style="width: 400px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 3">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
       </div>
       <div style="width: 400px" v-show="current == 4">
@@ -83,8 +79,8 @@
 
 <script>
 import { url } from '@/api/config'
-import { getBuildConfig, getDateTree } from '@/api/system'
-import { addRole, updateRole, getRoleMapById } from '@/api/role'
+import { getDateTree } from '@/api/system'
+import { addRole, updateRole, getRoleMapById, getRoleModuleById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
 
@@ -139,6 +135,7 @@ export default {
       publishIdStr: '',
       ms720Str: '',
       funNum: '',
+      sysFunNum: '',
       funAry: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       sysId: '',
       grId: '',
@@ -214,8 +211,10 @@ export default {
     }
   },
   created() {
+    this._getDataTree()
     this.sys = this.$route.query.id || ''
     this.type = Number(this.$route.query.type) || ''
+    this.sysFunNum = Number(this.$route.query.funNum) || ''
   },
   methods: {
     addAppBg() {
@@ -305,9 +304,12 @@ export default {
         this.dataTree = this.tempDataTree = res
       })
     },
-    _getBuildConfig(id, str) {
-      getBuildConfig().then(res => {
-        this._getDataTree()
+    _getBuildConfig(lid, str) {
+      let id = ''
+      if(typeof (lid) === 'number') {
+        id = lid
+      }
+      getRoleModuleById(id).then(res => {
         this.mapConfigList = res.mapConfigList
         this.mapConfigList.map(v => {
           v.name = v.mName
@@ -326,12 +328,13 @@ export default {
         })
         this.featureList = list
         //
-        // this.dataTree = this.tempDataTree = res.tabDataTreeJson
+        this.dataTree = res.json720
+        this.topicDataTree = res.dataPublishJson
         //
-        this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
-        if(typeof(id) === 'number' && str === 'role') { //获取角色信息
+        this.checkFunNum(this.sysFunNum)
+        if (typeof (id) === 'number' && str === 'role') { //获取角色信息
           this._getRoleMapById(id)
-        } else if(typeof(id) === 'string') {
+        } else if (typeof (id) === 'string') {
           this.isShow = true
           this.$emit('isShow', this.isShow)
         }
@@ -374,34 +377,15 @@ export default {
           this.mapIdStr = list.toString()
           // 720已选
           res.data.ms720ServerList.map(v => {
-            this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
-            list.push(v.sysData)
+            list.push(v.ms720Id)
           })
           this.ms720Str = list.toString()
-          this.dataTree = this.tempDataTree
           list = []
           res.data.publishList.map(v => {
-            this.tempTopicDataTree = this.checkRoleData(this.tempTopicDataTree, v.publishId)
             list.push(v.publishId)
           })
           this.publishIdStr = list.toString()
-          this.topicDataTree = this.tempTopicDataTree
-          // list = []
-          // res.data.msRoleDataList.map(v => {
-          //   this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
-          //   list.push(v.sysData)
-          // })
-          // this.tabDataIdStr = list.toString()
-          // this.dataTree = this.tempDataTree
-          if (res.data.funNum < 11) {
-            this.qxLevel = '一级权限'
-          } else if (res.data.funNum > 10 && res.data.funNum < 21) {
-            this.qxLevel = '二级权限'
-          } else if (res.data.funNum > 20) {
-            this.qxLevel = '三级权限'
-          }
-          this.qx1Change(this.qxLevel)
-          this.funNum = res.data.funNum
+          this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
         } else {
@@ -409,16 +393,16 @@ export default {
         }
       })
     },
-    checkRoleData(list, id) {
-      list.map((h, index) => {
-        if (id === h.id) {
-          h.selected = true
-        } else if (h.children) {
-          this.checkRoleData(h.children, id)
-        }
-        list.splice(index, 1, h)
-      })
-      return list
+    checkFunNum(funNum) {
+      if (funNum < 11) {
+        this.qxLevel = '一级权限'
+      } else if (funNum > 10 && funNum < 21) {
+        this.qxLevel = '二级权限'
+      } else if (funNum > 20) {
+        this.qxLevel = '三级权限'
+      }
+      this.qx1Change(this.qxLevel)
+      this.funNum = funNum
     },
     _addRole() {
       let data = Object.assign({}, {

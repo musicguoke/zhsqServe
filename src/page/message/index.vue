@@ -40,13 +40,6 @@
         <FormItem label="联系人">
           <Input v-model="itemInfo.contact" readonly></Input>
         </FormItem>
-        <FormItem label="处理状态">
-          <Select v-model="itemInfo.status">
-            <Option value="0">未处理</Option>
-            <Option value="1">处理并查看</Option>
-            <Option value="3">忽略</Option>
-          </Select>
-        </FormItem>
         <FormItem label="反馈类型">
           <Input v-model="type" readonly></Input>
         </FormItem>
@@ -74,8 +67,9 @@
       </Form>
       <div slot="footer">
         <Button type="text" @click="cancelEditPass">取消</Button>
-        <Button type="warning" @click="ignore">忽略</Button>
-        <Button type="primary" @click="save">保存</Button>
+        <Button type="warning" v-if="itemInfo.status % 2 !== 1" @click="ignore">忽略</Button>
+        <Button type="primary" v-if="itemInfo.status % 2 !== 1" @click="save">保存</Button>
+        <Button type="primary" v-else @click="save">确定</Button>
       </div>
     </Modal>
   </Content>
@@ -126,8 +120,13 @@ export default {
   },
   methods: {
     save() {
+      if(this.itemInfo.status % 2 == 1) {
+        this.modalShow = false
+        return 
+      }
       this.$refs['itemInfo'].validate((valid) => {
         if (valid) {
+          this.itemInfo.status = 1
           this._updateSuggest(this.itemInfo)
         }
       })

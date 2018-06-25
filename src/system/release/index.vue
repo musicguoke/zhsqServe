@@ -9,7 +9,13 @@
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
-        <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right" :rules="catalogValidate">
+        <Form 
+          ref="editItemForm"
+          :model="editItemForm"
+          :label-width="100"
+          label-position="right"
+          :rules="catalogValidate"
+        >
           <FormItem v-if="!isAdd" label="id" prop="dpId">
             <Input v-model="editItemForm.dpId" readonly></Input>
           </FormItem>
@@ -36,7 +42,7 @@
           </FormItem>
           <FormItem v-if="!isAdd" label="图片地址">
             <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath" style="width: 70%"></Input>
-            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials show-upload-list="false" :on-success="handleSuccess">
+            <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="true" :on-success="handleSuccess">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
           </FormItem>
@@ -186,7 +192,11 @@ export default {
     },
     saveEditPass() {
       if (this.isAdd) {
-        this._addTopicData(this.editItemForm)
+        this.$refs['editItemForm'].validate((valid) => {
+          if (valid) {
+            this._addTopicData(this.editItemForm)
+          }
+        })
       } else {
         this._updateTopicData(this.editItemForm)
       }
@@ -330,6 +340,7 @@ export default {
         if (res.code === 20000) {
           this.$Message.success(`添加${res.message}`)
           this._getTopicDataTree()
+          this.cancelEdit()
         } else {
           this.$Message.error(`添加${res.message}`)
         }
@@ -349,7 +360,7 @@ export default {
       getSTopicTypeList().then(res => {
         if (res.code === 20000) {
           this.dataTypeList = res.data.list
-          if(id) {
+          if (id) {
             this._getTopicDataById(id)
           }
         } else {

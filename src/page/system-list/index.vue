@@ -60,7 +60,8 @@ export default {
             path: '/system',
             query: {
               id: item.id,
-              systemname: item.sysName
+              systemname: item.sysName,
+              type: item.type
             }
           })
         }

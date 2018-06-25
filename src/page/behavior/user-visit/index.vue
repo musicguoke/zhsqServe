@@ -2,7 +2,7 @@
   <Content>
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>资源管理</BreadcrumbItem>
-      <BreadcrumbItem>资源列表</BreadcrumbItem>
+      <BreadcrumbItem>用户访问</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
       <div id="service-analysis">
@@ -90,7 +90,7 @@
             <span class="export" @click="export2excel">
               <span class="icon-download"></span>导出</span>
             <div class="breadcrumb">
-              <span class="btn-item" v-for="(item, index) in btnTitle" :class="{active: cur == index}" @click="getItemData(index)">{{item}}</span>
+              <span class="btn-item" v-for="(item, index) in btnTitle" :class="{active: cur == index}" @click="getItemData(index)" :key="index">{{item}}</span>
             </div>
             <div class="search-box">
               <input type="search" class="search" v-model="searchContent" placeholder="搜索" />
@@ -168,7 +168,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in data">
+              <tr v-for="(item, index) in data" :key="index">
                 <td>{{index + params.start + 1}}</td>
                 <td v-if="type == 4 || type == 5">{{item.id}}</td>
                 <td v-if="type == 2 && departmentObj == null">{{item.branch}}</td>
@@ -200,15 +200,15 @@
                 </td>
                 <td v-else class="hover" @click="getVisitTimes(item.id, item.type, item.name)">{{item.total}}</td>
               </tr>
-              <tr v-for="(item, index) in userData">
+              <tr v-for="(item, index) in userData" :key="index">
                 <td>{{index + params.start + 1}}</td>
-                <td>{{item.arTrueName}}</td>
+                <td>{{item.userName}}</td>
                 <td>{{item.system}}</td>
                 <td v-if="type == 1">{{item.visitName}}</td>
                 <td>{{item.visitType}}</td>
                 <td v-if="type == 2">{{item.sysVersion}}</td>
                 <td v-if="type == 2">{{item.softVersion}}</td>
-                <td>{{item.arBranchName}}</td>
+                <td>{{item.branchName}}</td>
                 <td>{{format(item.visitTime)}}</td>
               </tr>
             </tbody>

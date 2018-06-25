@@ -41,7 +41,7 @@ export function getMsTabDatainfoById(id) {
 }
 
 // 修改目录信息
-export function updateMsTabDatainfo() {
+export function updateMsTabDatainfo(data) {
   return axios.post(
     `${url}/sys/msTabDataController/update.do`,
     qs.stringify(data)).then(res => {

@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import App from './App'
 import router from './router'
 import { Table, TableColumn, Tree, Button } from 'element-ui'
