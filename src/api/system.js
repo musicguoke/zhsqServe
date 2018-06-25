@@ -4,10 +4,9 @@ import { url } from './config.js'
 
 axios.defaults.withCredentials = true
 
-export function getBuildConfig() {
+export function getBuildConfig(id) {
   const data = {
-    pageNo: 1,
-    pageSize: 50
+    sysId: id
   }
 
   return axios.post(`${url}/sys/msSystemChildController/index.do`, qs.stringify(data)).then(res => {

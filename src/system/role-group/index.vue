@@ -30,7 +30,7 @@
       </div>
       <authority-config v-if="type==3" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
       <ghdw-role-config v-if="type==2" ref="authConfig" @isShow="tableShow" :id="sysId" :newSys="newRole" @cancel="cancel" />
-      <authority-config1 v-if="type==1" ref="authConfig" @isShow="tableShow" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
+      <authority-config1 v-if="type==1" ref="authConfig" @isShow="tableShow" :buildSys="true" :sysOrRole="false" :id="sysId" :newSys="newRole" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -72,12 +72,13 @@ export default {
     show() {
       this.newRole = true
       this.name = '新建角色'
-      this.$refs.authConfig._getBuildConfig('new')
+      this.$refs.authConfig._getBuildConfig('new', 'role')
     },
     cancel() {
       this.isShow = false
       this.newRole = false
       this.name = ''
+      this._getRolesList()
     },
     edit(scope) {
       this.name = '编辑角色'

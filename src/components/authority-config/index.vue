@@ -87,13 +87,9 @@
         <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
       <div v-show="current == 1 && type !== 2" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
-        <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
+        <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' :buildSys="buildSys" @on-selection-change="selectDataConfig"></my-tree>
       </div>
-      <div
-        style="width: 400px;overflow:auto"
-        :style="{maxHeight: tableHeight + 'px'}"
-        v-show="current == 2"
-      >
+      <div style="width: 400px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 2">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
       </div>
       <div style="width: 400px" v-show="current == 3">
@@ -144,7 +140,7 @@ import {
   searchSysById,
   updateSystem
 } from '@/api/system'
-import { addRole, updateRole, getRoleMapById } from '@/api/role'
+import { addRole, updateRole, getRoleMapById, getRoleModuleById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
 
@@ -154,6 +150,10 @@ export default {
   },
   props: {
     newSys: {
+      type: Boolean,
+      default: false
+    },
+    buildSys: {
       type: Boolean,
       default: false
     },
@@ -337,7 +337,7 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      if(res.code == 20000) {
+      if (res.code == 20000) {
         this.imageList.push(data)
         this.$set(this.formItem, 'ios_iphone', res.data)
       } else {
@@ -350,7 +350,7 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      if(res.code == 20000) {
+      if (res.code == 20000) {
         this.imageList.push(data)
         this.$set(this.formItem, 'ios_ipad', res.data)
       } else {
@@ -363,7 +363,7 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      if(res.code == 20000) {
+      if (res.code == 20000) {
         this.imageList.push(data)
         this.$set(this.formItem, 'android_phone', res.data)
       } else {
@@ -376,7 +376,7 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      if(res.code == 20000) {
+      if (res.code == 20000) {
         this.imageList.push(data)
         this.$set(this.formItem, 'android_pad', res.data)
       } else {
@@ -389,7 +389,7 @@ export default {
         imagePath: res.data,
         imageType: "1"
       }
-      if(res.code == 20000) {
+      if (res.code == 20000) {
         this.imageList.push(data)
         this.$set(this.formItem, 'pc', res.data)
       } else {
@@ -427,24 +427,13 @@ export default {
         this.funAry = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
       }
     },
-    handleCheckData(arr) {
-      let list = []
-      arr.map(v => {
-        list.push(v.id)
-        if (v.children && v.children.length > 0) {
-          this.handleCheckData(v.children)
-        }
-      })
-      return list.toString()
-    },
-    _getBuildConfig(id, str) {
-      getBuildConfig().then(res => {
+    _getRoleModuleById(id) {
+      getRoleModuleById(id).then(res => {
         this.mapConfigList = res.mapConfigList
         this.mapConfigList.map(v => {
           v.name = v.mName
           v._checked = false
         })
-        //
         let list = []
         res.cilentAuthorityList.map(v => {
           v.name = v.moduleName
@@ -456,23 +445,56 @@ export default {
           list.push(v)
         })
         this.featureList = list
-        //
-        this.dataTree = this.tempDataTree = res.tabDataTreeJson
-        //
-        this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
-        //
-        this.checkFunNum(this.$route.query.funNum)
-        if(typeof(id) === 'number' && str === 'role') { //获取角色信息
+        this.dataTree = res.json720
+        this.topicDataTree = res.dataPublishJson
+        if(id) {
           this._getRoleMapById(id)
-        } else if(typeof(id) === 'number' && str === 'sys') { //获取系统信息
-          this._getAreaList() //区域列表
-          this._searchSysById(id)
-        } else if(typeof(id) === 'string') {
-          this._getAreaList() //区域列表
+        } else {
           this.isShow = true
           this.$emit('isShow', this.isShow)
         }
       })
+    },
+    _getSysMapById(id) {
+      getBuildConfig(id).then(res => {
+        this.mapConfigList = res.mapConfigList
+        this.mapConfigList.map(v => {
+          v.name = v.mName
+          v._checked = false
+        })
+        let list = []
+        res.cilentAuthorityList.map(v => {
+          v.name = v.moduleName
+          v._checked = false
+          if (v.id === 1) {
+            v._checked = true
+            v._disabled = true
+          }
+          list.push(v)
+        })
+        this.featureList = list
+        this.dataTree = this.tempDataTree = res.tabDataTreeJson
+        this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+        if(id) {
+          this._searchSysById(id)
+        } else {
+          this.isShow = true
+          this.$emit('isShow', this.isShow)
+        }
+      })
+    },
+    _getBuildConfig(lid, str) {
+      let id = ''
+      if(typeof (lid) === 'number') {
+        id = lid
+      }
+      this.checkFunNum(this.$route.query.funNum)
+      if (str === 'role') { //获取角色信息
+        this._getRoleModuleById(id)
+      } else if (str === 'sys') { //获取系统信息
+        this._getAreaList() //区域列表
+        this._getSysMapById(id)
+      }
     },
     _getAreaList() {
       getAreaList().then(res => {
@@ -566,11 +588,9 @@ export default {
           this.mapIdStr = list.toString()
           list = []
           res.data.msSystemDatainfoList.map(v => {
-            // this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
             list.push(v.dataId)
           })
           this.tabDataIdStr = list.toString()
-          // this.dataTree = this.tempDataTree
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -578,18 +598,6 @@ export default {
           this.$Message.error(res.message)
         }
       })
-    },
-    checkData(list, id) {
-      list.map((h, index) => {
-        if (id === h.id) {
-          h.selected = true
-          h.isChecked = true
-        } else if (h.children) {
-          this.checkData(h.children, id)
-        }
-        list.splice(index, 1, h)
-      })
-      return list
     },
     //获得角色详细信息
     _getRoleMapById(id) {
@@ -633,18 +641,14 @@ export default {
           this.ms720Str = list
           list = []
           res.data.publishList.map(v => {
-            this.tempTopicDataTree = this.checkRoleData(this.tempTopicDataTree, v.publishId)
             list.push(v.publishId)
           })
           this.publishIdStr = list.toString()
-          this.topicDataTree = this.tempTopicDataTree
           list = []
           res.data.msRoleDataList.map(v => {
-            // this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
             list.push(v.sysData)
           })
           this.tabDataIdStr = list.toString()
-          // this.dataTree = this.tempDataTree
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -652,17 +656,6 @@ export default {
           this.$Message.error(res.message)
         }
       })
-    },
-    checkRoleData(list, id) {
-      list.map((h, index) => {
-        if (id === h.id) {
-          h.selected = true
-        } else if (h.children) {
-          this.checkRoleData(h.children, id)
-        }
-        list.splice(index, 1, h)
-      })
-      return list
     },
     checkFunNum(funNum) {
       if (funNum < 11) {

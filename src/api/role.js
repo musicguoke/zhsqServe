@@ -74,3 +74,16 @@ export function updateRoleMap() {
       return Promise.resolve(res.data)
   })
 }
+
+// 角色打包
+export function getRoleModuleById(id) {
+  const data = {
+    grId: id
+  }
+
+  return axios.post(
+    `${url}/sys/msMembersGroup/index.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}

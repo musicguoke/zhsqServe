@@ -32,7 +32,7 @@
         <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
       <div v-show="current == 2" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
-        <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
+        <my-tree ref="treeTable" :items="dataTree" :buildSys="buildSys" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
       </div>
       <div
         style="width: 400px;overflow:auto"
@@ -82,8 +82,7 @@
 </template>
 
 <script>
-import { getBuildConfig } from '@/api/system'
-import { addRole, updateRole, getRoleMapById } from '@/api/role'
+import { addRole, updateRole, getRoleMapById, getRoleModuleById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
 
@@ -93,6 +92,10 @@ export default {
   },
   props: {
     newSys: {
+      type: Boolean,
+      default: false
+    },
+    buildSys: {
       type: Boolean,
       default: false
     },
@@ -305,8 +308,12 @@ export default {
       })
       return list.toString()
     },
-    _getBuildConfig(id) {
-      getBuildConfig().then(res => {
+    _getBuildConfig(lid) {
+      let id = ''
+      if(typeof (lid) === 'number') {
+        id = lid
+      }
+      getRoleModuleById(id).then(res => {
         this.mapConfigList = res.mapConfigList
         this.mapConfigList.map(v => {
           v.name = v.mName
@@ -325,9 +332,8 @@ export default {
         })
         this.featureList = list
         //
-        this.dataTree = this.tempDataTree = res.tabDataTreeJson
-        //
-        this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
+        this.dataTree = res.tabDataTreeJson
+        this.topicDataTree = res.dataPublishJson
         //
         this.checkFunNum(this.$route.query.funNum)
         if(typeof(id) === 'number') {
@@ -375,18 +381,14 @@ export default {
           this.mapIdStr = list.toString()
           list = []
           res.data.publishList.map(v => {
-            this.tempTopicDataTree = this.checkRoleData(this.tempTopicDataTree, v.publishId)
             list.push(v.publishId)
           })
           this.publishIdStr = list.toString()
-          this.topicDataTree = this.tempTopicDataTree
           list = []
           res.data.msRoleDataList.map(v => {
-            // this.tempDataTree = this.checkRoleData(this.tempDataTree, v.sysData)
             list.push(v.sysData)
           })
           this.tabDataIdStr = list.toString()
-          // this.dataTree = this.tempDataTree
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -394,17 +396,6 @@ export default {
           this.$Message.error(res.message)
         }
       })
-    },
-    checkRoleData(list, id) {
-      list.map((h, index) => {
-        if (id === h.id) {
-          h.selected = true
-        } else if (h.children) {
-          this.checkRoleData(h.children, id)
-        }
-        list.splice(index, 1, h)
-      })
-      return list
     },
     checkFunNum(funNum) {
       if (funNum < 11) {
