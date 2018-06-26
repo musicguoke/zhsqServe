@@ -445,7 +445,7 @@ export default {
           list.push(v)
         })
         this.featureList = list
-        this.dataTree = res.json720
+        this.dataTree = res.json720.length > 0 ? res.json720 : res.tabDataTreeJson
         this.topicDataTree = res.dataPublishJson
         if(id) {
           this._getRoleMapById(id)

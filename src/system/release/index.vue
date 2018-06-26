@@ -73,8 +73,7 @@
 import { url } from '@/api/config'
 import TreeTable from '@/components/my-tree/index'
 import vSearch from '@/components/search/index'
-import { getDateTree } from '@/api/system'
-import { getAreaList } from '@/api/catalog'
+import { getAreaList, getCatalogById } from '@/api/catalog'
 import { getTopicDataTree, getTopicDataCatalogById, getTopicDataById, addTopicData, updateTopicData, addCatalogToTopic, deleteTopicData } from '@/api/topics'
 import { getSTopicTypeList } from '@/api/dataSource-service'
 
@@ -236,7 +235,7 @@ export default {
         this.editItemForm.dpId = item.id
         this.editItemForm.dpName = item.dpName
         this.editCatalogModal = true
-        this._getDateTree(item.id)
+        this._getCatalogById(item.id)
       }
     },
     initData(list) {
@@ -305,9 +304,9 @@ export default {
         }
       })
     },
-    _getDateTree(id) {
-      getDateTree().then(res => {
-        this.catalogData = this.tempDataTree = res
+    _getCatalogById(id) {
+      getCatalogById(id).then(res => {
+        this.catalogData = res
         this._getTopicDataCatalogById(id)
       })
     },
@@ -316,24 +315,11 @@ export default {
         if (res.code === 20000) {
           let list = []
           res.data.map(v => {
-            this.tempDataTree = this.checkData(this.tempDataTree, v.dataId)
             list.push(v.dataId)
           })
-          this.catalogData = this.tempDataTree
           this.dataIdStr = list.toString()
         }
       })
-    },
-    checkData(list, id) {
-      list.map((h, index) => {
-        if (id === h.id) {
-          h.selected = true
-        } else if (h.children) {
-          this.checkData(h.children, id)
-        }
-        list.splice(index, 1, h)
-      })
-      return list
     },
     _addCatalogToTopic(data) {
       addCatalogToTopic(data).then(res => {

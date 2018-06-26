@@ -43,7 +43,7 @@
                 {{action.text}}
               </i-button>
             </div>
-            <label @click="toggle(index,item, $event)" v-if="!column.type">
+            <label @click="toggle(index, item, $event)" v-if="!column.type">
               <span class="icon-box" v-if='snum==iconRow()'>
                 <i v-html='item.spaceHtml'></i>
                 <span class="item-icon-box" v-if="item.children&&item.children.length>0">
@@ -109,6 +109,7 @@ export default {
     },
     items() {
       if (this.items) {
+        this.initItems = []
         this.dataLength = this.Length(this.items)
         this.initData(this.deepCopy(this.items), 1, null);
         this.checkGroup = this.renderCheck(this.items)
@@ -131,6 +132,7 @@ export default {
   },
   mounted() {
     if (this.items) {
+      this.initItems = []
       this.dataLength = this.Length(this.items)
       this.initData(this.deepCopy(this.items), 1, null);
       this.cloneColumns = this.makeColumns();
@@ -235,7 +237,6 @@ export default {
     },
     // 数据处理 增加自定义属性监听
     initData(items, level, parent) {
-      this.initItems = []
       let spaceHtml = "";
       for (var i = 1; i < level; i++) {
         spaceHtml += "<i class='ms-tree-space'></i>"

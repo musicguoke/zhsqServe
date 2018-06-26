@@ -79,7 +79,6 @@
 
 <script>
 import { url } from '@/api/config'
-import { getDateTree } from '@/api/system'
 import { addRole, updateRole, getRoleMapById, getRoleModuleById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
@@ -211,7 +210,6 @@ export default {
     }
   },
   created() {
-    this._getDataTree()
     this.sys = this.$route.query.id || ''
     this.type = Number(this.$route.query.type) || ''
     this.sysFunNum = Number(this.$route.query.funNum) || ''
@@ -298,11 +296,6 @@ export default {
         }
       })
       return list.toString()
-    },
-    _getDataTree() {
-      getDateTree().then(res => {
-        this.dataTree = this.tempDataTree = res
-      })
     },
     _getBuildConfig(lid, str) {
       let id = ''
