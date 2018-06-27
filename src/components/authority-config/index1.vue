@@ -29,7 +29,7 @@
         </FormItem>
       </Form>
       <div style="width: 500px" v-show="current == 1">
-        <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
+        <my-tree ref="topicTreeTable" :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
       <div v-show="current == 2" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :buildSys="buildSys" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
@@ -379,16 +379,6 @@ export default {
             this.mapConfigList.splice(index, 1, v)
           })
           this.mapIdStr = list.toString()
-          list = []
-          res.data.publishList.map(v => {
-            list.push(v.publishId)
-          })
-          this.publishIdStr = list.toString()
-          list = []
-          res.data.msRoleDataList.map(v => {
-            list.push(v.sysData)
-          })
-          this.tabDataIdStr = list.toString()
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -410,12 +400,12 @@ export default {
     },
     _addRole() {
       let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
+        tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         sysId: this.id,
-        publishIdStr: this.publishIdStr,
+        publishIdStr: this.$refs.topicTreeTable.checkGroup.toString(),
         ms720Str: ''
       }, this.formRoleItem)
       addRole(data).then(res => {
@@ -429,13 +419,13 @@ export default {
     },
     _updateRole() {
       let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
+        tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         sysId: this.id,
         grId: this.grId,
-        publishIdStr: this.publishIdStr,
+        publishIdStr: this.$refs.topicTreeTable.checkGroup.toString(),
         ms720Str: ''
       }, this.formRoleItem)
       updateRole(data).then(res => {

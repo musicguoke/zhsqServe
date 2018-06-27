@@ -507,7 +507,7 @@ export default {
     },
     _addSystem() {
       let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
+        tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
@@ -523,8 +523,9 @@ export default {
       })
     },
     _updateSystem() {
+      console.log(this.$refs.treeTable.checkGroup.toString())
       let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
+        tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
@@ -586,11 +587,6 @@ export default {
             this.mapConfigList.splice(index, 1, v)
           })
           this.mapIdStr = list.toString()
-          list = []
-          res.data.msSystemDatainfoList.map(v => {
-            list.push(v.dataId)
-          })
-          this.tabDataIdStr = list.toString()
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -644,11 +640,6 @@ export default {
             list.push(v.publishId)
           })
           this.publishIdStr = list.toString()
-          list = []
-          res.data.msRoleDataList.map(v => {
-            list.push(v.sysData)
-          })
-          this.tabDataIdStr = list.toString()
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -670,7 +661,7 @@ export default {
     },
     _addRole() {
       let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
+        tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
@@ -689,7 +680,7 @@ export default {
     },
     _updateRole() {
       let data = Object.assign({}, {
-        tabDataIdStr: this.tabDataIdStr,
+        tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
