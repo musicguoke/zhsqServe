@@ -46,7 +46,7 @@
             <FormItem label="电话">
                 <Input v-model="messageForm.phone" placeholder="请输入电话号码..." ></Input>
             </FormItem>
-            <FormItem label="短信内容">
+            <FormItem label="短信内容" prop="content">
                 <Input v-model="messageForm.message" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." ></Input>
             </FormItem>
             <FormItem label="发送时间">
@@ -58,7 +58,7 @@
         </Form>
   </Modal>
   <Modal v-model="messageSendModal" :title=modalTitle @on-ok="_sendMessage"> 
-        <Form :model="messageSendForm"  :label-width="80">
+        <Form :model="messageSendForm" :rules="ruleValidate" :label-width="80">
             <FormItem label="电话">
                 <Input v-model="messageSendForm.phoneStr" placeholder="多个电话用英文逗号隔开..." ></Input>
             </FormItem>
@@ -68,7 +68,7 @@
                     <Button type="primary" icon="person-add" @click="importModal=true">导入</Button>
                 </div>
             </FormItem>
-            <FormItem label="短信内容">
+            <FormItem label="短信内容" prop="message">
                 <Input v-model="messageSendForm.message" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." ></Input>
             </FormItem>
         </Form>
@@ -125,7 +125,12 @@ export default {
       importModal: false,
       importForm: {
         file: ""
-      }
+      },
+      ruleValidate: {
+        message:[
+            { type: 'string',max: 120, message: '短信内容不得超过120个字符', trigger: 'blur' }
+        ]
+     }
     };
   },
   created() {
