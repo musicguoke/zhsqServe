@@ -359,7 +359,7 @@ export default {
         //推送点击保存
         savePushMessage() {
             let data = {
-                pGroup: this.pushForm.pGroup,
+                pGroupStr:Array.from(this.pushForm.pGroupList).join(","),
                 pRemark: this.pushForm.pRemark,
                 pType: this.pushForm.pType,
                 // pFilename: this.pushForm.pFilename,
