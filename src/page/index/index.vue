@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
+// import * as echarts from 'echarts'
 import { getIndex, getLogStatistics, getMetaUrl } from '@/api/service'
 
 export default {
