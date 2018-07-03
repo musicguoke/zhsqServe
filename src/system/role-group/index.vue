@@ -97,8 +97,8 @@ export default {
         }
       })
     },
-    _getRolesList(name, page) {
-      getRolesList(name, page).then(res => {
+    _getRolesList(page, name) {
+      getRolesList(page, name).then(res => {
         if (res.code === 20000) {
           this.roleList = res.data.list
           this.total = res.data.total
