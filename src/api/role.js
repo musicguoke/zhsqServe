@@ -5,7 +5,7 @@ import { url } from './config.js'
 axios.defaults.withCredentials = true
 
 // 角色管理
-export function getRolesList(name, page) {
+export function getRolesList(page, name) {
   const data = {
     pageNo: page || 1,
     pageSize: 10,

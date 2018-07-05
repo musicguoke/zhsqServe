@@ -29,7 +29,7 @@
         </FormItem>
       </Form>
       <div style="width: 500px" v-show="current == 2">
-        <my-tree :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
+        <my-tree ref="topicTreeTable" :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
       <div v-show="current == 1" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
@@ -79,7 +79,6 @@
 
 <script>
 import { url } from '@/api/config'
-import { getDateTree } from '@/api/system'
 import { addRole, updateRole, getRoleMapById, getRoleModuleById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
@@ -211,7 +210,6 @@ export default {
     }
   },
   created() {
-    this._getDataTree()
     this.sys = this.$route.query.id || ''
     this.type = Number(this.$route.query.type) || ''
     this.sysFunNum = Number(this.$route.query.funNum) || ''
@@ -299,11 +297,6 @@ export default {
       })
       return list.toString()
     },
-    _getDataTree() {
-      getDateTree().then(res => {
-        this.dataTree = this.tempDataTree = res
-      })
-    },
     _getBuildConfig(lid, str) {
       let id = ''
       if(typeof (lid) === 'number') {
@@ -375,16 +368,6 @@ export default {
             this.mapConfigList.splice(index, 1, v)
           })
           this.mapIdStr = list.toString()
-          // 720已选
-          res.data.ms720ServerList.map(v => {
-            list.push(v.ms720Id)
-          })
-          this.ms720Str = list.toString()
-          list = []
-          res.data.publishList.map(v => {
-            list.push(v.publishId)
-          })
-          this.publishIdStr = list.toString()
           this.checkFunNum(res.data.funNum)
           this.isShow = true
           this.$emit('isShow', this.isShow)
@@ -411,8 +394,8 @@ export default {
         mapIdStr: this.mapIdStr,
         funNum: this.funNum,
         sysId: this.id,
-        publishIdStr: this.publishIdStr,
-        ms720Str: this.ms720Str
+        publishIdStr: this.$refs.topicTreeTable.checkGroup.toString(),
+        ms720Str: this.$refs.treeTable.checkGroup.toString()
       }, this.formRoleItem)
       addRole(data).then(res => {
         if (res.code === 20000) {
@@ -431,8 +414,8 @@ export default {
         funNum: this.funNum,
         sysId: this.id,
         grId: this.grId,
-        publishIdStr: this.publishIdStr,
-        ms720Str: this.ms720Str
+        publishIdStr: this.$refs.topicTreeTable.checkGroup.toString(),
+        ms720Str: this.$refs.treeTable.checkGroup.toString()
       }, this.formRoleItem)
       updateRole(data).then(res => {
         if (res.code === 20000) {

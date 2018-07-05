@@ -1,6 +1,6 @@
 <template>
   <Content>
-    <Card style="margin-top: 17px" :style="{maxHeight: contentHeight}">
+    <Card style="margin: 17px 0">
       <div class="card-content">
         <div class="banner" ref="ebox"></div>
         <div class="data-content">
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
+// import * as echarts from 'echarts'
 import { getIndex, getLogStatistics, getMetaUrl } from '@/api/service'
 
 export default {

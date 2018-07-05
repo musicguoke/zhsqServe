@@ -83,3 +83,14 @@ export function uploadImg(data) {
       return Promise.resolve(res.data)
   })
 }
+
+// 获取已选中的目录
+export function getCatalogById(id) {
+  const data = {
+    dpId: id
+  }
+  return axios.post(
+    `${url}/sys/msTabDataController/getDataTreeBySysIdAndDpId.do`, qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
