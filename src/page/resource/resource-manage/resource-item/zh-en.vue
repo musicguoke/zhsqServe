@@ -18,19 +18,19 @@
     <div class="tablePage">
       <Page :total="listLength" @on-change="_getZhEnList"></Page>
     </div>
-    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
+    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">中英文信息</h3>
-      <Form ref="import_form" :model="itemInfo" :label-width="90">
-        <FormItem label="中文名">
+      <Form ref="form" :model="itemInfo" :rules="rules" :label-width="90">
+        <FormItem label="中文名" prop="name">
           <Input v-model="itemInfo.name" placeholder="请输入中文名"></Input>
         </FormItem>
-        <FormItem label="英文名">
+        <FormItem label="英文名" prop="nameA">
           <Input v-model="itemInfo.nameA" placeholder="请输入英文名"></Input>
         </FormItem>
-        <FormItem label="表名">
+        <FormItem label="表名" prop="layerType">
           <Input v-model="itemInfo.layerType" placeholder="请输入表名"></Input>
         </FormItem>
-        <FormItem label="字段类型">
+        <FormItem label="字段类型" prop="fieldType">
           <Select v-model="itemInfo.fieldType" placeholder="请选择字段类型">
             <Option value="1">1</Option>
             <Option value="2">2</Option>
@@ -45,6 +45,10 @@
           <Input v-model="itemInfo.mOrder"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancel">取消</Button>
+        <Button type="primary" @click="save">保存</Button>
+      </div>
     </Modal>
     <Modal v-model="importModalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="saveImportFile" @on-cancel="cancel">
       <h3 slot="header" style="color:#2D8CF0">导入文件</h3>
@@ -103,6 +107,20 @@ export default {
         type: '2',
         file: ''
       },
+      rules: {
+        name: [
+          { required: true, message: '请输入中文名', trigger: 'blur' }
+        ],
+        nameA: [
+          { required: true, message: '请输入英文名', trigger: 'blur' }
+        ],
+        layerType: [
+          { required: true, message: '请输入表名', trigger: 'blur' },
+        ],
+        filedType: [
+          { required: true, message: '请选择字段类型', trigger: 'blur' },
+        ]
+      }
     }
   },
   created() {
@@ -122,6 +140,7 @@ export default {
     _addZhEn(data) {
       addZhEn(data).then(res => {
         if (res.code === 20000) {
+          this.cancel()
           this.$Message.success(res.message)
           this._getZhEnList()
         } else {
@@ -161,9 +180,14 @@ export default {
       this.modalShow = true
     },
     save() {
-      this._addZhEn(this.itemInfo)
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this._addZhEn(this.itemInfo)
+        }
+      })
     },
     cancel() {
+      this.modalShow = false
       this.itemInfo = {
         listorder: '',
         layerType: '',

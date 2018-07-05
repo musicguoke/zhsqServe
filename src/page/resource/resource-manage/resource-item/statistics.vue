@@ -166,7 +166,7 @@ export default {
       addStatistic(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getStatisticList()
         } else {
           this.$Message.error(res.message)
         }
@@ -176,7 +176,7 @@ export default {
       updateStatistic(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getStatisticList()
         } else {
           this.$Message.error(res.message)
         }
@@ -186,7 +186,7 @@ export default {
       deleteStatistic(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getStatisticList()
         } else {
           this.$Message.error(res.message)
         }
@@ -196,7 +196,7 @@ export default {
       deleteStatistics(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getStatisticList()
         } else {
           this.$Message.error(res.message)
         }
@@ -206,7 +206,7 @@ export default {
       importStatisticFile(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getStatisticList()
         } else {
           this.$Message.error(res.message)
         }

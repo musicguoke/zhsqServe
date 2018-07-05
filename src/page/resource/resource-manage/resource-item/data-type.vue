@@ -1,13 +1,6 @@
 <template>
   <div class="data-type">
-    <v-search
-      :importShow="false"
-      @on-search="search"
-      @on-reset="reset"
-      @on-build="newData"
-      :disabled="selectedId.length <= 0"
-      @on-delete="deleteMany"
-    />
+    <v-search :importShow="false" @on-search="search" @on-reset="reset" @on-build="newData" :disabled="selectedId.length <= 0" @on-delete="deleteMany" />
     <el-table :data="data" border style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="itemid" label="id" sortable=""></el-table-column>
@@ -20,9 +13,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <Modal v-model="editDataModal" :closable='false' :mask-closable="false" :width="500" @on-ok="saveModal" @on-cancel="cancelModal">
+    <Modal v-model="editDataModal" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">数据信息</h3>
-      <Form :model="editItemForm" :label-width="60">
+      <Form ref="form" :model="editItemForm" :rules="rules" :label-width="80">
         <FormItem label="数据名称" prop="typename">
           <Input v-model="editItemForm.typename" placeholder="数据名称"></Input>
         </FormItem>
@@ -33,6 +26,10 @@
           <Input v-model="editItemForm.typestatus" placeholder="数据更新时间"></Input>
         </FormItem> -->
       </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancelModal">取消</Button>
+        <Button type="primary" @click="saveModal">保存</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -65,6 +62,14 @@ export default {
         typename: '',
         typeid: '',
         typestatus: ''
+      },
+      rules: {
+        typename: [
+          { required: true, message: '请输入类型名称', trigger: 'blur' }
+        ],
+        typeid: [
+          { required: true, message: '请输入类型编码', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -94,17 +99,18 @@ export default {
       })
     },
     saveModal() {
-      if(this.editItemForm.typeid == '') {
-        this.$Message.error('数据类型id不能为空')
-      } else if(this.editItemForm.typename == '') {
-        this.$Message.error('数据类型名称不能为空')
-      } else if(!this.newOrEdit) {
-        this._updateDataType(this.editItemForm)
-      } else {
-        this._addDataType(this.editItemForm)
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (!this.newOrEdit) {
+            this._updateDataType(this.editItemForm)
+          } else {
+            this._addDataType(this.editItemForm)
+          }
+        }
+      })
     },
     cancelModal() {
+      this.editDataModal = false
       this.editItemForm = {
         itemid: '',
         typename: '',
@@ -164,6 +170,7 @@ export default {
     _addDataType(data) {
       addDataType(data).then(res => {
         if (res.code === 20000) {
+          this.cancelModal()
           this.$Message.success(`添加${res.message}`)
           this._getDataTypeList()
         } else {
@@ -174,6 +181,7 @@ export default {
     _updateDataType(data) {
       updateDataType(data).then(res => {
         if (res.code === 20000) {
+          this.cancelModal()
           this.$Message.success(`修改${res.message}`)
           this._getDataTypeList()
         } else {

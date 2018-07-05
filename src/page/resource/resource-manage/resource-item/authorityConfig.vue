@@ -4,7 +4,7 @@
     <div class="tableSize">
       <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="id" sortable>
+        <el-table-column prop="moduleId" label="编号" sortable>
         </el-table-column>
         <el-table-column prop="moduleName" label="模块名称">
         </el-table-column>
@@ -23,26 +23,30 @@
     <div class="tablePage">
       <Page :total="listLength" @on-change="_getAuthorityList"></Page>
     </div>
-    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
+    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">权限信息</h3>
-      <Form ref="import_form" :model="itemInfo" :label-width="90">
-        <FormItem label="ID">
-          <Input v-model="itemInfo.id" readonly></Input>
+      <Form ref="form" :model="itemInfo" :rules="rules" :label-width="90">
+        <FormItem label="编号" prop="moduleId">
+          <Input v-model="itemInfo.moduleId"></Input>
         </FormItem>
-        <FormItem label="模块名称">
+        <FormItem label="模块名称" prop="moduleName">
           <Input v-model="itemInfo.moduleName" placeholder="请输入模块名称"></Input>
         </FormItem>
-        <FormItem label="系统类别">
+        <FormItem label="系统类别" prop="permissionType">
           <Select v-model="itemInfo.permissionType">
             <Option value="1">综合市情</Option>
             <Option value="2">规划定位</Option>
             <Option value="3">综合区情</Option>
           </Select>
         </FormItem>
-        <FormItem label="模块描述">
+        <FormItem label="模块描述" prop="moduleDescp">
           <Input v-model="itemInfo.moduleDescp" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入模块描述"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancel">取消</Button>
+        <Button type="primary" @click="save">保存</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -64,10 +68,24 @@ export default {
       listLength: '',
       isNew: true,
       itemInfo: {
-        id: '',
+        moduleId: '',
         moduleName: '',
         moduleDescp: '',
         permissionType: ''
+      },
+      rules: {
+        moduleId: [
+          { required: true, message: '请输入功能编号', trigger: 'blur' }
+        ],
+        moduleName: [
+          { required: true, message: '请输入功能名称', trigger: 'blur' }
+        ],
+        moduleDescp: [
+          { required: true, message: '请输入功能描述', trigger: 'blur' },
+        ],
+        permissionType: [
+          { required: true, message: '请选择系统', trigger: 'blur' },
+        ]
       }
     }
   },
@@ -78,6 +96,15 @@ export default {
     _getAuthorityList(page) {
       getAuthorityList(page).then(res => {
         if (res.code === 20000) {
+          res.data.list.map(v => {
+            if (v.permissionType == 1) {
+              v.permissionType = '综合市情'
+            } else if (v.permissionType == 2) {
+              v.permissionType = '规划定位'
+            } else if (v.permissionType == 3) {
+              v.permissionType = '综合区情'
+            }
+          })
           this.list = res.data.list
           this.listLength = res.data.total
         } else {
@@ -88,13 +115,7 @@ export default {
     _getAuthority(id) {
       getAuthority(id).then(res => {
         if (res.code === 20000) {
-          if (res.data.permissionType == 1) {
-            res.data.permissionType = '综合市情'
-          } else if (res.data.permissionType == 2) {
-            res.data.permissionType = '规划定位'
-          } else if (res.data.permissionType == 3) {
-            res.data.permissionType = '综合区情'
-          }
+          res.data.permissionType = res.data.permissionType.toString()
           this.itemInfo = res.data
           this.isNew = false
           this.modalShow = true
@@ -106,8 +127,9 @@ export default {
     _addAuthority(data) {
       addAuthority(data).then(res => {
         if (res.code === 20000) {
+          this.cancel()
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getAuthorityList()
         } else {
           this.$Message.error(res.message)
         }
@@ -116,8 +138,9 @@ export default {
     _updateAuthority(data) {
       updateAuthority(data).then(res => {
         if (res.code === 20000) {
+          this.cancel()
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getAuthorityList()
         } else {
           this.$Message.error(res.message)
         }
@@ -127,7 +150,7 @@ export default {
       deleteAuthority(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getAuthorityList()
         } else {
           this.$Message.error(res.message)
         }
@@ -137,7 +160,7 @@ export default {
       deleteAuthorities(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getVersionList()
+          this._getAuthorityList()
         } else {
           this.$Message.error(res.message)
         }
@@ -175,13 +198,18 @@ export default {
       })
     },
     save() {
-      if (this.isNew) {
-        this._addAuthority(this.itemInfo)
-      } else {
-        this._updateAuthority(this.itemInfo)
-      }
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.isNew) {
+            this._addAuthority(this.itemInfo)
+          } else {
+            this._updateAuthority(this.itemInfo)
+          }
+        }
+      })
     },
     cancel() {
+      this.modalShow = false
       this.itemInfo = {
         id: '',
         moduleName: '',

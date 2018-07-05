@@ -313,10 +313,6 @@ export default {
         res.cilentAuthorityList.map(v => {
           v.name = v.moduleName
           v._checked = false
-          if (v.id === 1) {
-            v._checked = true
-            v._disabled = true
-          }
           list.push(v)
         })
         this.featureList = list
