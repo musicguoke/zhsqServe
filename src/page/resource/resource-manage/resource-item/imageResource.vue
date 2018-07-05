@@ -22,12 +22,12 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
-        <Modal v-model="imageSourceModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="imageSourceForm" :label-width="80">
-                <FormItem label="图片名称">
+        <Modal v-model="imageSourceModal" :title=modalTitle @on-ok="addOrUpdate" ref="imageModal">
+            <Form :model="imageSourceForm" :label-width="80" :rules="imageRule" ref="imageRule">
+                <FormItem label="图片名称" prop="fileName">
                     <Input v-model="imageSourceForm.fileName" ></Input>
                 </FormItem>
-                <FormItem label="图片路径">
+                <FormItem label="图片路径" prop="filePath">
                     <Input v-model="imageSourceForm.filePath" ></Input>
                 </FormItem>
                 <FormItem label="压缩图">
@@ -36,7 +36,7 @@
                 <FormItem label="缩略图">
                     <Input v-model="imageSourceForm.thumbnailName" ></Input>
                 </FormItem>
-                <FormItem label="排序">
+                <FormItem label="排序" prop="listorder">
                     <Input v-model="imageSourceForm.listorder" ></Input>
                 </FormItem>
             </Form>
@@ -67,7 +67,18 @@ export default {
                 thumbnailName:'',
                 listorder:''
             },
-            nowPage:1
+            nowPage:1,
+            imageRule: {
+                fileName: [
+                    { required: true, message: '图片名称不能为空', trigger: 'blur' }
+                ],
+                filePath: [
+                    { required: true, message: '图片路径不能为空', trigger: 'blur' }
+                ],
+                listorder: [
+                    { required: true, message: '排序序号不能为空', trigger: 'blur' }
+                ]
+            },
         }
     },
     created(){
@@ -103,6 +114,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.imageSourceModal = true
+            this.$refs.imageRule.resetFields()
             this.modalTitle = "新增图片资源"
             for(let i in this.imageSourceForm){
                 this.imageSourceForm[i] = ''
@@ -112,43 +124,51 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.imageSourceModal = true
+            this.$refs.imageRule.resetFields()
             this.modalTitle = "修改图片资源"
             for(let i in this.imageSourceForm){
                 this.imageSourceForm[i] = ''
                 if(params.row[i]){
-                    this.imageSourceForm[i] =params.row[i] 
+                    this.imageSourceForm[i] =params.row[i].toString()  
                 }
              }
         },
         //点击确定
         addOrUpdate(){
-            let data = {
-                fileName:this.imageSourceForm.fileName,
-                filePath:this.imageSourceForm.filePath,
-                fileQuality:this.imageSourceForm.fileQuality,
-                thumbnailName:this.imageSourceForm.thumbnailName,
-                listorder:this.imageSourceForm.listorder
-            }
-            if(this.isAdd){
-                addImageSource(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('添加成功');
-                        this._getImageSource(this.nowPage)
-                    }else{
-                        this.$Message.error(res.message)
+            this.$refs['imageRule'].validate((valid)=>{
+                if(valid){
+                    let data = {
+                        fileName:this.imageSourceForm.fileName,
+                        filePath:this.imageSourceForm.filePath,
+                        fileQuality:this.imageSourceForm.fileQuality,
+                        thumbnailName:this.imageSourceForm.thumbnailName,
+                        listorder:this.imageSourceForm.listorder
                     }
-                })
-            }else{
-                data.id = this.imageSourceForm.id
-                updateImageSource(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功');
-                        this._getImageSource(this.nowPage)
+                    if(this.isAdd){
+                        addImageSource(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('添加成功');
+                                this._getImageSource(this.nowPage)
+                            }else{
+                                this.$Message.error(res.message)
+                            }
+                        })
                     }else{
-                        this.$Message.error(res.message)
+                        data.id = this.imageSourceForm.id
+                        updateImageSource(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功');
+                                this._getImageSource(this.nowPage)
+                            }else{
+                                this.$Message.error(res.message)
+                            }
+                        })  
                     }
-                })  
-            }
+                }else{
+                    this.$refs['imageModal'].visible = true
+                    this.imageSourceModal = true
+                }
+            })
         },
         remove(params) {
             let data = {
@@ -162,7 +182,7 @@ export default {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this.total--
-                            this._getImageSource(this.nowPage)
+                            this._getImageSource(1)
                         }else{
                             this.$Message.error(res.message);
                         }

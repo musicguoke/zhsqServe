@@ -77,7 +77,7 @@ export default {
     editSys(row) {
       this.newSys = false
       this.name = '编辑系统'
-      this.$refs.authConfig._getBuildConfig(Number(row.id), 'sys')
+      this.$refs.authConfig._getBuildConfig(Number(row.id), 'sys', Number(row.type))
     },
     // 子组件控制table显示隐藏
     tableShow(isShow) {

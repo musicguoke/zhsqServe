@@ -18,12 +18,12 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
-        <Modal v-model="resource720Modal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="resource720Form" :label-width="80">
-                <FormItem label="资源名称">
+        <Modal v-model="resource720Modal" :title=modalTitle @on-ok="addOrUpdate" ref="modal720">
+            <Form :model="resource720Form" :label-width="80" :rules="rule720" ref="rule720">
+                <FormItem label="资源名称" prop="name">
                     <Input v-model="resource720Form.name" ></Input>
                 </FormItem>
-                <FormItem label="资源路径">
+                <FormItem label="资源路径" prop="path">
                     <Input v-model="resource720Form.path" ></Input>
                 </FormItem>
             </Form>
@@ -51,7 +51,15 @@ export default {
                 name:'',
                 path:''
             },
-            nowPage:1
+            nowPage:1,
+            rule720: {
+                name: [
+                    { required: true, message: '资源名称不能为空', trigger: 'blur' }
+                ],
+                path: [
+                    { required: true, message: '资源路径不能为空', trigger: 'blur' }
+                ]
+            },
         }
     },
     created(){
@@ -88,6 +96,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.resource720Modal = true
+            this.$refs.rule720.resetFields()
             this.modalTitle = "新增720资源"
             for(let i in this.resource720Form){
                 this.resource720Form[i] = ''
@@ -97,41 +106,49 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.resource720Modal = true
+            this.$refs.rule720.resetFields()
             this.modalTitle = "修改720资源"
             for(let i in this.resource720Form){
                 this.resource720Form[i] = ''
                 if(params.row[i]){
-                    this.resource720Form[i] =params.row[i] 
+                    this.resource720Form[i] =params.row[i].toString() 
                 }
              }
         },
         //点击确定
         addOrUpdate(){
             let data = {}
-            data = {
-                name:this.resource720Form.name,
-                path:this.resource720Form.path
-            }
-            if(this.isAdd){
-                add720Resource(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('添加成功')
-                        this._get720Resource(this.nowPage)
-                    }else{
-                        this.$Message.error(res.message)
+            this.$refs['rule720'].validate((valid)=>{
+                if(valid){
+                    data = {
+                        name:this.resource720Form.name,
+                        path:this.resource720Form.path
                     }
-                })
-            }else{
-                data.id = this.resource720Form.id
-                update720Resource(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功')
-                        this._get720Resource(this.nowPage)
+                    if(this.isAdd){
+                        add720Resource(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('添加成功')
+                                this._get720Resource(this.nowPage)
+                            }else{
+                                this.$Message.error(res.message)
+                            }
+                        })
                     }else{
-                        this.$Message.error(res.message)
-                    }
-                })
-            }  
+                        data.id = this.resource720Form.id
+                        update720Resource(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功')
+                                this._get720Resource(this.nowPage)
+                            }else{
+                                this.$Message.error(res.message)
+                            }
+                        })
+                    }  
+                }else{
+                    this.$refs['modal720'].visible = true;
+                    this.resource720Modal = true;
+                }
+            })
         },
         remove(params) {
             let data = {
@@ -144,6 +161,7 @@ export default {
                     delete720Resource(data).then(res => {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
+                            this._get720Resource(1)
                             this.total--
                         }else{
                             this.$Message.error(res.message);

@@ -95,8 +95,6 @@ export default {
       unreadSuggestList(page).then(res => {
         if (res.code === 20000) {
           this.unread = res.data
-        } else {
-          this.$Message.error(`${res.message}`)
         }
       })
     }

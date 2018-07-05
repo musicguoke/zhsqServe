@@ -471,21 +471,21 @@ export default {
         }
       })
     },
-    _getSysMapById(id) {
+    _getSysMapById(id, type) {
       getBuildConfig(id).then(res => {
+        let sysType = type || 1
         this.mapConfigList = res.mapConfigList
         this.mapConfigList.map(v => {
           v.name = v.mName
           v._checked = false
         })
-        let list = []
-        res.cilentAuthorityList.map(v => {
+        this.tempFeatureList = res.cilentAuthorityList
+        this.tempFeatureList.map(v => {
           v.name = v.moduleName
           v._checked = false
-          list.push(v)
         })
-        this.tempFeatureList = list
-        this.featureList = this.tempFeatureList.filter(v => v.permissionType == 1)
+        console.log(sysType)
+        this.featureList = this.tempFeatureList.filter(v => v.permissionType == sysType)
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
         if(id) {
@@ -496,7 +496,7 @@ export default {
         }
       })
     },
-    _getBuildConfig(lid, str) {
+    _getBuildConfig(lid, str, type) {
       let id = ''
       if(typeof (lid) === 'number') {
         id = lid
@@ -506,7 +506,7 @@ export default {
         this._getRoleModuleById(id)
       } else if (str === 'sys') { //获取系统信息
         this._getAreaList() //区域列表
-        this._getSysMapById(id)
+        this._getSysMapById(id, type)
       }
     },
     _getAreaList() {

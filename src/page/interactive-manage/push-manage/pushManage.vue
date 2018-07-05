@@ -36,7 +36,7 @@
         <Modal v-model="pushModal" :title=modalTitle @on-ok="savePushMessage">
             <Form :model="pushForm" :label-width="80">
                 <FormItem label="选择系统" v-if="!$route.query.id">
-                    <Select v-model="pushForm.pSysList" multiple :label-in-value="true" @on-change="filterGroup">
+                    <Select v-model="pushForm.pSys" :label-in-value="true" @on-change="filterGroup">
                         <Option v-for="item in sysData" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
@@ -134,7 +134,7 @@ export default {
             total: 0,
             nowPage: 1,
             pushForm: {
-                pSysList:[],
+                pSys:'',
                 pGroupList:[],
                 pGroup:'',
                 pRemark: '',
@@ -220,7 +220,7 @@ export default {
             }
         },
         openGetUser(){
-            if(this.pushForm.pSysList.length != 0 || this.$route.query.id){
+            if(this.pushForm.pSys || this.$route.query.id){
                 this.chooseUserModal = true
                 this.searchUserName = ''
                 this._getUserList(1)
@@ -234,7 +234,7 @@ export default {
                 pageNo: page,
                 pageSize: 10,
                 arTruename: this.searchUserName,
-                sysIdList:this.pushForm.pSysList?this.pushForm.pSysList.join(','):''
+                sysIdList:this.pushForm.pSys?this.pushForm.pSys:''
             }
             getUserList(data).then(res => {
                 this.userData = []
@@ -312,13 +312,11 @@ export default {
         //通过系统id过滤角色
         filterGroup(){
             this.roleData = []
-            this.pushForm.pSysList.map(v=>{
-                getRolesList(v).then(res => {
-                    res.data.list.map(v => {
-                        this.roleData.push({
-                            value: v.grId,
-                            label: v.grName
-                        })
+            getRolesList(this.pushForm.pSys).then(res => {
+                res.data.list.map(v => {
+                    this.roleData.push({
+                        value: v.grId,
+                        label: v.grName
                     })
                 })
             })
@@ -362,8 +360,7 @@ export default {
                 pGroupStr:Array.from(this.pushForm.pGroupList).join(","),
                 pRemark: this.pushForm.pRemark,
                 pType: this.pushForm.pType,
-                // pFilename: this.pushForm.pFilename,
-                // pFileurl: this.pushForm.pFileurl,
+                sysId:this.$route.query.id?this.$route.query.id:this.pushForm.pSys,
                 pContent: this.pushForm.pContent,
                 userIds: this.pushForm.userIds
             }

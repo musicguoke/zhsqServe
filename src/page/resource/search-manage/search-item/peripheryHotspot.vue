@@ -18,18 +18,18 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" show-total show-elevator></Page>
         </div>
-        <Modal v-model="hotSpotModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="hotSpotForm" :label-width="80">
-                <FormItem label="名称">
+        <Modal v-model="hotSpotModal" :title=modalTitle @on-ok="addOrUpdate" ref="hotSpotModal">
+            <Form :model="hotSpotForm" :label-width="80" :rules="hotSpotRule" ref="hotSpotRule">
+                <FormItem label="名称" prop="name">
                     <Input v-model="hotSpotForm.name" placeholder="请输入名称..."></Input>
                 </FormItem>
-                <FormItem label="父id">
+                <FormItem label="父id" prop="parentid">
                     <Input v-model="hotSpotForm.parentid" placeholder="请输入父id..."></Input>
                 </FormItem>
-                <FormItem label="数据编号">
+                <FormItem label="数据编号" prop="dataId">
                     <Input v-model="hotSpotForm.dataId" placeholder="请输入数据编码..."></Input>
                 </FormItem>
-                <FormItem label="序号">
+                <FormItem label="序号" prop="listorder">
                     <Input v-model="hotSpotForm.listorder" placeholder="请输入序号..."></Input>
                 </FormItem>
             </Form>
@@ -86,6 +86,20 @@ data() {
           type:'',
           file:''
         },
+        hotSpotRule: {
+            name: [
+                { required: true, message: "热点名称不能为空", trigger: "blur" }
+            ],
+            parentid: [
+                { required: true, message: "父级id不能为空", trigger: "blur"}
+            ],
+            dataId: [
+                { required: true, message: "数据编码不能为空", trigger: "blur" }
+            ],
+            listorder: [
+                { required: true, message: "序号不能为空", trigger: "blur"}
+            ]
+        }
     }
   },
   created(){
@@ -114,6 +128,7 @@ data() {
     openAddModal(){
       this.isAdd = true
       this.hotSpotModal = true
+      this.$refs.hotSpotRule.resetFields()
       for(let i in this.hotSpotForm){
         this.hotSpotForm[i] = '';
      }
@@ -123,44 +138,52 @@ data() {
     openEditModal(params){
         this.isAdd = false
         this.hotSpotModal = true
+        this.$refs.hotSpotRule.resetFields()
         for(let i in this.hotSpotForm){
           this.hotSpotForm[i] = '';
           if(params.row[i]){
-            this.hotSpotForm[i] =params.row[i] 
+            this.hotSpotForm[i] =params.row[i].toString()
           }
         }
         this.modalTitle = '修改周边热点'
     },
     //点击确定
     addOrUpdate(){
-      let data = {}
-        data = {
-          method:'save',
-          name:this.hotSpotForm.name,
-          parentid:this.hotSpotForm.parentid,
-          dataId:this.hotSpotForm.dataId,
-          listorder:this.hotSpotForm.listorder
-        }
-      if(this.isAdd){
-          addHotspot(data).then(res=>{
-            if(res.code == 20000){
-              this.$Message.success('添加成功');
-              this._getHotspot(this.nowPage)
+        this.$refs["hotSpotRule"].validate(valid => {
+            if (valid) {
+                let data = {}
+                    data = {
+                    method:'save',
+                    name:this.hotSpotForm.name,
+                    parentid:this.hotSpotForm.parentid,
+                    dataId:this.hotSpotForm.dataId,
+                    listorder:this.hotSpotForm.listorder
+                    }
+                if(this.isAdd){
+                    addHotspot(data).then(res=>{
+                        if(res.code == 20000){
+                        this.$Message.success('添加成功');
+                        this._getHotspot(this.nowPage)
+                        }else{
+                        this.$Message.error(res.message)
+                        }
+                    })
+                }else{
+                    data.id = this.hotSpotForm.id
+                    updateHotspot(data).then(res=>{
+                        if(res.code == 20000){
+                        this.$Message.success('修改成功');
+                        this._getHotspot(this.nowPage)
+                        }else{
+                        this.$Message.error(res.message)
+                        }
+                    })
+                }
             }else{
-              this.$Message.error(res.message)
+                this.$refs.hotSpotModal.visible = true
+                this.hotSpotModal = true
             }
-          })
-      }else{
-          data.id = this.hotSpotForm.id
-          updateHotspot(data).then(res=>{
-            if(res.code == 20000){
-              this.$Message.success('修改成功');
-              this._getHotspot(this.nowPage)
-            }else{
-              this.$Message.error(res.message)
-            }
-          })
-      }
+        })
     },
     search(searchName){
         this.searchName = searchName
