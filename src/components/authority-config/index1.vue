@@ -61,7 +61,7 @@
           </FormItem>
           <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
-              <Option v-for="(item, index) in funAry" :value="item" :key="index">
+              <Option v-for="item in funAry" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>

@@ -22,7 +22,7 @@
           <Input v-model="formItem.sysName" placeholder="请输入系统名称"></Input>
         </FormItem>
         <FormItem label="系统类别">
-          <Select v-model="formItem.type">
+          <Select v-model="formItem.type" @on-change="sysTypeChange" :disabled="!newSys">
             <Option value="1">综合市情</Option>
             <Option value="2">规划定位</Option>
             <Option value="3">综合区情</Option>
@@ -96,7 +96,7 @@
         <Table border ref="selection" :columns="columns5" :data="mapConfigList" @on-select-all="selectMapConfig" @on-select="selectMapConfig" @on-selection-change="selectMapConfig">
         </Table>
       </div>
-      <div style="width: 400px" class="select-box" v-show="current == 4">
+      <div style="width: 400px;paddingBottom: 60px;" class="select-box" v-show="current == 4">
         <Form :label-width="80">
           <FormItem label="权限等级">
             <Select v-if="sys" v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
@@ -112,7 +112,7 @@
           </FormItem>
           <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
-              <Option v-for="(item, index) in funAry" :value="item" :key="index">
+              <Option v-for="item in funAry" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>
@@ -181,7 +181,7 @@ export default {
       btnContent: '下一步',
       formItem: {
         sysName: "",
-        type: "",
+        type: "1",
         areacode: "",
         enable: '0'
       },
@@ -197,6 +197,7 @@ export default {
       tempTopicDataTree: [],
       mapConfigList: [],
       featureList: [],
+      tempFeatureList: [],
       cilentAuthorityStr: '1',
       tabDataIdStr: '',
       mapIdStr: '',
@@ -416,15 +417,30 @@ export default {
       section.map(v => id.push(v.id))
       this.cilentAuthorityStr = id.toString()
     },
+    // 系统类别发生变化
+    sysTypeChange(value) {
+      this.featureList = this.tempFeatureList.filter(v => v.permissionType == value)
+    },
     // 权限选择
     qx1Change(value) {
       this.funNum = ''
+      let list = []
+      this.funAry = []
       if (value === '一级权限') {
-        this.funAry = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        list.map(v => {
+          this.funAry.push(v)
+        })
       } else if (value === '二级权限') {
-        this.funAry = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        list = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        list.map(v => {
+          this.funAry.push(v)
+        })
       } else {
-        this.funAry = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+        list = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+        list.map(v => {
+          this.funAry.push(v)
+        })
       }
     },
     _getRoleModuleById(id) {
@@ -472,7 +488,8 @@ export default {
           }
           list.push(v)
         })
-        this.featureList = list
+        this.tempFeatureList = list
+        this.featureList = this.tempFeatureList.filter(v => v.permissionType == 1)
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
         if(id) {
@@ -523,7 +540,6 @@ export default {
       })
     },
     _updateSystem() {
-      console.log(this.$refs.treeTable.checkGroup.toString())
       let data = Object.assign({}, {
         tabDataIdStr: this.$refs.treeTable.checkGroup.toString(),
         cilentAuthorityStr: this.cilentAuthorityStr,

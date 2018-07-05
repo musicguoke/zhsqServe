@@ -8,6 +8,8 @@
         </el-table-column>
         <el-table-column prop="moduleName" label="模块名称">
         </el-table-column>
+        <el-table-column prop="permissionType" label="系统类别">
+        </el-table-column>
         <el-table-column prop="moduleDescp" label="模块描述">
         </el-table-column>
         <el-table-column label="操作" width="160" align="center">
@@ -29,6 +31,13 @@
         </FormItem>
         <FormItem label="模块名称">
           <Input v-model="itemInfo.moduleName" placeholder="请输入模块名称"></Input>
+        </FormItem>
+        <FormItem label="系统类别">
+          <Select v-model="itemInfo.permissionType">
+            <Option value="1">综合市情</Option>
+            <Option value="2">规划定位</Option>
+            <Option value="3">综合区情</Option>
+          </Select>
         </FormItem>
         <FormItem label="模块描述">
           <Input v-model="itemInfo.moduleDescp" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入模块描述"></Input>
@@ -57,7 +66,8 @@ export default {
       itemInfo: {
         id: '',
         moduleName: '',
-        moduleDescp: ''
+        moduleDescp: '',
+        permissionType: ''
       }
     }
   },
@@ -78,6 +88,13 @@ export default {
     _getAuthority(id) {
       getAuthority(id).then(res => {
         if (res.code === 20000) {
+          if (res.data.permissionType == 1) {
+            res.data.permissionType = '综合市情'
+          } else if (res.data.permissionType == 2) {
+            res.data.permissionType = '规划定位'
+          } else if (res.data.permissionType == 3) {
+            res.data.permissionType = '综合区情'
+          }
           this.itemInfo = res.data
           this.isNew = false
           this.modalShow = true
@@ -158,7 +175,7 @@ export default {
       })
     },
     save() {
-      if(this.isNew) {
+      if (this.isNew) {
         this._addAuthority(this.itemInfo)
       } else {
         this._updateAuthority(this.itemInfo)

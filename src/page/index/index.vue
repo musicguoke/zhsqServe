@@ -392,8 +392,6 @@ export default {
             }
           })
           this.data1 = res.data.result
-        } else {
-          this.$Message.error('好像出什么问题了')
         }
       })
     },
@@ -409,8 +407,6 @@ export default {
             this.loginArray.push(v.data.login)
           })
           this.lineInitial()
-        } else {
-          this.$Message.error('好像出什么问题了')
         }
       })
     }

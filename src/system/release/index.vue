@@ -9,13 +9,7 @@
       <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
-        <Form 
-          ref="editItemForm"
-          :model="editItemForm"
-          :label-width="100"
-          label-position="right"
-          :rules="catalogValidate"
-        >
+        <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right" :rules="catalogValidate">
           <FormItem v-if="!isAdd" label="id" prop="dpId">
             <Input v-model="editItemForm.dpId" readonly></Input>
           </FormItem>
@@ -27,12 +21,12 @@
           </FormItem>
           <FormItem label="数据类型" prop="dpType">
             <Select v-model="editItemForm.dpType">
-              <Option v-for="(item, index) in dataTypeList" :value="item.typeid" :key="index">{{item.typename}}</Option>
+              <Option v-for="item in dataTypeList" :value="item.typeid" :key="item.typeid">{{item.typename}}</Option>
             </Select>
           </FormItem>
           <FormItem label="地区选择">
             <Select v-model="editItemForm.dpAreacode">
-              <Option v-for="(item, index) in areaQxList" :value="item.areacode" :key="index">
+              <Option v-for="item in areaQxList" :value="item.areacode" :key="item.areacode">
                 {{item.areaname}}
               </Option>
             </Select>
@@ -86,6 +80,7 @@ export default {
     return {
       contentHeight: window.innerHeight - 174 + 'px',
       data3: [],
+      tempData: [],
       tempDataTree: [],
       code: '',
       uploadUrl: url,
@@ -140,13 +135,10 @@ export default {
           key: 'dpName'
         }, {
           title: '数据类型',
-          key: 'id'
+          key: 'dpType'
         }, {
           title: '排序',
           key: 'dpListorder'
-        }, {
-          title: '描述',
-          key: 'description'
         }, {
           title: '操作',
           type: 'action',
@@ -228,6 +220,8 @@ export default {
         this.isAdd = false
         this._getAreaList(item.id)
       } else if (e.target.innerText === '添加') {
+        this._getAreaList()
+        this._getSTopicTypeList()
         this.editItemForm.dpParentid = item.id
         this.isAdd = true
         this.editItemModal = true
@@ -253,6 +247,17 @@ export default {
           this.$Message.success(`添加${res.message}`)
           this._getTopicDataTree()
           this.editItemModal = false
+          this.editItemForm = {
+            dpId: '',
+            dpName: '',
+            dpType: '',
+            dpAreacode: '',
+            dpListorder: '',
+            dpAreacode: '',
+            dpImagePath: '',
+            dpParentid: -1,
+            sysId: this.$route.query.id
+          }
         } else {
           this.$Message.error(`添加${res.message}`)
         }
@@ -260,7 +265,8 @@ export default {
     },
     _getTopicDataTree(id) {
       getTopicDataTree(id).then(res => {
-        this.data3 = this.initData(res)
+        this._getSTopicTypeList()
+        this.tempData = this.initData(res)
       })
     },
     _deleteTopicData(id) {
@@ -345,6 +351,9 @@ export default {
     _getSTopicTypeList(id) {
       getSTopicTypeList().then(res => {
         if (res.code === 20000) {
+          res.data.list.map(v => {
+            this.data3 = this.checkDataType(v.typeid, v.typename, this.tempData)
+          })
           this.dataTypeList = res.data.list
           if (id) {
             this._getTopicDataById(id)
@@ -353,6 +362,16 @@ export default {
           this.$Message.error()
         }
       })
+    },
+    checkDataType(id, name, list) {
+      list.map(v => {
+        if (v.dpType === id) {
+          v.dpType = name
+        } else if (v.children) {
+          this.checkDataType(id, name, v.children)
+        }
+      })
+      return list
     }
   }
 }
