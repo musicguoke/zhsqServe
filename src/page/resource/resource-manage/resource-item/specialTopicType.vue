@@ -18,12 +18,12 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
-        <Modal v-model="sTopicTypeModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="sTopicTypeForm"  :label-width="80">
-                <FormItem label="类型id">
+        <Modal v-model="sTopicTypeModal" :title=modalTitle @on-ok="addOrUpdate" ref="sTopicTypeModal">
+            <Form :model="sTopicTypeForm"  :label-width="80" :rules="topicRule" ref="topicRule">
+                <FormItem label="类型id" prop="typeid">
                     <Input v-model="sTopicTypeForm.typeid"></Input>
                 </FormItem>
-                <FormItem label="类型名称">
+                <FormItem label="类型名称" prop="typename">
                     <Input v-model="sTopicTypeForm.typename"></Input>
                 </FormItem>
             </Form>
@@ -51,7 +51,15 @@ export default {
                 typeid:'',
                 typename:''
             },
-            nowPage:1
+            nowPage:1,
+            topicRule:{
+                typeid: [
+                    { required: true, message: '行政区划编码不能为空', trigger: 'blur' }
+                ],
+                typename: [
+                    { required: true, message: '数据编码不能为空', trigger: 'blur' }
+                ]
+            }
         }
     },
     created(){
@@ -80,6 +88,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.sTopicTypeModal = true
+            this.$refs.topicRule.resetFields()
             for(let i in this.sTopicTypeForm){
                 this.sTopicTypeForm[i] = ''
             }
@@ -89,42 +98,50 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.sTopicTypeModal = true
+            this.$refs.topicRule.resetFields()
             for(let i in this.sTopicTypeForm){
                 this.sTopicTypeForm[i] = ''
                 if(params.row[i]){
-                    this.sTopicTypeForm[i] =params.row[i] 
+                    this.sTopicTypeForm[i] =params.row[i].toString()  
                 }
              }
              this.modalTitle = '修改专题类型'
         },
         //点击确定
         addOrUpdate(){
-            let data = {
-                typeid:this.sTopicTypeForm.typeid,
-                typename:this.sTopicTypeForm.typename
-            }
-            if(this.isAdd){
-                addSTopicType(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功');
-                        this._getSTopicTypeList(this.nowPage)
-                    }else{
-                        this.$Message.error(res.data);
-                        this._getSTopicTypeList(this.nowPage)
+            this.$refs['topicRule'].validate((valid)=>{
+                if(valid){
+                    let data = {
+                        typeid:this.sTopicTypeForm.typeid,
+                        typename:this.sTopicTypeForm.typename
                     }
-                })
-            }else{
-                data.id = this.sTopicTypeForm.id
-                uspdateSTopicType(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功');
-                        this._getSTopicTypeList(this.nowPage)
+                    if(this.isAdd){
+                        addSTopicType(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功');
+                                this._getSTopicTypeList(this.nowPage)
+                            }else{
+                                this.$Message.error(res.data);
+                                this._getSTopicTypeList(this.nowPage)
+                            }
+                        })
                     }else{
-                        this.$Message.error(res.data);
-                        this._getSTopicTypeList(this.nowPage)
-                    }
-                }) 
-            }    
+                        data.id = this.sTopicTypeForm.id
+                        uspdateSTopicType(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功');
+                                this._getSTopicTypeList(this.nowPage)
+                            }else{
+                                this.$Message.error(res.data);
+                                this._getSTopicTypeList(this.nowPage)
+                            }
+                        }) 
+                    } 
+                }else{
+                    this.$refs.sTopicTypeModal.visible = true
+                    this.sTopicTypeModal = true
+                } 
+            })  
         },
         remove(params) {
             let data = {

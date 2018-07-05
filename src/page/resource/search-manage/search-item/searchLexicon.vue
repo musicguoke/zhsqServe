@@ -18,12 +18,12 @@
         <div class="tablePage">
             <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
         </div>
-        <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="lexiconForm"  :label-width="80">
-                <FormItem label="数据编码">
+        <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate" ref="lexiconModal">
+            <Form :model="lexiconForm"  :label-width="80" :rules="lexiconRule" ref="lexiconRule">
+                <FormItem label="数据编码" prop="dataId">
                     <Input v-model="lexiconForm.dataId" placeholder="请输入..."></Input>
                 </FormItem>
-                <FormItem label="名称">
+                <FormItem label="名称" prop="name">
                     <Input v-model="lexiconForm.name" placeholder="请输入..."></Input>
                 </FormItem>
             </Form>
@@ -78,7 +78,15 @@ export default {
           type:'',
           file:{}
       },
-      selectedId:[]
+      selectedId:[],
+      lexiconRule: {
+        name: [
+          { required: true, message: "单词名称不能为空", trigger: "blur" }
+        ],
+        dataId: [
+          { required: true, message: "单词编码不能为空", trigger: "blur" }
+        ]
+      }
     }
   },
   created(){
@@ -107,6 +115,7 @@ export default {
     openAddModal(){
         this.isAdd = true
         this.lexiconModal = true
+        this.$refs.lexiconRule.resetFields()
         for(let i in this.lexiconForm){
           this.lexiconForm[i] = '';
         }
@@ -116,10 +125,11 @@ export default {
     openEditModal(params){
         this.isAdd = false
         this.lexiconModal = true
+        this.$refs.lexiconRule.resetFields()
         for(let i in this.lexiconForm){
           this.lexiconForm[i] = '';
           if(params.row[i]){
-            this.lexiconForm[i] =params.row[i] 
+            this.lexiconForm[i] =params.row[i].toString()
           }
         }
         this.modalTitle = '修改搜索词库'
@@ -136,30 +146,37 @@ export default {
     },
     //点击确定
     addOrUpdate(){
-      let data = {
-         dataId:this.lexiconForm.dataId,
-         name:this.lexiconForm.name
-      }
-      if(this.isAdd){
-        addLexicon(data).then(res=>{
-            if(res.code == 20000){
-               this.$Message.success('添加成功')
-               this._getLexicon(this.nowPage)
+        this.$refs["lexiconRule"].validate(valid => {
+            if (valid) {
+                let data = {
+                    dataId:this.lexiconForm.dataId,
+                    name:this.lexiconForm.name
+                }
+                if(this.isAdd){
+                    addLexicon(data).then(res=>{
+                        if(res.code == 20000){
+                        this.$Message.success('添加成功')
+                        this._getLexicon(this.nowPage)
+                        }else{
+                        this.$Message.error(res.message)     
+                        }
+                    })
+                }else{
+                    data.id = this.lexiconForm.id
+                    updateLexicon(data).then(res=>{
+                        if(res.code == 20000){
+                        this.$Message.success('修改成功')
+                        this._getLexicon(this.nowPage)
+                        }else{
+                        this.$Message.error(res.message)
+                        }
+                    }) 
+                }
             }else{
-               this.$Message.error(res.message)     
+                this.$refs.lexiconModal.visible = true
+                this.lexiconModal = true
             }
         })
-      }else{
-        data.id = this.lexiconForm.id
-        updateLexicon(data).then(res=>{
-            if(res.code == 20000){
-              this.$Message.success('修改成功')
-              this._getLexicon(this.nowPage)
-            }else{
-              this.$Message.error(res.message)
-            }
-        }) 
-      }
     },
     search(searchName){
         this.searchName = searchName

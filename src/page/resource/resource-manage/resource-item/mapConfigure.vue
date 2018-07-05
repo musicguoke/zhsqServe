@@ -26,15 +26,15 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
-        <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="mapConfigureForm" :label-width="80">
-                <FormItem label="名称">
+        <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate" ref="mapConfigureModal">
+            <Form :model="mapConfigureForm" :label-width="80" :rules="mapRule" ref="mapRule">
+                <FormItem label="名称" prop="mName">
                     <Input v-model="mapConfigureForm.mName"></Input>
                 </FormItem>
-                <FormItem label="地图地址">
+                <FormItem label="地图地址" prop="mUrl">
                     <Input v-model="mapConfigureForm.mUrl"></Input>
                 </FormItem>
-                <FormItem label="排序">
+                <FormItem label="排序" prop="mOrder">
                     <Input v-model="mapConfigureForm.mOrder"></Input>
                 </FormItem>
                 <FormItem label="地图图例">
@@ -43,10 +43,10 @@
                         <div slot="tip">只能上传jpg/png文件，且不超过2M</div>
                     </Upload>
                 </FormItem>
-                <FormItem label="图例地址">
+                <FormItem label="图例地址" prop="mImage">
                     <Input v-model="mapConfigureForm.mImage"></Input>
                 </FormItem>
-                <FormItem label="版本">
+                <FormItem label="版本" prop="mVersion">
                     <Input v-model="mapConfigureForm.mVersion"></Input>
                 </FormItem>
             </Form>
@@ -79,7 +79,24 @@ export default {
                 mVersion: ''
             },
             nowPage: 1,
-            selectedId: []
+            selectedId: [],
+            mapRule: {
+                mName: [
+                    { required: true, message: '地图名称不能为空', trigger: 'blur' }
+                ],
+                mUrl: [
+                    { required: true, message: '地图地址不能为空', trigger: 'blur' }
+                ],
+                mOrder:[
+                    { required: true, message: '地图排序不能为空', trigger: 'blur' }
+                ],
+                mImage:[
+                    { required: true, message: '图例地址不能为空', trigger: 'blur' }
+                ],
+                mVersion:[
+                    { required: true, message: '地图版本不能为空', trigger: 'blur' }
+                ]
+            },
         }
     },
     created() {
@@ -106,6 +123,7 @@ export default {
         openAddModal() {
             this.isAdd = true
             this.mapConfigureModal = true
+            this.$refs.mapRule.resetFields()
             for (let i in this.mapConfigureForm) {
                 this.mapConfigureForm[i] = ''
             }
@@ -118,10 +136,11 @@ export default {
         openEditModal(params) {
             this.isAdd = false
             this.mapConfigureModal = true
+            this.$refs.mapRule.resetFields()
             for (let i in this.mapConfigureForm) {
                 this.mapConfigureForm[i] = ''
                 if (params.row[i]) {
-                    this.mapConfigureForm[i] = params.row[i]
+                    this.mapConfigureForm[i] = params.row[i].toString() 
                 }
             }
             if (this.$refs.upload._data.fileList) {
@@ -131,34 +150,41 @@ export default {
         },
         //点击确定
         addOrUpdate() {
-            let data = {}
-            data = {
-                mName: this.mapConfigureForm.mName,
-                mUrl: this.mapConfigureForm.mUrl,
-                mOrder: this.mapConfigureForm.mOrder,
-                mImage: this.mapConfigureForm.mImage,
-                mVersion: this.mapConfigureForm.mVersion
-            }
-            if (this.isAdd) {
-                insertMapConfigure(data).then(res => {
-                    if (res.code == 20000) {
-                        this._getMapConfigure(this.nowPage)
-                        this.$Message.success('添加成功');
-                    } else {
-                        this.$Message.error(res.message)
+            this.$refs['mapRule'].validate((valid)=>{
+                if(valid){
+                    let data = {}
+                    data = {
+                        mName: this.mapConfigureForm.mName,
+                        mUrl: this.mapConfigureForm.mUrl,
+                        mOrder: this.mapConfigureForm.mOrder,
+                        mImage: this.mapConfigureForm.mImage,
+                        mVersion: this.mapConfigureForm.mVersion
                     }
-                })
-            } else {
-                data.id = this.mapConfigureForm.id
-                updateMapConfigure(data).then(res => {
-                    if (res.code == 20000) {
-                        this._getMapConfigure(this.nowPage)
-                        this.$Message.success('修改成功');
+                    if (this.isAdd) {
+                        insertMapConfigure(data).then(res => {
+                            if (res.code == 20000) {
+                                this._getMapConfigure(this.nowPage)
+                                this.$Message.success('添加成功');
+                            } else {
+                                this.$Message.error(res.message)
+                            }
+                        })
                     } else {
-                        this.$Message.error(res.message)
+                        data.id = this.mapConfigureForm.id
+                        updateMapConfigure(data).then(res => {
+                            if (res.code == 20000) {
+                                this._getMapConfigure(this.nowPage)
+                                this.$Message.success('修改成功');
+                            } else {
+                                this.$Message.error(res.message)
+                            }
+                        })
                     }
-                })
-            }
+                }else{
+                    this.$refs['mapConfigureModal'].visible = true
+                    this.mapConfigureModal = true
+                }
+            })
         },
         //删除
         remove(params) {

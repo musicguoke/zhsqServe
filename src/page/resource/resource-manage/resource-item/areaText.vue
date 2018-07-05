@@ -22,24 +22,24 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
           </div>
-        <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="areaTextForm"  :label-width="100">
-                <FormItem label="行政区划编码">
+        <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTextModal">
+            <Form :model="areaTextForm"  :label-width="100" :rules="areaTextRule" ref="areaTextRule">
+                <FormItem label="行政区划编码" prop="areacode">
                     <Input v-model="areaTextForm.areacode" ></Input>
                 </FormItem>
-                <FormItem label="数据编码">
+                <FormItem label="数据编码"  prop="dataId">
                     <Input v-model="areaTextForm.dataId" ></Input>
                 </FormItem>
-                <FormItem label="标题">
+                <FormItem label="标题"  prop="title">
                     <Input v-model="areaTextForm.title" ></Input>
                 </FormItem>
-                <FormItem label="年份">
+                <FormItem label="年份"  prop="year">
                     <Input v-model="areaTextForm.year"></Input>
                 </FormItem>
-                <FormItem label="文件地址">
+                <FormItem label="文件地址"  prop="filePath">
                     <Input v-model="areaTextForm.filePath"></Input>
                 </FormItem>
-                <FormItem label="排序">
+                <FormItem label="排序"  prop="listorder">
                     <Input v-model="areaTextForm.listorder"></Input>
                 </FormItem>
             </Form>
@@ -98,7 +98,27 @@ export default {
                 type:"",
                 file:""
             },
-            nowPage:1
+            nowPage:1,
+            areaTextRule: {
+                areacode: [
+                    { required: true, message: '行政区划编码不能为空', trigger: 'blur' }
+                ],
+                dataId: [
+                    { required: true, message: '数据编码不能为空', trigger: 'blur' }
+                ],
+                year:[
+                    { required: true, message: '年份不能为空', trigger: 'blur' }
+                ],
+                title: [
+                    { required: true, message: '标题不能为空', trigger: 'blur' }
+                ],
+                filePath: [
+                    { required: true, message: '文件地址不能为空', trigger: 'blur' }
+                ],
+                listorder:[
+                    { required: true, message: '排序不能为空', trigger: 'blur' }
+                ]
+            },
         }
     },
     created(){
@@ -127,6 +147,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.areaTextModal = true
+            this.$refs.areaTextRule.resetFields()
             for(let i in this.areaTextForm){
                 this.areaTextForm[i] = ''
             }
@@ -136,10 +157,11 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.areaTextModal = true
+            this.$refs.areaTextRule.resetFields()
             for(let i in this.areaTextForm){
                 this.areaTextForm[i] = ''
                 if(params.row[i]){
-                    this.areaTextForm[i] =params.row[i] 
+                    this.areaTextForm[i] =params.row[i].toString()  
                 }
             } 
             this.modalTitle = '修改区域文本'
@@ -150,36 +172,43 @@ export default {
         },
         //点击确定
         addOrUpdate(){
-            let data = {}
-                data = {
-                    method:'save',
-                    areacode:this.areaTextForm.areacode,
-                    title:this.areaTextForm.title,
-                    year:this.areaTextForm.year,
-                    dataId:this.areaTextForm.dataId,
-                    filePath:this.areaTextForm.filePath,
-                    listorder:this.areaTextForm.listorder
+            this.$refs['areaTextRule'].validate((valid)=>{
+                if(valid){
+                    let data = {}
+                        data = {
+                            method:'save',
+                            areacode:this.areaTextForm.areacode,
+                            title:this.areaTextForm.title,
+                            year:this.areaTextForm.year,
+                            dataId:this.areaTextForm.dataId,
+                            filePath:this.areaTextForm.filePath,
+                            listorder:this.areaTextForm.listorder
+                        }
+                    if(this.isAdd){
+                        addAreaText(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('添加成功')
+                                this._getAreaText(this.nowPage)
+                            }else{
+                                this.$Message.error(res.message);  
+                            }
+                        })
+                    }else{
+                        data.id = this.areaTextForm.id
+                        updateAreaText(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功')
+                                this._getAreaText(this.nowPage)
+                            }else{
+                                this.$Message.error(res.message);  
+                            }
+                        })
+                    }
+                }else{
+                    this.$refs['areaTextModal'].visible = true
+                    this.areaTextModal = true
                 }
-            if(this.isAdd){
-                addAreaText(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('添加成功')
-                        this._getAreaText(this.nowPage)
-                    }else{
-                        this.$Message.error(res.message);  
-                    }
-                })
-            }else{
-                data.id = this.areaTextForm.id
-                updateAreaText(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功')
-                        this._getAreaText(this.nowPage)
-                    }else{
-                        this.$Message.error(res.message);  
-                    }
-                })
-            }
+            })
         },
         //删除
         remove (params) {

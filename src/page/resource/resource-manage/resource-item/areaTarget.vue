@@ -20,20 +20,20 @@
         <div class="tablePage">
             <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
         </div>
-        <Modal v-model="areaTargetModal" :title=modalTitle @on-ok="addOrUpdate">
-            <Form :model="areaTargetForm"  :label-width="80">
-                <FormItem label="行政区划">
+        <Modal v-model="areaTargetModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTargetModal">
+            <Form :model="areaTargetForm"  :label-width="80" :rules="areaRule" ref="areaRule">
+                <FormItem label="行政区划" prop="areacode">
                     <Select v-model="areaTargetForm.areacode">
                         <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="指标">
+                <FormItem label="城镇指标" prop="cityTarget">
                     <Input v-model="areaTargetForm.cityTarget"></Input>
                 </FormItem>
                 <FormItem label="区县指标">
                     <Input v-model="areaTargetForm.countyTarget"></Input>
                 </FormItem>
-                <FormItem label="年份">
+                <FormItem label="年份" prop="year">
                     <Input v-model="areaTargetForm.year"></Input>
                 </FormItem>
             </Form>
@@ -66,7 +66,18 @@ export default {
                 countyTarget:''
             },
             nowPage:1,
-            selectedId:[]
+            selectedId:[],
+            areaRule: {
+                areacode: [
+                    { required: true, message: '行政区划不能为空', trigger: 'blur' }
+                ],
+                cityTarget: [
+                    { required: true, message: '城镇指标不能为空', trigger: 'blur' }
+                ],
+                year:[
+                    { required: true, message: '年份不能为空', trigger: 'blur' }
+                ]
+            },
         }
     },
     created(){
@@ -109,6 +120,7 @@ export default {
         openAddModal(){
             this.isAdd = true
             this.areaTargetModal = true
+            this.$refs.areaRule.resetFields()
             for(let i in this.areaTargetForm){
                 this.areaTargetForm[i] = ''
             }
@@ -118,44 +130,52 @@ export default {
         openEditModal(params){
             this.isAdd = false
             this.areaTargetModal = true
+             this.$refs.areaRule.resetFields()
             for(let i in this.areaTargetForm){
                 this.areaTargetForm[i] = ''
                 if(params.row[i]){
-                    this.areaTargetForm[i] =params.row[i] 
+                    this.areaTargetForm[i] =params.row[i].toString()  
                 }
              }
              this.modalTitle = '修改区域指标'
         },
         //点击确定
         addOrUpdate(){
-            let data = {
-                areacode:this.areaTargetForm.areacode,
-                year:this.areaTargetForm.year,
-                cityTarget:this.areaTargetForm.cityTarget,
-                countyTarget:this.areaTargetForm.countyTarget
-            }
-            if(this.isAdd){
-                addAreaTarget(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功');
-                        this._getAreaTarget(this.nowPage)
-                    }else{
-                        this.$Message.error(res.data);
-                        this._getAreaTarget(this.nowPage)
+            this.$refs['areaRule'].validate((valid)=>{
+                if(valid){
+                    let data = {
+                        areacode:this.areaTargetForm.areacode,
+                        year:this.areaTargetForm.year,
+                        cityTarget:this.areaTargetForm.cityTarget,
+                        countyTarget:this.areaTargetForm.countyTarget
                     }
-                })
-            }else{
-                data.id = this.areaTargetForm.id
-                updateAreaTarget(data).then(res=>{
-                    if(res.code == 20000){
-                        this.$Message.success('修改成功');
-                        this._getAreaTarget(this.nowPage)
+                    if(this.isAdd){
+                        addAreaTarget(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功');
+                                this._getAreaTarget(this.nowPage)
+                            }else{
+                                this.$Message.error(res.data);
+                                this._getAreaTarget(this.nowPage)
+                            }
+                        })
                     }else{
-                        this.$Message.error(res.data);
-                        this._getAreaTarget(this.nowPage)
-                    }
-                }) 
-            }    
+                        data.id = this.areaTargetForm.id
+                        updateAreaTarget(data).then(res=>{
+                            if(res.code == 20000){
+                                this.$Message.success('修改成功');
+                                this._getAreaTarget(this.nowPage)
+                            }else{
+                                this.$Message.error(res.data);
+                                this._getAreaTarget(this.nowPage)
+                            }
+                        }) 
+                    } 
+                }else{
+                    this.$refs['areaTargetModal'].visible = true
+                    this.areaTargetModal = true
+                }
+            })   
         },
         remove(params) {
             let data = {
@@ -168,7 +188,7 @@ export default {
                     deleteAreaTarget(data).then(res => {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
-                            this._getAreaTarget(this.nowPage)
+                            this._getAreaTarget(1)
                             this.total--
                         }else{
                             this.$Message.error(res.message);
