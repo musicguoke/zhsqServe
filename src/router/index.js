@@ -34,6 +34,7 @@ const SIndex = r => require(["@/system/index"], r);
 const ContentList = r => require(["@/system/content-list/index"], r);
 const SGroupList = r => require(["@/system/role-group/index"], r);
 const Release = r => require(["@/system/release/index"], r);
+const Catelog = r => require(["@/system/catelog/index"], r);
 const SystemList = r => require(["@/page/system-list/index"], r);
 
 // user
@@ -329,6 +330,11 @@ const router = new VueRouter({
           path: "release",
           component: Release,
           meta: { title: "发布目录" }
+        },
+        {
+          path: "modify",
+          component: Catelog,
+          meta: { title: "修改目录" }
         },
         {
           path: "user-list",

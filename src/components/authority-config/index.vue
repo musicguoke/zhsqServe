@@ -484,7 +484,6 @@ export default {
           v.name = v.moduleName
           v._checked = false
         })
-        console.log(sysType)
         this.featureList = this.tempFeatureList.filter(v => v.permissionType == sysType)
         this.dataTree = this.tempDataTree = res.tabDataTreeJson
         this.topicDataTree = this.tempTopicDataTree = res.dataPublishJson
@@ -574,13 +573,14 @@ export default {
           }
           this.sysId = res.data.id
           let list = []
-          this.featureList.map(v => {
+          this.featureList.map((v, index) => {
             // 判断该系统的已选功能项
             v._checked = false
             list = []
             res.data.cilentAuthorityList.map(h => {
               if (v.id === h.funId) {
                 v._checked = true
+                this.featureList.splice(index, 1, v)
               }
               list.push(h.funId)
             })

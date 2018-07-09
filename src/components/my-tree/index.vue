@@ -358,6 +358,7 @@ export default {
         this.handleParentCheck(data.parent, data.isChecked)
       }
       this.handleCheck(data, data.isChecked)
+      this.$emit('on-tree-select', data)
     },
     handleParentCheck(data, status) {
       if(data) {
@@ -404,6 +405,10 @@ export default {
         this.checkGroup = []
       }
       // this.$emit('on-selection-change', this.checkGroup)
+      this.$emit('on-tree-select', this.initItems[0])
+    },
+    handleCancelCheckAll() {
+      this.checkGroup = []
     },
     // 数组去重
     getArray(a) {
