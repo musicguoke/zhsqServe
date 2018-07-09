@@ -9,12 +9,13 @@
   export default {
     name: 'DragTree',
     props: {
-      list: {
-        type: Array,
-        default: []
-      },
       ori: {
         type: Boolean
+      }
+    },
+    computed: {
+      list() {
+        return this.$store.state.dragTreeData
       }
     },
     data () {

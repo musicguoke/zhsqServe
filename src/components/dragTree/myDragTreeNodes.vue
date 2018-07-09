@@ -1,13 +1,13 @@
 <template>
   <ol drag-tree-nodes class="drag-tree-nodes" :class="{hidden: collapsed}">
-    <drag-tree-node1
+    <drag-tree-node
       v-for="li in list"
       :key="li.name"
       :nodeData="li"
       @removeNode="removeNode"
       v-if="!li.placeholder && !li.hidden"
     >
-    </drag-tree-node1>
+    </drag-tree-node>
     <li
       class="drag-tree-node drag-tree-placeholder"
       v-else-if="li.placeholder"
@@ -17,7 +17,7 @@
   </ol>
 </template>
 <script>
-  import DragTreeNode1 from './DragTreeNode1'
+  import DragTreeNode from './myDragTreeNode'
   
   export default {
     name: 'DragTreeNodes',
@@ -82,27 +82,4 @@
   }
 </script>
 <style>
-.drag-tree-nodes {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-body li {
-  list-style-type: none;
-}
-.drag-tree-nodes.hidden {
-    display: none;
-    visibility: hidden;
-}
-.drag-tree-nodes .drag-tree-nodes {
-    padding-left: 15px;
-}
-.drag-tree-placeholder div{
-  user-select: none;
-  display: block;
-  padding: 10px 15px;
-  margin-bottom: -1px;
-  background-color : transparent;
-}
 </style>

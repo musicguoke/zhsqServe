@@ -6,13 +6,16 @@
     </Breadcrumb>
     <div class="table-box">
       <Card :style="{width:'49%',float:'left',maxHeight: contentHeight}">
-        <drag-tree1 :list='dataTree'></drag-tree1>
+        <my-drag-tree :list="dataTree"></my-drag-tree>
         <!-- <tree-table ref="tree" :items='dataTree' :columns='dataColumns' :buildSys="true" @on-tree-select="selectDataConfig">
         </tree-table> -->
       </Card>
       <Card :style="{width:'49%',float:'right',overflow:'hidden',maxHeight: contentHeight}">
-        <drag-tree :list='list'></drag-tree>
-        <div v-if="list.length > 0" style="display: flex; justify-content: center;">
+        <drag-tree></drag-tree>
+        <div
+          v-if="list.length > 0"
+          style="display: flex; justify-content: center;margin-top: 16px;"
+        >
           <div>
             <Button type="primary" @click="handleSave">保存</Button>
             <Button type="error" @click="clear">清空</Button>
@@ -25,7 +28,7 @@
 
 <script>
 import DragTree from '@/components/DragTree/DragTree'
-import DragTree1 from '@/components/DragTree/DragTree1'
+import MyDragTree from '@/components/DragTree/myDragTree'
 import TreeTable from '@/components/my-tree/index'
 import { getDateTree } from '@/api/system'
 import { getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
@@ -57,11 +60,15 @@ export default {
   },
   components: {
     DragTree,
-    TreeTable
+    TreeTable,
+    MyDragTree
   },
   created() {
     this._getDateTree(-1)
     this._getCatalogBySysId()
+  },
+  mounted() {
+    console.log(this.$refs.dragTree)
   },
   methods: {
     _getDateTree(id) {
@@ -72,6 +79,7 @@ export default {
     _getCatalogBySysId() {
       getCatalogBySysId().then(res => {
         this.list = res
+        this.$store.commit('setDragTreeData', res)
       })
     },
     _saveCatalogBySelf(data) {

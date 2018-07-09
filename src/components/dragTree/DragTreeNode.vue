@@ -53,7 +53,7 @@ export default {
       firstMoving: true,
       dragInfo: null,
       editTitle: false,
-      title: ''
+      title: '',
     }
   },
   computed: {
@@ -248,7 +248,6 @@ export default {
         }
         if (this.pos.distX < 0) { // 向左移动
           let next = this.dragInfo.next()
-          console.log(this.dragInfo.next())
           if (!next) {
             let target = this.dragInfo.parent
             if (target) {

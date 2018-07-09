@@ -8,20 +8,17 @@
       <span>{{ nodeData.dataId }}</span>
       <span>{{ nodeData.title }}</span>
     </div>
-    <drag-tree-nodes1 :list="nodeData.children" :collapsed="collapsed" ref="childNodes"></drag-tree-nodes1>
+    <drag-tree-nodes :list="nodeData.children" :collapsed="collapsed" ref="childNodes"></drag-tree-nodes>
   </li>
 </template>
 <script>
-import DragTreeNodes1 from './DragTreeNodes1'
+import DragTreeNodes from './myDragTreeNodes'
 import DomHelper from './dom-helper'
 export default {
   name: 'DragTreeNode',
   props: {
     nodeData: Object
   },
-  // components: {
-  //   DragTreeNodes
-  // },
   data() {
     return {
       collapsed: false,
@@ -35,8 +32,8 @@ export default {
       pos: null,
       firstMoving: true,
       dragInfo: null,
-      editTitle: false,
-      title: ''
+      title: '',
+      sourceData: null
     }
   },
   computed: {
@@ -127,10 +124,6 @@ export default {
       }
       this.nodeData.children.splice(index, 0, node)
     },
-    edit(data) {
-      this.editTitle = true
-      this.title = data.title
-    },
     deleteNode(dataId) {
       this.$store.commit('setDragTreeData', this.fingDataID(this.dragTreeData, dataId))
     },
@@ -154,13 +147,6 @@ export default {
       })
       return obj
     },
-    save(data) {
-      this.$store.commit('setDragTreeData', this.findIdIndex(this.dragTreeData, data.dataId, this.title))
-      this.editTitle = false
-    },
-    cancel() {
-      this.editTitle = false
-    },
     storeRootData (value) {
       this.$store.commit('setDragTreeData', value)
     },
@@ -181,6 +167,7 @@ export default {
       this.isDragging = true
       this.dragInfo = DomHelper.dragInfo(this.nodeData, this.parentNodeData)
       console.log('dragInfo', this.dragInfo)
+      this.sourceData = this.dragInfo.siblings[this.dragInfo.index]
       let index = DomHelper.jsonIndex(this.nodeData, this.parentNodeData.children)
       // 隐藏当前节点
       // this.nodeData.hidden = true
@@ -213,71 +200,35 @@ export default {
         left: `${leftElmPos}px`,
         top: `${topElmPos}px`
       })
-      // 判断移动方向
-      DomHelper.positionMoved(evt, this.pos, this.firstMoving)
       if (this.firstMoving) {
         this.firstMoving = false
         return
       }
-      if (this.pos.dirAx) { // 水平移动
-        if (this.pos.distX > 0) { // 向右移动
-          let prev = this.dragInfo.prev()
-          if (prev) {
-            let children = prev.children
-            if (children) {
-              this.dragInfo.moveTo(prev, prev.children, prev.children.length)
-            }
-          }
-        }
-        if (this.pos.distX < 0) { // 向左移动
-          let next = this.dragInfo.next()
-          console.log(this.dragInfo.next())
-          if (!next) {
-            let target = this.dragInfo.parent
-            if (target) {
-              let parent = this.getNodeParent(target, this.rootTreeData).match
-              if (parent) {
-                this.dragInfo.moveTo(parent, parent.children, DomHelper.jsonIndex(target, parent.children) + 1)
-              }
-            }
-          }
-        }
-      } else { // 垂直移动
-        if (this.pos.distY > 0) {
-          let next = this.dragInfo.next()
-          if (next) {
-            next.children = next.children ? next.children : []
-            this.dragInfo.moveTo(next, next.children, 0)
-          } else { // 寻找父节点的同级节点
-            let target = this.dragInfo.parent
-            if (target) {
-              let parent = this.getNodeParent(target, this.rootTreeData).match
-              if (parent) {
-                this.dragInfo.moveTo(parent, parent.children, DomHelper.jsonIndex(target, parent.children) + 1)
-              }
-            }
-          }
-        }
-        if (this.pos.distY < 0) {
-          let prev = this.dragInfo.prev()
-          if (prev) {
-            prev.children = prev.children ? prev.children : []
-            this.dragInfo.moveTo(prev, prev.children, prev.children.length)
+    },
+    checkDataIndex(list, id) {
+      list.map(v => {
+        if(v.dataId === id) {
+          if(typeof this.sourceData === 'object' && !isNaN(this.sourceData.length)) {
+            list = list.concat(this.sourceData)
           } else {
-            let target = this.dragInfo.parent
-            if (target) {
-              let parent = this.getNodeParent(target, this.rootTreeData).match
-              if (parent) {
-                this.dragInfo.moveTo(parent, parent.children, DomHelper.jsonIndex(target, parent.children))
-              }
-            }
+            list.push(this.sourceData)
           }
+        } else if(v.children) {
+          this.checkDataIndex(v.children, id)
         }
-      }
+      })
+      return list
     },
     dragEnd(evt) {
       this.unbindDragMoveEvent()
       this.isDragging = false
+      let targetId
+      if(evt.target.tagName === 'DIV') {
+        targetId = evt.target.children[0].innerText
+      } else if(evt.target.tagName === 'SPAN') {
+        targetId = evt.target.innerText
+      }
+      this.$store.commit('setDragTreeData', this.checkDataIndex(this.$store.state.dragTreeData, targetId))
       if (this.dragElm) {
         console.log('end')
         this.dragInfo.apply()
@@ -296,57 +247,4 @@ export default {
 }
 </script>
 <style>
-.drag-tree-node .clickable {
-  cursor: pointer;
-}
-.drag-tree-node,
-.drag-tree-placeholder {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  min-height: 20px;
-  line-height: 20px;
-}
-.drag-tree-placeholder {
-  background: #f0f9ff;
-  border: dashed 2px #bed2db;
-  box-sizing: border-box;
-}
-.drag-tree-node .drag-tree-handle {
-  overflow: hidden;
-  user-select: none;
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 15px;
-  padding-left: 30px;
-  line-height: 30px;
-  margin-bottom: -1px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  cursor: move;
-  position: relative;
-}
-.drag-tree-node .drag-tree-handle:hover {
-  background: #727272;
-  color: #fff;
-}
-.drag-tree-node .drag-tree-handle .drag-tree-icon {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  font-size: 20px;
-}
-.drag-tree-node .right-button {
-  margin-left: 8px;
-}
-.drag-tree-node-drag {
-  position: absolute;
-  pointer-events: none;
-  z-index: 999;
-  opacity: 0.8;
-}
-.drag-tree-node-hidden {
-  display: none;
-}
 </style>
