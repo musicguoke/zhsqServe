@@ -21,7 +21,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
         </div>
         <Modal v-model="dataTargetModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="dataTargetForm" label-position="left" :label-width="100">
@@ -164,7 +164,8 @@ export default {
                     deleteDataTarget(data).then(res => {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
-                            this.total--
+                            this._getDataTarget(1)
+                            this.$refs.page.currentPage = 1
                         }else{
                             this.$Message.error(res.message);
                         }

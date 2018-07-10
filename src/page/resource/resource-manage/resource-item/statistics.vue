@@ -33,7 +33,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getStatisticList"></Page>
+      <Page :total="listLength" @on-change="_getStatisticList" show-total show-elevator ref="page"></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
       <h3 slot="header" style="color:#2D8CF0">统计配置</h3>
@@ -112,6 +112,7 @@ export default {
       list: [],
       listLength: '',
       selectedId: [],
+      nowPage:'',
       itemInfo: {
         id: '',
         targetId: '',
@@ -143,6 +144,7 @@ export default {
       this._getStatisticList()
     },
     _getStatisticList(page, name) {
+      this.nowPage = page
       getStatisticList(page, name).then(res => {
         if (res.code === 20000) {
           this.list = res.data.list
@@ -166,7 +168,7 @@ export default {
       addStatistic(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getStatisticList()
+          this._getStatisticList(this.nowPage)
         } else {
           this.$Message.error(res.message)
         }
@@ -176,7 +178,7 @@ export default {
       updateStatistic(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getStatisticList()
+          this._getStatisticList(this.nowPage)
         } else {
           this.$Message.error(res.message)
         }
@@ -186,7 +188,8 @@ export default {
       deleteStatistic(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getStatisticList()
+          this._getStatisticList(1)
+          this.$refs.page.current = 1
         } else {
           this.$Message.error(res.message)
         }
@@ -196,7 +199,8 @@ export default {
       deleteStatistics(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getStatisticList()
+          this._getStatisticList(1)
+          this.$refs.page.current = 1
         } else {
           this.$Message.error(res.message)
         }

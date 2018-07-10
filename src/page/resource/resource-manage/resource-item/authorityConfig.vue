@@ -21,7 +21,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getAuthorityList"></Page>
+      <Page :total="listLength" @on-change="_getAuthorityList" show-total show-elevator ref="page"></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">权限信息</h3>
@@ -73,6 +73,7 @@ export default {
         moduleDescp: '',
         permissionType: ''
       },
+      nowPage:'',
       rules: {
         moduleId: [
           { required: true, message: '请输入功能编号', trigger: 'blur' }
@@ -94,6 +95,7 @@ export default {
   },
   methods: {
     _getAuthorityList(page) {
+      this.nowPage = page
       getAuthorityList(page).then(res => {
         if (res.code === 20000) {
           res.data.list.map(v => {
@@ -117,6 +119,7 @@ export default {
         if (res.code === 20000) {
           res.data.permissionType = res.data.permissionType.toString()
           this.itemInfo = res.data
+          this.itemInfo.moduleId = res.data.moduleId.toString()
           this.isNew = false
           this.modalShow = true
         } else {
@@ -129,7 +132,7 @@ export default {
         if (res.code === 20000) {
           this.cancel()
           this.$Message.success(res.message)
-          this._getAuthorityList()
+          this._getAuthorityList(this.nowPage)
         } else {
           this.$Message.error(res.message)
         }
@@ -140,7 +143,7 @@ export default {
         if (res.code === 20000) {
           this.cancel()
           this.$Message.success(res.message)
-          this._getAuthorityList()
+          this._getAuthorityList(this.nowPage)
         } else {
           this.$Message.error(res.message)
         }
@@ -150,7 +153,8 @@ export default {
       deleteAuthority(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getAuthorityList()
+          this._getAuthorityList(1)
+          this.$refs.page.currentPage = 1
         } else {
           this.$Message.error(res.message)
         }
@@ -160,7 +164,8 @@ export default {
       deleteAuthorities(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(res.message)
-          this._getAuthorityList()
+          this._getAuthorityList(1)
+          this.$refs.page.currentPage = 1
         } else {
           this.$Message.error(res.message)
         }

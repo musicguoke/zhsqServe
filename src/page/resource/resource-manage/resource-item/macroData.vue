@@ -1,6 +1,6 @@
 <template>
     <div> 
-        <v-search :importShow="false" :buildShow="false" @on-search="search" @on-reset="reset"/>
+        <v-search :import-show="false" :delete-show="false" :build-show="false" @on-search="search" @on-reset="reset"/>
         <el-table :data="macroData" border style="width: 100%">
             <el-table-column prop="id" label="ID" width="100" sortable>
             </el-table-column>

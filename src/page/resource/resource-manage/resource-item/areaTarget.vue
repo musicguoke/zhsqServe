@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :importShow="false" :searchShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal"/>
+        <v-search :import-show="false" :search-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal"/>
         <el-table :data="areaTargetData" border style="width: 100%"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
             </el-table-column>
@@ -18,7 +18,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
         </div>
         <Modal v-model="areaTargetModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTargetModal">
             <Form :model="areaTargetForm"  :label-width="80" :rules="areaRule" ref="areaRule">
@@ -152,7 +152,7 @@ export default {
                     if(this.isAdd){
                         addAreaTarget(data).then(res=>{
                             if(res.code == 20000){
-                                this.$Message.success('修改成功');
+                                this.$Message.success('添加成功');
                                 this._getAreaTarget(this.nowPage)
                             }else{
                                 this.$Message.error(res.data);
@@ -189,7 +189,7 @@ export default {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this._getAreaTarget(1)
-                            this.total--
+                            this.$refs.page.currentPage = 1
                         }else{
                             this.$Message.error(res.message);
                         }
@@ -208,6 +208,7 @@ export default {
                 if (res.code === 20000) {
                     this.$Message.success(res.message)
                     this._getAreaTarget(1)
+                    this.$refs.page.currentPage = 1
                 } else {
                     this.$Message.error(res.message)
                 }

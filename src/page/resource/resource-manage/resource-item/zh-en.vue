@@ -16,7 +16,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getZhEnList"></Page>
+      <Page :total="listLength" @on-change="_getZhEnList" show-total show-elevator></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">中英文信息</h3>

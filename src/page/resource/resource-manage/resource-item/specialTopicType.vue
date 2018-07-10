@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :search-show="false" :import-show="false" @on-build="openAddModal" />
+        <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="openAddModal" />
         <el-table :data="sTopicTypeData" border style="width: 100%">
             <el-table-column prop="typeid" label="类型id">
             </el-table-column>
@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
         </div>
         <Modal v-model="sTopicTypeModal" :title=modalTitle @on-ok="addOrUpdate" ref="sTopicTypeModal">
             <Form :model="sTopicTypeForm" :label-width="80" :rules="topicRule" ref="topicRule">
@@ -154,8 +154,8 @@ export default {
                     deleteSTopicType(data).then(res => {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
-                            this._getSTopicTypeList(this.nowPage)
-                            this.total--
+                            this._getSTopicTypeList(1)
+                            this.$refs.page.currentPage = 1
                         } else {
                             this.$Message.error(res.message);
                         }

@@ -34,7 +34,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator></Page>
+                <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator ref="page"></Page>
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
@@ -373,8 +373,8 @@ export default {
                     }
                 } else {
                     for(let i in res.data){
+                        this.sysAndGroupList.push({ sysId: res.data[i].sysId, grId: res.data[i].grId })
                         if(res.data[i].sysId == this.$route.query.id){
-                            this.sysAndGroupList.push({ sysId: res.data[i].sysId, grId: res.data[i].grId })
                             this.userForm.grIdProduct = res.data[i].grId
                         }
                     }
@@ -483,8 +483,8 @@ export default {
                     deleteUser(data).then(res => {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
-                            this.total--
-                            this._getUserList(this.nowPage)
+                            this._getUserList(1)
+                            this.$refs.page.currentPage = 1
                         } else {
                             this.$Message.error(res.message);
                         }
@@ -571,12 +571,19 @@ export default {
                         this.userForm.grId += v.grId + ','
                     }
                 })
-                this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
-                this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
             } else {
-                this.userForm.sysId = this.$route.query.id
-                this.userForm.grId = this.userForm.grIdProduct
+                this.sysAndGroupList.map(v => {
+                    if(v.sysId == this.$route.query.id){
+                        this.userForm.sysId += this.$route.query.id + ','
+                        this.userForm.grId += this.userForm.grIdProduct + ','
+                    }else{
+                        this.userForm.sysId += v.sysId + ','
+                        this.userForm.grId += v.grId + ','
+                    }
+                })
             }
+            this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
+            this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)
             let data = {
                 arLoginname: this.userForm.arLoginname,
                 arTruename: this.userForm.arTruename,
