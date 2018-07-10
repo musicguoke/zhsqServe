@@ -25,7 +25,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
+                <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="page"></Page>
             </div>
         </Card>
         <Modal v-model="contactsModal" :closable='false' :mask-closable="false" :title=modalTitle @on-ok="addOrUpdate">
@@ -155,12 +155,13 @@ export default {
         },
         _deletesContacts(id) {
             let data = {
-                ids: id
+                idStr: id
             }
             deletesContacts(data).then(res => {
                 if (res.code === 20000) {
                     this.$Message.success(res.message)
                     this._getContactsList(1)
+                    this.$refs.page.currentPage = 1
                 } else {
                     this.$Message.error(res.message)
                 }

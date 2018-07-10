@@ -26,7 +26,7 @@
                     </el-table>
                 </div>
                 <div class="tablePage">
-                    <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+                    <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
                 </div>
             </div>
         </Card>
@@ -148,7 +148,8 @@ export default {
                         if (res.code == 20000) {
                             this.$Message.success('删除成功');
                             this.technicalData.splice(params.$index, 1);
-                            this._getTechnicalSupportList(this.nowPage)
+                            this._getTechnicalSupportList(1)
+                            this.$refs.page.currentPage = 1
                         }
                     })
                 },
@@ -164,7 +165,8 @@ export default {
             deleteTechnicalSupports(data).then(res => {
                 if (res.code === 20000) {
                     this.$Message.success(res.message)
-                    this._getTechnicalSupportList(this.nowPage)
+                    this._getTechnicalSupportList(1)
+                    this.$refs.page.currentPage = 1
                 } else {
                     this.$Message.error(res.message)
                 }

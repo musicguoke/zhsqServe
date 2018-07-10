@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search  @on-build="openAddModal" @on-import="openImportModal" @on-search="search" @on-reset="reset"/>
+        <v-search  @on-build="openAddModal" :delete-show="false" @on-import="openImportModal" @on-search="search" @on-reset="reset"/>
         <el-table :data="areaTextData" border style="width: 100%">
             <el-table-column prop="areacode" label="区域编码" sortable>
             </el-table-column>
@@ -20,7 +20,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
           </div>
         <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTextModal">
             <Form :model="areaTextForm"  :label-width="100" :rules="areaTextRule" ref="areaTextRule">
@@ -221,6 +221,8 @@ export default {
                     deleteAreaText(data).then(res=>{
                         if(res.code == 20000){
                             this.$Message.success('删除成功');
+                            this._getAreaText(1)
+                            this.$refs.page.currentPage = 1
                         }else{
                             this.$Message.error(res.message);
                         }

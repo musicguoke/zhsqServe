@@ -1,6 +1,6 @@
 <template>
     <div class="map-config">
-        <v-search :importShow="false" :searchShow="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal" />
+        <v-search :import-show="false" :search-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="openAddModal" />
         <div class="tableSize">
             <el-table :data="mapConfigureData" border style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55">
@@ -24,7 +24,7 @@
             </el-table>
         </div>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
         </div>
         <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate" ref="mapConfigureModal">
             <Form :model="mapConfigureForm" :label-width="80" :rules="mapRule" ref="mapRule">
@@ -196,7 +196,8 @@ export default {
                     deleteMapConfigureById(data).then(res => {
                         if (res.code == 20000) {
                             this.mapConfigureData.splice(params.$index, 1)
-                            this._getMapConfigure(this.nowPage)
+                            this._getMapConfigure(1)
+                            this.$refs.page.currentPage = 1
                             this.$Message.success('删除成功');
                         }
                     })
@@ -207,7 +208,7 @@ export default {
         },
         _deletesMapConfigureById(id) {
             let data = {
-                ids: id
+                idStr: id
             }
             deletesMapConfigureById(data).then(res => {
                 if (res.code === 20000) {

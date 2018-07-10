@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search :importShow="false" @on-reset="reset" @on-search="search" @on-build="openAddModal"/>
+        <v-search :import-show="false" :delete-show="false" @on-reset="reset" @on-search="search" @on-build="openAddModal"/>
         <el-table :data="resource720Data" border style="width: 100%">
              <el-table-column prop="id" label="ID">
             </el-table-column>
@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
         </div>
         <Modal v-model="resource720Modal" :title=modalTitle @on-ok="addOrUpdate" ref="modal720">
             <Form :model="resource720Form" :label-width="80" :rules="rule720" ref="rule720">
@@ -162,7 +162,7 @@ export default {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this._get720Resource(1)
-                            this.total--
+                            this.$refs.page.currentPage = 1
                         }else{
                             this.$Message.error(res.message);
                         }

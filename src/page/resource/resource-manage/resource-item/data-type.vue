@@ -1,6 +1,6 @@
 <template>
   <div class="data-type">
-    <v-search :importShow="false" @on-search="search" @on-reset="reset" @on-build="newData" :disabled="selectedId.length <= 0" @on-delete="deleteMany" />
+    <v-search :import-show="false" @on-search="search" @on-reset="reset" @on-build="newData" :disabled="selectedId.length <= 0" @on-delete="deleteMany" />
     <el-table :data="data" border style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="itemid" label="id" sortable=""></el-table-column>
