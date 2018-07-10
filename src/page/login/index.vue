@@ -107,7 +107,6 @@ export default {
                 // 单个系统自动选择
                 this.$router.replace('/zhsq_admin')
               }
-              console.log(window)
             } else {
               this.$Message.error(res.message)
             }

@@ -234,7 +234,7 @@ export default {
       this.current = parseInt(name)
     },
     next() {
-      if (this.current == 5) {
+      if (this.current == 4) {
         this.btnContent = '完成'
       }
       if (this.current == 5) {
