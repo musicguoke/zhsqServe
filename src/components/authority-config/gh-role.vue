@@ -45,9 +45,9 @@
         <Form :label-width="80">
           <FormItem label="权限等级">
             <Select v-if="sys" v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
-              <Option v-if="funNum < 11 || funNum < 21" value="一级权限">一级权限</Option>
-              <Option v-if="funNum < 21" value="二级权限">二级权限</Option>
-              <Option v-if="funNum > 20" value="三级权限">三级权限</Option>
+              <Option v-if="sysFunNum < 11 || sysFunNum < 21 || sysFunNum > 20" value="一级权限">一级权限</Option>
+              <Option v-if="sysFunNum < 21 || sysFunNum > 20" value="二级权限">二级权限</Option>
+              <Option v-if="sysFunNum > 20" value="三级权限">三级权限</Option>
             </Select>
             <Select v-else v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option value="一级权限">一级权限</Option>
@@ -57,7 +57,7 @@
           </FormItem>
           <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
-              <Option v-for="item in funAry" :value="item" :key="item">
+              <Option v-for="item in arrFun" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>
@@ -135,7 +135,12 @@ export default {
       ms720Str: '',
       funNum: '',
       sysFunNum: '',
-      funAry: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      funAry: [0, 1, 2,
+       3, 4, 5, 6, 7, 8, 9,
+        10,11, 12, 13, 14, 
+        15, 16, 17, 18, 19,
+         20,21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+      arrFun: [],
       sysId: '',
       grId: '',
       selectedRow: '', //选中编辑的系统项
@@ -280,11 +285,11 @@ export default {
     qx1Change(value) {
       console.log(value)
       if (value === '一级权限') {
-        this.funAry = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        this.arrFun = this.funAry.slice(0, 11)
       } else if (value === '二级权限') {
-        this.funAry = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        this.arrFun = this.funAry.slice(11, 21)
       } else {
-        this.funAry = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+        this.arrFun = this.funAry.slice(21, 31)
       }
     },
     handleCheckData(arr) {
@@ -320,7 +325,12 @@ export default {
         this.dataTree = res.json720
         this.topicDataTree = res.dataPublishJson
         //
-        this.checkFunNum(this.sysFunNum)
+        this.funAry.map((v, index) => {
+          if(v === this.sysFunNum) {
+            this.funAry = this.funAry.slice(0, index + 1)
+          }
+        })
+        // this.checkFunNum(this.sysFunNum)
         if (typeof (id) === 'number' && str === 'role') { //获取角色信息
           this._getRoleMapById(id)
         } else if (typeof (id) === 'string') {

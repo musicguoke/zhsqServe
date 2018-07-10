@@ -1,6 +1,6 @@
 <template>
-  <li class="drag-tree-node">
-    <div class="drag-tree-handle" @mousedown.self="dragStart">
+  <li class="drag-tree-node" :data-id="nodeData.dataId">
+    <div class="drag-tree-handle" :data-id="nodeData.dataId" @mousedown.self="dragStart">
       <div class="drag-tree-icon" v-if="hasChildren">
         <Icon v-if="collapsed" @click="toggle" type="arrow-right-b"></Icon>
         <Icon v-if="!collapsed" @click="toggle" type="arrow-down-b"></Icon>
@@ -41,7 +41,7 @@ export default {
   // },
   data() {
     return {
-      collapsed: false,
+      collapsed: true,
       isDragging: false,
       lastX: null,
       lastY: null,
@@ -149,30 +149,24 @@ export default {
       this.title = data.title
     },
     deleteNode(dataId) {
-      this.$store.commit('setDragTreeData', this.fingDataID(this.dragTreeData, dataId))
+      this.$store.commit('setDragTreeData', this.findDataId(this.dragTreeData, dataId))
     },
-    fingDataID(list, dataId) {
+    findDataId(list, dataId, title) {
       list.map((v, index) => {
-        if(v.dataId === dataId) {
-          list.splice(index, 1)
+        if(v.dataId == dataId) {
+          if(title) {
+            v.title = title
+          } else {
+            list.splice(index, 1)
+          }
         } else if(v.children) {
-          this.findIdIndex(v.children, dataId)
+          this.findDataId(v.children, dataId, title)
         }
       })
       return list
     },
-    findIdIndex(obj, id, title) {
-      obj.map(v => {
-        if(v.id === id) {
-          v.title = title
-        } else if(v.children) {
-          this.findIdIndex(v.children, id, title)
-        }
-      })
-      return obj
-    },
     save(data) {
-      this.$store.commit('setDragTreeData', this.findIdIndex(this.dragTreeData, data.dataId, this.title))
+      this.$store.commit('setDragTreeData', this.findDataId(this.dragTreeData, data.dataId, this.title))
       this.editTitle = false
     },
     cancel() {
@@ -300,7 +294,6 @@ export default {
         this.$nextTick(() => {
           this.dragElm.remove()
           this.dragElm = null
-
           this.dragInfo = null
         })
       }

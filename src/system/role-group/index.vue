@@ -78,7 +78,7 @@ export default {
       this.isShow = false
       this.newRole = false
       this.name = ''
-      this._getRolesList()
+      this._getRolesList(1)
     },
     edit(scope) {
       this.name = '编辑角色'
@@ -102,6 +102,7 @@ export default {
         if (res.code === 20000) {
           this.roleList = res.data.list
           this.total = res.data.total
+          this.page = page
         } else {
           this.$Message.error(res.message)
         }
@@ -111,7 +112,7 @@ export default {
       deleteRole(id).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`删除${res.message}`)
-          this._getRolesList()
+          this._getRolesList(1)
         } else {
           this.$Message.error(`删除${res.message}`)
         }

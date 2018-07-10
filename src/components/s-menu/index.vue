@@ -11,8 +11,8 @@
           目录管理
       </template>
       <MenuItem name="content-list">资源目录</MenuItem>
-      <MenuItem name="modify">修改目录</MenuItem>
-      <MenuItem name="release">发布目录</MenuItem>
+      <MenuItem name="modify">发布目录</MenuItem>
+      <MenuItem name="release">专题目录</MenuItem>
     </Submenu>
     <Submenu name="2">
       <template slot="title">
