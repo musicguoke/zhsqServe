@@ -20,7 +20,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="imagePage"></Page>
         </div>
         <Modal v-model="imageSourceModal" :title=modalTitle @on-ok="addOrUpdate" ref="imageModal">
             <Form :model="imageSourceForm" :label-width="80" :rules="imageRule" ref="imageRule">
@@ -182,7 +182,7 @@ export default {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this._getImageSource(1)
-                            this.$refs.page.currentPage = 1
+                            this.$refs.imagePage.currentPage = 1
                         }else{
                             this.$Message.error(res.message);
                         }

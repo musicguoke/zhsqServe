@@ -109,6 +109,7 @@ export default {
       uploadUrl: url,
       messageData: [],
       pageLength: 1,
+      nowPage:'',
       messageForm: {
         phone: "",
         message: "",
@@ -157,6 +158,7 @@ export default {
       });
     },
     pageChange(page) {
+      this.nowPage = page
       this._getMessageList(page)
     },
     search(){
@@ -212,6 +214,7 @@ export default {
       sendMessage(data).then(res => {
         if (res.code == 20000) {
           this.$Message.success(res.message)
+          this._getMessageList(this.nowPage)
         } else {
           this.$Message.error(res.message)
         }

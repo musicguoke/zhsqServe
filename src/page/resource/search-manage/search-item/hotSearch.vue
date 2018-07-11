@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-search @on-search="search" @on-reset="reset"  @on-build="openAddModal" @on-import="openImportModal"/>
+        <v-search :delete-show="false" @on-search="search" @on-reset="reset"  @on-build="openAddModal" @on-import="openImportModal"/>
         <el-table :data="hotSearchData" border style="width: 100%">
             <el-table-column prop="dataCode" label="数据编码" sortable>
             </el-table-column>
@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" show-total show-elevator></Page>
+            <Page :total="pageLength" @on-change="pageChange" show-total show-elevator ref="searchPage"></Page>
         </div>
         <Modal v-model="hotSearchModal" :title=modalTitle @on-ok="addOrUpdate" ref="hotSearchModal">
             <Form :model="hotSearchForm" :label-width="80" :rules="hotSearchRule" ref="hotSearchRule">
@@ -43,14 +43,14 @@
                   </Select>
               </FormItem>
               <FormItem label="选择文件">
-                    <Upload :action="`${uploadUrl}/sys/hotSearch/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+                    <Upload :action="`${uploadUrl}/sys/hotSearch/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="searchUpload">
                         <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
                     </Upload>
               </FormItem>
                   <div class="importSlot">
                   <div class="importSlotTitle">导入须知</div>
                   <p>1、导入文件大小不超过2MB.</p>
-                  <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a>点此下载.</a></p>
+                  <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a :href="`${uploadUrl}/sys/hotSearch/downloadImportedFile.do`">点此下载.</a></p>
               </div>
           </Form>
         </Modal>
@@ -208,6 +208,8 @@ export default {
           deleteHotSearch(data).then(res => {
             if (res.code == 20000) {
               this.$Message.success("删除成功");
+              this._getHotSearch(1)
+              this.$refs.searchPage.currentPage = 1
             } else {
               this.$Message.error(res.message);
             }
@@ -225,8 +227,8 @@ export default {
       for (let i in this.importForm) {
         this.importForm[i] = "";
       }
-      if (this.$refs.upload._data.fileList) {
-        this.$refs.upload._data.fileList = [];
+      if (this.$refs.searchUpload._data.fileList) {
+        this.$refs.searchUpload._data.fileList = [];
       }
     },
     //导入文件保存
@@ -248,6 +250,7 @@ export default {
         if (res.code == 20000) {
           this.$Message.success("添加成功");
           this._getHotSearch(1);
+          this.$refs.searchPage.currentPage = 1
         } else {
           this.$Message.error(res.message);
         }
