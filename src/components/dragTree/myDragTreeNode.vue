@@ -1,14 +1,18 @@
 <template>
   <li class="drag-tree-node">
     <div class="drag-tree-handle" @mousedown.self="dragStart">
-      <div class="drag-tree-icon" v-if="hasChildren">
-        <Icon v-if="collapsed" @click="toggle" type="arrow-right-b"></Icon>
-        <Icon v-if="!collapsed" @click="toggle" type="arrow-down-b"></Icon>
+      <div class="drag-tree-icon" @click="toggle" v-if="hasChildren">
+        <Icon v-if="collapsed" type="arrow-right-b"></Icon>
+        <Icon v-if="!collapsed" type="arrow-down-b"></Icon>
       </div>
-      <span>{{ nodeData.dataId }}</span>
       <span>{{ nodeData.title }}</span>
+      <span>{{ nodeData.dataId }}</span>
     </div>
-    <drag-tree-nodes :list="nodeData.children" :collapsed="collapsed" ref="childNodes"></drag-tree-nodes>
+    <drag-tree-nodes
+      :list="nodeData.children"
+      :collapsed="collapsed"
+      ref="childNodes">
+    </drag-tree-nodes>
   </li>
 </template>
 <script>
@@ -21,7 +25,7 @@ export default {
   },
   data() {
     return {
-      collapsed: false,
+      collapsed: true,
       isDragging: false,
       lastX: null,
       lastY: null,
@@ -44,7 +48,7 @@ export default {
       if (!this.$parent || !this.$parent.$parent) {
         return null
       }
-      if (this.$parent.$parent.$options.name === 'DragTree') {
+      if (this.$parent.$parent.$options.name === 'MyDragTree') {
         return { name: '', children: this.$parent.$parent.list }
       } else {
         return this.$parent.$parent.nodeData
@@ -109,21 +113,6 @@ export default {
       }
       return curArgs
     },
-    // 增加节点事件
-    insert(node, index) {
-      console.log('this.nodeData.children', this.nodeData.children)
-      !this.nodeData.children && (this.nodeData.children = [])
-      if (!node) {
-        node = {
-          name: 'new add',
-          children: []
-        }
-      }
-      if (index < 0) {
-        index = this.nodeData.children.length
-      }
-      this.nodeData.children.splice(index, 0, node)
-    },
     deleteNode(dataId) {
       this.$store.commit('setDragTreeData', this.fingDataID(this.dragTreeData, dataId))
     },
@@ -147,13 +136,6 @@ export default {
       })
       return obj
     },
-    storeRootData (value) {
-      this.$store.commit('setDragTreeData', value)
-    },
-    // 删除节点操作，需要从父节点操作
-    remove(evt) {
-      this.$emit('removeNode', this)
-    },
     bindDragMoveEvent() {
       document.bind('mouseup', this.dragEnd)
       document.bind('mousemove', this.dragMove)
@@ -167,7 +149,7 @@ export default {
       this.isDragging = true
       this.dragInfo = DomHelper.dragInfo(this.nodeData, this.parentNodeData)
       console.log('dragInfo', this.dragInfo)
-      this.sourceData = this.dragInfo.siblings[this.dragInfo.index]
+      this.sourceData = JSON.parse(JSON.stringify(this.dragInfo.siblings[this.dragInfo.index]))
       let index = DomHelper.jsonIndex(this.nodeData, this.parentNodeData.children)
       // 隐藏当前节点
       // this.nodeData.hidden = true
@@ -222,23 +204,58 @@ export default {
     dragEnd(evt) {
       this.unbindDragMoveEvent()
       this.isDragging = false
-      let targetId
-      if(evt.target.tagName === 'DIV') {
-        targetId = evt.target.children[0].innerText
-      } else if(evt.target.tagName === 'SPAN') {
-        targetId = evt.target.innerText
+      let targetId, list = []
+      targetId = evt.target.dataset['id']
+      console.log(evt.target.dataset['id'])
+      this.sourceData = this.changeListId(this.sourceData)
+      if(targetId) {
+        this.$store.commit('setDragTreeData', this.checkDataIndex(this.$store.state.dragTreeData, targetId))
+      } else if(this.dragTreeData.length < 1) {
+        if(typeof this.sourceData === 'object' && !isNaN(this.sourceData.length)) {
+          list = list.concat(this.sourceData)
+        } else {
+          list.push(this.sourceData)
+        }
+        this.$store.commit('setDragTreeData', list)
       }
-      this.$store.commit('setDragTreeData', this.checkDataIndex(this.$store.state.dragTreeData, targetId))
       if (this.dragElm) {
         console.log('end')
         this.dragInfo.apply()
         this.$nextTick(() => {
           this.dragElm.remove()
           this.dragElm = null
-
           this.dragInfo = null
         })
       }
+    },
+    changeListId(list) {
+      if(typeof list === 'object' && !isNaN(list.length)) {
+        list.map(v => {
+          v.id = this.uuid()
+          if(v.children) {
+            this.changeListId(v.children)
+          }
+        })
+      } else {
+        list.id = this.uuid()
+        if(list.children) {
+          this.changeListId(list.children)
+        }
+      }
+      return list
+    },
+    uuid() {
+      let s = []
+      let hexDigits = "0123456789abcdef"
+      for (let i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1)
+      }
+      s[14] = "4"  
+      s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1)  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+      s[8] = s[13] = s[18] = s[23] = "-"
+
+      let uuid = s.join("")
+      return uuid
     }
   },
   beforeCreate() {
@@ -247,4 +264,57 @@ export default {
 }
 </script>
 <style>
+.drag-tree-node .clickable {
+  cursor: pointer;
+}
+.drag-tree-node,
+.drag-tree-placeholder {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-height: 20px;
+  line-height: 20px;
+}
+.drag-tree-placeholder {
+  background: #f0f9ff;
+  border: dashed 2px #bed2db;
+  box-sizing: border-box;
+}
+.drag-tree-node .drag-tree-handle {
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 15px;
+  padding-left: 30px;
+  line-height: 30px;
+  /* margin-bottom: -1px; */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  cursor: move;
+  position: relative;
+}
+.drag-tree-node .drag-tree-handle:hover {
+  background: #727272;
+  color: #fff;
+}
+.drag-tree-node .drag-tree-handle .drag-tree-icon {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  padding: 10px 10px 0 10px;
+  font-size: 20px;
+}
+.drag-tree-node .right-button {
+  margin-left: 8px;
+}
+.drag-tree-node-drag {
+  position: absolute;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.8;
+}
+.drag-tree-node-hidden {
+  display: none;
+}
 </style>

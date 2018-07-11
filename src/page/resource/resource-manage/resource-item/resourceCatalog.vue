@@ -145,7 +145,8 @@ export default {
         type: this.editItemForm.type,
         listorder: this.editItemForm.listorder,
         datapath: this.editItemForm.datapath,
-        description: this.editItemForm.description
+        description: this.editItemForm.description,
+        parentid: this.editItemForm.parentid
       }
       this._updateMsTabDatainfo(data)
     },

@@ -62,6 +62,7 @@ export default {
       },
       apply: function () {
         this.parent.children.splice(this.index, 1, this.source)
+        return this.parent
       }
     }
   },

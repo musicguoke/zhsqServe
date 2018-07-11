@@ -14,6 +14,11 @@ const store = new Vuex.Store({
     setDragTreeOffsetX (state, value) {
       state.dragTreeOffsetX = value
     }
+  },
+  getters: {
+    dragTreeData: state => {
+      return state.dragTreeData
+    }
   }
 })
 

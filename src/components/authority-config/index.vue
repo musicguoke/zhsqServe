@@ -217,7 +217,7 @@ export default {
           key: 'title'
         }, {
           title: '编码',
-          key: 'id',
+          key: 'dataId',
           sortable: true
         }, {
           title: '排序',
