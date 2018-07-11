@@ -3,7 +3,7 @@ import qs from 'qs'
 import { url } from './config.js'
 
 axios.defaults.withCredentials = true
-    // 热点
+    // 综合周边
 export function getHotspot(data) {
     return axios.post(`${url}/sys/hotAround/list.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
@@ -26,6 +26,34 @@ export function deleteHotspot(data) {
 }
 export function importHotspot(data) {
     return axios.post(`${url}/sys/hotAround/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+// 规划周边
+export function getHotSpotBase(data) {
+    return axios.post(`${url}/sys/msHotAroundBase/list.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function addHotSpotBase(data) {
+    return axios.post(`${url}/sys/msHotAroundBase/insert.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function updateHotSpotBase(data) {
+    return axios.post(`${url}/sys/msHotAroundBase/update.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function deleteHotSpotBase(data) {
+    return axios.post(`${url}/sys/msHotAroundBase/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+export function importHotSpotBase(data) {
+    return axios.post(`${url}/sys/msHotAroundBase/importFile.do`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
     }).then(res => {
         return Promise.resolve(res.data)

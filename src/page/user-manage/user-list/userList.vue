@@ -34,7 +34,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator ref="page"></Page>
+                <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator ref="userPage"></Page>
             </div>
         </Card>
         <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
@@ -484,7 +484,7 @@ export default {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this._getUserList(1)
-                            this.$refs.page.currentPage = 1
+                            this.$refs.userPage.currentPage = 1
                         } else {
                             this.$Message.error(res.message);
                         }
@@ -572,15 +572,20 @@ export default {
                     }
                 })
             } else {
-                this.sysAndGroupList.map(v => {
-                    if(v.sysId == this.$route.query.id){
-                        this.userForm.sysId += this.$route.query.id + ','
-                        this.userForm.grId += this.userForm.grIdProduct + ','
-                    }else{
-                        this.userForm.sysId += v.sysId + ','
-                        this.userForm.grId += v.grId + ','
-                    }
-                })
+                if(this.isAdd){
+                    this.userForm.sysId = this.$route.query.id +','
+                    this.userForm.grId = this.userForm.grIdProduct +','
+                }else{
+                    this.sysAndGroupList.map(v => {
+                        if(v.sysId == this.$route.query.id){
+                            this.userForm.sysId += this.$route.query.id + ','
+                            this.userForm.grId += this.userForm.grIdProduct + ','
+                        }else{
+                            this.userForm.sysId += v.sysId + ','
+                            this.userForm.grId += v.grId + ','
+                        }
+                    })
+                }
             }
             this.userForm.sysId = this.userForm.sysId.substring(0, this.userForm.sysId.length - 1)
             this.userForm.grId = this.userForm.grId.substring(0, this.userForm.grId.length - 1)

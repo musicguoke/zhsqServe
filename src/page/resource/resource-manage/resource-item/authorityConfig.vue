@@ -21,7 +21,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getAuthorityList" show-total show-elevator ref="page"></Page>
+      <Page :total="listLength" @on-change="_getAuthorityList" show-total show-elevator ref="authorityPage"></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">权限信息</h3>
@@ -154,7 +154,7 @@ export default {
         if (res.code === 20000) {
           this.$Message.success(res.message)
           this._getAuthorityList(1)
-          this.$refs.page.currentPage = 1
+          this.$refs.page.authorityPage = 1
         } else {
           this.$Message.error(res.message)
         }
@@ -165,7 +165,7 @@ export default {
         if (res.code === 20000) {
           this.$Message.success(res.message)
           this._getAuthorityList(1)
-          this.$refs.page.currentPage = 1
+          this.$refs.page.authorityPage = 1
         } else {
           this.$Message.error(res.message)
         }

@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator></Page>
+            <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="lexiconPage"></Page>
         </div>
         <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate" ref="lexiconModal">
             <Form :model="lexiconForm"  :label-width="80" :rules="lexiconRule" ref="lexiconRule">
@@ -197,7 +197,8 @@ export default {
             deleteLexicon(data).then(res=>{
                 if(res.code == 20000){
                   this.$Message.success('删除成功');
-                  this.pageLength--
+                  this._getLexicon(1)
+                  this.$refs.lexiconPage.currentPage = 1 
                 }else{
                   this.$Message.error(res.message)
                 }
@@ -214,7 +215,8 @@ export default {
         deleteLexicons(data).then(res => {
             if (res.code === 20000) {
                 this.$Message.success(res.message)
-                this._getLexicon(this.nowPage)
+                this._getLexicon(1)
+                this.$refs.lexiconPage.currentPage = 1 
             } else {
                 this.$Message.error(res.message)
             }
@@ -257,6 +259,7 @@ export default {
             if(res.code == 20000){
                 this.$Message.success("添加成功")
                 this._getLexicon(1)
+                this.$refs.lexiconPage.currentPage = 1 
             }else{
                 this.$Message.error(res.message)
             }

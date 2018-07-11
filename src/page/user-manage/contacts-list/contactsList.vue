@@ -25,7 +25,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="page"></Page>
+                <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="conectPage"></Page>
             </div>
         </Card>
         <Modal v-model="contactsModal" :closable='false' :mask-closable="false" :title=modalTitle @on-ok="addOrUpdate">
@@ -143,6 +143,7 @@ export default {
                             this.contactsData.splice(params.$index, 1);
                             this.$Message.success('删除成功');
                             this._getContactsList(this.nowPage)
+                            this.$refs.conectPage.currentPage = 1
                         } else {
                             this.$Message.error(res.message);
                         }
@@ -161,7 +162,7 @@ export default {
                 if (res.code === 20000) {
                     this.$Message.success(res.message)
                     this._getContactsList(1)
-                    this.$refs.page.currentPage = 1
+                    this.$refs.conectPage.currentPage = 1
                 } else {
                     this.$Message.error(res.message)
                 }

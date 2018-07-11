@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="specialPage"></Page>
         </div>
         <Modal v-model="sTopicTypeModal" :title=modalTitle @on-ok="addOrUpdate" ref="sTopicTypeModal">
             <Form :model="sTopicTypeForm" :label-width="80" :rules="topicRule" ref="topicRule">
@@ -155,7 +155,7 @@ export default {
                         if (res.code = 20000) {
                             this.$Message.success('删除成功')
                             this._getSTopicTypeList(1)
-                            this.$refs.page.currentPage = 1
+                            this.$refs.mapConfigPage.currentPage = 1
                         } else {
                             this.$Message.error(res.message);
                         }

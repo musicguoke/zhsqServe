@@ -51,7 +51,7 @@
         </FormItem>
         <FormItem label="选择文件">
           <div>
-            <Upload :action="`${uploadUrl}/sys/msBranchStruct/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+            <Upload :action="`${uploadUrl}/sys/msBranchStruct/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="departmentUpload">
               <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
             </Upload>
           </div>
@@ -60,7 +60,7 @@
           <div class="importSlotTitle">导入须知</div>
           <p>1、导入文件大小不超过2MB.</p>
           <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
-            <a href="/mouldFile/ms_branch_struct.xlsx" download="ms_branch_struct.xlsx">点此下载.</a>
+            <a :href="`${uploadUrl}/sys/msBranchStruct/downloadImportedFile.do`">点此下载.</a>
           </p>
         </div>
       </Form>
@@ -204,8 +204,8 @@ export default {
       for (let i in this.importForm) {
         this.importForm[i] = ""
       }
-      if (this.$refs.upload._data.fileList) {
-        this.$refs.upload._data.fileList = []
+      if (this.$refs.departmentUpload._data.fileList) {
+        this.$refs.departmentUpload._data.fileList = []
       }
     },
     boforeUpload(file) {

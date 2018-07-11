@@ -20,7 +20,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page"></Page>
+            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="areaTextPage"></Page>
           </div>
         <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTextModal">
             <Form :model="areaTextForm"  :label-width="100" :rules="areaTextRule" ref="areaTextRule">
@@ -45,7 +45,7 @@
             </Form>
         </Modal>
         <Modal v-model="importModal" title='导入区域文本' @on-ok="saveImport">
-            <Form :model="importForm" label-position="left" :label-width="100" ref="file_form">
+            <Form :model="importForm" label-position="left" :label-width="100" ref="file_text_form">
                 <FormItem label="导入类型">
                     <Select v-model="importForm.type">
                         <Option value="1">增量导入</Option>
@@ -53,14 +53,14 @@
                     </Select>
                 </FormItem>
                 <FormItem label="选择文件">
-                     <Upload :action="`${uploadUrl}/sys/areaText/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="upload">
+                     <Upload :action="`${uploadUrl}/sys/areaText/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="areaTextUpload">
                         <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
                     </Upload>
                 </FormItem>
                 <div class="importSlot">
                     <div class="importSlotTitle">导入须知</div>
                     <p>1、导入文件大小不超过2MB.</p>
-                    <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a>点此下载.</a></p>
+                    <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板<a :href="`${uploadUrl}/sys/areaText/downloadImportedFile.do`">点此下载.</a></p>
                 </div>
             </Form>
         </Modal>
@@ -222,7 +222,7 @@ export default {
                         if(res.code == 20000){
                             this.$Message.success('删除成功');
                             this._getAreaText(1)
-                            this.$refs.page.currentPage = 1
+                            this.$refs.areaTextPage.currentPage = 1
                         }else{
                             this.$Message.error(res.message);
                         }
@@ -238,8 +238,8 @@ export default {
             for(let i in this.importForm){
                 this.importForm[i] = ""
             }
-            if(this.$refs.upload._data.fileList){
-                this.$refs.upload._data.fileList = []
+            if(this.$refs.areaTextUpload._data.fileList){
+                this.$refs.areaTextUpload._data.fileList = []
             }
         },
         boforeUpload(file) {
@@ -252,7 +252,7 @@ export default {
             } else if (this.importForm.file === '') {
                 this.$Message.error('请选择上传文件')
             } else {
-                let formData = new FormData(this.$refs.file_form)
+                let formData = new FormData(this.$refs.file_text_form)
                 formData.append('type', this.importForm.type)
                 formData.append('file', this.importForm.file)
                 this._importAreaText(formData)
@@ -264,6 +264,7 @@ export default {
                 if(res.code == 20000){
                     this.$Message.success("添加成功")
                     this._getAreaText(1)
+                    this.$refs.areaTextPage.currentPage = 1
                 }else{
                     this.$Message.error(res.message)
                 }
