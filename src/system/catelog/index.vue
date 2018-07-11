@@ -12,7 +12,7 @@
         <div
           v-if="list.length > 0"
         >
-          <drag-tree></drag-tree>
+          <drag-tree :list="dragTreeData"></drag-tree>
           <div>
             <Button style="display: block;margin: 6px auto 0;" type="primary" @click="handleSave">保存</Button>
             <!-- <Button type="error" @click="clear">清空</Button> -->
@@ -28,6 +28,7 @@
 import DragTree from '@/components/DragTree/DragTree'
 import MyDragTree from '@/components/DragTree/myDragTree'
 import { getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
+import { mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -62,7 +63,10 @@ export default {
   computed: {
     list() {
       return this.tempList.length > 0 ? this.tempList : this.$store.state.dragTreeData
-    }
+    },
+    ...mapGetters([
+      'dragTreeData'
+    ])
   },
   methods: {
     _getAreaCatalog(id) {

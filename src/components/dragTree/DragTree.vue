@@ -9,14 +9,7 @@
   export default {
     name: 'DragTree',
     props: {
-      ori: {
-        type: Boolean
-      }
-    },
-    computed: {
-      list() {
-        return this.$store.state.dragTreeData
-      }
+      list: Array
     },
     data () {
       return {
@@ -26,9 +19,6 @@
     watch: {
       list (value) {
         this.storeRootData(value)
-      },
-      ori (value) {
-        console.log(value)
       }
     },
     components: {
@@ -45,7 +35,7 @@
       }
     },
     mounted () {
-      this.storeRootData(this.list)
+      // this.storeRootData(this.list)
     }
   }
 </script>

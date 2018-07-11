@@ -1,28 +1,20 @@
 <template>
   <li class="drag-tree-node" :data-id="nodeData.dataId">
     <div class="drag-tree-handle" :data-id="nodeData.dataId" @mousedown.self="dragStart">
-      <div class="drag-tree-icon" v-if="hasChildren">
-        <Icon v-if="collapsed" @click="toggle" type="arrow-right-b"></Icon>
-        <Icon v-if="!collapsed" @click="toggle" type="arrow-down-b"></Icon>
+      <div class="drag-tree-icon" @click="toggle" v-if="hasChildren">
+        <Icon v-if="collapsed" type="arrow-right-b"></Icon>
+        <Icon v-if="!collapsed" type="arrow-down-b"></Icon>
       </div>
       <span>{{ nodeData.dataId }}</span>
       <span v-if="!editTitle">{{ nodeData.title }}</span>
       <Input type="text" v-if="editTitle" v-model="title"></Input>
       <div v-if="!editTitle">
-        <Button type="primary" size="mini" class="right-button" @click="edit(nodeData)">
-          编辑
-        </Button>
-        <Button type="warning" size="mini" class="right-button" @click="deleteNode(nodeData.dataId)">
-          删除
-        </Button>
+        <Button size="small" type="primary" shape="circle" icon="edit" @click="edit(nodeData)"></Button>
+        <Button size="small" type="warning" shape="circle" icon="close-round" @click="deleteNode(nodeData.dataId)"></Button>
       </div>
       <div v-if="editTitle" style="display: flex;">
-        <Button type="success" size="mini" class="right-button" @click="save(nodeData)">
-          保存
-        </Button>
-        <Button type="error" size="mini" class="right-button" @click="cancel">
-          取消
-        </Button>
+        <Button size="small" type="primary" shape="circle" icon="checkmark-round" @click="save(nodeData)"></Button>
+        <Button size="small" type="warning" shape="circle" icon="close-round" @click="cancel"></Button>
       </div>
     </div>
     <drag-tree-nodes :list="nodeData.children" :collapsed="collapsed" ref="childNodes"></drag-tree-nodes>
@@ -41,7 +33,7 @@ export default {
   // },
   data() {
     return {
-      collapsed: true,
+      collapsed: false,
       isDragging: false,
       lastX: null,
       lastY: null,
@@ -51,9 +43,7 @@ export default {
       // 移动坐标对象
       pos: null,
       firstMoving: true,
-      dragInfo: null,
-      editTitle: false,
-      title: '',
+      dragInfo: null
     }
   },
   computed: {
@@ -129,21 +119,6 @@ export default {
       }
       return curArgs
     },
-    // 增加节点事件
-    insert(node, index) {
-      console.log('this.nodeData.children', this.nodeData.children)
-      !this.nodeData.children && (this.nodeData.children = [])
-      if (!node) {
-        node = {
-          name: 'new add',
-          children: []
-        }
-      }
-      if (index < 0) {
-        index = this.nodeData.children.length
-      }
-      this.nodeData.children.splice(index, 0, node)
-    },
     edit(data) {
       this.editTitle = true
       this.title = data.title
@@ -153,13 +128,13 @@ export default {
     },
     findDataId(list, dataId, title) {
       list.map((v, index) => {
-        if(v.dataId == dataId) {
-          if(title) {
+        if (v.dataId == dataId) {
+          if (title) {
             v.title = title
           } else {
             list.splice(index, 1)
           }
-        } else if(v.children) {
+        } else if (v.children) {
           this.findDataId(v.children, dataId, title)
         }
       })
@@ -171,13 +146,6 @@ export default {
     },
     cancel() {
       this.editTitle = false
-    },
-    storeRootData (value) {
-      this.$store.commit('setDragTreeData', value)
-    },
-    // 删除节点操作，需要从父节点操作
-    remove(evt) {
-      this.$emit('removeNode', this)
     },
     bindDragMoveEvent() {
       document.bind('mouseup', this.dragEnd)
@@ -256,7 +224,6 @@ export default {
         if (this.pos.distY > 0) {
           let next = this.dragInfo.next()
           if (next) {
-            next.children = next.children ? next.children : []
             this.dragInfo.moveTo(next, next.children, 0)
           } else { // 寻找父节点的同级节点
             let target = this.dragInfo.parent
@@ -270,8 +237,8 @@ export default {
         }
         if (this.pos.distY < 0) {
           let prev = this.dragInfo.prev()
+          prev.children = prev.children ? prev.children : []
           if (prev) {
-            prev.children = prev.children ? prev.children : []
             this.dragInfo.moveTo(prev, prev.children, prev.children.length)
           } else {
             let target = this.dragInfo.parent
@@ -291,12 +258,25 @@ export default {
       if (this.dragElm) {
         console.log('end')
         this.dragInfo.apply()
+        // let list = this.findId(this.dragTreeData, this.dragInfo.apply())
+        // this.$store.commit('setDragTreeData', list)
         this.$nextTick(() => {
           this.dragElm.remove()
           this.dragElm = null
+
           this.dragInfo = null
         })
       }
+    },
+    findId(list, data) {
+      list.map((v, index) => {
+        if (v.dataId == data.dataId) {
+          list.splice(index, 1, data)
+        } else if (v.children) {
+          this.findId(v.children, data)
+        }
+      })
+      return list
     }
   },
   beforeCreate() {
@@ -326,10 +306,10 @@ export default {
   user-select: none;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 5px 15px;
   padding-left: 30px;
   line-height: 30px;
-  margin-bottom: -1px;
   background-color: #fff;
   border: 1px solid #ddd;
   cursor: move;
@@ -340,10 +320,6 @@ export default {
   color: #fff;
 }
 .drag-tree-node .drag-tree-handle .drag-tree-icon {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
   font-size: 20px;
 }
 .drag-tree-node .right-button {
@@ -359,3 +335,4 @@ export default {
   display: none;
 }
 </style>
+

@@ -1,9 +1,9 @@
 <template>
   <li class="drag-tree-node">
     <div class="drag-tree-handle" @mousedown.self="dragStart">
-      <div class="drag-tree-icon" v-if="hasChildren">
-        <Icon v-if="collapsed" @click="toggle" type="arrow-right-b"></Icon>
-        <Icon v-if="!collapsed" @click="toggle" type="arrow-down-b"></Icon>
+      <div class="drag-tree-icon" @click="toggle" v-if="hasChildren">
+        <Icon v-if="collapsed" type="arrow-right-b"></Icon>
+        <Icon v-if="!collapsed" type="arrow-down-b"></Icon>
       </div>
       <span>{{ nodeData.title }}</span>
       <span>{{ nodeData.dataId }}</span>
@@ -288,7 +288,7 @@ export default {
   padding: 5px 15px;
   padding-left: 30px;
   line-height: 30px;
-  margin-bottom: -1px;
+  /* margin-bottom: -1px; */
   background-color: #fff;
   border: 1px solid #ddd;
   cursor: move;
@@ -300,9 +300,9 @@ export default {
 }
 .drag-tree-node .drag-tree-handle .drag-tree-icon {
   position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
+  top: -5px;
+  left: 0;
+  padding: 10px 10px 0 10px;
   font-size: 20px;
 }
 .drag-tree-node .right-button {
