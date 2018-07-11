@@ -1,6 +1,10 @@
 <template>
   <li class="drag-tree-node" :data-id="nodeData.dataId">
-    <div class="drag-tree-handle" :data-id="nodeData.dataId" @mousedown.self="dragStart">
+    <div
+      class="drag-tree-handle"
+      :data-id="nodeData.dataId"
+      @mousedown.self="dragStart"
+    >
       <div class="drag-tree-icon" @click="toggle" v-if="hasChildren">
         <Icon v-if="collapsed" type="arrow-right-b"></Icon>
         <Icon v-if="!collapsed" type="arrow-down-b"></Icon>
@@ -33,7 +37,7 @@ export default {
   // },
   data() {
     return {
-      collapsed: false,
+      collapsed: true,
       isDragging: false,
       lastX: null,
       lastY: null,
@@ -43,7 +47,9 @@ export default {
       // 移动坐标对象
       pos: null,
       firstMoving: true,
-      dragInfo: null
+      dragInfo: null,
+      editTitle: false,
+      title: ''
     }
   },
   computed: {
@@ -222,6 +228,7 @@ export default {
         }
       } else { // 垂直移动
         if (this.pos.distY > 0) {
+          
           let next = this.dragInfo.next()
           if (next) {
             this.dragInfo.moveTo(next, next.children, 0)
@@ -237,8 +244,8 @@ export default {
         }
         if (this.pos.distY < 0) {
           let prev = this.dragInfo.prev()
-          prev.children = prev.children ? prev.children : []
           if (prev) {
+            prev.children = prev.children ? prev.children : []
             this.dragInfo.moveTo(prev, prev.children, prev.children.length)
           } else {
             let target = this.dragInfo.parent
@@ -258,8 +265,8 @@ export default {
       if (this.dragElm) {
         console.log('end')
         this.dragInfo.apply()
-        // let list = this.findId(this.dragTreeData, this.dragInfo.apply())
-        // this.$store.commit('setDragTreeData', list)
+        let list = this.findId(this.dragTreeData, this.dragInfo.apply())
+        this.$store.commit('setDragTreeData', list)
         this.$nextTick(() => {
           this.dragElm.remove()
           this.dragElm = null

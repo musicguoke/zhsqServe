@@ -339,7 +339,7 @@ export default {
         this.topicDataTree = res.dataPublishJson
         //
         this.funAry.map((v, index) => {
-          if(v === this.$route.query.funNum) {
+          if(v == this.sysFunNum) {
             this.funAry = this.funAry.slice(0, index + 1)
           }
         })

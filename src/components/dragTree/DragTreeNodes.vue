@@ -5,6 +5,7 @@
       :key="li.name"
       :nodeData="li"
       @removeNode="removeNode"
+      @reload="reload"
       v-if="!li.placeholder && !li.hidden"
     >
     </drag-tree-node>
@@ -29,11 +30,14 @@ export default {
   computed: {
     nodeHeight() {
       return this.$store.state.dragTreeNodeHeight > 0 ? this.$store.state.dragTreeNodeHeight : 15
+    },
+    dragTreeData() {
+      return this.$store.state.dragTreeData
     }
   },
   watch: {
-    list() {
-      this.reload()
+    dragTreeData() {
+      // this.reload()
     }
   },
   methods: {
