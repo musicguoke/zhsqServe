@@ -167,6 +167,9 @@ export default {
         }
       }
     }
+  },
+  destroyed() {
+    this.$store.commit('setDragTreeData', '')
   }
 }
 </script>

@@ -7,16 +7,8 @@
             <Icon v-if="!this.nodeData.expand" type="arrow-right-b"></Icon>
             <Icon v-if="this.nodeData.expand" type="arrow-down-b"></Icon>
           </div>
-          <span
-            v-if="!editTitle"
-            :class="[prefixCls + '-title-wrap']"
-            ref="dropTarget">
-            <span
-              :class="[dragClasses,dragOverClass]"
-              :data-id="nodeData.dataId"
-              ref="draggAbleDom"
-              v-html="nodeData.title"
-            >
+          <span v-if="!editTitle" :class="[prefixCls + '-title-wrap']" ref="dropTarget">
+            <span :class="[dragClasses,dragOverClass]" :data-id="nodeData.dataId" ref="draggAbleDom" v-html="nodeData.title">
             </span>
           </span>
           <Input type="text" style="margin-left: 35px;" v-if="editTitle" v-model="title"></Input>
