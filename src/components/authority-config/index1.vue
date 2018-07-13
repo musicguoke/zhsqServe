@@ -48,15 +48,14 @@
       <div style="width: 400px" class="select-box" v-show="current == 5">
         <Form :label-width="80">
           <FormItem label="权限等级">
-            <Select v-if="sys" v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
-              <Option v-if="sysFunNum < 11 || sysFunNum < 21 || sysFunNum > 20" value="一级权限">一级权限</Option>
-              <Option v-if="sysFunNum < 21 || sysFunNum > 20" value="二级权限">二级权限</Option>
-              <Option v-if="sysFunNum > 20" value="三级权限">三级权限</Option>
-            </Select>
-            <Select v-else v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
-              <Option value="一级权限">一级权限</Option>
-              <Option value="二级权限">二级权限</Option>
-              <Option value="三级权限">三级权限</Option>
+            <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
+              <Option 
+                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, levelNum)"
+                :value="item"
+                :key="item"
+              >
+                {{item}}
+              </Option>
             </Select>
           </FormItem>
           <FormItem label="请选择权限">
@@ -82,11 +81,13 @@
 </template>
 
 <script>
+import { configMixin } from '@/util/mixin'
 import { addRole, updateRole, getRoleMapById, getRoleModuleById } from '@/api/role'
 import { getAreaList, getMsTabDatainfoById, uploadImg } from '@/api/catalog'
 import MyTree from '@/components/my-tree/index'
 
 export default {
+  mixins: [configMixin],
   components: {
     MyTree
   },
@@ -103,146 +104,17 @@ export default {
   },
   data() {
     return {
-      isShow: false,
-      contentHeight: window.innerHeight - 136 + 'px',
-      tableHeight: window.innerHeight - 298,
-      appBgArray: [1],
-      code: '', // 目录树code
-      tabActiveName: '0',
-      theme: 'light',
-      uploadType: '',
-      qxLevel: '一级权限',
       sys: '',
-      sysType: '',
-      current: 0,
       btnContent: '下一步',
-      formItem: {
-        sysName: "",
-        type: "",
-        areacode: "",
-        enable: '0'
-      },
       formRoleItem: {
         grName: '',
         grIspass: '1'
       },
-      imageList: [],
-      areaQxList: [],
       dataTree: [],
-      topicDataTree: [],
-      tempDataTree: [],
-      tempTopicDataTree: [],
-      mapConfigList: [],
-      featureList: [],
-      cilentAuthorityStr: '1',
-      tabDataIdStr: '',
-      mapIdStr: '',
-      publishIdStr: '',
-      funNum: '',
-      sysFunNum: '',
-      funAry: [0, 1, 2,
-       3, 4, 5, 6, 7, 8, 9,
-        10,11, 12, 13, 14, 
-        15, 16, 17, 18, 19,
-         20,21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-      arrFun: [],
-      sysId: '',
-      grId: '',
-      selectedRow: '', //选中编辑的系统项
-      dataColumns: [
-        {
-          type: 'selection',
-          width: '50',
-        }, {
-          title: '名称',
-          key: 'title'
-        }, {
-          title: '编码',
-          key: 'dataId',
-          sortable: true
-        }, {
-          title: '排序',
-          key: 'listorder'
-        }, {
-          title: '更新时间',
-          key: 'updatetime'
-        }
-      ],
-      topicDataColumns: [
-        {
-          type: 'selection',
-          width: '50',
-        },
-        {
-          title: '数据名称',
-          key: 'dpName'
-        }, {
-          title: '数据类型',
-          key: 'id'
-        }, {
-          title: '排序',
-          key: 'dpListorder'
-        }, {
-          title: '描述',
-          key: 'description'
-        }
-      ],
-      columns4: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '功能名称',
-          key: 'name'
-        }
-      ],
-      columns5: [
-        {
-          type: 'selection',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '地图名称',
-          key: 'name'
-        }
-      ]
+      topicDataTree: []
     }
-  },
-  watch: {
-    // 手动更新iview menu选中项
-    tabActiveName() {
-      this.$nextTick(() => {
-        this.$refs.tab_menu.updateActiveName()
-      })
-    }
-  },
-  created() {
-    this.sys = this.$route.query.id || ''
-    this.type = this.$route.query.type || ''
-    this.sysFunNum = this.$route.query.funNum || ''
   },
   methods: {
-    addAppBg() {
-      this.appBgArray.push(1)
-    },
-    deleteAppBg(index) {
-      this.appBgArray.splice(index, 1)
-    },
-    cancel() {
-      this.$emit('cancel')
-      this.initFormData()
-    },
-    // 数据初始化
-    initFormData() {
-      Object.assign(this.$data, this.$options.data())
-    },
-    tabChange(name) {
-      this.tabActiveName = name
-      this.current = parseInt(name)
-    },
     next() {
       if (this.current == 4) {
         this.btnContent = '完成'
@@ -253,12 +125,6 @@ export default {
       if (this.current < 5) {
         this.current += 1
       }
-    },
-    pre() {
-      if (this.current !== 2) {
-        this.btnContent = '下一步'
-      }
-      this.current -= 1
     },
     done() {
       if (this.sysOrRole) {
@@ -273,47 +139,6 @@ export default {
       } else {
         this._updateRole()
       }
-    },
-    selectMapConfig(section, row) {
-      // 已选择地图项
-      let id = []
-      section.map(v => id.push(v.id))
-      this.mapIdStr = id.toString()
-    },
-    selectTopicDataConfig(section) {
-      // 专题数据选择
-      this.publishIdStr = section.toString()
-    },
-    selectDataConfig(section) {
-      // 数据选择
-      this.tabDataIdStr = section.toString()
-    },
-    selectFeatureConfig(section, row) {
-      //已选择功能项
-      let id = []
-      section.map(v => id.push(v.id))
-      this.cilentAuthorityStr = id.toString()
-    },
-    // 权限选择
-    qx1Change(value) {
-      console.log(value)
-      if (value === '一级权限') {
-        this.arrFun = this.funAry.slice(0, 11)
-      } else if (value === '二级权限') {
-        this.arrFun = this.funAry.slice(11, 21)
-      } else {
-        this.arrFun = this.funAry.slice(21, 31)
-      }
-    },
-    handleCheckData(arr) {
-      let list = []
-      arr.map(v => {
-        list.push(v.id)
-        if (v.children && v.children.length > 0) {
-          this.handleCheckData(v.children)
-        }
-      })
-      return list.toString()
     },
     _getBuildConfig(lid) {
       let id = ''
@@ -337,12 +162,7 @@ export default {
         //
         this.dataTree = res.tabDataTreeJson
         this.topicDataTree = res.dataPublishJson
-        //
-        this.funAry.map((v, index) => {
-          if(v === this.$route.query.funNum) {
-            this.funAry = this.funAry.slice(0, index + 1)
-          }
-        })
+
         if(typeof(id) === 'number') {
           this._getRoleMapById(id)
         } else if(typeof(id) === 'string') {
@@ -393,17 +213,6 @@ export default {
           this.$Message.error(res.message)
         }
       })
-    },
-    checkFunNum(funNum, str) {
-      if (funNum < 11) {
-        this.qxLevel = '一级权限'
-      } else if (funNum > 10 && funNum < 21) {
-        this.qxLevel = '二级权限'
-      } else if (funNum > 20) {
-        this.qxLevel = '三级权限'
-      }
-      this.qx1Change(this.qxLevel)
-      this.funNum = funNum
     },
     _addRole() {
       let data = Object.assign({}, {

@@ -11,15 +11,15 @@ function resolve(dir) {
 module.exports = {
   context: path.resolve(__dirname, "../"),
   entry: {
-    app: ['babel-polyfill', "./src/main.js"]
+    app: ["babel-polyfill", "./src/main.js"]
   },
   externals: {
-    'vue': 'Vue',
-    'vue-router': 'VueRouter',
-    'iview': 'iView',
-    'axios': 'axios',
-    'echarts': 'echarts',
-    'vuex': 'Vuex'
+    vue: "Vue",
+    "vue-router": "VueRouter",
+    iview: "iView",
+    axios: "axios",
+    echarts: "echarts",
+    vuex: "Vuex"
   },
   output: {
     path: config.build.assetsRoot,
@@ -58,6 +58,10 @@ module.exports = {
       {
         test: /\.scss$/,
         loaders: ["style", "css", "sass"]
+      },
+      {
+        test: /\.less$/,
+        loader: "style-loader!css-loader!less-loader"
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
