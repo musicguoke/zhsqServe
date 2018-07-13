@@ -79,7 +79,11 @@ const PlanPeriphery = r =>
     require(["@/page/resource/search-manage/search-item/planPeriphery"], r);
 const Lexicon = r =>
     require(["@/page/resource/search-manage/search-item/searchLexicon"], r);
-
+//system-monitor
+const SeverMonitor = r =>
+    require(["@/page/system-monitor/sever-monitor/severMonitor"], r);
+const SeverMonitorDetail = r =>
+    require(["@/page/system-monitor/sever-monitor/severMonitorDetail"], r);
 //system-configure
 const ParameterConfigure = r =>
     require([
@@ -300,6 +304,18 @@ const router = new VueRouter({
                     name: "TechnicalSupport",
                     component: TechnicalSupport,
                     meta: { title: "技术支持" }
+                },
+                {
+                    path: "sever-monitor",
+                    name: "SeverMonitor",
+                    component: SeverMonitor,
+                    meta: { title: "服务监控" }
+                },
+                {
+                    path: "sever-monitor/detail",
+                    name: "SeverMonitorDetail",
+                    component: SeverMonitorDetail,
+                    meta: { title: "服务监控详情" }
                 },
                 {
                     path: "parameter-configure",
