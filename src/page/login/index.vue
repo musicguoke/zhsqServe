@@ -31,9 +31,9 @@
     </div>
     <footer>
       <div class="companyName">
-        <span>建设单位:重庆市地理信息中心</span>
+        <span>建设单位:重庆市规划局</span>
         <span class="footer_line">|</span>
-        <span> 技术支持:重庆知行宏图科技有限公司</span>
+        <span> 技术支持:重庆市地理信息中心</span>
       </div>
       <div class="baseInfo">
         <span>邮箱：cqzhsq@qq.com </span>

@@ -35,7 +35,7 @@
         <my-tree ref="treeTable" :items="dataTree" :buildSys="buildSys" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
       </div>
       <div
-        style="width: 400px;overflow:auto"
+        style="width: 500px;overflow:auto"
         :style="{maxHeight: tableHeight + 'px'}"
         v-show="current == 3"
       >
@@ -50,7 +50,7 @@
           <FormItem label="权限等级">
             <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option 
-                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, levelNum)"
+                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, levelNum+1)"
                 :value="item"
                 :key="item"
               >

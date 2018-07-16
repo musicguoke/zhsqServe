@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true
 // 获取区域列表
 export function getAreaList(page) {
   const data = {
-    pageNo: page || 1,
+    pageNo: 1,
     pageSize: 40
   }
 

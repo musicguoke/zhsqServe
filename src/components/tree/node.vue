@@ -7,22 +7,16 @@
             <Icon v-if="!this.nodeData.expand" type="arrow-right-b"></Icon>
             <Icon v-if="this.nodeData.expand" type="arrow-down-b"></Icon>
           </div>
-          <span v-if="!editTitle" :class="[prefixCls + '-title-wrap']" ref="dropTarget">
+          <span :class="[prefixCls + '-title-wrap']" ref="dropTarget">
             <span :class="[dragClasses,dragOverClass]" :data-id="nodeData.dataId" ref="draggAbleDom" v-html="nodeData.title">
             </span>
           </span>
-          <Input type="text" style="margin-left: 35px;" v-if="editTitle" v-model="title"></Input>
-          <div v-if="!editTitle" style="display: flex;">
-            <Button style="margin-right: 5px;" size="small" type="primary" shape="circle" icon="edit" @click="edit(nodeData)"></Button>
+          <div style="display: flex;">
+            <Button style="margin-right: 5px;" size="small" type="primary" shape="circle" icon="edit" @click="onEdit(nodeData)"></Button>
             <Button style="margin-right: 5px;" size="small" type="warning" shape="circle" icon="close-round" @click="deleteNode(nodeData.dataId)"></Button>
           </div>
-          <div v-if="editTitle" style="display: flex;">
-            <Button style="margin-right: 5px;" size="small" type="primary" shape="circle" icon="checkmark-round" @click="save(nodeData)"></Button>
-            <Button style="margin-right: 5px;" size="small" type="warning" shape="circle" icon="close-round" @click="cancel"></Button>
-          </div>
         </div>
-        <Tree-Node v-for="item in nodeData.children" :key="item.title" :node-data="item" v-show="nodeData.children.length && nodeData.expand">
-        </Tree-Node>
+        <Tree-Node v-for="item in nodeData.children" :key="item.title" :node-data="item" v-show="nodeData.children.length && nodeData.expand"></Tree-Node>
       </li>
     </ul>
   </transition>
@@ -52,8 +46,6 @@ export default {
       root: null,
       parentNodeData: {},
       dragNodeHighlight: false, //拖拽元素是否高亮
-      editTitle: false,
-      title: ''
     };
   },
   computed: {
@@ -95,12 +87,14 @@ export default {
       this.$refs.dropTarget.ondragover = this.onDragOver;
       this.$refs.dropTarget.ondragleave = this.onDragLeave;
       this.$refs.dropTarget.ondrop = this.onDrop;
+      this.$refs.dropTarget.onEditData = this.onEdit
     }
   },
   methods: {
-    edit(data) {
+    onEdit(data) {
       this.editTitle = true
       this.title = data.title
+      this.root.onEditData(data)
     },
     deleteNode(dataId) {
       this.$store.commit('setDragTreeData', this.findDataId(this.dragTreeData, dataId))
@@ -118,13 +112,6 @@ export default {
         }
       })
       return list
-    },
-    save(data) {
-      this.$store.commit('setDragTreeData', this.findDataId(this.dragTreeData, data.dataId, this.title))
-      this.editTitle = false
-    },
-    cancel() {
-      this.editTitle = false
     },
     init() {
       this.nodeData._hash = this.generateHash();

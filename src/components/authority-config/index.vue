@@ -89,7 +89,7 @@
       <div v-show="current == 1 && type !== 2" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' :buildSys="buildSys" @on-selection-change="selectDataConfig"></my-tree>
       </div>
-      <div style="width: 400px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 2">
+      <div style="width: 500px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 2">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
       </div>
       <div style="width: 400px" v-show="current == 3">
@@ -99,7 +99,7 @@
       <div style="width: 400px;paddingBottom: 60px;" class="select-box" v-show="current == 4">
         <Form :label-width="80">
           <FormItem label="权限等级">
-            <Select v-model="qxLevel" @on-change="qx2Change" placeholder="请选择权限等级">
+            <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option 
                 v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, levelNum+1)"
                 :value="item"
@@ -111,7 +111,7 @@
           </FormItem>
           <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
-              <Option v-for="item in funAry" :value="item" :key="item">
+              <Option v-for="item in arrFun" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>
@@ -184,7 +184,26 @@ export default {
       dataTree: [],
       topicDataTree: [],
       tempFeatureList: [],
-      ms720Str: ''
+      ms720Str: '',
+      dataColumns: [
+        {
+          type: 'selection',
+          width: '50',
+        }, {
+          title: '名称',
+          key: 'title'
+        }, {
+          title: '编码',
+          key: 'id',
+          sortable: true
+        }, {
+          title: '排序',
+          key: 'listorder'
+        }, {
+          title: '更新时间',
+          key: 'updatetime'
+        }
+      ],
     }
   },
   methods: {

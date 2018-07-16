@@ -36,13 +36,10 @@ export const configMixin = {
           key: 'dpName'
         }, {
           title: '数据类型',
-          key: 'id'
+          key: 'typeName'
         }, {
           title: '排序',
           key: 'dpListorder'
-        }, {
-          title: '描述',
-          key: 'description'
         }
       ],
       dataColumns: [
@@ -54,7 +51,7 @@ export const configMixin = {
           key: 'title'
         }, {
           title: '编码',
-          key: 'id',
+          key: 'dataId',
           sortable: true
         }, {
           title: '排序',
@@ -72,7 +69,12 @@ export const configMixin = {
         },
         {
           title: '功能名称',
-          key: 'name'
+          key: 'name',
+          width: 150
+        },
+        {
+          title: '功能描述',
+          key: 'moduleDescp'
         }
       ],
       columns5: [
@@ -99,21 +101,21 @@ export const configMixin = {
   created() {
     this.sys = this.$route.query.id || ''
     this.type = this.$route.query.type || ''
-    this.sysFunNum = this.$route.query.funNum || ''
-    if(this.sysFunNum <= 10) {
-      this.levelNum = 0
-    } else if(this.sysFunNum > 10 && this.sysFunNum <= 20) {
-      this.levelNum = 1
-    } else {
-      this.levelNum = 2
-    }
-    this.levelNum = this.levelNum || 2
-    //
-    this.funAry.map((v, index) => {
-      if(v === this.sysFunNum) {
-        this.funAry = this.funAry.slice(0, index + 1)
+    this.sysFunNum = this.$route.query.funNum || null
+    if(this.sysFunNum) {
+      if(this.sysFunNum <= 10) {
+        this.levelNum = 0
+      } else if(this.sysFunNum > 10 && this.sysFunNum <= 20) {
+        this.levelNum = 1
+      } else {
+        this.levelNum = 2
       }
-    })
+      this.funAry.map((v, index) => {
+        if(v == this.sysFunNum) {
+          this.funAry = this.funAry.slice(0, index + 1)
+        }
+      })
+    }
     this.checkFunNum(this.sysFunNum)
   },
   methods: {
@@ -146,28 +148,6 @@ export const configMixin = {
         this.arrFun = this.funAry.slice(21, 31)
       }
     },
-    // 权限选择
-    qx2Change(value) {
-      this.funNum = ''
-      let list = []
-      this.funAry = []
-      if (value === '一级权限') {
-        list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        list.map(v => {
-          this.funAry.push(v)
-        })
-      } else if (value === '二级权限') {
-        list = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        list.map(v => {
-          this.funAry.push(v)
-        })
-      } else {
-        list = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-        list.map(v => {
-          this.funAry.push(v)
-        })
-      }
-    },
     checkFunNum(funNum) {
       if (funNum < 11) {
         this.qxLevel = '一级权限'
@@ -177,7 +157,6 @@ export const configMixin = {
         this.qxLevel = '三级权限'
       }
       this.qx1Change(this.qxLevel)
-      this.qx2Change(this.qxLevel)
       this.funNum = funNum
     },
     selectMapConfig(section, row) {

@@ -2,15 +2,21 @@
   <div>
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>目录管理</BreadcrumbItem>
-      <BreadcrumbItem>修改目录</BreadcrumbItem>
+      <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
-    <div class="table-box">
+    <div class="table-box" v-if="role == 3">
+      <Card :style="{maxHeight: contentHeight}">
+        <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
+      </Card>
+    </div>
+    <div class="table-box" v-else>
       <Card :style="{width:'49%',float:'left',maxHeight: contentHeight}">
         <my-drag-tree :list="dataTree"></my-drag-tree>
       </Card>
       <Card :style="{width:'49%',float:'right',overflow:'hidden',maxHeight: contentHeight}">
         <div v-if="list.length > 0">
-          <drag-tree :data="dragTreeData" draggable @on-drop="getDropData"></drag-tree>
+          <drag-tree :data="dragTreeData" draggable @on-drop="getDropData" @on-edit="editData">
+          </drag-tree>
           <div>
             <Button style="display: block;margin: 6px auto 0;" type="primary" @click="handleSave">保存</Button>
           </div>
@@ -18,14 +24,44 @@
         <Alert show-icon v-else>请从左侧侧拖入数据</Alert>
       </Card>
     </div>
+    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="editRow" @on-cancel="cancel">
+      <h3 slot="header" style="color:#2D8CF0">数据信息</h3>
+      <Form :model="dataInfo" :label-width="90">
+        <FormItem label="ID">
+          <Input v-model="dataInfo.dataId" readonly></Input>
+        </FormItem>
+        <FormItem label="名称">
+          <Input v-model="dataInfo.title"></Input>
+        </FormItem>
+        <FormItem label="排序">
+          <Input v-model="dataInfo.listorder"></Input>
+        </FormItem>
+        <FormItem label="更新时间">
+          <Input v-model="dataInfo.updatetime" readonly></Input>
+        </FormItem>
+        <FormItem label="地区选择">
+          <Select v-model="dataInfo.areacode">
+            <Option v-for="item in areaList" :value="item.areacode" :key="item.areacode">
+              {{item.areaname}}
+            </Option>
+          </Select>
+        </FormItem>
+        <FormItem label="数据类型">
+          <Select v-model="dataInfo.type">
+            <Option v-for="item in typeList" :value="item.typeid" :key="item.typeid">{{item.typename}}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 
 <script>
-// import DragTree from '@/components/DragTree/DragTree'
 import DragTree from '@/components/tree/index.js'
 import MyDragTree from '@/components/DragTree/myDragTree'
-import { getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
+import TreeTable from '@/components/my-tree/index'
+import { getMsTabDatainfoById, getAreaList, getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
+import { getSTopicTypeList } from '@/api/dataSource-service'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -47,12 +83,16 @@ export default {
       ],
       dataTree: [],
       tempList: [],
-      submitList: []
+      submitList: [],
+      modalShow: false,
+      areaList: null,
+      dataInfo: {}
     }
   },
   components: {
     DragTree,
-    MyDragTree
+    MyDragTree,
+    TreeTable
   },
   created() {
     this._getAreaCatalog()
@@ -61,6 +101,9 @@ export default {
   computed: {
     list() {
       return this.tempList.length > 0 ? this.tempList : this.$store.state.dragTreeData
+    },
+    role() {
+      return JSON.parse(localStorage.getItem('userInfo')).role
     },
     ...mapGetters([
       'dragTreeData'
@@ -84,6 +127,34 @@ export default {
           this.$Message.success(res.message);
           this._getCatalogBySysId()
         }
+      })
+    },
+    _getMsTabDatainfoById(id) {
+      getMsTabDatainfoById(id).then(res => {
+        if (res.code === 20000) {
+          this.typeList.map(v => {
+            if(v.typeid == res.data.type) {
+              res.data.type = v.typename
+            }
+          })
+          res.data.title = res.data.name
+          res.data.dataId = res.data.id
+          res.data.updatetime = this._mm.formatDate(res.data.updatetime)
+          this.dataInfo = res.data
+          this.modalShow = true
+        }
+      })
+    },
+    _getAreaList(id) {
+      getAreaList(id).then(res => {
+        this.areaList = res.data.list
+        this._getSTopicTypeList(id)
+      })
+    },
+    _getSTopicTypeList(id) {
+      getSTopicTypeList(id).then(res => {
+        this.typeList = res.data.list
+        this._getMsTabDatainfoById(id)
       })
     },
     changeListId(list) {
@@ -115,7 +186,7 @@ export default {
       })
       this._saveCatalogBySelf(JSON.stringify({ list: this.submitList }))
     },
-    checkListOrder(list, id, ) {
+    checkListOrder(list, id) {
       list.map((v, index) => {
         v.listorder = index + 1
         v.parentId = id
@@ -133,6 +204,23 @@ export default {
       })
       return list
     },
+    editData(row) {
+      this._getAreaList(row.dataId)
+    },
+    editRow() {
+      let list = this.$store.state.dragTreeData
+      this.$store.commit('setDragTreeData', this.findData(list, this.dataInfo))
+    },
+    findData(list, datainfo) {
+      list.map((v, index) => {
+        if (v.dataId == datainfo.dataId) {
+          v.title = datainfo.title
+        } else if (v.children) {
+          this.findData(v.children, datainfo)
+        }
+      })
+      return list
+    },
     getDropData(info) {
       var dragData = info.dragNode.nodeData;
       var dragParent = info.dragNode.parentNode;
@@ -141,7 +229,7 @@ export default {
       var dropPosition = info.dropPosition; //0作为子级，-1放在目标节点前面，1放在目标节点后面
 
       //把拖拽元素从父节点中删除
-      if(dragParent) {
+      if (dragParent) {
         dragParent.children.splice(dragParent.children.indexOf(dragData), 1);
       } else {
         this.dragTreeData.splice(this.dragTreeData.indexOf(dragData), 1);
@@ -150,7 +238,7 @@ export default {
         dropData.children = dropData.children ? dropData.children : []
         dropData.children.push(dragData);
       } else {
-        if(dropParent) {
+        if (dropParent) {
           var index = dropParent.children.indexOf(dropData);
           if (dropPosition === -1) {
             dropParent.children.splice(index, 0, dragData);
@@ -180,31 +268,31 @@ export default {
 
 <style scoped>
 .market-nav-position {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 .market-nav-ul {
-    margin: 0 auto;
-    padding: 10px 0;
+  margin: 0 auto;
+  padding: 10px 0;
 }
 .market-title {
-    width: 140px;
-    height: 36px;
-    line-height: 36px;
-    border-radius: 40px;
-    margin: 0 5px;
-    background: #eff1f6;
-    color: #65778b;
-    font-size: 14px;
-    display: inline-block;
-    list-style: none;
-    text-align: center;
+  width: 140px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 40px;
+  margin: 0 5px;
+  background: #eff1f6;
+  color: #65778b;
+  font-size: 14px;
+  display: inline-block;
+  list-style: none;
+  text-align: center;
 }
 .market-title.current {
-    background: #fff;
-    color: #5094e7;
-    border: 1px solid #dfe3ed;
+  background: #fff;
+  color: #5094e7;
+  border: 1px solid #dfe3ed;
 }
 .cursor_pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>
