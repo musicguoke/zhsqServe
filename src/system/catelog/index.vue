@@ -6,7 +6,8 @@
     </Breadcrumb>
     <div class="table-box" v-if="role == 3">
       <Card :style="{maxHeight: contentHeight}">
-        <tree-table :items='dataTree' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
+        <tree-table v-if="dragTreeData.length>0" :items='dragTreeData' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
+        <Alert show-icon v-else>暂无发布目录</Alert>
       </Card>
     </div>
     <div class="table-box" v-else>
@@ -59,17 +60,15 @@ export default {
   data() {
     return {
       contentHeight: window.innerHeight - 174 + 'px',
-      dataColumns: [
-        {
-          type: 'selection',
-          width: '50',
-        }, {
+      dataColumns: [{
           title: '名称',
           key: 'title'
         }, {
+          title: '排序',
+          key: 'listorder'
+        } ,{
           title: '编码',
-          key: 'dataId',
-          sortable: true
+          key: 'dataId'
         }
       ],
       dataTree: [],
