@@ -28,6 +28,20 @@ export function getAreaCatalog() {
 }
 
 // 根据编号获取目录信息
+export function getByIdOrDataId(id, dataId) {
+  const data = {
+    id: id,
+    dataId: dataId
+  }
+
+  return axios.post(
+    `${url}/sys/msSysDatainfo/getByIdOrDataId.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+// 根据编号获取目录信息
 export function getMsTabDatainfoById(id) {
   const data = {
     id: id

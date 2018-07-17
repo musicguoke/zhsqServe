@@ -14,7 +14,7 @@
         <my-drag-tree :list="dataTree"></my-drag-tree>
       </Card>
       <Card :style="{width:'49%',float:'right',overflow:'hidden',maxHeight: contentHeight}">
-        <div v-if="list.length > 0">
+        <div v-if="list.length>0">
           <drag-tree :data="dragTreeData" draggable @on-drop="getDropData" @on-edit="editData">
           </drag-tree>
           <div>
@@ -36,19 +36,11 @@
         <FormItem label="排序">
           <Input v-model="dataInfo.listorder"></Input>
         </FormItem>
-        <FormItem label="更新时间">
-          <Input v-model="dataInfo.updatetime" readonly></Input>
-        </FormItem>
         <FormItem label="地区选择">
           <Select v-model="dataInfo.areacode">
             <Option v-for="item in areaList" :value="item.areacode" :key="item.areacode">
               {{item.areaname}}
             </Option>
-          </Select>
-        </FormItem>
-        <FormItem label="数据类型">
-          <Select v-model="dataInfo.type">
-            <Option v-for="item in typeList" :value="item.typeid" :key="item.typeid">{{item.typename}}</Option>
           </Select>
         </FormItem>
       </Form>
@@ -60,8 +52,7 @@
 import DragTree from '@/components/tree/index.js'
 import MyDragTree from '@/components/DragTree/myDragTree'
 import TreeTable from '@/components/my-tree/index'
-import { getMsTabDatainfoById, getAreaList, getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
-import { getSTopicTypeList } from '@/api/dataSource-service'
+import { getByIdOrDataId, getMsTabDatainfoById, getAreaList, getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -82,7 +73,6 @@ export default {
         }
       ],
       dataTree: [],
-      tempList: [],
       submitList: [],
       modalShow: false,
       areaList: null,
@@ -100,7 +90,7 @@ export default {
   },
   computed: {
     list() {
-      return this.tempList.length > 0 ? this.tempList : this.$store.state.dragTreeData
+      return this.$store.state.dragTreeData
     },
     role() {
       return JSON.parse(localStorage.getItem('userInfo')).role
@@ -117,7 +107,6 @@ export default {
     },
     _getCatalogBySysId() {
       getCatalogBySysId().then(res => {
-        this.tempList = res
         this.$store.commit('setDragTreeData', res)
       })
     },
@@ -129,32 +118,20 @@ export default {
         }
       })
     },
-    _getMsTabDatainfoById(id) {
-      getMsTabDatainfoById(id).then(res => {
-        if (res.code === 20000) {
-          this.typeList.map(v => {
-            if(v.typeid == res.data.type) {
-              res.data.type = v.typename
-            }
-          })
+    _getByIdOrDataId(id, dataId) {
+      getByIdOrDataId(id, dataId).then(res => {
+        if(res.code === 20000) {
           res.data.title = res.data.name
-          res.data.dataId = res.data.id
           res.data.updatetime = this._mm.formatDate(res.data.updatetime)
           this.dataInfo = res.data
           this.modalShow = true
         }
       })
     },
-    _getAreaList(id) {
-      getAreaList(id).then(res => {
+    _getAreaList(row) {
+      getAreaList().then(res => {
         this.areaList = res.data.list
-        this._getSTopicTypeList(id)
-      })
-    },
-    _getSTopicTypeList(id) {
-      getSTopicTypeList(id).then(res => {
-        this.typeList = res.data.list
-        this._getMsTabDatainfoById(id)
+        this._getByIdOrDataId(row.id, row.dataId)
       })
     },
     changeListId(list) {
@@ -177,10 +154,11 @@ export default {
           parentId: v.parentId,
           name: v.title,
           listorder: v.listorder,
-          dataId: v.dataId
+          dataId: v.dataId,
+          areacode: v.areacode ? v.areacode : 500000
         }
         this.submitList.push(obj)
-        if (v.children && v.children.length > 0) {
+        if (v.children) {
           this.checkListOrder(v.children, v.id)
         }
       })
@@ -195,7 +173,8 @@ export default {
           parentId: v.parentId,
           name: v.title,
           listorder: v.listorder,
-          dataId: v.dataId
+          dataId: v.dataId,
+          areacode: v.areacode ? v.areacode : 500000
         }
         this.submitList.push(obj)
         if (v.children) {
@@ -205,7 +184,7 @@ export default {
       return list
     },
     editData(row) {
-      this._getAreaList(row.dataId)
+      this._getAreaList(row)
     },
     editRow() {
       let list = this.$store.state.dragTreeData
@@ -213,9 +192,13 @@ export default {
     },
     findData(list, datainfo) {
       list.map((v, index) => {
+        // 子集的areacode和父级一样
+        v.areacode = datainfo.areacode
         if (v.dataId == datainfo.dataId) {
           v.title = datainfo.title
-        } else if (v.children) {
+          v.listorder = datainfo.listorder
+        }
+        if (v.children) {
           this.findData(v.children, datainfo)
         }
       })

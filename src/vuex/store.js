@@ -1,6 +1,6 @@
 const store = new Vuex.Store({
   state: {
-    dragTreeData: null,
+    dragTreeData: [],
     dragTreeNodeHeight: 0,
     dragTreeOffsetX: 0
   },
