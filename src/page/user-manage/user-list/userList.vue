@@ -5,7 +5,9 @@
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
         <Card :style="{maxHeight:userListHeight}">
-            <v-search :importShow="false" :deleteShow="false" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
+            <v-search :importShow="!isProduct"  :deleteShow="false" :selectShow="isProduct" :conditionExportShow="true" :selectList="groupSingleFilterList" 
+            @on-export="openExportModal" @on-import="openImportModal"  @on-change="filterByRole"
+            @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arId" label="ID" width="60" sortable>
@@ -22,8 +24,6 @@
                     </el-table-column>
                     <el-table-column prop="name" label="部门" :filters="departmentFilterList" :filter-method="filterByDepartment" filter-placement="bottom-end" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <!-- <el-table-column prop="addTime" label="注册时间" sortable>
-                    </el-table-column> -->
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
@@ -166,16 +166,84 @@
                 </FormItem>
             </Form>
         </Modal>
+        <Modal v-model="importModal" title='导入用户' @on-ok="saveImport">
+            <Form :model="importForm" label-position="left" :label-width="100" ref="file_user_form">
+                <FormItem label="用户角色">
+                    <Select v-model="importForm.sysId" @on-change="importOrExportSysChange('import')" style="width:185px">
+                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="importForm.groupId" style="width:185px;margin-left:14px;" >
+                        <Option v-for="item in groupImportOrExportList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="选择文件">
+                    <div>
+                        <Upload :action="`${uploadUrl}/sys/msMembers/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="userUpload">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                        </Upload>
+                    </div>
+                </FormItem>
+                <div class="importSlot">
+                <div class="importSlotTitle">导入须知</div>
+                <p>1、导入文件大小不超过2MB.</p>
+                <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
+                    <a :href="`${uploadUrl}/sys/msMembers/downloadImportedFile.do`">点此下载.</a>
+                </p>
+                </div>
+            </Form>
+        </Modal>
+        <Modal v-model="exportUserModal" :title=modalTitle @on-ok="_exportUser">
+            <Form :model="exportForm" :label-width="100">
+                <FormItem label="用户类型">
+                    <Select v-model="exportForm.type">
+                        <Option value="0">全部</Option>
+                        <Option value="1">新增用户</Option>
+                        <Option value="2">活跃用户</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="用户角色" v-show="!isProduct">
+                    <Select v-model="exportForm.sysId" @on-change="importOrExportSysChange('export')" style="width:185px">
+                        <Option value="0">全部</Option>
+                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="exportForm.groupId" style="width:185px;margin-left:14px;" >
+                        <Option value="0">全部</Option>
+                        <Option v-for="item in groupImportOrExportList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="用户角色" v-show="isProduct">
+                    <Select v-model="exportForm.groupId">
+                        <Option value="0">全部</Option>
+                        <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="时间" v-if="exportForm.type == 2">
+                    <div style="display:flex">
+                     <DatePicker type="date"  @on-change="getBeginDate" placeholder="请选择开始时间" :options="limitDate" style="width: 48%" ref="beginDate"></DatePicker>
+                     <p style="margin:0 4px">—</p>
+                     <DatePicker type="date"  @on-change="getEndDate" placeholder="请选择结束时间" :options="limitDate" style="width: 48%" ref="endDate"></DatePicker>
+                    </div>
+                </FormItem>
+                <FormItem label="时间"  v-else>
+                    <div style="display:flex">
+                     <DatePicker type="date"  @on-change="getBeginDate"  placeholder="请选择开始时间" style="width: 48%" ref="beginDate"></DatePicker>
+                     <p style="margin:0 4px">—</p>
+                     <DatePicker type="date"  @on-change="getEndDate" placeholder="请选择结束时间" style="width: 48%" ref="endDate"></DatePicker>
+                    </div>
+                </FormItem>
+            </Form>
+        </Modal>
     </Content>
 </template>
 
 <script>
 import {getAreaCode, getUserList, addUser, updateUser, deleteUser,
-    getEquipment, updateEquipment, getRolesList,getUserSysAndRole} from '@/api/user-service'
+    getEquipment, updateEquipment, getRolesList,getUserSysAndRole,importUser,exportUser} from '@/api/user-service'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
 import vSearch from '@/components/search/index'
+import { url } from '@/api/config.js'
 export default {
     components: {
         vSearch
@@ -186,14 +254,17 @@ export default {
              callback();
         }
         return {
+            uploadUrl: url,
             userListHeight: window.innerHeight - 174 + 'px',
             searchDepartment: '',
             searchCounty: '',
             searchSystem: '',
             searchName: '',
+            filterByGrId:'',
             userModal: false,
             equipmentModal: false,
             equipmentEditModal:false,
+            importModal:false,
             modalTitle: '',
             total: 0,
             isAdd: false,
@@ -241,9 +312,23 @@ export default {
                 label: "name",
                 children: "list"
             },
+            importForm: {
+                file: '',
+                sysId:'',
+                groupId:''
+            },
+            exportForm:{
+                type:'',
+                sysId:'',
+                grId:'',
+                beginDate:'',
+                endDate:''
+            },
             systemList: [],
             groupList: [],
             groupSingleList: [],
+            groupImportOrExportList:[],
+            groupSingleFilterList:[{value:'',label:'全部'}],
             sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
             nowSystemLength: 1,
@@ -299,6 +384,12 @@ export default {
                     { required: true, message: '用户密码不能为空', trigger: 'blur' },
                     { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
                 ]
+            },
+            exportUserModal:false,
+            limitDate:{
+                disabledDate (date) {
+                    return (date.valueOf() < (Date.now() - (86400000)*30)) || (date.valueOf() > Date.now());
+                }
             }
         }
     },
@@ -316,7 +407,7 @@ export default {
             }
             this._getUserList(1)
         }),
-            this._getDepartmentList()
+        this._getDepartmentList()
         if (this.$route.query.id) {
             this.isProduct = true
             this._getRolesSingleList(this.$route.query.id)
@@ -416,6 +507,7 @@ export default {
             });
         },
         _getSystemList() {
+            this.systemList = []
             getSystemList(1).then(res => {
                 let data = res.data.list
                 let array = []
@@ -434,13 +526,15 @@ export default {
             this._getUserList(page)
         },
         //点击搜索
-        search(searchName) {
+        search(searchName,groupId) {
             this.searchName = searchName
+            this.filterByGrId = groupId == '0'?'':groupId
             this._getUserList(1)
         },
         //点击清空
         searchReset() {
             this.searchName = ''
+            this.filterByGrId = ''
             this._getUserList(1)
         },
         //设备列表
@@ -504,9 +598,10 @@ export default {
         _getUserList(page) {
             let data = {
                 methods: 'list',
-                pageNo: page || tis.nowPage,
+                pageNo: page || this.nowPage,
                 pageSize: 10,
-                arTruename: this.searchName
+                arTruename: this.searchName,
+                grId:this.filterByGrId
             }
             getUserList(data).then(res => {
                 this.userData = []
@@ -731,8 +826,109 @@ export default {
                         value: parseInt( res.data.list[i].grId),
                         label: res.data.list[i].grName
                     })
+                    this.groupSingleFilterList.push({
+                        value: parseInt( res.data.list[i].grId),
+                        label: res.data.list[i].grName
+                    })
                 }
             })
+        },
+        //打开导入文件模态框
+        openImportModal() {
+            this.importModal = true
+            this._getSystemList()
+            for (let i in this.importForm) {
+                this.importForm[i] = ""
+            }
+            if (this.$refs.userUpload._data.fileList) {
+                this.$refs.userUpload._data.fileList = []
+            }
+        },
+        boforeUpload(file) {
+            this.importForm.file = file
+        },
+        //根据sysId获取角色
+        importOrExportSysChange(type){
+            this.groupImportOrExportList = []
+            let id = ''
+            if(type == 'import'){
+                id = this.importForm.sysId
+            }else if(type == 'export'){
+                id = this.exportForm.sysId
+            }
+            getRolesList(id).then(res => {
+                for (let i in  res.data.list) {
+                    this.groupImportOrExportList.push({
+                        value: parseInt( res.data.list[i].grId),
+                        label: res.data.list[i].grName
+                    })
+                }
+            })
+        },
+        //导入文件保存
+        saveImport() {
+            if (this.importForm.file === '') {
+                this.$Message.error('请选择上传文件')
+            } else if(this.importForm.groupId === ''){
+                this.$Message.error('请选择用户角色')
+            } else {
+                let formData = new FormData(this.$refs.file_user_form)
+                formData.append('grId', this.importForm.groupId)
+                formData.append('file', this.importForm.file)
+                this._importUser(formData)
+            }
+        },
+        //导入文件
+        _importUser(data) {
+            importUser(data).then(res => {
+                if (res.code == 20001) {
+                    this.$Message.success(res.message)
+                    this._getUserList(1)
+                } else {
+                    this.$Message.error(res.message)
+                }
+            })
+        },
+        getBeginDate(date){
+            this.exportForm.beginDate = date.substring(0,10)
+        },
+        getEndDate(date){
+            this.exportForm.endDate = date.substring(0,10)
+        },
+        //用户导出
+        openExportModal(){
+            this.$refs.beginDate.visualValue = ''
+            this.$refs.endDate.visualValue = ''
+            this.modalTitle = '导出筛选条件'
+            this.exportUserModal = true
+            this._getSystemList()
+            for (let i in this.exportForm) {
+                this.exportForm[i] = ""
+            }
+        },
+        _exportUser(){
+            let sysId = ''
+            if(this.$route.query.id){
+                sysId = this.$route.query.id
+            }else{
+                sysId = this.exportForm.sysId == '0'?'':this.exportForm.sysId
+            }
+            let data = {
+                sysId:sysId,    
+                grId:this.exportForm.groupId == '0'?'':this.exportForm.groupId,       
+                type:this.exportForm.type == '0'?'':this.exportForm.groupId,
+                beginDate:this.exportForm.beginDate,
+                endDate:this.exportForm.endDate
+            }
+            let params = `${this.uploadUrl}/sys/msMembers/exportMsMembers.do?`
+            for(let i in data){
+                if(data[i]){
+                    params += `${i}=${data[i]}&`
+                }else{
+                     params += `${i}=&`
+                }
+            }
+            window.location.href = params
         }
     }
 }

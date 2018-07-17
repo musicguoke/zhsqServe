@@ -71,3 +71,17 @@ export function getUserSysAndRole(id) {
         return Promise.resolve(res.data)
     })
 }
+//导入
+export function importUser(data) {
+    return axios.post(`${url}/sys/msMembers/importFile.do`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    }).then(res => {
+        return Promise.resolve(res.data)
+    })
+}
+//导出
+export function exportUser(data) {
+    return axios.post(`${url}/sys/msMembers/exportMsMembers.do`, { responseType: 'arraybuffer' }, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

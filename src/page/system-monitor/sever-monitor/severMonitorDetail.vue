@@ -23,7 +23,7 @@
                     </el-table-column>
                     <el-table-column  prop="requestType" label="请求方式">
                     </el-table-column>
-                     <el-table-column  prop="monitorTime" label="监测时间">
+                     <el-table-column  prop="monitorTime" label="监测时间" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
@@ -153,6 +153,7 @@ export default {
                     }else{
                         v.statusName = '失败'
                     }
+                    v.monitorTime = this._mm.formatDate(v.monitorTime)
                 })
             })
         },
