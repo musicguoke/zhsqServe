@@ -31,9 +31,9 @@
     </div>
     <footer>
       <div class="companyName">
-        <span>建设单位:重庆市地理信息中心</span>
+        <span>建设单位:重庆市规划局</span>
         <span class="footer_line">|</span>
-        <span> 技术支持:重庆知行宏图科技有限公司</span>
+        <span> 技术支持:重庆市地理信息中心</span>
       </div>
       <div class="baseInfo">
         <span>邮箱：cqzhsq@qq.com </span>
@@ -49,6 +49,7 @@
 import axios from '@/util/http'
 import qs from 'qs'
 import { url } from '@/api/config'
+import { enterSystem } from '@/api/system'
 
 export default {
   data() {
@@ -72,6 +73,23 @@ export default {
     document.title = '系统登录'
   },
   methods: {
+    _enterSystem(data) {
+      enterSystem(data.id).then(res => {
+        if (res.code === 20000) {
+          this.$router.push({
+            path: '/system',
+            query: {
+              id: data.id,
+              type: data.type,
+              funNum: data.funNum,
+              systemname: data.sysName
+            }
+          })
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
     login(loginInfo) {
       return axios
         .post(`${url}/sys/sysUser/login.do`, qs.stringify(loginInfo), {
@@ -94,14 +112,7 @@ export default {
                   localStorage.setItem('sysUserList', JSON.stringify(res.data.userInfo.list))
                   this.$router.replace('/system-list')
                 } else if (res.data.sysUserChildList.length === 1) {
-                  this.$router.push({
-                    path: '/system',
-                    query: {
-                      id: res.data.userInfo.list[0].id,
-                      systemname: res.data.userInfo.list[0].sysName,
-                      type: res.data.userInfo.list[0].type
-                    }
-                  })
+                  this._enterSystem(res.data.userInfo.list[0])
                 }
               } else {
                 // 单个系统自动选择

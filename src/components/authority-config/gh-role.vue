@@ -34,7 +34,7 @@
       <div v-show="current == 1" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="select720DataConfig"></my-tree>
       </div>
-      <div style="width: 400px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 3">
+      <div style="width: 500px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 3">
         <Table border ref="selection" :columns="columns4" :data="featureList" @on-select-all="selectFeatureConfig" @on-select="selectFeatureConfig" @on-selection-change="selectFeatureConfig"></Table>
       </div>
       <div style="width: 400px" v-show="current == 4">

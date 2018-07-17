@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true
 // 获取区域列表
 export function getAreaList(page) {
   const data = {
-    pageNo: page || 1,
+    pageNo: 1,
     pageSize: 40
   }
 
@@ -23,6 +23,20 @@ export function getAreaCatalog() {
 
   return axios.post(
     `${url}/sys/msTabDataController/getGroupDataTreeAllByParentid.do`).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+// 根据编号获取目录信息
+export function getByIdOrDataId(id, dataId) {
+  const data = {
+    id: id,
+    dataId: dataId
+  }
+
+  return axios.post(
+    `${url}/sys/msSysDatainfo/getByIdOrDataId.do`,
+    qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })
 }

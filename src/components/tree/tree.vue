@@ -150,7 +150,9 @@ export default {
         event: e
       });
     },
-
+    onEditData(row) {
+      this.$emit('on-edit', row)
+    },
     onDrop(e, treeNode) {
       //当没有设置拖拽节点时，禁止作为目标节点
       if (!this.hasDragNode()) {

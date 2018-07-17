@@ -2,7 +2,7 @@
   <div>
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>目录管理</BreadcrumbItem>
-      <BreadcrumbItem>发布目录</BreadcrumbItem>
+      <BreadcrumbItem>专题目录</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
       <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="build" />
