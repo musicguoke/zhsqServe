@@ -2,8 +2,9 @@
   <Header>
     <div class="container">
       <div class="navbar-logo">
-        <span class="layout-logo" @click="linkTo"></span>
-        <!-- <router-link tag="span" to="/zhsq_admin/system-manage"></router-link> -->
+        <span v-if="type==2" class="layout-logo ghdw" @click="linkTo"></span>
+        <span v-else-if="type==3" class="layout-logo zhqq" @click="linkTo"></span>
+        <span v-else class="layout-logo" @click="linkTo"></span>
         <span class="navbar-title">
           {{title}} —
           <small>管理平台</small>
@@ -50,6 +51,11 @@ export default {
     title: {
       type: String,
       default: '重庆市综合市情管理系统'
+    }
+  },
+  computed: {
+    type() {
+      return this.$route.query.type
     }
   },
   created() {

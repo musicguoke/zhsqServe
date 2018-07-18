@@ -2,8 +2,8 @@
   <div class="container">
     <img class="bg" src="static/images/bg.png" alt="">
     <header>
-      <img src="../../assets/logo.png">
-      <h2>重庆市综合市情系统</h2>
+      <!-- <img src="../../assets/logo.png">
+      <h2>重庆市综合市情系统</h2> -->
     </header>
     <div class="login">
       <img class="login-bg" src="static/images/leftImg.png">

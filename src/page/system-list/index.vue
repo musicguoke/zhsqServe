@@ -3,9 +3,8 @@
     <Header>
       <div class="container">
         <div class="navbar-logo">
-          <div class="layout-logo"></div>
+          <!-- <div class="layout-logo"></div> -->
           <span class="navbar-title">
-            系统
             <small>管理平台</small>
           </span>
         </div>
