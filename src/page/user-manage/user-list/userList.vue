@@ -70,7 +70,7 @@
                         <FormItem label="座机">
                             <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
                         </FormItem>
-                        <FormItem label="邮箱" prop="arEmail">
+                        <FormItem label="邮箱">
                             <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
                         </FormItem>
                     </Form>
@@ -129,7 +129,7 @@
                 <FormItem label="座机">
                     <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
                 </FormItem>
-                <FormItem label="邮箱" prop="arEmail">
+                <FormItem label="邮箱">
                     <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
                 </FormItem>
             </Form>
