@@ -56,7 +56,7 @@
           系统监控
       </template>
       <MenuItem name="sever-monitor">服务监控</MenuItem>
-      <MenuItem name="7-2">硬件监控</MenuItem>
+      <!-- <MenuItem name="7-2">硬件监控</MenuItem> -->
     </Submenu>
     <Submenu name="8">
       <template slot="title">

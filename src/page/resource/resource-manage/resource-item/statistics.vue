@@ -86,7 +86,7 @@
           <div class="importSlotTitle">导入须知</div>
           <p>1、导入文件大小不超过2MB.</p>
           <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
-            <a :href="`${uploadUrl}/sys/msTabDataController/downloadImportedFile.do`" download="ms_branch_struct.xlsx">点此下载.</a>
+            <a :href="`${uploadUrl}/sys/msStatisticalConfigController/downloadImportedFile.do`" download="ms_branch_struct.xlsx">点此下载.</a>
           </p>
         </div>
       </Form>

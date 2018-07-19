@@ -53,7 +53,7 @@
 import DragTree from '@/components/tree/index.js'
 import MyDragTree from '@/components/DragTree/myDragTree'
 import TreeTable from '@/components/my-tree/index'
-import { getByIdOrDataId, getMsTabDatainfoById, getAreaList, getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
+import { getByIdOrDataId, getMsTabDatainfoById, getAreaList, getDataTreeAllBySysId, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -84,7 +84,7 @@ export default {
     TreeTable
   },
   created() {
-    this._getAreaCatalog()
+    this._getDataTreeAllBySysId()
     this._getCatalogBySysId()
   },
   computed: {
@@ -99,8 +99,8 @@ export default {
     ])
   },
   methods: {
-    _getAreaCatalog(id) {
-      getAreaCatalog(id).then(res => {
+    _getDataTreeAllBySysId(id) {
+      getDataTreeAllBySysId(id).then(res => {
         this.dataTree = this.changeListId(res)
       })
     },

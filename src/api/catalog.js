@@ -27,6 +27,15 @@ export function getAreaCatalog() {
   })
 }
 
+// 获取目录带区域
+export function getDataTreeAllBySysId() {
+
+  return axios.post(
+    `${url}/sys/msTabDataController/getDataTreeAllBySysId.do`).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
 // 根据编号获取目录信息
 export function getByIdOrDataId(id, dataId) {
   const data = {

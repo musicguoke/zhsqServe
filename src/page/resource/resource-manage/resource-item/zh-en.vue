@@ -5,9 +5,9 @@
       <el-table :data="list" border style="width: 100%">
         <el-table-column prop="listorder" width="80" label="排序" sortable>
         </el-table-column>
-        <el-table-column prop="name" label="中文名">
+        <el-table-column prop="nameA" label="中文名">
         </el-table-column>
-        <el-table-column prop="nameA" label="英文名">
+        <el-table-column prop="name" label="英文名">
         </el-table-column>
         <el-table-column prop="layerType" label="表名" sortable>
         </el-table-column>
@@ -68,7 +68,7 @@
           <div class="importSlotTitle">导入须知</div>
           <p>1、导入文件大小不超过2MB.</p>
           <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
-            <a :href="`${uploadUrl}/sys/msTabDataController/downloadImportedFile.do`" download="ms_branch_struct.xlsx">点此下载.</a>
+            <a :href="`${uploadUrl}/sys/msThematicMap/downloadImportedFile.do`" download="ms_branch_struct.xlsx">点此下载.</a>
           </p>
         </div>
       </Form>

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getAreaCatalog } from '@/api/catalog'
+import { getDataTreeAllBySysId } from '@/api/catalog'
 import TreeTable from '@/components/my-tree/index'
 
 export default {
@@ -40,14 +40,14 @@ export default {
     }
   },
   created() {
-    this._getAreaCatalog(-1)
+    this._getDataTreeAllBySysId(-1)
   },
   methods: {
     selectDataConfig() {
 
     },
-    _getAreaCatalog(id) {
-      getAreaCatalog(id).then(res => {
+    _getDataTreeAllBySysId(id) {
+      getDataTreeAllBySysId(id).then(res => {
         this.dataTree = res
       })
     }
