@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-search :search-show="false" :build-show="false" :delete-show="false" @on-import="importCatalog" />
     <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick" @on-expand-click="loadData"></tree-table>
     <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
       <h3 slot="header" style="color:#2D8CF0">修改目录</h3>
@@ -62,8 +63,9 @@
 <script>
 import { url } from '@/api/config.js'
 import TreeTable from '@/components/my-tree/index'
+import vSearch from '@/components/search'
 import { getDateTree } from '@/api/system'
-import { 
+import {
   getAreaList,
   getAreaCatalog,
   getMsTabDatainfoById,
@@ -75,7 +77,8 @@ import { getDataTypeList } from '@/api/data-type'
 
 export default {
   components: {
-    TreeTable
+    TreeTable,
+    vSearch
   },
   data() {
     return {
@@ -95,10 +98,6 @@ export default {
       editItemForm: {},
       dataColumns: [
         {
-          type: 'selection',
-          width: '50',
-        },
-        {
           title: '数据名称',
           key: 'title'
         }, {
@@ -117,10 +116,6 @@ export default {
           actions: [{
             type: 'primary',
             text: '编辑'
-          }, {
-            type: 'success',
-            text: '导入',
-            key: 'parentId'
           }, {
             type: 'error',
             text: '删除'
@@ -151,6 +146,9 @@ export default {
       }
       this._updateMsTabDatainfo(data)
     },
+    importCatalog() {
+      this.importModal = true
+    },
     handleSuccessUpload(response, file) {
       console.log('上传成功')
     },
@@ -168,7 +166,7 @@ export default {
         // 向 formData 对象中添加文件
         formData.append('file', this.importFile.file)
         formData.append('type', this.importFile.type)
-        formData.append('areaCode', this.importFile.areacode)
+        formData.append('areaCode', -1)
         this._importMsTabFile(formData)
       }
     },
@@ -183,9 +181,6 @@ export default {
         })
       } else if (e.target.innerText === '编辑') {
         this._getMsTabDatainfoById(item.id)
-      } else if (e.target.innerText === '导入') {
-        this.importFile.areacode = item.id
-        this.importModal = true
       }
     },
     loadData(item, index) {

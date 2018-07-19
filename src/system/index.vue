@@ -4,7 +4,7 @@
       <v-header :title="name"/>
       <div class="navbar">
         <div class="container">
-          <v-menu :query="this.$route.query"/>
+          <v-menu />
         </div>
       </div>
       <div class="content">

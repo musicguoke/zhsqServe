@@ -6,7 +6,7 @@
             <BreadcrumbItem>{{systemInfo.systemName}}</BreadcrumbItem>
         </Breadcrumb>
         <Card :style="{maxHeight:managerHeight}">
-            <v-search :delete-show="false" :searchShow="false" :importShow="false" @on-delete="deleteMany" @on-build="severMonitorDetailAddOpen" />
+            <v-search v-if="userinfo.role!==3" :delete-show="false" :searchShow="false" :importShow="false" @on-delete="deleteMany" @on-build="severMonitorDetailAddOpen" />
             <div class="tableSize">
                 <el-table :data="severDetailData" border style="width: 100%">
                     <el-table-column prop="id" label="序号" sortable>
@@ -120,6 +120,11 @@ export default {
                 { text: '数据库服务', value: '数据库服务' },
                 { text: 'web应用系统服务', value: 'web应用系统服务' }
             ]
+        }
+    },
+    computed: {
+        userinfo() {
+            return JSON.parse(localStorage.getItem('userInfo'))
         }
     },
     created() {

@@ -4,7 +4,7 @@
       <BreadcrumbItem>目录管理</BreadcrumbItem>
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
-    <div class="table-box" v-if="role == 3">
+    <div class="table-box" v-if="userinfo.role == 3">
       <Card :style="{maxHeight: contentHeight}">
         <tree-table v-if="dragTreeData.length>0" :items='dragTreeData' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
         <Alert show-icon v-else>暂无发布目录</Alert>
@@ -91,8 +91,8 @@ export default {
     list() {
       return this.$store.state.dragTreeData
     },
-    role() {
-      return JSON.parse(localStorage.getItem('userInfo')).role
+    userinfo() {
+      return JSON.parse(localStorage.getItem('userInfo'))
     },
     ...mapGetters([
       'dragTreeData'

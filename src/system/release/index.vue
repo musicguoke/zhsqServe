@@ -5,8 +5,9 @@
       <BreadcrumbItem>专题目录</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
-      <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="build" />
-      <tree-table ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
+      <v-search v-if="userinfo.role!==3" :search-show="false" :delete-show="false" :import-show="false" @on-build="build" />
+      <tree-table v-if="userinfo.role!==3" ref="treeTable" :items='data3' :columns='dataColumns' @on-row-click="rowClick"></tree-table>
+      <tree-table v-else ref="treeTable" :items='data3' :columns='columns'></tree-table>
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
         <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right" :rules="catalogValidate">
@@ -158,7 +159,24 @@ export default {
           }],
           width: 120
         }
+      ],
+      columns: [
+        {
+          title: '数据名称',
+          key: 'dpName'
+        }, {
+          title: '数据类型',
+          key: 'dpType'
+        }, {
+          title: '排序',
+          key: 'dpListorder'
+        }
       ]
+    }
+  },
+  computed: {
+    userinfo() {
+      return JSON.parse(localStorage.getItem('userInfo'))
     }
   },
   created() {
