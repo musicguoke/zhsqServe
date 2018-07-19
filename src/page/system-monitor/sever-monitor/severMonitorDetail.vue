@@ -123,7 +123,7 @@ export default {
         }
     },
     created() {
-        this.systemInfo = this.$route.params
+        this.systemInfo = this.$route.query
         this._getSeverMonitorDetail(1)
     },
     methods: {
