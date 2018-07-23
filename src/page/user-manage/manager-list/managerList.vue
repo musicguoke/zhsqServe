@@ -66,7 +66,7 @@
             <FormItem label="手机号" prop="tel">
                 <Input v-model="managerForm.tel" placeholder="请输入手机号"></Input>
             </FormItem>
-            <FormItem label="邮箱" prop="email">
+            <FormItem label="邮箱">
                 <Input v-model="managerForm.email" placeholder="请输入邮箱"></Input>
             </FormItem>
         </Form>
