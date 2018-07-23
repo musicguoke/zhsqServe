@@ -11,7 +11,18 @@
           目录管理
       </template>
       <MenuItem name="content-list">资源目录</MenuItem>
-      <MenuItem name="modify">发布目录</MenuItem>
+      <MenuItem
+        name="modify"
+        v-if="userinfo.role!==3&&Number(query.type)!==2"
+      >
+        发布目录
+      </MenuItem>
+      <MenuItem
+        name="modify"
+        v-else-if="Number(query.type)!==2"
+      >
+        发布目录
+      </MenuItem>
       <MenuItem name="release">专题目录</MenuItem>
     </Submenu>
     <Submenu name="2">
@@ -48,28 +59,30 @@
       <MenuItem name="search-statistics">搜索访问</MenuItem>
       <!-- <MenuItem name="5-3">用户轨迹</MenuItem> -->
     </Submenu>
-    <Submenu name="6">
+    <!-- <Submenu name="6">
       <template slot="title">
         <Icon type="disc"></Icon>
           系统监控
       </template>
-      <MenuItem name="7-1">服务监控</MenuItem>
+      <MenuItem name="sever-monitor">服务监控</MenuItem>
       <MenuItem name="7-2">硬件监控</MenuItem>
-    </Submenu>
+    </Submenu> -->
   </Menu>  
 </template>
 
 <script>
 export default {
-  props: {
-    query: {
-      type: Object,
-      default: {}
-    }
-  },
   data() {
     return {
       theme1: 'light'
+    }
+  },
+  computed: {
+    userinfo() {
+      return JSON.parse(localStorage.getItem('userInfo'))
+    },
+    query() {
+      return this.$route.query
     }
   },
   methods: {

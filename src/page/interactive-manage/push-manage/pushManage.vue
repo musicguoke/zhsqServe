@@ -6,7 +6,7 @@
         </Breadcrumb>
         <Card :style="{maxHeight:pushManageHeight}">
             <div>
-                <v-search :search-show="false" :import-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="pushAddOpen" />
+                <v-search v-if="userinfo.role!==3" :search-show="false" :import-show="false" :disabled="selectedId.length <= 0" @on-delete="deleteMany" @on-build="pushAddOpen" />
                 <div class="tableSize">
                     <el-table :data="pushData" border style="width: 100%" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="55">
@@ -21,7 +21,7 @@
                         </el-table-column>
                         <el-table-column prop="pContent" label="内容" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column label="操作" width="160" align="center">
+                        <el-table-column v-if="userinfo.role!==3" label="操作" width="160" align="center">
                             <template slot-scope="scope">
                                 <Button type="error" @click="remove(scope)" size="small">删除</Button>
                             </template>
@@ -124,9 +124,9 @@ export default {
             modalTitle: '',
             isGroup: true,
             pushData: [],
-            sysData:[],
+            sysData: [],
             roleData: [],
-            sysData:[],
+            sysData: [],
             userData: [],
             countyList: [],
             selectUserList: { userName: [], userIds: [] },
@@ -134,16 +134,21 @@ export default {
             total: 0,
             nowPage: 1,
             pushForm: {
-                pSys:'',
-                pGroupList:[],
-                pGroup:'',
+                pSys: '',
+                pGroupList: [],
+                pGroup: '',
                 pRemark: '',
-                pType:'',
+                pType: '',
                 pContent: '',
                 userIds: '',
-                pGoalType:''
+                pGoalType: ''
             },
             selectedId: []
+        }
+    },
+    computed: {
+        userinfo() {
+            return JSON.parse(localStorage.getItem('userInfo'))
         }
     },
     created() {
@@ -157,7 +162,7 @@ export default {
                 })
             }
         })
-        if(this.$route.query.id){
+        if (this.$route.query.id) {
             getRolesList().then(res => {
                 res.data.list.map(v => {
                     this.roleData.push({
@@ -219,12 +224,12 @@ export default {
                 }
             }
         },
-        openGetUser(){
-            if(this.pushForm.pSys || this.$route.query.id){
+        openGetUser() {
+            if (this.pushForm.pSys || this.$route.query.id) {
                 this.chooseUserModal = true
                 this.searchUserName = ''
                 this._getUserList(1)
-            }else{
+            } else {
                 this.$Message.error('请先选择系统')
             }
         },
@@ -234,7 +239,7 @@ export default {
                 pageNo: page,
                 pageSize: 10,
                 arTruename: this.searchUserName,
-                sysIdList:this.pushForm.pSys?this.pushForm.pSys:''
+                sysIdList: this.pushForm.pSys ? this.pushForm.pSys : ''
             }
             getUserList(data).then(res => {
                 this.userData = []
@@ -312,7 +317,7 @@ export default {
             })
         },
         //通过系统id过滤角色
-        filterGroup(){
+        filterGroup() {
             this.roleData = []
             getRolesList(this.pushForm.pSys).then(res => {
                 res.data.list.map(v => {
@@ -324,10 +329,10 @@ export default {
             })
         },
         //选择用户组
-        getGroupInfo(data){
+        getGroupInfo(data) {
             let id = []
             let name = []
-            data.map(v=>{
+            data.map(v => {
                 id.push(v.value)
                 name.push(v.label)
             })
@@ -359,10 +364,10 @@ export default {
         //推送点击保存
         savePushMessage() {
             let data = {
-                pGroupStr:Array.from(this.pushForm.pGroupList).join(","),
+                pGroupStr: Array.from(this.pushForm.pGroupList).join(","),
                 pRemark: this.pushForm.pRemark,
                 pType: this.pushForm.pType,
-                sysId:this.$route.query.id?this.$route.query.id:this.pushForm.pSys,
+                sysId: this.$route.query.id ? this.$route.query.id : this.pushForm.pSys,
                 pContent: this.pushForm.pContent,
                 userIds: this.pushForm.userIds
             }

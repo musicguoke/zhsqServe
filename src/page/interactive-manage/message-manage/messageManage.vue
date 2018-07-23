@@ -6,7 +6,7 @@
     </Breadcrumb>
     <Card :style="{maxHeight:messageManageHeight}">
       <div>
-        <div  style="margin-bottom:10px;display:flex;justify-content: space-between">
+        <div v-if="userinfo.role!==3" style="margin-bottom:10px;display:flex;justify-content: space-between">
           <div class="search-box">
             <Input v-model="searchName" placeholder="请输入电话号码查询..." style="width: 200px" />
             <span style="margin: 0 10px;">
@@ -133,6 +133,11 @@ export default {
         ]
      }
     };
+  },
+  computed: {
+    userinfo() {
+      return JSON.parse(localStorage.getItem('userInfo'))
+    }
   },
   created() {
     this._getMessageList(1);

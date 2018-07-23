@@ -101,8 +101,12 @@ export const configMixin = {
   created() {
     this.sys = this.$route.query.id || ''
     this.type = this.$route.query.type || ''
-    this.sysFunNum = this.$route.query.funNum || null
-    if(this.sysFunNum) {
+    if(this.$route.query.funNum == 0) {
+      this.sysFunNum = this.$route.query.funNum
+    } else {
+      this.sysFunNum = this.$route.query.funNum || null
+    }
+    if(this.sysFunNum || this.sysFunNum == 0) {
       if(this.sysFunNum <= 10) {
         this.levelNum = 0
       } else if(this.sysFunNum > 10 && this.sysFunNum <= 20) {

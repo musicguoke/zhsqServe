@@ -4,7 +4,7 @@
       <BreadcrumbItem>目录管理</BreadcrumbItem>
       <BreadcrumbItem>发布目录</BreadcrumbItem>
     </Breadcrumb>
-    <div class="table-box" v-if="role == 3">
+    <div class="table-box" v-if="userinfo.role == 3">
       <Card :style="{maxHeight: contentHeight}">
         <tree-table v-if="dragTreeData.length>0" :items='dragTreeData' :columns='dataColumns' @on-selection-change='selectDataConfig'></tree-table>
         <Alert show-icon v-else>暂无发布目录</Alert>
@@ -53,7 +53,7 @@
 import DragTree from '@/components/tree/index.js'
 import MyDragTree from '@/components/DragTree/myDragTree'
 import TreeTable from '@/components/my-tree/index'
-import { getByIdOrDataId, getMsTabDatainfoById, getAreaList, getAreaCatalog, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
+import { getByIdOrDataId, getMsTabDatainfoById, getAreaList, getDataTreeAllBySysId, getCatalogBySysId, saveCatalogBySelf } from '@/api/catalog'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -84,23 +84,23 @@ export default {
     TreeTable
   },
   created() {
-    this._getAreaCatalog()
+    this._getDataTreeAllBySysId()
     this._getCatalogBySysId()
   },
   computed: {
     list() {
       return this.$store.state.dragTreeData
     },
-    role() {
-      return JSON.parse(localStorage.getItem('userInfo')).role
+    userinfo() {
+      return JSON.parse(localStorage.getItem('userInfo'))
     },
     ...mapGetters([
       'dragTreeData'
     ])
   },
   methods: {
-    _getAreaCatalog(id) {
-      getAreaCatalog(id).then(res => {
+    _getDataTreeAllBySysId(id) {
+      getDataTreeAllBySysId(id).then(res => {
         this.dataTree = this.changeListId(res)
       })
     },

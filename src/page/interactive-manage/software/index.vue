@@ -5,7 +5,8 @@
       <BreadcrumbItem>软件版本</BreadcrumbItem>
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
-      <v-search 
+      <v-search
+        v-if="userinfo.role!==3"
         :search-show="false"
         :import-show="false"
         @on-build="build"
@@ -25,7 +26,7 @@
           </el-table-column>
           <el-table-column prop="vAddtime" label="添加时间" sortable>
           </el-table-column>
-          <el-table-column label="操作" width="160" align="center">
+          <el-table-column v-if="userinfo.role!==3" label="操作" width="160" align="center">
             <template slot-scope="scope">
               <Button type="primary" @click="detail(scope.row)" size="small" class="marginRight">查看</Button>
               <Button type="error" @click="remove(scope.row)" size="small">删除</Button>
@@ -114,6 +115,11 @@ export default {
         vSourcename: '',
         sysIdStr: ''
       }
+    }
+  },
+  computed: {
+    userinfo() {
+      return JSON.parse(localStorage.getItem('userInfo'))
     }
   },
   created() {
