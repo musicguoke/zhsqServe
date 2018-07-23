@@ -2,8 +2,8 @@
   <Header>
     <div class="container">
       <div class="navbar-logo">
-        <span v-if="type==2" class="layout-logo ghdw" @click="linkTo"></span>
-        <span v-else-if="type==3" class="layout-logo zhqq" @click="linkTo"></span>
+        <span v-if="query==2" class="layout-logo ghdw" @click="linkTo"></span>
+        <span v-else-if="query==3" class="layout-logo zhqq" @click="linkTo"></span>
         <span v-else class="layout-logo" @click="linkTo"></span>
         <span class="navbar-title">
           {{title}} —
@@ -54,8 +54,8 @@ export default {
     }
   },
   computed: {
-    type() {
-      return this.$route.query.type
+    query() {
+      return this.$route.query
     }
   },
   created() {
@@ -65,14 +65,19 @@ export default {
   },
   methods: {
     linkTo() {
-      if(this.userInfo.role !== 3) {
+      if (this.userInfo.role !== 3) {
         this.$router.push('/zhsq_admin/system-manage')
       }
     },
     showMessage() {
-      this.$router.push({
-        name: 'Message'
-      });
+      if (this.query.id) {
+        this.$router.push({
+          path: `/system/message`,
+          query: this.query
+        })
+      } else {
+        this.$router.push({ name: 'Message' })
+      }
     },
     userClick(name) {
       if (name === 'logout') {
@@ -85,7 +90,14 @@ export default {
         })
       }
       if (name === 'personal-center') {
-        this.$router.push(`/zhsq_admin/${name}`)
+        if (this.query.id) {
+          this.$router.push({
+            path: `/system/${name}`,
+            query: this.query
+          })
+        } else {
+          this.$router.push(`/zhsq_admin/${name}`)
+        }
       }
     },
     _logout() {

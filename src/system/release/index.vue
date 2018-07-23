@@ -11,7 +11,7 @@
       <Modal v-model="editItemModal" :closable='false' :mask-closable=false :width="500">
         <h3 slot="header" style="color:#2D8CF0">目录信息</h3>
         <Form ref="editItemForm" :model="editItemForm" :label-width="100" label-position="right" :rules="catalogValidate">
-          <FormItem v-if="!isAdd" label="id" prop="dpId">
+          <FormItem v-show="!isAdd" label="id" prop="dpId">
             <Input v-model="editItemForm.dpId" readonly></Input>
           </FormItem>
           <FormItem label="名称" prop="dpName">
@@ -32,11 +32,11 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem v-if="!isAdd" label="添加时间">
+          <FormItem v-show="!isAdd" label="添加时间">
             <Input v-model="dpAddtime" readonly></Input>
           </FormItem>
-          <FormItem v-if="!isAdd" label="图片地址">
-            <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath" style="width: 70%"></Input>
+          <FormItem v-show="!isAdd" label="图片地址">
+            <Input placeholder="上传后的地址" v-model="editItemForm.dpImagePath"></Input>
             <Upload :action="`${uploadUrl}/sys/file/upload.do`" with-credentials :show-upload-list="true" :on-success="handleSuccess">
               <Button type="ghost" style="display: inline" icon="ios-cloud-upload-outline">点击上传</Button>
             </Upload>
@@ -47,7 +47,14 @@
           <Button type="primary" :loading="savePassLoading" @click="saveEditPass">保存</Button>
         </div>
       </Modal>
-      <Modal v-model="editCatalogModal" :closable='false' :mask-closable=false :width="500" @on-ok="saveCatalog" @on-cancel="cancelEdit">
+      <Modal
+        v-model="editCatalogModal"
+        :closable='false'
+        :mask-closable=false 
+        :width="500"
+        @on-ok="saveCatalog"
+        @on-cancel="cancelEdit"
+      >
         <h3 slot="header" style="color:#2D8CF0">数据目录</h3>
         <Form :label-width="100" label-position="right">
           <FormItem label="数据名称">
@@ -59,7 +66,6 @@
           </tree-table>
         </Form>
       </Modal>
-
     </Card>
   </div>
 </template>
@@ -191,13 +197,13 @@ export default {
       this.editItemModal = true
     },
     cancelEdit() {
+      this.$refs['editItemForm'].resetFields()
       this.editItemModal = false
-      this.cancelCatalog = false
-      this.editItemForm = {
-        dpName: '',
-        dpType: '',
-        dpListorder: ''
-      }
+      // this.editItemForm = {
+      //   dpName: '',
+      //   dpType: '',
+      //   dpListorder: ''
+      // }
     },
     saveEditPass() {
       if (this.isAdd) {
@@ -321,7 +327,7 @@ export default {
       updateTopicData(data).then(res => {
         if (res.code === 20000) {
           this.$Message.success(`修改${res.message}`)
-          this.editItemModal = false
+          this.cancelEdit()
           this._getTopicDataTree()
         } else {
           this.$Message.error(`修改${res.message}`)
