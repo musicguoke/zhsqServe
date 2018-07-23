@@ -121,7 +121,7 @@ export default {
   methods: {
     save() {
       if(this.itemInfo.status % 2 == 1) {
-        this.modalShow = false
+        this.cancelEditPass()
         return 
       }
       this.$refs['itemInfo'].validate((valid) => {
@@ -137,6 +137,7 @@ export default {
     },
     cancelEditPass() {
       this.modalShow = false
+      this.$refs.itemInfo.resetFields()
     },
     deleteSys(row) {
       this.$Modal.confirm({

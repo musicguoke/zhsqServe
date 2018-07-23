@@ -57,6 +57,42 @@
         </div>
       </Form>
     </Modal>
+    <Modal v-model="layerModal" :closable='false' :mask-closable="false" :width="500">
+      <h3 slot="header" style="color:#2D8CF0">图层信息</h3>
+      <el-table :data="layerList" border style="width: 100%">
+        <el-table-column prop="id" label="ID" width="60" sortable>
+        </el-table-column>
+        <el-table-column prop="layer" label="图层">
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <Button type="primary" size="small" @click="checkLayer(scope)">查看</Button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </Modal>
+    <Modal
+      v-model="layerFieldsModal"
+      :closable='false'
+      :mask-closable="false"
+      :width="700"
+      @on-ok="clickFieldsModal"
+      @on-cancel="clickFieldsModal"
+    >
+      <h3 slot="header" style="color:#2D8CF0">图层信息</h3>
+      <el-table :data="layerFields" border style="width: 100%" height="400">
+        <el-table-column prop="listorder" width="80" label="排序" sortable>
+        </el-table-column>
+        <el-table-column prop="nameA" width="150" label="中文名">
+        </el-table-column>
+        <el-table-column prop="name" width="80" label="英文名">
+        </el-table-column>
+        <el-table-column prop="layerType" label="表名">
+        </el-table-column>
+        <el-table-column prop="fieldType" width="80" label="字段类型">
+        </el-table-column>
+      </el-table>
+    </Modal>
   </div>
 </template>
 
@@ -71,7 +107,9 @@ import {
   getMsTabDatainfoById,
   updateMsTabDatainfo,
   deleteMsTabDatainfo,
-  importMsTabFile
+  importMsTabFile,
+  getSourceLayer,
+  getSourceLayerFields
 } from '@/api/catalog'
 import { getDataTypeList } from '@/api/data-type'
 
@@ -86,6 +124,10 @@ export default {
       code: '',
       searchName: '',
       editItemModal: false,
+      layerModal: false,
+      layerFieldsModal: false,
+      layerList: [],
+      layerFields: [],
       importModal: false,
       uploadUrl: url,
       dataTypeList: [],
@@ -116,6 +158,9 @@ export default {
           actions: [{
             type: 'primary',
             text: '编辑'
+          }, {
+            type: 'success',
+            text: '查看图层'
           }, {
             type: 'error',
             text: '删除'
@@ -181,6 +226,12 @@ export default {
         })
       } else if (e.target.innerText === '编辑') {
         this._getMsTabDatainfoById(item.id)
+      } else if (e.target.innerText === '查看图层') {
+        if (!item.datapath) {
+          this.$Message.error('暂无图层地址')
+          return
+        }
+        this._getSourceLayer(item.datapath)
       }
     },
     loadData(item, index) {
@@ -265,6 +316,38 @@ export default {
           this._getAreaCatalog()
         } else {
           this.$Message.error(res.message)
+        }
+      })
+    },
+    _getSourceLayer(src) {
+      getSourceLayer(src).then(res => {
+        if (res.code === 20000) {
+          this.layerList = []
+          this.layerFields = []
+          res.data.map((v, index) => {
+            let temp = {
+              id: index + 1,
+              layer: v
+            }
+            this.layerList.push(temp)
+          })
+          this.layerModal = true
+        }
+      })
+    },
+    checkLayer(scope) {
+      this._getSourceLayerFields(scope.row.layer)
+    },
+    clickFieldsModal() {
+      this.layerModal = true
+      this.layerFieldsModal = false
+    },
+    _getSourceLayerFields(type) {
+      getSourceLayerFields(type).then(res => {
+        if (res.code === 20000) {
+          this.layerFields = res.data
+          this.layerModal = false
+          this.layerFieldsModal = true
         }
       })
     }
