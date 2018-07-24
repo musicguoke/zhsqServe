@@ -2,7 +2,8 @@ const store = new Vuex.Store({
   state: {
     dragTreeData: [],
     dragTreeNodeHeight: 0,
-    dragTreeOffsetX: 0
+    dragTreeOffsetX: 0,
+    unread: 0
   },
   mutations: {
     setDragTreeNodeHeight (state, value) {
@@ -13,6 +14,9 @@ const store = new Vuex.Store({
     },
     setDragTreeOffsetX (state, value) {
       state.dragTreeOffsetX = value
+    },
+    setUnread(state, value) {
+      state.unread = value
     }
   },
   getters: {

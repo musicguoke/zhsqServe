@@ -48,6 +48,7 @@ import {
 } from '@/api/system'
 import AuthorityConfig from '@/components/authority-config/index'
 import vSearch from '@/components/search/index'
+import { unreadSuggestList } from '@/api/suggest'
 
 export default {
   components: {
@@ -157,6 +158,13 @@ export default {
         }
       })
     },
+    _unreadSuggestList(page) {
+      unreadSuggestList(page).then(res => {
+        if (res.code === 20000) {
+          this.$store.commit('setUnread', res.data)
+        }
+      })
+    },
     _enterSystem(data) {
       let id = ''
       if (data) {
@@ -164,6 +172,7 @@ export default {
       }
       enterSystem(id).then(res => {
         if (res.code === 20000) {
+          this._unreadSuggestList()
           if (id) {
             this.$router.push({
               path: '/system',

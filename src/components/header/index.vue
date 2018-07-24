@@ -38,13 +38,11 @@
 
 <script>
 import { logout } from '@/api/service'
-import { unreadSuggestList } from '@/api/suggest'
 
 export default {
   data() {
     return {
-      userInfo: '',
-      unread: 0
+      userInfo: ''
     }
   },
   props: {
@@ -56,10 +54,12 @@ export default {
   computed: {
     query() {
       return this.$route.query
+    },
+    unread() {
+      return this.$store.state.unread
     }
   },
   created() {
-    this._unreadSuggestList()
     // 用户权限信息
     this.userInfo = JSON.parse(localStorage.getItem('userInfo')) || ''
   },
@@ -106,13 +106,6 @@ export default {
           this.$router.replace('/')
         } else {
           this.$Message.error(res.message)
-        }
-      })
-    },
-    _unreadSuggestList(page) {
-      unreadSuggestList(page).then(res => {
-        if (res.code === 20000) {
-          this.unread = res.data
         }
       })
     }
