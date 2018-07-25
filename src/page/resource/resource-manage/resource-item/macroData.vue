@@ -22,7 +22,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+            <Page :total="pageLength"  @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="macroPage"></Page>
         </div>
         <Modal v-model="macroDataModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="macroDataForm"  :label-width="100" style="max-height:400px;overflow:auto">
@@ -177,10 +177,12 @@ export default {
         search(searchName){
             this.searchName = searchName
             this._getMacroData(1)
+            this.$refs.macroPage.currentPage = 1
         },
         reset(){    
             this.searchName = ''
             this._getMacroData(1)
+            this.$refs.macroPage.currentPage = 1
         }
     }
 }

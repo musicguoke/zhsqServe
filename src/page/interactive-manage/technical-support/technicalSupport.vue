@@ -160,7 +160,7 @@ export default {
         },
         _deleteTechnicalSupports(id) {
             let data = {
-                ids: id
+                idStr: id
             }
             deleteTechnicalSupports(data).then(res => {
                 if (res.code === 20000) {

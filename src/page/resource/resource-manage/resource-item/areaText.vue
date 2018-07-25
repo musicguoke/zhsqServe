@@ -273,10 +273,12 @@ export default {
         search(searchName){
             this.searchName = searchName
             this._getAreaText(1)
+            this.$refs.areaTextPage.currentPage = 1
         },
         reset(){
             this.searchName = ''
             this._getAreaText(1)
+            this.$refs.areaTextPage.currentPage = 1
         }
     }
 }

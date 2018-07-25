@@ -36,7 +36,7 @@
                 <FormItem label="缩略图">
                     <Input v-model="imageSourceForm.thumbnailName" ></Input>
                 </FormItem>
-                <FormItem label="排序" prop="listorder">
+                <FormItem label="排序" >
                     <Input v-model="imageSourceForm.listorder" ></Input>
                 </FormItem>
             </Form>
@@ -105,10 +105,12 @@ export default {
         search(searchName){
             this.searchName = searchName
             this._getImageSource(1)
+           this.$refs.imagePage.currentPage = 1
         },
         reset(){
             this.searchName = ''
             this._getImageSource(1)
+            this.$refs.imagePage.currentPage = 1
         },
         //打开新增模态框
         openAddModal(){
