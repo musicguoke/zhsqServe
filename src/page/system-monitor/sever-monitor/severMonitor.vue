@@ -103,7 +103,7 @@ export default {
     },
     getSeverDetail(param) {
       this.$router.push({
-        name: 'SeverMonitor',
+        name: 'SeverMonitorDetail',
         query: param.row
       })
     }

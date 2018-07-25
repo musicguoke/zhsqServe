@@ -1,6 +1,14 @@
 <template>
   <div class="zh-en">
-    <v-search :search-show="false" :delete-show="false" @on-build="build" @on-import="importShow" />
+    <v-search
+      :search-show="false"
+      :export-show="true"
+      :delete-show="false"
+      :export-url="'/sys/msThematicMap/downloadImportedFile.do'" 
+      @on-export="exportFile"
+      @on-build="build"
+      @on-import="importShow"
+    />
     <div class="tableSize">
       <el-table :data="list" border style="width: 100%">
         <el-table-column prop="listorder" width="80" label="排序" sortable>
@@ -9,9 +17,15 @@
         </el-table-column>
         <el-table-column prop="name" label="英文名">
         </el-table-column>
-        <el-table-column prop="layerType" label="表名" sortable>
+        <el-table-column prop="layerType" width="300" label="表名" sortable>
         </el-table-column>
         <el-table-column prop="fieldType" label="字段类型" sortable>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <!-- <Button type="primary" @click="editData(scope.row)" size="small" class="marginRight" title="编辑">编辑</Button> -->
+            <Button type="error" @click="deleteData(scope.row)" size="small" title="删除">删除</Button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -79,7 +93,7 @@
 <script>
 import { url } from '@/api/config'
 import vSearch from '@/components/search/index'
-import { getZhEnList, addZhEn, uploadZhEnFile } from '@/api/zh-en'
+import { getZhEnList, addZhEn, uploadZhEnFile, deleteZhEn } from '@/api/zh-en'
 
 export default {
   components: {
@@ -107,6 +121,7 @@ export default {
         type: '2',
         file: ''
       },
+      downUrl: '',
       rules: {
         name: [
           { required: true, message: '请输入中文名', trigger: 'blur' }
@@ -158,6 +173,29 @@ export default {
         }
       })
     },
+    _deleteZhEn(data) {
+      deleteZhEn(data).then(res => {
+        if (res.code === 20000) {
+          this.$Message.success(res.message)
+          this._getZhEnList()
+        } else {
+          this.$Message.error(res.message)
+        }
+      })
+    },
+    deleteData(row) {
+      let data = {
+        name: row.name,
+        layer_type: row.layerType
+      }
+      this.$Modal.confirm({
+        content: '删除后数据无法恢复，是否继续？',
+        onOk: () => {
+          this._deleteZhEn(data)
+        },
+        onCancel: () => { }
+      })
+    },
     importShow() {
       this.importModalShow = true
     },
@@ -185,6 +223,9 @@ export default {
           this._addZhEn(this.itemInfo)
         }
       })
+    },
+    exportFile() {
+      this.downUrl = '/sys/msStatisticalConfigController/downloadImportedFile.do'
     },
     cancel() {
       this.modalShow = false

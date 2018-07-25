@@ -354,7 +354,7 @@ export default {
       })
       data.isChecked = !bol
       //所有父级节点也改变状态
-      if(this.buildSys && data.parent) {
+      if(data.parent) {
         this.handleParentCheck(data.parent, data.isChecked)
       }
       this.handleCheck(data, data.isChecked)
