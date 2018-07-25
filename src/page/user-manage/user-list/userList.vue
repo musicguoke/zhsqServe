@@ -530,12 +530,14 @@ export default {
             this.searchName = searchName
             this.filterByGrId = groupId
             this._getUserList(1)
+            this.$refs.userPage.currentPage = 1
         },
         //点击清空
         searchReset() {
             this.searchName = ''
             this.filterByGrId = ''
             this._getUserList(1)
+            this.$refs.userPage.currentPage = 1
         },
         //设备列表
         equipmentOpen(params) {
@@ -596,6 +598,7 @@ export default {
             return row.name === value;
         },
         _getUserList(page) {
+            console.log(page)
             let data = {
                 methods: 'list',
                 pageNo: page || this.nowPage,

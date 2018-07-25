@@ -23,3 +23,8 @@ export function addSeverMonitorDetail(data) {
         return Promise.resolve(res.data)
     })
 }
+export function deleteSeverMonitorDetail(data) {
+    return axios.post(`${url}/sys/systemMonitor/delete.do`, qs.stringify(data)).then(res => {
+        return Promise.resolve(res.data)
+    })
+}

@@ -28,7 +28,7 @@
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <Button type="primary" @click="editSeverDetail(scope)" size="small">编辑</Button>
-                            <Button type="error" @click="remove(scope)" size="small">删除</Button>
+                            <Button type="error" @click="removeMonitor(scope.row)" size="small">删除</Button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { getSeverMonitorDetail, addSeverMonitorDetail } from '@/api/sever-monitor.js'
+import { getSeverMonitorDetail, addSeverMonitorDetail,deleteSeverMonitorDetail} from '@/api/sever-monitor.js'
 import vSearch from '@/components/search/index'
 export default {
     components: {
@@ -202,7 +202,6 @@ export default {
             let successMgs = ''
             let errorMgs = ''
             if (this.isAdd) {
-                data.id = ''
                 data.cmd = 'new'
                 successMgs = '添加成功'
                 errorMgs = '添加失败'
@@ -220,6 +219,26 @@ export default {
                     this.$Message.error(errorMgs);
                 }
             })
+        },
+        removeMonitor(params){
+            this.$Modal.confirm({
+                content: '删除后数据无法恢复，是否继续？',
+                onOk: () => {
+                    let data = {
+                        ids:params.id
+                    }
+                    deleteSeverMonitorDetail(data).then(res=>{
+                        if(res.success){
+                            this.$Message.success('删除成功')
+                            this._getSeverMonitorDetail(1)
+                        }else{
+                            this.$Message.error('删除失败')
+                        }
+                    })
+                },
+                onCancel: () => {            
+                }
+            });   
         },
         filterTag(value, row) {
             return row.monitorTypeName === value;

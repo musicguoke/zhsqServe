@@ -36,7 +36,7 @@
           </el-table>
         </div>
         <div class="tablePage">
-          <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator></Page>
+          <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="messagePage"></Page>
         </div>
       </div>
   </div>
@@ -169,6 +169,7 @@ export default {
     search(){
       if(this.searchName){
         this._getMessageList(1)
+        this.$refs.messagePage.currentPage = 1
       }else{
         this.$Message.error('请输入搜索号码')
       }
@@ -176,6 +177,7 @@ export default {
     reset(){
       this.searchName = ''
       this._getMessageList(1)
+      this.$refs.messagePage.currentPage = 1
     },
     messageAddOpen() {
       this.modalTitle = '发送短信'
