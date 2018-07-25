@@ -6,7 +6,7 @@
         </Breadcrumb>
         <Card :style="{maxHeight:userListHeight}">
             <v-search :importShow="!isProduct"  :deleteShow="false" :selectShow="isProduct" :conditionExportShow="true" :selectList="groupSingleFilterList" 
-            @on-export="openExportModal" @on-import="openImportModal"  @on-change="filterByRole"
+            @on-export="openExportModal" @on-import="openImportModal" 
             @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
@@ -328,7 +328,7 @@ export default {
             groupList: [],
             groupSingleList: [],
             groupImportOrExportList:[],
-            groupSingleFilterList:[{value:'',label:'全部'}],
+            groupSingleFilterList:[{value:'0',label:'全部'}],
             sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
             nowSystemLength: 1,
@@ -528,7 +528,7 @@ export default {
         //点击搜索
         search(searchName,groupId) {
             this.searchName = searchName
-            this.filterByGrId = groupId == '0'?'':groupId
+            this.filterByGrId = groupId
             this._getUserList(1)
         },
         //点击清空
@@ -601,7 +601,7 @@ export default {
                 pageNo: page || this.nowPage,
                 pageSize: 10,
                 arTruename: this.searchName,
-                grId:this.filterByGrId
+                grId:this.filterByGrId == 0?'':this.filterByGrId
             }
             getUserList(data).then(res => {
                 this.userData = []

@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     handleSearch() {
-      if(this.searchContent === '' && this.selectFilter == '') {
+      if(this.searchContent === '' && (this.selectFilter === ''|| this.selectFilter === undefined || this.selectFilter === null)) {
         this.$Message.error('请输入搜索内容')
         return
       }
