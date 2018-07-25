@@ -33,7 +33,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getStatisticList" show-total show-elevator ref="page"></Page>
+      <Page :total="listLength" :current="nowPage" @on-change="_getStatisticList" show-total show-elevator ref="page"></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
       <h3 slot="header" style="color:#2D8CF0">统计配置</h3>
@@ -113,6 +113,7 @@ export default {
       listLength: '',
       selectedId: [],
       nowPage:'',
+      searchContent: null,
       itemInfo: {
         id: '',
         targetId: '',
@@ -138,14 +139,17 @@ export default {
   },
   methods: {
     search(name) {
-      this._getStatisticList('', name)
-    },
-    reset() {
+      this.searchContent = name
       this._getStatisticList()
     },
-    _getStatisticList(page, name) {
+    reset() {
+      this.searchContent = null
+      this.nowPage = 1
+      this._getStatisticList()
+    },
+    _getStatisticList(page) {
       this.nowPage = page
-      getStatisticList(page, name).then(res => {
+      getStatisticList(page, this.searchContent).then(res => {
         if (res.code === 20000) {
           this.list = res.data.list
           this.listLength = res.data.total

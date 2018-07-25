@@ -1,11 +1,12 @@
 <template>
   <div class="zh-en">
     <v-search
-      :search-show="false"
       :export-show="true"
       :delete-show="false"
       :export-url="'/sys/msThematicMap/downloadImportedFile.do'" 
       @on-export="exportFile"
+      @on-search="search"
+      @on-reset="reset"
       @on-build="build"
       @on-import="importShow"
     />
@@ -17,7 +18,9 @@
         </el-table-column>
         <el-table-column prop="name" label="英文名">
         </el-table-column>
-        <el-table-column prop="layerType" width="300" label="表名" sortable>
+        <el-table-column prop="layerType" width="300" label="表名">
+        </el-table-column>
+        <el-table-column prop="layerAlias" label="图层别名">
         </el-table-column>
         <el-table-column prop="fieldType" label="字段类型" sortable>
         </el-table-column>
@@ -30,7 +33,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getZhEnList" show-total show-elevator></Page>
+      <Page :total="listLength" :current="page" @on-change="_getZhEnList" show-total show-elevator></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">中英文信息</h3>
@@ -107,6 +110,8 @@ export default {
       importModalShow: false,
       list: [],
       listLength: '',
+      searchContent: null,
+      page: 1,
       itemInfo: {
         listorder: '',
         layerType: '',
@@ -143,7 +148,7 @@ export default {
   },
   methods: {
     _getZhEnList(page) {
-      getZhEnList(page).then(res => {
+      getZhEnList(page, this.searchContent).then(res => {
         if (res.code === 20000) {
           this.list = res.data.list
           this.listLength = res.data.total
@@ -216,6 +221,15 @@ export default {
     },
     build() {
       this.modalShow = true
+    },
+    search(name) {
+      this.searchContent = name
+      this._getZhEnList()
+    },
+    reset() {
+      this.searchContent = null
+      this.page = 1
+      this._getZhEnList()
     },
     save() {
       this.$refs['form'].validate((valid) => {
