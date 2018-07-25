@@ -6,9 +6,20 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="moduleId" label="编号" sortable>
         </el-table-column>
-        <el-table-column prop="moduleName" label="模块名称">
+        <el-table-column
+          prop="moduleName"
+          label="模块名称"
+        >
         </el-table-column>
-        <el-table-column prop="permissionType" label="系统类别">
+        <el-table-column
+          prop="permissionType"
+          label="系统类别"
+          :filters="
+          [{text: '综合市情', value: '综合市情'}, 
+          {text: '规划定位', value: '规划定位'}, 
+          {text: '综合区情', value: '综合区情'}]"
+          :filter-method="filterSys"
+        >
         </el-table-column>
         <el-table-column prop="moduleDescp" label="模块描述">
         </el-table-column>
@@ -94,6 +105,9 @@ export default {
     this._getAuthorityList()
   },
   methods: {
+    filterSys(value, row) {
+      return row.permissionType === value
+    },
     _getAuthorityList(page) {
       this.nowPage = page
       getAuthorityList(page).then(res => {

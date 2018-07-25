@@ -408,6 +408,16 @@ const router = new VueRouter({
           path: "search-statistics",
           component: SearchVisit,
           meta: { title: "搜索统计" }
+        },
+        {
+          path: "personal-center",
+          component: Personal,
+          meta: { title: "个人中心" }
+        },
+        {
+          path: "message",
+          component: Message,
+          meta: { title: "消息中心" }
         }
       ]
     }

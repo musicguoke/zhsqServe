@@ -133,3 +133,27 @@ export function saveCatalogBySelf(data) {
       return Promise.resolve(res.data)
   })
 }
+
+// 查看图层
+export function getSourceLayer(src) {
+  const data = {
+    json: src
+  }
+
+  return axios.post(
+    `${url}/sys/msTabDataController/getSourceLayer.do`, qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+// 查看图层
+export function getSourceLayerFields(type) {
+  const data = {
+    layerType: type
+  }
+
+  return axios.post(
+    `${url}/sys/msTabDataController/getSourceLayerFields.do`, qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
