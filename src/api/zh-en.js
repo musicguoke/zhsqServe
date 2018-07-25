@@ -37,3 +37,11 @@ export function uploadZhEnFile(data) {
       return Promise.resolve(res.data)
   })
 }
+
+// 删除
+export function deleteZhEn(data) {
+  return axios.post(
+    `${url}/sys/msThematicMap/delete.do`, qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}

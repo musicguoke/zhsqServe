@@ -117,7 +117,7 @@ export default {
           key: 'systemName'
         },
         {
-          title: '正常',
+          title: '正常（%）',
           key: 'successRate',
           className: 'normal-column'
         },

@@ -1,5 +1,5 @@
 <template>
-  <div class="card-content" v-show="isShow" style="min-height: 400px;">
+  <div class="card-content" v-if="isShow" style="min-height: 400px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
       <Step v-if="type!==2" title="数据配置" content=""></Step>

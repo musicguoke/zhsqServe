@@ -13,6 +13,9 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="tablePage">
+      <Page :total="pageLength" @on-change="_getDataTypeList" v-show="pageLength > 10" show-total></Page>
+    </div>
     <Modal v-model="editDataModal" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">数据信息</h3>
       <Form ref="form" :model="editItemForm" :rules="rules" :label-width="80">
@@ -57,6 +60,7 @@ export default {
       data: [],
       selectedId: [],
       editDataModal: false,
+      pageLength: '',
       editItemForm: {
         itemid: '',
         typename: '',
@@ -93,7 +97,7 @@ export default {
       this.$Modal.confirm({
         content: '删除后数据无法恢复，是否继续？',
         onOk: () => {
-          this._deleteStatistics(this.selectedId.toString())
+          this._deleteDataTypes(this.selectedId.toString())
         },
         onCancel: () => { }
       })
@@ -141,6 +145,7 @@ export default {
             v.typetime = this._mm.formatDate(v.typetime)
           })
           this.data = res.data.list
+          this.pageLength = res.data.total
         } else {
           this.$Message.error()
         }
