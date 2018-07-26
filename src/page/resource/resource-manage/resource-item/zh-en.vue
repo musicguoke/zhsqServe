@@ -33,7 +33,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" :current="page" @on-change="_getZhEnList" show-total show-elevator></Page>
+      <Page :total="listLength" :current="page" @on-change="handlePageChange" show-total show-elevator></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">中英文信息</h3>
@@ -147,8 +147,12 @@ export default {
     this._getZhEnList()
   },
   methods: {
-    _getZhEnList(page) {
-      getZhEnList(page, this.searchContent).then(res => {
+    handlePageChange(page) {
+      this.page = page
+      this._getZhEnList()
+    },
+    _getZhEnList() {
+      getZhEnList(this.page1, this.searchContent).then(res => {
         if (res.code === 20000) {
           this.list = res.data.list
           this.listLength = res.data.total
@@ -223,6 +227,7 @@ export default {
       this.modalShow = true
     },
     search(name) {
+      this.page = 1
       this.searchContent = name
       this._getZhEnList()
     },

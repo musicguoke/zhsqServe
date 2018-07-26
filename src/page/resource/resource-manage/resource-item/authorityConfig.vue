@@ -32,7 +32,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getAuthorityList" show-total show-elevator ref="authorityPage"></Page>
+      <Page :total="listLength" @on-change="handlePageChange" show-total show-elevator ref="authorityPage"></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">权限信息</h3>
@@ -110,9 +110,12 @@ export default {
       this.sysType = row.permissionType[0]
       this._getAuthorityList()
     },
-    _getAuthorityList(page) {
+    handlePageChange(page) {
       this.nowPage = page
-      getAuthorityList(page, this.sysType).then(res => {
+      this._getAuthorityList()
+    },
+    _getAuthorityList() {
+      getAuthorityList(this.nowPage, this.sysType).then(res => {
         if (res.code === 20000) {
           res.data.list.map(v => {
             if (v.permissionType == 1) {

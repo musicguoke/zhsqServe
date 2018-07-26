@@ -24,11 +24,9 @@
             </DropdownMenu>
           </Dropdown>
           <div @click="showMessage" class="message-con">
-            <Tooltip :content="`你共有${unread}条未处理建议`">
-              <Badge dot>
-                <Icon type="ios-bell-outline" size="26"></Icon>
-              </Badge>
-            </Tooltip>
+            <Badge :count="unread">
+              <Icon type="ios-bell-outline" size="26"></Icon>
+            </Badge>
           </div>
         </div>
       </div>
@@ -42,7 +40,8 @@ import { logout } from '@/api/service'
 export default {
   data() {
     return {
-      userInfo: ''
+      userInfo: '',
+      count: 0
     }
   },
   props: {

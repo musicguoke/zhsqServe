@@ -139,6 +139,7 @@ export default {
   },
   methods: {
     search(name) {
+      this.nowPage = 1
       this.searchContent = name
       this._getStatisticList()
     },
