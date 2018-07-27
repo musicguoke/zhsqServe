@@ -6,17 +6,17 @@
     </Breadcrumb>
     <Card :style="{maxHeight: contentHeight}">
       <div class="table" v-show="!isShow">
-        <v-search 
-          :importShow="false"
-          @on-search="search"
-          @on-build="show"
-          @on-reset="reset"
-          :disabled="selectedId.length <= 0"
-          @on-delete="deleteMany" />
+        <v-search :importShow="false" @on-search="search" @on-build="show" @on-reset="reset" :disabled="selectedId.length <= 0" @on-delete="deleteMany" />
         <el-table :data="sysData" border style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="id" label="系统编号" sortable></el-table-column>
           <el-table-column prop="sysName" label="系统名称"></el-table-column>
+          <el-table-column
+            prop="sysType"
+            label="系统类型"
+            :filters="[{ text: '综合市情', value: '1' }, { text: '规划定位', value: '2' }, { text: '综合区情', value: '3' }]"
+            :filter-method="filterSysType"
+          ></el-table-column>
           <el-table-column prop="areaName" label="所属区县"></el-table-column>
           <el-table-column prop="status" label="系统状态"></el-table-column>
           <el-table-column label="操作" align="center">
@@ -28,13 +28,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <authority-config 
-        ref="authConfig"
-        @isShow="tableShow"
-        :newSys="newSys"
-        :buildSys="true"
-        @cancel="cancel"
-      />
+      <authority-config ref="authConfig" @isShow="tableShow" :newSys="newSys" :buildSys="true" @cancel="cancel" />
     </Card>
   </Content>
 </template>
@@ -62,17 +56,23 @@ export default {
       isShow: false,
       name: '系统列表',
       selectedId: [],
-      sysData: []
+      sysData: [],
+      searchContent: null
     }
   },
   created() {
     this._enterSystem()
   },
   methods: {
+    filterSysType(value, row) {
+      return row.type == value
+    },
     search(content) {
-      this._getSystemList('', content)
+      this.searchContent = content
+      this._getSystemList()
     },
     reset() {
+      this.searchContent = null
       this._getSystemList()
     },
     editSys(row) {
@@ -82,7 +82,7 @@ export default {
     },
     // 子组件控制table显示隐藏
     tableShow(isShow) {
-      this.isShow = isShow                                          
+      this.isShow = isShow
     },
     enterSys(row) {
       this._enterSystem(row)
@@ -122,14 +122,21 @@ export default {
       this.name = '系统列表'
       this._getSystemList()
     },
-    _getSystemList(page, name) {
-      getSystemList(page, name).then(res => {
+    _getSystemList(page) {
+      getSystemList(page, this.searchContent).then(res => {
         if (res.code === 20000) {
           res.data.list.filter(v => {
             if (v.enable === 0) {
               v.status = '暂停运行'
             } else if (v.enable === 1) {
               v.status = '正在运行'
+            }
+            if (v.type === 1) {
+              v.sysType = '综合市情'
+            } else if (v.type === 2) {
+              v.sysType = '规划定位'
+            } else if (v.type === 3) {
+              v.sysType = '综合区情'
             }
           })
           this.sysData = res.data.list

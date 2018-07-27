@@ -2,7 +2,7 @@
   <div class="statistic">
     <v-search :search-show="false" :import-show="false" :disabled="selectedId.length <= 0" @on-build="build" @on-delete="deleteMany" />
     <div class="tableSize">
-      <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table :data="list" border style="width: 100%" @filter-change="filterSys" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="moduleId" label="编号" sortable>
         </el-table-column>
@@ -14,11 +14,11 @@
         <el-table-column
           prop="permissionType"
           label="系统类别"
+          column-key="permissionType"
           :filters="
-          [{text: '综合市情', value: '综合市情'}, 
-          {text: '规划定位', value: '规划定位'}, 
-          {text: '综合区情', value: '综合区情'}]"
-          :filter-method="filterSys"
+          [{text: '综合市情', value: '1'}, 
+          {text: '规划定位', value: '2'}, 
+          {text: '综合区情', value: '3'}]"
         >
         </el-table-column>
         <el-table-column prop="moduleDescp" label="模块描述">
@@ -32,7 +32,7 @@
       </el-table>
     </div>
     <div class="tablePage">
-      <Page :total="listLength" @on-change="_getAuthorityList" show-total show-elevator ref="authorityPage"></Page>
+      <Page :total="listLength" @on-change="handlePageChange" show-total show-elevator ref="authorityPage"></Page>
     </div>
     <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">权限信息</h3>
@@ -85,6 +85,7 @@ export default {
         permissionType: ''
       },
       nowPage:'',
+      sysType: null,
       rules: {
         moduleId: [
           { required: true, message: '请输入功能编号', trigger: 'blur' }
@@ -105,12 +106,16 @@ export default {
     this._getAuthorityList()
   },
   methods: {
-    filterSys(value, row) {
-      return row.permissionType === value
+    filterSys(row) {
+      this.sysType = row.permissionType[0]
+      this._getAuthorityList()
     },
-    _getAuthorityList(page) {
+    handlePageChange(page) {
       this.nowPage = page
-      getAuthorityList(page).then(res => {
+      this._getAuthorityList()
+    },
+    _getAuthorityList() {
+      getAuthorityList(this.nowPage, this.sysType).then(res => {
         if (res.code === 20000) {
           res.data.list.map(v => {
             if (v.permissionType == 1) {

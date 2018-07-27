@@ -14,7 +14,7 @@
       </el-table-column>
     </el-table>
     <div class="tablePage">
-      <Page :total="pageLength" @on-change="_getDataTypeList" v-show="pageLength > 10" show-total></Page>
+      <Page :total="pageLength" :current="page" @on-change="handlePageChange" v-show="pageLength > 10" show-total></Page>
     </div>
     <Modal v-model="editDataModal" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">数据信息</h3>
@@ -61,6 +61,8 @@ export default {
       selectedId: [],
       editDataModal: false,
       pageLength: '',
+      searchContent: null,
+      page: 1,
       editItemForm: {
         itemid: '',
         typename: '',
@@ -82,15 +84,22 @@ export default {
   },
   methods: {
     search(name) {
-      this._getDataTypeList('', name)
+      this.searchContent = name
+      this._getDataTypeList()
     },
     reset() {
+      this.searchContent = null
+      this.page = 1
+      this._getDataTypeList()
+    },
+    handlePageChange(page) {
+      this.page = page
       this._getDataTypeList()
     },
     handleSelectionChange(val) {
       this.selectedId = []
       val.map(v => {
-        this.selectedId.push(v.id)
+        this.selectedId.push(v.itemid)
       })
     },
     deleteMany() {
@@ -138,8 +147,8 @@ export default {
       this.newOrEdit = true
       this.editDataModal = true
     },
-    _getDataTypeList(page, name) {
-      getDataTypeList(page, name).then(res => {
+    _getDataTypeList() {
+      getDataTypeList(this.page, this.searchContent).then(res => {
         if (res.code === 20000) {
           res.data.list.map(v => {
             v.typetime = this._mm.formatDate(v.typetime)

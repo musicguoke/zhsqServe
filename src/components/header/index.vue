@@ -2,8 +2,8 @@
   <Header>
     <div class="container">
       <div class="navbar-logo">
-        <span v-if="query==2" class="layout-logo ghdw" @click="linkTo"></span>
-        <span v-else-if="query==3" class="layout-logo zhqq" @click="linkTo"></span>
+        <span v-if="query.type==2" class="layout-logo ghdw" @click="linkTo"></span>
+        <span v-else-if="query.type==3" class="layout-logo zhqq" @click="linkTo"></span>
         <span v-else class="layout-logo" @click="linkTo"></span>
         <span class="navbar-title">
           {{title}} —
@@ -24,11 +24,9 @@
             </DropdownMenu>
           </Dropdown>
           <div @click="showMessage" class="message-con">
-            <Tooltip :content="`你共有${unread}条未处理建议`">
-              <Badge dot>
-                <Icon type="ios-bell-outline" size="26"></Icon>
-              </Badge>
-            </Tooltip>
+            <Badge :count="unread">
+              <Icon type="ios-bell-outline" size="26"></Icon>
+            </Badge>
           </div>
         </div>
       </div>
@@ -42,7 +40,8 @@ import { logout } from '@/api/service'
 export default {
   data() {
     return {
-      userInfo: ''
+      userInfo: '',
+      count: 0
     }
   },
   props: {

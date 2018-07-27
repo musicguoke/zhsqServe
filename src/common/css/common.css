@@ -47,7 +47,13 @@ body {
     z-index: 902;
 }
 
+<<<<<<< HEAD=======.ivu-menu-item-group-title {
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+}
 
+>>>>>>>1c906e8cb2f5ba7c1069560437de667dd34deed5
 /* 首页布局 */
 
 .layout {

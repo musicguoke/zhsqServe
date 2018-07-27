@@ -5,8 +5,9 @@ import { url } from './config.js'
 axios.defaults.withCredentials = true
 
 // 获取用户权限列表
-export function getZhEnList(page) {
+export function getZhEnList(page, name) {
   const data = {
+    name: name || null,
     pageNo: page || 1,
     pageSize: 10
   }
