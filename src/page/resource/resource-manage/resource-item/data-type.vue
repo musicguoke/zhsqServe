@@ -99,7 +99,7 @@ export default {
     handleSelectionChange(val) {
       this.selectedId = []
       val.map(v => {
-        this.selectedId.push(v.id)
+        this.selectedId.push(v.itemid)
       })
     },
     deleteMany() {

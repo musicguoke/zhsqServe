@@ -45,6 +45,12 @@ body {
   z-index: 902;
 }
 
+.ivu-menu-item-group-title {
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
+}
+
 /* 首页布局 */
 
 .layout {
@@ -164,7 +170,7 @@ body {
 
 @media screen and (max-height: 768px) {
   .ivu-modal-body {
-      max-height: 350px;
-      overflow: auto;
+    max-height: 350px;
+    overflow: auto;
   }
 }

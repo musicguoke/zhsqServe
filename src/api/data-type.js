@@ -78,7 +78,7 @@ export function deleteDataType(id) {
 // 批量删除数据类型
 export function deleteDataTypes(ids) {
   const data = {
-    itemids: ids || ''
+    itemidStr: ids || ''
   }
 
   return axios.post(

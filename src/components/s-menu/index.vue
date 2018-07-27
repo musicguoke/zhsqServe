@@ -33,7 +33,7 @@
       <MenuItem name="user-list">用户管理</MenuItem>
       <MenuItem name="role-list">角色管理</MenuItem>
     </Submenu>
-    <Submenu name="3">
+    <Submenu name="3" v-if="userinfo.role!==3">
       <template slot="title">
         <Icon type="loop"></Icon>
           交互管理
@@ -41,7 +41,8 @@
       <MenuItem name="push-manage">推送管理</MenuItem>
       <MenuItem name="message-manage">短信管理</MenuItem>
     </Submenu>
-    <Submenu name="4">
+    <MenuGroup title="交互管理" v-else></MenuGroup>
+    <Submenu name="4" v-if="userinfo.role!==3">
       <template slot="title">
         <Icon type="loop"></Icon>
           版本管理
@@ -49,7 +50,8 @@
       <MenuItem name="software-version">软件版本</MenuItem>
       <!-- <MenuItem name="version-description">版本描述</MenuItem> -->
     </Submenu>
-    <Submenu name="5">
+    <MenuGroup title="版本管理" v-else></MenuGroup>
+    <Submenu name="5" v-if="userinfo.role!==3">
       <template slot="title">
         <Icon type="stats-bars"></Icon>
           行为分析
@@ -59,6 +61,7 @@
       <MenuItem name="search-statistics">搜索访问</MenuItem>
       <!-- <MenuItem name="5-3">用户轨迹</MenuItem> -->
     </Submenu>
+    <MenuGroup title="行为分析" v-else></MenuGroup>
     <!-- <Submenu name="6">
       <template slot="title">
         <Icon type="disc"></Icon>
@@ -105,8 +108,9 @@ export default {
     background: transparent;
   }
 }
-.ivu-menu-horizontal {
+.ivu-menu-horizontal, .ivu-menu-item-group-title {
   height: 36px;
   line-height: 36px;
+  font-size: 14px;
 }
 </style>
