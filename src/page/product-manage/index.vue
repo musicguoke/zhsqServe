@@ -7,7 +7,13 @@
     <Card :style="{maxHeight: contentHeight}">
       <div class="table" v-show="!isShow">
         <v-search :importShow="false" @on-search="search" @on-build="show" @on-reset="reset" :disabled="selectedId.length <= 0" @on-delete="deleteMany" />
-        <el-table :data="sysData" border style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table
+          :data="sysData"
+          border
+          style="width: 100%"
+          :cell-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange"
+        >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="id" label="系统编号" sortable></el-table-column>
           <el-table-column prop="sysName" label="系统名称"></el-table-column>
@@ -18,7 +24,10 @@
             :filter-method="filterSysType"
           ></el-table-column>
           <el-table-column prop="areaName" label="所属区县"></el-table-column>
-          <el-table-column prop="status" label="系统状态"></el-table-column>
+          <el-table-column
+            prop="status"
+            label="系统状态"
+          ></el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <Button type="primary" @click="editSys(scope.row)" size="small">编辑</Button>
@@ -28,7 +37,13 @@
           </el-table-column>
         </el-table>
       </div>
-      <authority-config ref="authConfig" @isShow="tableShow" :newSys="newSys" :buildSys="true" @cancel="cancel" />
+      <authority-config
+        ref="authConfig"
+        @isShow="tableShow"
+        :newSys="newSys"
+        :buildSys="true"
+        @cancel="cancel"
+      />
     </Card>
   </Content>
 </template>
@@ -40,7 +55,7 @@ import {
   deleteBatchSystems,
   enterSystem
 } from '@/api/system'
-import AuthorityConfig from '@/components/authority-config/index'
+import AuthorityConfig from '@/components/authority-config/product-config'
 import vSearch from '@/components/search/index'
 import { unreadSuggestList } from '@/api/suggest'
 
@@ -64,6 +79,14 @@ export default {
     this._enterSystem()
   },
   methods: {
+    tableRowClassName({row, column, rowIndex, columnIndex}) {
+      if (row.enable == 0 && columnIndex === 5) {
+        return 'warning-row'
+      } else if (row.enable == 1 && columnIndex === 5) {
+        return 'success-row'
+      }
+      return ''
+    },
     filterSysType(value, row) {
       return row.type == value
     },

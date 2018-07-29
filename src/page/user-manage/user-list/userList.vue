@@ -5,9 +5,18 @@
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
         <Card :style="{maxHeight:userListHeight}">
-            <v-search :importShow="!isProduct"  :deleteShow="false" :selectShow="isProduct" :conditionExportShow="true" :selectList="groupSingleFilterList" 
-            @on-export="openExportModal" @on-import="openImportModal" 
-            @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
+            <v-search
+                :importShow="!isProduct"
+                :deleteShow="false"
+                :selectShow="isProduct"
+                :conditionExportShow="true"
+                :selectList="groupSingleFilterList"
+                @on-export="openExportModal"
+                @on-import="openImportModal"
+                @on-search="search"
+                @on-build="userAddOpen"
+                @on-reset="searchReset"
+            />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%">
                     <el-table-column prop="arId" label="ID" width="60" sortable>
@@ -20,14 +29,14 @@
                     </el-table-column>
                     <el-table-column prop="arEmail" label="邮箱">
                     </el-table-column>
-                    <el-table-column prop="areaname" label="区县"  :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
+                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column prop="name" label="部门" :filters="departmentFilterList" :filter-method="filterByDepartment" filter-placement="bottom-end" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small"  title="编辑">编辑</Button>
+                            <Button type="info" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
                     </el-table-column>
@@ -54,12 +63,12 @@
                             <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
                         </FormItem>
                         <FormItem label="部门" prop="arBranch">
-                            <Select v-model="userForm.arBranch" ref="department1">
+                            <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1">
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
-                            <Select v-model="userForm.arAreacode">
+                            <Select v-model="userForm.arAreacode" @on-open-change="handleQxOpenChange">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
@@ -84,10 +93,19 @@
                     </div>
                     <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
-                            <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
+                            <Select
+                                v-model="item.sysId"
+                                @on-change="systemChange(item.sysId,$index)"
+                                style="width:220px"
+                                :ref="'item'+$index"
+                            >
                                 <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                            <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index">
+                            <Select
+                                v-model="item.grId"
+                                style="width:220px;margin-left:5px;"
+                                :ref="'group'+$index"
+                            >
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
@@ -95,7 +113,7 @@
                     </Form>
                 </Tab-pane>
             </Tabs>
-            <Form :model="userForm"  :label-width="80" v-show="isProduct" :rules="userRuleProduct" ref="userRuleProduct">
+            <Form :model="userForm" :label-width="80" v-show="isProduct" :rules="userRuleProduct" ref="userRuleProduct">
                 <FormItem label="用户名" prop="arLoginname">
                     <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                 </FormItem>
@@ -138,7 +156,7 @@
             <el-table :data="equipmentData" border style="width: 100%">
                 <el-table-column prop="arOs" label="设备类型" width="100">
                 </el-table-column>
-                <el-table-column prop="arCodeBind" label="绑定码" >
+                <el-table-column prop="arCodeBind" label="绑定码">
                 </el-table-column>
                 <el-table-column label="操作" width="80" align="center">
                     <template slot-scope="scope">
@@ -162,7 +180,7 @@
                     <Input v-model="equipmentForm.arRegtime" readonly placeholder="请输入..."></Input>
                 </FormItem>
                 <FormItem label="最后登陆时间">
-                    <Input v-model="equipmentForm.arLastlogintime" readonly	placeholder="请输入..."></Input>
+                    <Input v-model="equipmentForm.arLastlogintime" readonly placeholder="请输入..."></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -172,23 +190,23 @@
                     <Select v-model="importForm.sysId" @on-change="importOrExportSysChange('import')" style="width:185px">
                         <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
-                    <Select v-model="importForm.groupId" style="width:185px;margin-left:14px;" >
+                    <Select v-model="importForm.groupId" style="width:185px;margin-left:14px;">
                         <Option v-for="item in groupImportOrExportList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="选择文件">
                     <div>
                         <Upload :action="`${uploadUrl}/sys/msMembers/importFile.do`" with-credentials :before-upload="boforeUpload" :on-success="handleSuccessUpload" accept=".xls,.xlsx" ref="userUpload">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
+                            <Button type="ghost" icon="ios-cloud-upload-outline">请选择</Button>
                         </Upload>
                     </div>
                 </FormItem>
                 <div class="importSlot">
-                <div class="importSlotTitle">导入须知</div>
-                <p>1、导入文件大小不超过2MB.</p>
-                <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
-                    <a :href="`${uploadUrl}/sys/msMembers/downloadImportedFile.do`">点此下载.</a>
-                </p>
+                    <div class="importSlotTitle">导入须知</div>
+                    <p>1、导入文件大小不超过2MB.</p>
+                    <p>2、支持Microsoft Office Excel的xls和xlsx文件,模板
+                        <a :href="`${uploadUrl}/sys/msMembers/downloadImportedFile.do`">点此下载.</a>
+                    </p>
                 </div>
             </Form>
         </Modal>
@@ -206,7 +224,7 @@
                         <Option value="0">全部</Option>
                         <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
-                    <Select v-model="exportForm.groupId" style="width:185px;margin-left:14px;" >
+                    <Select v-model="exportForm.groupId" style="width:185px;margin-left:14px;">
                         <Option value="0">全部</Option>
                         <Option v-for="item in groupImportOrExportList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
@@ -219,16 +237,16 @@
                 </FormItem>
                 <FormItem label="时间" v-if="exportForm.type == 2">
                     <div style="display:flex">
-                     <DatePicker type="date"  @on-change="getBeginDate" placeholder="请选择开始时间" :options="limitDate" style="width: 48%" ref="beginDate"></DatePicker>
-                     <p style="margin:0 4px">—</p>
-                     <DatePicker type="date"  @on-change="getEndDate" placeholder="请选择结束时间" :options="limitDate" style="width: 48%" ref="endDate"></DatePicker>
+                        <DatePicker type="date" @on-change="getBeginDate" placeholder="请选择开始时间" :options="limitDate" style="width: 48%" ref="beginDate"></DatePicker>
+                        <p style="margin:0 4px">—</p>
+                        <DatePicker type="date" @on-change="getEndDate" placeholder="请选择结束时间" :options="limitDate" style="width: 48%" ref="endDate"></DatePicker>
                     </div>
                 </FormItem>
-                <FormItem label="时间"  v-else>
+                <FormItem label="时间" v-else>
                     <div style="display:flex">
-                     <DatePicker type="date"  @on-change="getBeginDate"  placeholder="请选择开始时间" style="width: 48%" ref="beginDate"></DatePicker>
-                     <p style="margin:0 4px">—</p>
-                     <DatePicker type="date"  @on-change="getEndDate" placeholder="请选择结束时间" style="width: 48%" ref="endDate"></DatePicker>
+                        <DatePicker type="date" @on-change="getBeginDate" placeholder="请选择开始时间" style="width: 48%" ref="beginDate"></DatePicker>
+                        <p style="margin:0 4px">—</p>
+                        <DatePicker type="date" @on-change="getEndDate" placeholder="请选择结束时间" style="width: 48%" ref="endDate"></DatePicker>
                     </div>
                 </FormItem>
             </Form>
@@ -237,8 +255,8 @@
 </template>
 
 <script>
-import {getAreaCode, getUserList, addUser, updateUser, deleteUser,
-    getEquipment, updateEquipment, getRolesList,getUserSysAndRole,importUser,exportUser} from '@/api/user-service'
+import {    getAreaCode, getUserList, addUser, updateUser, deleteUser,
+    getEquipment, updateEquipment, getRolesList, getUserSysAndRole, importUser, exportUser} from '@/api/user-service'
 import { getSystemList } from '@/api/system'
 import { getDepartmentList } from "@/api/department-service"
 import MD5 from 'crypto-js/md5'
@@ -251,7 +269,7 @@ export default {
     data() {
         //对角色字段单独验证
         const validateRole = (rule, value, callback) => {
-             callback();
+            callback();
         }
         return {
             uploadUrl: url,
@@ -260,11 +278,11 @@ export default {
             searchCounty: '',
             searchSystem: '',
             searchName: '',
-            filterByGrId:'',
+            filterByGrId: '',
             userModal: false,
             equipmentModal: false,
-            equipmentEditModal:false,
-            importModal:false,
+            equipmentEditModal: false,
+            importModal: false,
             modalTitle: '',
             total: 0,
             isAdd: false,
@@ -276,7 +294,7 @@ export default {
                 arLoginname: '',
                 arTruename: '',
                 arPassword: '',
-                arEditPassword:'',//编辑时的密码
+                arEditPassword: '',//编辑时的密码
                 arTel: '',//座机
                 arMobile: '',//手机
                 arEmail: '',
@@ -289,7 +307,7 @@ export default {
                 sysId: '',//系统编号
                 grId: '',//角色编号
                 arId: '',
-                grIdProduct:''
+                grIdProduct: ''
             },
             equipmentForm: {
                 id: "",
@@ -302,7 +320,7 @@ export default {
                 arRegip: "",
                 sysId: ""
             },
-            equipmentData:[],
+            equipmentData: [],
             userData: [],
             departmentData: [],
             departmentFilterList: [],
@@ -314,21 +332,21 @@ export default {
             },
             importForm: {
                 file: '',
-                sysId:'',
-                groupId:''
+                sysId: '',
+                groupId: ''
             },
-            exportForm:{
-                type:'',
-                sysId:'',
-                grId:'',
-                beginDate:'',
-                endDate:''
+            exportForm: {
+                type: '',
+                sysId: '',
+                grId: '',
+                beginDate: '',
+                endDate: ''
             },
             systemList: [],
             groupList: [],
             groupSingleList: [],
-            groupImportOrExportList:[],
-            groupSingleFilterList:[{value:'0',label:'全部'}],
+            groupImportOrExportList: [],
+            groupSingleFilterList: [{ value: '0', label: '全部' }],
             sysAndGroupList: [{ sysId: '', grId: '' }],
             systemLength: 1,
             nowSystemLength: 1,
@@ -352,12 +370,12 @@ export default {
                 arAreacode: [
                     { required: true, message: '请选择区县', trigger: 'change' }
                 ],
-                arPassword:[
+                arPassword: [
                     { required: true, message: '用户密码不能为空', trigger: 'blur' },
                     { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
                 ]
             },
-            userRuleProduct:{
+            userRuleProduct: {
                 arLoginname: [
                     { required: true, message: '用户名不能为空', trigger: 'blur' }
                 ],
@@ -377,46 +395,43 @@ export default {
                 arAreacode: [
                     { required: true, message: '请选择区县', trigger: 'change' }
                 ],
-                role:[
-                    { type:'number',required: true, validator: validateRole, trigger:'change'}
+                role: [
+                    { type: 'number', required: true, validator: validateRole, trigger: 'change' }
                 ],
-                arPassword:[
+                arPassword: [
                     { required: true, message: '用户密码不能为空', trigger: 'blur' },
                     { type: 'string', min: 6, message: '密码不能少于6位', trigger: 'blur' }
                 ]
             },
-            exportUserModal:false,
-            limitDate:{
-                disabledDate (date) {
-                    return (date.valueOf() < (Date.now() - (86400000)*30)) || (date.valueOf() > Date.now());
+            exportUserModal: false,
+            limitDate: {
+                disabledDate(date) {
+                    return (date.valueOf() < (Date.now() - (86400000) * 30)) || (date.valueOf() > Date.now());
                 }
             }
         }
     },
     created() {
-        getAreaCode().then(res => {
-            for (let i in res.data.list) {
-                this.countyList.push({
-                    value: res.data.list[i].areacode,
-                    label: res.data.list[i].areaname
-                })
-                this.countyFilterList.push({
-                    text: res.data.list[i].areaname,
-                    value: res.data.list[i].areaname
-                })
-            }
-            this._getUserList(1)
-        }),
-        this._getDepartmentList()
+        this._getUserList()
         if (this.$route.query.id) {
             this.isProduct = true
-            this._getRolesSingleList(this.$route.query.id)
+            this._getRolesSingleList(this.$route.query.id);
             this.userForm.sysId = this.$route.query.id
         } else {
             this.isProduct = false
         }
     },
     methods: {
+        handleQxOpenChange(bol) {
+            if(bol) {
+                this._getAreacode()
+            }
+        },
+        handleBranchOpenChange(bol) {
+            if(bol) {
+                this._getDepartmentList()
+            }
+        },
         userAddOpen() {
             this.$refs.userRule.resetFields()
             this.$refs.userRuleProduct.resetFields()
@@ -447,30 +462,30 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
-            this.$refs.department1.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
-            this.$refs.department2.values = [{value:this.userForm.arBranch,label:this.userForm.name}]
-            getUserSysAndRole(this.userForm.arId).then(res=>{
-                 if(!this.isProduct){
+            this.$refs.department1.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
+            this.$refs.department2.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
+            getUserSysAndRole(this.userForm.arId).then(res => {
+                if (!this.isProduct) {
                     this.nowSystemLength = res.data.length
-                    for(let i = 0;i<res.data.length;i++){
+                    for (let i = 0; i < res.data.length; i++) {
                         this.sysAndGroupList.push({
                             sysId: res.data[i].sysId,
                             grId: res.data[i].grId
                         })
                     }
-                    for(let i = 0;i<res.data.length;i++){
+                    for (let i = 0; i < res.data.length; i++) {
                         this.groupList.push([])
-                        this._getRolesList(res.data[i].sysId,i)
+                        this._getRolesList(res.data[i].sysId, i)
                     }
                 } else {
-                    for(let i in res.data){
+                    for (let i in res.data) {
                         this.sysAndGroupList.push({ sysId: res.data[i].sysId, grId: res.data[i].grId })
-                        if(res.data[i].sysId == this.$route.query.id){
+                        if (res.data[i].sysId == this.$route.query.id) {
                             this.userForm.grIdProduct = res.data[i].grId
                         }
                     }
                 }
-            
+
             })
         },
         _getDepartmentList() {
@@ -526,7 +541,7 @@ export default {
             this._getUserList(page)
         },
         //点击搜索
-        search(searchName,groupId) {
+        search(searchName, groupId) {
             this.searchName = searchName
             this.filterByGrId = groupId
             this._getUserList(1)
@@ -554,18 +569,18 @@ export default {
                 } else {
                     this.equipmentModal = true
                     this.equipmentData = res.data.list
-                    for(let i in this.equipmentData){
+                    for (let i in this.equipmentData) {
                         this.equipmentData[i].arLastlogintime = this._mm.formatDate(this.equipmentData[i].arLastlogintime)
                         this.equipmentData[i].arRegtime = this._mm.formatDate(this.equipmentData[i].arRegtime)
-                    }  
+                    }
                 }
             })
         },
         //修改设备
-        equipmentEditOpen(params){
+        equipmentEditOpen(params) {
             this.equipmentEditModal = true
-            for(let i in params.row){
-                this.equipmentForm[i] = params.row[i] 
+            for (let i in params.row) {
+                this.equipmentForm[i] = params.row[i]
             }
         },
         remove(params) {
@@ -598,17 +613,16 @@ export default {
             return row.name === value;
         },
         _getUserList(page) {
-            console.log(page)
             let data = {
                 methods: 'list',
                 pageNo: page || this.nowPage,
                 pageSize: 10,
                 arTruename: this.searchName,
-                grId:this.filterByGrId == 0?'':this.filterByGrId
+                grId: this.filterByGrId == 0 ? '' : this.filterByGrId
             }
             getUserList(data).then(res => {
                 this.userData = []
-                let data = res.data.list
+                let data = res.data.page.list
                 for (let i in data) {
                     if (data[i].addTime < 0) {
                         data[i].addTime = Math.abs(data[i].addTime)
@@ -623,62 +637,90 @@ export default {
                     })
                     this.userData.push(data[i])
                 }
-                this.total = res.data.total
+                for (let i in res.data.areaCodeList) {
+                    this.countyFilterList.push({
+                        text: res.data.areaCodeList[i].areaname,
+                        value: res.data.areaCodeList[i].areaname
+                    })
+                }
+                res.data.branchStructList.map(v => {
+                    this.departmentFilterList.push({
+                        value: v.name,
+                        text: v.name
+                    })
+                    if (v.list) {
+                        v.list.map(a => {
+                            this.departmentFilterList.push({
+                                value: a.name,
+                                text: a.name
+                            })
+                            if (a.list) {
+                                a.list.map(b => {
+                                    this.departmentFilterList.push({
+                                        value: b.name,
+                                        text: b.name
+                                    })
+                                })
+                            }
+                        })
+                    }
+                })
+                this.total = res.data.page.total
             })
         },
         //点击确定
         addOrUpdateUser() {
             let sysNum = 0
-            if(!this.isProduct){
+            if (!this.isProduct) {
                 this.$refs.userRule.validate((valid) => {
-                    if(!valid){
+                    if (!valid) {
                         this.$refs.userModal.visible = true;
                         this.userModal = true;
                         this.$refs.tab.activeKey = 'baseInfo'
-                    }else{
-                        this.sysAndGroupList.map(v=>{
-                            if(v.sysId){
-                                sysNum ++
+                    } else {
+                        this.sysAndGroupList.map(v => {
+                            if (v.sysId) {
+                                sysNum++
                             }
                         })
-                        if(sysNum == 0){
+                        if (sysNum == 0) {
                             this.$Message.error('请至少选择一个系统角色')
-                        }else{
+                        } else {
                             this.addOrUpdateFun()
                         }
                     }
                 })
-            }else{
+            } else {
                 this.$refs.userRuleProduct.validate((valid) => {
-                    if(!valid){
+                    if (!valid) {
                         this.$refs.userModal.visible = true;
                         this.userModal = true;
-                    }else{
+                    } else {
                         this.addOrUpdateFun()
                     }
                 })
             }
         },
-        addOrUpdateFun(){
+        addOrUpdateFun() {
             if (!this.isProduct) {
                 this.userForm.sysId = ''
                 this.userForm.grId = ''
                 this.sysAndGroupList.map(v => {
-                    if(v.sysId){
+                    if (v.sysId) {
                         this.userForm.sysId += v.sysId + ','
                         this.userForm.grId += v.grId + ','
                     }
                 })
             } else {
-                if(this.isAdd){
-                    this.userForm.sysId = this.$route.query.id +','
-                    this.userForm.grId = this.userForm.grIdProduct +','
-                }else{
+                if (this.isAdd) {
+                    this.userForm.sysId = this.$route.query.id + ','
+                    this.userForm.grId = this.userForm.grIdProduct + ','
+                } else {
                     this.sysAndGroupList.map(v => {
-                        if(v.sysId == this.$route.query.id){
+                        if (v.sysId == this.$route.query.id) {
                             this.userForm.sysId += this.$route.query.id + ','
                             this.userForm.grId += this.userForm.grIdProduct + ','
-                        }else{
+                        } else {
                             this.userForm.sysId += v.sysId + ','
                             this.userForm.grId += v.grId + ','
                         }
@@ -707,13 +749,13 @@ export default {
                     if (res.code == 20000) {
                         this.$Message.success('添加成功')
                         this._getUserList(this.nowPage)
-                     } else {
+                    } else {
                         this.$Message.error(res.message);
                     }
                 })
             } else {
                 data.arId = this.userForm.arId
-                if(this.userForm.arEditPassword){
+                if (this.userForm.arEditPassword) {
                     data.arPassword = MD5(this.userForm.arEditPassword).toString()
                 }
                 updateUser(data).then(res => {
@@ -824,13 +866,13 @@ export default {
         },
         _getRolesSingleList(id) {
             getRolesList(id).then(res => {
-                for (let i in  res.data.list) {
+                for (let i in res.data.list) {
                     this.groupSingleList.push({
-                        value: parseInt( res.data.list[i].grId),
+                        value: parseInt(res.data.list[i].grId),
                         label: res.data.list[i].grName
                     })
                     this.groupSingleFilterList.push({
-                        value: parseInt( res.data.list[i].grId),
+                        value: parseInt(res.data.list[i].grId),
                         label: res.data.list[i].grName
                     })
                 }
@@ -851,18 +893,18 @@ export default {
             this.importForm.file = file
         },
         //根据sysId获取角色
-        importOrExportSysChange(type){
+        importOrExportSysChange(type) {
             this.groupImportOrExportList = []
             let id = ''
-            if(type == 'import'){
+            if (type == 'import') {
                 id = this.importForm.sysId
-            }else if(type == 'export'){
+            } else if (type == 'export') {
                 id = this.exportForm.sysId
             }
             getRolesList(id).then(res => {
-                for (let i in  res.data.list) {
+                for (let i in res.data.list) {
                     this.groupImportOrExportList.push({
-                        value: parseInt( res.data.list[i].grId),
+                        value: parseInt(res.data.list[i].grId),
                         label: res.data.list[i].grName
                     })
                 }
@@ -872,7 +914,7 @@ export default {
         saveImport() {
             if (this.importForm.file === '') {
                 this.$Message.error('请选择上传文件')
-            } else if(this.importForm.groupId === ''){
+            } else if (this.importForm.groupId === '') {
                 this.$Message.error('请选择用户角色')
             } else {
                 let formData = new FormData(this.$refs.file_user_form)
@@ -880,6 +922,18 @@ export default {
                 formData.append('file', this.importForm.file)
                 this._importUser(formData)
             }
+        },
+        _getAreacode() {
+            getAreaCode().then(res => {
+                if(res.code === 20000) {
+                    res.data.list.map(v => {
+                        this.countyList.push({
+                            value: v.areacode,
+                            label: v.areaname
+                        })
+                    })
+                }
+            })
         },
         //导入文件
         _importUser(data) {
@@ -892,14 +946,14 @@ export default {
                 }
             })
         },
-        getBeginDate(date){
-            this.exportForm.beginDate = date.substring(0,10)
+        getBeginDate(date) {
+            this.exportForm.beginDate = date.substring(0, 10)
         },
-        getEndDate(date){
-            this.exportForm.endDate = date.substring(0,10)
+        getEndDate(date) {
+            this.exportForm.endDate = date.substring(0, 10)
         },
         //用户导出
-        openExportModal(){
+        openExportModal() {
             this.$refs.beginDate.visualValue = ''
             this.$refs.endDate.visualValue = ''
             this.modalTitle = '导出筛选条件'
@@ -909,26 +963,26 @@ export default {
                 this.exportForm[i] = ""
             }
         },
-        _exportUser(){
+        _exportUser() {
             let sysId = ''
-            if(this.$route.query.id){
+            if (this.$route.query.id) {
                 sysId = this.$route.query.id
-            }else{
-                sysId = this.exportForm.sysId == '0'?'':this.exportForm.sysId
+            } else {
+                sysId = this.exportForm.sysId == '0' ? '' : this.exportForm.sysId
             }
             let data = {
-                sysId:sysId,    
-                grId:this.exportForm.groupId == '0'?'':this.exportForm.groupId,       
-                type:this.exportForm.type == '0'?'':this.exportForm.groupId,
-                beginDate:this.exportForm.beginDate,
-                endDate:this.exportForm.endDate
+                sysId: sysId,
+                grId: this.exportForm.groupId == '0' ? '' : this.exportForm.groupId,
+                type: this.exportForm.type == '0' ? '' : this.exportForm.groupId,
+                beginDate: this.exportForm.beginDate,
+                endDate: this.exportForm.endDate
             }
             let params = `${this.uploadUrl}/sys/msMembers/exportMsMembers.do?`
-            for(let i in data){
-                if(data[i]){
+            for (let i in data) {
+                if (data[i]) {
                     params += `${i}=${data[i]}&`
-                }else{
-                     params += `${i}=&`
+                } else {
+                    params += `${i}=&`
                 }
             }
             window.location.href = params

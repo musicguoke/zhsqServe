@@ -1,5 +1,5 @@
 <template>
-  <div class="card-content" v-show="isShow" style="min-height: 400px;">
+  <div class="card-content" v-if="isShow" style="min-height: 450px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
       <Step title="720配置" content=""></Step>
@@ -46,7 +46,7 @@
           <FormItem label="权限等级">
             <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option 
-                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, levelNum+1)"
+                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, qxLevelNum+1)"
                 :value="item"
                 :key="item"
               >
@@ -153,6 +153,7 @@ export default {
         //
         this.dataTree = res.json720
         this.topicDataTree = res.dataPublishJson
+        this.qxCheck(this.$route.query.funNum)
         if (typeof (id) === 'number' && str === 'role') { //获取角色信息
           this._getRoleMapById(id)
         } else if (typeof (id) === 'string') {

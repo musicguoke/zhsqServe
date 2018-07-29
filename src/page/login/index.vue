@@ -6,7 +6,7 @@
       <h2>重庆市综合市情系统</h2> -->
     </header>
     <div class="login">
-      <img class="login-bg" src="static/images/leftImg.png">
+      <!-- <img class="login-bg" src="static/images/leftImg.png"> -->
       <Form ref="formInline" :model="formInline" :rules="ruleInline">
         <h1 class="title">
           <span class="triangle"></span>
@@ -31,11 +31,13 @@
     </div>
     <footer>
       <div class="companyName">
-        <span>建设单位:重庆市规划局</span>
-        <span class="footer_line">|</span>
-        <span> 技术支持:重庆市地理信息中心</span>
+        <!-- <span>建设单位:重庆市规划局</span> -->
+        <!-- <span class="footer_line">|</span> -->
+        <!-- <span> 技术支持:重庆市地理信息中心</span> -->
       </div>
       <div class="baseInfo">
+        <span> 技术支持:重庆市地理信息中心</span>
+        <span class="footer_line">|</span>
         <span>邮箱：cqzhsq@qq.com </span>
         <span class="footer_line">|</span>
         <span>联系电话：023-67033881</span>
@@ -137,7 +139,7 @@ export default {
 .baseInfo {
   width: 100%;
   display: flex;
-  line-height: 36px;
+  line-height: 24px;
   justify-content: center;
 }
 
@@ -164,7 +166,7 @@ export default {
 }
 
 .container header {
-  height: 88px;
+  // height: 88px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -179,7 +181,7 @@ header h2 {
   width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 

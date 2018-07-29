@@ -4,7 +4,6 @@ export const configMixin = {
       isShow: false,
       contentHeight: window.innerHeight - 136 + 'px',
       tableHeight: window.innerHeight - 298,
-      funNum: '',
       sysFunNum: '',
       levelNum: 2,
       funAry: [0, 1, 2,
@@ -12,8 +11,9 @@ export const configMixin = {
         10,11, 12, 13, 14, 
         15, 16, 17, 18, 19,
          20,21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-      arrFun: [],
+      arrFun: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       qxLevel: '一级权限',
+      funNum: '',
       cilentAuthorityStr: '1',
       tabDataIdStr: '',
       mapIdStr: '',
@@ -98,31 +98,47 @@ export const configMixin = {
       })
     }
   },
+  computed: {
+    qxArray() {
+      return this.$store.state.qxArray
+    },
+    qxLevelNum() {
+      return this.$store.state.qxLevelNum
+    }
+  },
   created() {
     this.sys = this.$route.query.id || ''
     this.type = this.$route.query.type || ''
-    if(this.$route.query.funNum == 0) {
-      this.sysFunNum = this.$route.query.funNum
-    } else {
-      this.sysFunNum = this.$route.query.funNum || null
+    this.funNum = this.$route.query.funNum
+    if(this.$route.query.funNum >= 0) {
+      this.qxCheck(this.funNum)
     }
-    if(this.sysFunNum || this.sysFunNum == 0) {
-      if(this.sysFunNum <= 10) {
-        this.levelNum = 0
-      } else if(this.sysFunNum > 10 && this.sysFunNum <= 20) {
-        this.levelNum = 1
-      } else {
-        this.levelNum = 2
-      }
-      this.funAry.map((v, index) => {
-        if(v == this.sysFunNum) {
-          this.funAry = this.funAry.slice(0, index + 1)
-        }
-      })
-    }
-    this.checkFunNum(this.sysFunNum)
   },
   methods: {
+    qxCheck(num) {
+      if(num == 0) {
+        this.sysFunNum = num
+      } else {
+        this.sysFunNum = num || 30
+      }
+      if(this.sysFunNum || this.sysFunNum == 0) {
+        this.funAry.map((v, index) => {
+          if(v == this.sysFunNum) {
+            this.funAry = this.funAry.slice(0, index + 1)
+          }
+        })
+        if(this.sysFunNum <= 10) {
+          this.levelNum = 0
+        } else if(this.sysFunNum > 10 && this.sysFunNum <= 20) {
+          this.levelNum = 1
+        } else {
+          this.levelNum = 2
+        }
+      }
+      this.$store.commit('setQxArray', this.funAry)
+      this.$store.commit('setQxLevel', this.levelNum)
+      this.checkFunNum(num)
+    },
     pre() {
       if (this.current !== 2) {
         this.btnContent = '下一步'
@@ -145,11 +161,11 @@ export const configMixin = {
     qx1Change(value) {
       console.log(value)
       if (value === '一级权限') {
-        this.arrFun = this.funAry.slice(0, 11)
+        this.arrFun = this.qxArray.slice(0, 11)
       } else if (value === '二级权限') {
-        this.arrFun = this.funAry.slice(11, 21)
+        this.arrFun = this.qxArray.slice(11, 21)
       } else {
-        this.arrFun = this.funAry.slice(21, 31)
+        this.arrFun = this.qxArray.slice(21, 31)
       }
     },
     checkFunNum(funNum) {
@@ -160,7 +176,7 @@ export const configMixin = {
       } else if (funNum > 20) {
         this.qxLevel = '三级权限'
       }
-      this.qx1Change(this.qxLevel)
+      this.qx1Change(this.qxLevel, funNum)
       this.funNum = funNum
     },
     selectMapConfig(section, row) {

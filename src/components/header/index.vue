@@ -6,13 +6,12 @@
         <span v-else-if="query.type==3" class="layout-logo zhqq" @click="linkTo"></span>
         <span v-else class="layout-logo" @click="linkTo"></span>
         <span class="navbar-title">
-          {{title}} —
-          <small>管理平台</small>
+          {{title}}管理平台
         </span>
       </div>
       <div class="layout-nav">
         <div class="user-info">
-          <Avatar style="background-color: #87d068" icon="person" />
+          <Avatar style="background-color: #87d068;margin-top:15px;" icon="person" />
           <Dropdown trigger="hover" @on-click="userClick" style="margin: 0 10px">
             <a href="javascript:void(0)" style="color: #fff;">
               {{userInfo.realName}}
@@ -120,12 +119,14 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+.navbar-logo span {
+  display: inline-block;
+}
 .message-con {
   cursor: pointer;
 }
 .user-info {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
   color: #fff;
   .user-name {
@@ -147,7 +148,6 @@ export default {
     }
   }
   .msg-icon {
-    display: flex;
     width: 22px;
     height: 22px;
     background: url("../../assets/msg.png") no-repeat;

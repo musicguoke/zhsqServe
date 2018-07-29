@@ -11,30 +11,32 @@ body {
 
 /* 头部样式 */
 
-.navbar-logo {
+/* .navbar-logo {
   display: flex;
   align-items: center;
-}
+} */
 
 .navbar-logo .layout-logo {
-  display: inline-block;
-  width: 85px;
-  height: 46px;
+  width: 75px;
+  height: 49px;
   background: url("../../assets/logo.png") no-repeat;
   background-size: 100%;
   cursor: pointer;
+  vertical-align: middle;
 }
 .navbar-logo .ghdw {
-  width: 46px;
-  height: 46px;
-  background: url("../../assets/ghdw.png") no-repeat center;
+  width: 49px;
+  height: 49px;
+  background: url("../../assets/ghdw.png") no-repeat;
   background-size: contain;
   border-radius: 4px;
+  vertical-align: middle;
 }
 .navbar-logo .zsqq {
 }
 
 .navbar-logo .navbar-title {
+  display: inline;
   font-size: 18px;
   font-weight: bold;
   margin-left: 14px;
@@ -100,6 +102,13 @@ body {
 
 .el-tooltip__popper {
   max-width: 300px;
+}
+.el-table .warning-row {
+  color: #19be6b;
+}
+
+.el-table .success-row {
+  color: #ed3f14;
 }
 
 .tablePage {
