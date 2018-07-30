@@ -415,6 +415,7 @@ export default {
         };
     },
     created() {
+        this._getAreacode()
         this._getUserList()
         if (this.$route.query.id) {
             this.isProduct = true;
@@ -425,11 +426,6 @@ export default {
         }
     },
     methods: {
-        handleQxOpenChange(bol) {
-            if (bol) {
-                this._getAreacode()
-            }
-        },
         handleBranchOpenChange(bol) {
             if (bol) {
                 this._getDepartmentList()

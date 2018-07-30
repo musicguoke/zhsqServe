@@ -109,11 +109,11 @@ body {
     max-width: 300px;
 }
 .el-table .warning-row {
-  color: #19be6b;
+  color: #ed3f14;
 }
 
 .el-table .success-row {
-  color: #ed3f14;
+  color: #19be6b;
 }
 
 .tablePage {
