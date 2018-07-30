@@ -18,7 +18,7 @@
                     </el-table-column>
                     <el-table-column prop="arDescribe" label="用户描述" :show-overflow-tooltip="true">
                     </el-table-column>
-                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" :filter-method="filterByAreaCode" filter-placement="bottom-end">
+                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" column-key="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column prop="name" label="部门" :filters="departmentFilterList" column-key="filterByBranch" :show-overflow-tooltip="true">
                     </el-table-column>
@@ -57,7 +57,7 @@
                             </Select>
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
-                            <Select v-model="userForm.arAreacode" @on-open-change="handleQxOpenChange">
+                            <Select v-model="userForm.arAreacode">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
@@ -493,7 +493,9 @@ export default {
                 pageNo: page || this.nowPage,
                 pageSize: 10,
                 arTruename: this.searchName,
-                grId: this.filterByGrId == 0 ? '' : this.filterByGrId
+                grId: this.filterByGrId == 0 ? '' : this.filterByGrId,
+                arBranchs:this.filterByBranch,
+                arAreacodes: this.filterByAreaCode
             }
             getUserList(data).then(res => {
                 this.userData = []
@@ -515,13 +517,15 @@ export default {
                 for (let i in res.data.areaCodeList) {
                     this.countyFilterList.push({
                         text: res.data.areaCodeList[i].areaname,
-                        value: res.data.areaCodeList[i].areaname
+                        value: res.data.areaCodeList[i].areaname,
+                        code:res.data.areaCodeList[i].areacode
                     })
                 }
                 res.data.branchStructList.map(v => {
                     this.departmentFilterList.push({
                         value: v.name,
-                        text: v.name
+                        text: v.name,
+                        code:v.id
                     })
                     if (v.list) {
                         v.list.map(a => {
@@ -993,11 +997,12 @@ export default {
         },
         //根据区县和部门进行过滤
         filterChange(params) {
+            console.log(params)
             let filterType = Object.keys(params)[0];
-            if (filterType == "filterByAreaName") {
+            if (filterType == "filterByAreaCode") {
                 let areacodeList = []
                 this.countyFilterList.map(v => {
-                    params["filterByAreaName"].map(n => {
+                    params["filterByAreaCode"].map(n => {
                         if (n == v.text) {
                             areacodeList.push(v.code);
                         }
