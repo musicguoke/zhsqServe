@@ -51,14 +51,14 @@
                         <FormItem label="密码" v-show="!isAdd">
                             <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
                         </FormItem>
-                        <FormItem label="部门" prop="arBranch">
-                            <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1">
-                                <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
-                            </Select>
-                        </FormItem>
                         <FormItem label="区县" prop="arAreacode">
                             <Select v-model="userForm.arAreacode">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="部门" prop="arBranch">
+                            <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1">
+                                <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
                         </FormItem>
@@ -109,14 +109,15 @@
                 <FormItem label="密码" v-show="!isAdd">
                     <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
                 </FormItem>
-                <FormItem label="部门" prop="arBranch">
-                    <Select v-model="userForm.arBranch" ref="department2">
-                        <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
-                    </Select>
-                </FormItem>
                 <FormItem label="区县" prop="arAreacode">
-                    <Select v-model="userForm.arAreacode">
+                    <!-- <Select v-model="userForm.arAreacode" disabled>
                         <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select> -->
+                    <Input v-model="userForm.arAreaname" readonly></Input>
+                </FormItem>
+                <FormItem label="部门" prop="arBranch">
+                    <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department2">
+                        <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                     </Select>
                 </FormItem>
                 <FormItem label="角色" prop="role">
@@ -289,7 +290,8 @@ export default {
                 arSalt: "", //校验码
                 arGroup: "", //用户组
                 arBranch: "", //部门
-                arAreacode: "", //区县
+                arAreacode: "", //区县code
+                arAreaname:"",//区县名
                 arSource: "", //来源
                 name: "",
                 arDescribe: "",//用户描述
@@ -433,7 +435,7 @@ export default {
         // },
         handleBranchOpenChange(bol) {
             if (bol) {
-                this._getDepartmentList()
+                this._getDepartmentListByAreaCode()
             }
         },
         userAddOpen() {
@@ -447,6 +449,10 @@ export default {
             this._getSystemList()
             for (let i in this.userForm) {
                 this.userForm[i] = ''
+            }
+            if(this.isProduct){
+                this.userForm.arAreacode = this.$route.query.areacode
+                this.userForm.arAreaname = this.$route.query.areaname
             }
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
         },
@@ -465,6 +471,10 @@ export default {
                 if (params.row[i] || params.row[i] == 0) {
                     this.userForm[i] = params.row[i]
                 }
+            }
+            if(this.isProduct){
+                this.userForm.arAreacode = this.$route.query.areacode
+                this.userForm.arAreaname = this.$route.query.areaname
             }
             this.$refs.department1.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
             this.$refs.department2.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
@@ -526,29 +536,29 @@ export default {
                         code:res.data.areaCodeList[i].areacode
                     })
                 }
-                res.data.branchStructList.map(v => {
-                    this.departmentFilterList.push({
-                        value: v.name,
-                        text: v.name,
-                        code:v.id
-                    })
-                    if (v.list) {
-                        v.list.map(a => {
-                            this.departmentFilterList.push({
-                                value: a.name,
-                                text: a.name
-                            })
-                            if (a.list) {
-                                a.list.map(b => {
-                                    this.departmentFilterList.push({
-                                        value: b.name,
-                                        text: b.name
-                                    })
-                                })
-                            }
-                        })
-                    }
-                })
+                // res.data.branchStructList.map(v => {
+                //     this.departmentFilterList.push({
+                //         value: v.name,
+                //         text: v.name,
+                //         code:v.id
+                //     })
+                //     if (v.list) {
+                //         v.list.map(a => {
+                //             this.departmentFilterList.push({
+                //                 value: a.name,
+                //                 text: a.name
+                //             })
+                //             if (a.list) {
+                //                 a.list.map(b => {
+                //                     this.departmentFilterList.push({
+                //                         value: b.name,
+                //                         text: b.name
+                //                     })
+                //                 })
+                //             }
+                //         })
+                //     }
+                // })
                 this.total = res.data.page.total
             })
         },
@@ -557,7 +567,7 @@ export default {
                 pageNo: 1,
                 pageSize: 100,
                 method: "listTree",
-                grName: ""
+                areacode:500000
             };
             getDepartmentList(data).then(res => {
                 this.departmentData = res.data;
@@ -584,6 +594,21 @@ export default {
                     }
                 })
             });
+        },
+        _getDepartmentListByAreaCode(){
+            if(this.userForm.arAreacode){
+                let data = {
+                    pageNo: 1,
+                    pageSize: 100,
+                    method: "listTree",
+                    areacode:this.userForm.arAreacode
+                };
+                getDepartmentList(data).then(res => {
+                    this.departmentData = res.data;
+                });
+            }else{
+                this.$Message.warning("请先选区县")
+            }
         },
         _getSystemList() {
             this.systemList = []
@@ -1002,7 +1027,6 @@ export default {
         },
         //根据区县和部门进行过滤
         filterChange(params) {
-            console.log(params)
             let filterType = Object.keys(params)[0];
             if (filterType == "filterByAreaCode") {
                 let areacodeList = []

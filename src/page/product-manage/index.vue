@@ -210,7 +210,9 @@ export default {
                 id: id,
                 type: data.type,
                 funNum: data.funNum,
-                systemname: data.sysName
+                systemname: data.sysName,
+                areacode:data.areacode,
+                areaname:data.areaName,
               }
             })
           } else {
