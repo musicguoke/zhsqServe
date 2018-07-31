@@ -198,6 +198,7 @@ export default {
     },
 
     onDrop(e) {
+      // 兼容火狐浏览器
       e.preventDefault();
       e.stopPropagation();
       this.dragOverClass = "";

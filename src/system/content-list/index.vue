@@ -24,15 +24,13 @@ export default {
       dataTree: [],
       dataColumns: [{
           title: '名称',
-          key: 'title'
+          key: 'title',
+          width: 500
         }, {
           title: '编码',
           key: 'id',
           sortable: true
-        }, {
-          title: '排序',
-          key: 'listorder'
-        }, {
+        },{
           title: '更新时间',
           key: 'updatetime'
         }

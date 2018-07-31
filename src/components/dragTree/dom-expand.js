@@ -128,6 +128,6 @@ if (!window.HTMLElement) {
     }
     return this
   }
-  HTMLDocument.prototype.bind = HTMLElement.prototype.bind
-  HTMLDocument.prototype.unbind = HTMLElement.prototype.unbind
+  window.Document.prototype.bind = HTMLElement.prototype.bind
+  window.Document.prototype.unbind = HTMLElement.prototype.unbind
 }

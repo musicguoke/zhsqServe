@@ -12,17 +12,15 @@
     />
     <div class="tableSize">
       <el-table :data="list" border style="width: 100%">
-        <el-table-column prop="listorder" width="80" label="排序" sortable>
+        <el-table-column prop="nameA" width="120" label="中文名">
         </el-table-column>
-        <el-table-column prop="nameA" label="中文名">
-        </el-table-column>
-        <el-table-column prop="name" label="英文名">
+        <el-table-column prop="name" width="80" label="英文名">
         </el-table-column>
         <el-table-column prop="layerType" width="300" label="表名">
         </el-table-column>
         <el-table-column prop="layerAlias" label="图层别名">
         </el-table-column>
-        <el-table-column prop="fieldType" label="字段类型" sortable>
+        <el-table-column prop="fieldType" width="110" label="字段类型" sortable>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -152,7 +150,7 @@ export default {
       this._getZhEnList()
     },
     _getZhEnList() {
-      getZhEnList(this.page1, this.searchContent).then(res => {
+      getZhEnList(this.page, this.searchContent).then(res => {
         if (res.code === 20000) {
           this.list = res.data.list
           this.listLength = res.data.total

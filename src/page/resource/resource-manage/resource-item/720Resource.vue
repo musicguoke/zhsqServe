@@ -2,8 +2,8 @@
     <div>
         <v-search :import-show="false" :delete-show="false" @on-reset="reset" @on-search="search" @on-build="openAddModal"/>
         <el-table :data="resource720Data" border style="width: 100%">
-             <el-table-column prop="id" label="ID">
-            </el-table-column>
+            <!-- <el-table-column prop="id" label="ID">
+            </el-table-column> -->
             <el-table-column prop="name" label="资源名称" >
             </el-table-column>
             <el-table-column prop="path" label="资源路径">

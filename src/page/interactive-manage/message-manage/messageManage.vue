@@ -18,8 +18,8 @@
         </div>
         <div class="tableSize">
           <el-table :data="messageData" border style="width: 100%">
-            <el-table-column prop="id" label="Id" width="60">
-            </el-table-column>
+            <!-- <el-table-column prop="id" label="Id" width="60">
+            </el-table-column> -->
             <el-table-column prop="phone" label="电话">
             </el-table-column>
             <el-table-column prop="message" label="短信内容" :show-overflow-tooltip="true">

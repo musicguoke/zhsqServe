@@ -31,8 +31,19 @@
       <div style="width: 500px" v-show="current == 1">
         <my-tree ref="topicTreeTable" :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
-      <div v-show="current == 2" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
-        <my-tree ref="treeTable" :items="dataTree" :buildSys="buildSys" :columns='dataColumns' @on-selection-change="selectDataConfig"></my-tree>
+      <div
+        v-show="current == 2"
+        class="table-tree-box"
+        :style="{maxHeight: tableHeight + 'px',width: '500px'}"
+      >
+        <my-tree
+          ref="treeTable"
+          :items="dataTree"
+          :buildSys="buildSys"
+          :columns='dataColumns'
+          @on-selection-change="selectDataConfig"
+        >
+        </my-tree>
       </div>
       <div
         style="width: 500px;overflow:auto"
@@ -50,7 +61,7 @@
           <FormItem label="权限等级">
             <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option 
-                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, qxLevelNum+1)"
+                v-for="item in ['公众用户可浏览', '部分字段可浏览', '全部字段可浏览'].slice(0, qxLevelNum+1)"
                 :value="item"
                 :key="item"
               >
@@ -58,13 +69,13 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="请选择权限">
+          <!-- <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
               <Option v-for="item in arrFun" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>
-          </FormItem>
+          </FormItem> -->
         </Form>
       </div>
     </div>

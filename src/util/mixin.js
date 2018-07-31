@@ -12,7 +12,7 @@ export const configMixin = {
         15, 16, 17, 18, 19,
          20,21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
       arrFun: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      qxLevel: '一级权限',
+      qxLevel: '公众用户可浏览',
       funNum: '',
       cilentAuthorityStr: '1',
       tabDataIdStr: '',
@@ -37,9 +37,6 @@ export const configMixin = {
         }, {
           title: '数据类型',
           key: 'typeName'
-        }, {
-          title: '排序',
-          key: 'dpListorder'
         }
       ],
       dataColumns: [
@@ -53,12 +50,6 @@ export const configMixin = {
           title: '编码',
           key: 'dataId',
           sortable: true
-        }, {
-          title: '排序',
-          key: 'listorder'
-        }, {
-          title: '更新时间',
-          key: 'updatetime'
         }
       ],
       columns4: [
@@ -160,21 +151,24 @@ export const configMixin = {
     // 权限选择
     qx1Change(value) {
       console.log(value)
-      if (value === '一级权限') {
-        this.arrFun = this.qxArray.slice(0, 11)
-      } else if (value === '二级权限') {
-        this.arrFun = this.qxArray.slice(11, 21)
+      if (value === '公众用户可浏览') {
+        this.funNum = 10
+        // this.arrFun = this.qxArray.slice(0, 11)
+      } else if (value === '部分字段可浏览') {
+        this.funNum = 20
+        // this.arrFun = this.qxArray.slice(11, 21)
       } else {
-        this.arrFun = this.qxArray.slice(21, 31)
+        this.funNum = 30
+        // this.arrFun = this.qxArray.slice(21, 31)
       }
     },
     checkFunNum(funNum) {
       if (funNum < 11) {
-        this.qxLevel = '一级权限'
+        this.qxLevel = '公众用户可浏览'
       } else if (funNum > 10 && funNum < 21) {
-        this.qxLevel = '二级权限'
+        this.qxLevel = '部分字段可浏览'
       } else if (funNum > 20) {
-        this.qxLevel = '三级权限'
+        this.qxLevel = '全部字段可浏览'
       }
       this.qx1Change(this.qxLevel, funNum)
       this.funNum = funNum

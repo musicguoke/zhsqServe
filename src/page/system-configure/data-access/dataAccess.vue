@@ -11,8 +11,8 @@
           <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
             </el-table-column>
-            <el-table-column prop="id" label="ID" width="60" sortable>
-            </el-table-column>
+            <!-- <el-table-column prop="id" label="ID" width="60" sortable>
+            </el-table-column> -->
             <el-table-column prop="userName" width="80" label="用户名">
             </el-table-column>
             <el-table-column prop="operation" label="用户操作">

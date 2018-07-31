@@ -85,7 +85,7 @@
           <FormItem label="权限等级">
             <Select v-model="qxLevel" @on-change="qx2Change" placeholder="请选择权限等级">
               <Option 
-                v-for="item in ['一级权限', '二级权限', '三级权限']"
+                v-for="item in ['公众用户可浏览', '部分字段可浏览', '全部字段可浏览']"
                 :value="item"
                 :key="item"
               >
@@ -93,13 +93,13 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="请选择权限">
+          <!-- <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
               <Option v-for="item in arrFun" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>
-          </FormItem>
+          </FormItem> -->
         </Form>
       </div>
     </div>
@@ -174,9 +174,6 @@ export default {
         }, {
           title: '排序',
           key: 'listorder'
-        }, {
-          title: '更新时间',
-          key: 'updatetime'
         }
       ],
     }
@@ -267,12 +264,15 @@ export default {
     // 权限选择
     qx2Change(value) {
       console.log(value)
-      if (value === '一级权限') {
-        this.arrFun = this.funAry.slice(0, 11)
-      } else if (value === '二级权限') {
-        this.arrFun = this.funAry.slice(11, 21)
+      if (value === '公众用户可浏览') {
+        this.funNum = 10
+        // this.arrFun = this.qxArray.slice(0, 11)
+      } else if (value === '部分字段可浏览') {
+        this.funNum = 20
+        // this.arrFun = this.qxArray.slice(11, 21)
       } else {
-        this.arrFun = this.funAry.slice(21, 31)
+        this.funNum = 30
+        // this.arrFun = this.qxArray.slice(21, 31)
       }
     },
     // 系统类别发生变化

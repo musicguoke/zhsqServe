@@ -46,7 +46,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '重庆市综合市情管理系统'
+      default: '重庆市综合市情'
     }
   },
   computed: {

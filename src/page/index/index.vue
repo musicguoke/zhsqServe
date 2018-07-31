@@ -8,17 +8,19 @@
             <div class="item">
               <span class="i-icon user-icon"></span>
               <div class="num">
-                <p class="num-title">用户总数</p>
-                <i>{{result.user}}
+                <p class="num-title">用户数量</p>
+                <i>
+                  <span class="num-green">{{result.user}}</span>
                   <b>人</b>
                 </i>
               </div>
             </div>
             <div class="item">
-              <span class="i-icon visit-icon"></span>
+              <span class="i-icon login-icon"></span>
               <div class="num">
-                <p class="num-title">累计访问次数</p>
-                <i>{{accessResult.access}}
+                <p class="num-title">累计用户登陆次数</p>
+                <i>
+                  <span class="num-green">{{accessResult.login}}</span>
                   <b>次</b>
                 </i>
               </div>
@@ -26,20 +28,44 @@
           </div>
           <div class="data-item">
             <div class="item">
-              <span class="i-icon data-icon"></span>
+              <span class="i-icon qx-icon"></span>
               <div class="num">
-                <p class="num-title">数据总量</p>
-                <i>{{result.data}}
-                  <b>条</b>
+                <p class="num-title">区县数量</p>
+                <i>
+                  <span class="num-green">{{result.county}}</span>
+                  <b>个</b>
                 </i>
               </div>
             </div>
             <div class="item">
-              <span class="i-icon qx-icon"></span>
+              <span class="i-icon visit-icon"></span>
               <div class="num">
-                <p class="num-title">部署区县</p>
-                <i>{{result.county}}
+                <p class="num-title">累计数据调用次数</p>
+                <i>
+                  <span class="num-blue">{{accessResult.access}}</span>
+                  <b>次</b>
+                </i>
+              </div>
+            </div>
+          </div>
+          <div class="data-item">
+            <div class="item">
+              <span class="i-icon sys-icon"></span>
+              <div class="num">
+                <p class="num-title">应用系统数量</p>
+                <i>
+                  <span class="num-blue">{{accessResult.system}}</span>
                   <b>个</b>
+                </i>
+              </div>
+            </div>
+            <div class="item">
+              <span class="i-icon data-icon"></span>
+              <div class="num">
+                <p class="num-title">图层数量</p>
+                <i>
+                  <span class="num-blue">{{result.data}}</span>
+                  <b>条</b>
                 </i>
               </div>
             </div>
@@ -48,23 +74,25 @@
             <div class="item">
               <span class="i-icon login-icon"></span>
               <div class="num">
-                <p class="num-title">累计登陆</p>
-                <i>{{accessResult.login}}
+                <p class="num-title">今日用户登陆次数</p>
+                <i>
+                  <span class="num-green">{{accessResult.todayUser}}</span>
                   <b>次</b>
                 </i>
               </div>
             </div>
             <div class="item">
-              <span class="i-icon sys-icon"></span>
+              <span class="i-icon visit-icon"></span>
               <div class="num">
-                <p class="num-title">系统数量</p>
-                <i>{{accessResult.system}}
+                <p class="num-title">今日数据调用次数</p>
+                <i>
+                  <span class="num-blue">{{accessResult.todayLogin}}</span>
                   <b>个</b>
                 </i>
               </div>
             </div>
           </div>
-          <div class="data-item data-right">
+          <!-- <div class="data-item data-right">
             <div class="item">
               <span class="item-title">今日动态</span>
               <span class="num user-num">
@@ -80,7 +108,7 @@
                 </i>
               </span>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="data-content data-bot">
           <div class="data-item">

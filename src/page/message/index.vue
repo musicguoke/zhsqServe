@@ -7,8 +7,8 @@
     <Card :style="{maxHeight: contentHeight}">
       <div class="table">
         <el-table :data="list" border style="width: 100%">
-          <el-table-column prop="id" label="ID" width="60" sortable></el-table-column>
-          <el-table-column prop="contact" label="联系人" width="80"></el-table-column>
+          <!-- <el-table-column prop="id" label="ID" width="60" sortable></el-table-column> -->
+          <el-table-column prop="contact" label="联系人"></el-table-column>
           <el-table-column prop="suggest" label="建议" :show-overflow-tooltip="true" width="300"></el-table-column>
           <el-table-column prop="suggestReply" label="意见回复" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column prop="replyDescp" label="回复描述" :show-overflow-tooltip="true"></el-table-column>

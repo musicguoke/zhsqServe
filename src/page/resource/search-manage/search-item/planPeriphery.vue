@@ -2,8 +2,8 @@
     <div>
         <v-search :search-show="false" :delete-show="false" @on-search="search" @on-reset="reset"  @on-build="openAddModal" @on-import="openImportModal"/>
         <el-table :data="hotspotData" border style="width: 100%">
-            <el-table-column prop="dataId" label="Id" sortable>
-            </el-table-column>
+            <!-- <el-table-column prop="dataId" label="Id" sortable>
+            </el-table-column> -->
             <el-table-column prop="name" label="热点名">
             </el-table-column>
             <el-table-column prop="parentid" label="父节点">

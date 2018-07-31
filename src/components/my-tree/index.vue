@@ -24,7 +24,7 @@
           :class="{'child-tr':item.parent}"
         >
           <td
-            :class="{'label-box': column.type === 'selection'}" 
+            :class="{'label-box': column.type === 'selection'}"
             v-for="(column,snum) in columns"
             :key="column.key"
             :style="tdStyle(column)"
@@ -43,16 +43,20 @@
                 {{action.text}}
               </i-button>
             </div>
-            <label @click="toggle(index, item, $event)" v-if="!column.type">
+            <label
+              @click="toggle(index, item, $event)"
+              :class="{'click-label': column.key==='title'&&item.children&&item.children.length>0}"
+              v-if="!column.type"
+            >
               <span class="icon-box" v-if='snum==iconRow()'>
                 <i v-html='item.spaceHtml'></i>
                 <span class="item-icon-box" v-if="item.children&&item.children.length>0">
-                  <!-- <i class="icon" :class="{'icon-plus':!item.expand,'icon-minus':item.expand }"></i> -->
-                  <i class="folder" :class="{'icon-folder':!item.expand,'icon-folder-open':item.expand }"></i>
+                  <i class="icon" :class="{'icon-plus':!item.expand,'icon-minus':item.expand }"></i>
+                  <!-- <i class="folder" :class="{'icon-folder':!item.expand,'icon-folder-open':item.expand }"></i> -->
                 </span>
                 <span class="item-icon-box" v-else>
-                  <!-- <i class="ms-tree-space"></i> -->
-                  <i class="folder icon-leaf"></i>
+                  <i class="ms-tree-space"></i>
+                  <!-- <i class="folder icon-leaf"></i> -->
                 </span>
               </span>
               <span>{{renderBody(item,column)}}</span>
@@ -179,7 +183,7 @@ export default {
         style["text-align"] = column.align;
       }
       if (column.width) {
-        style["max-width"] = column.width + 'px';
+        style["width"] = column.width + 'px';
       }
       return style;
     },
@@ -583,8 +587,9 @@ table {
   font-style: normal;
   font-weight: 400;
   line-height: 1;
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
+  margin: 0 4px;
 }
 .ms-tree-space::before {
   content: "";
@@ -598,10 +603,14 @@ table {
   display: flex;
   align-items: center;
 }
+.click-label {
+  cursor: pointer;
+}
 .icon {
   display: block;
-  width: 18px;
-  height: 24px;
+  width: 15px;
+  height: 15px;
+  margin: 0 4px;
 }
 .folder {
   display: block;

@@ -7,8 +7,8 @@
     <Card :style="{maxHeight: contentHeight}">
       <div class="tableSize">
         <el-table :data="list" border style="width: 100%">
-          <el-table-column prop="id" label="id" sortable>
-          </el-table-column>
+          <!-- <el-table-column prop="id" label="id" sortable>
+          </el-table-column> -->
           <el-table-column prop="version" label="版本号" sortable>
           </el-table-column>
           <el-table-column prop="imagePath" label="图片路径">

@@ -1,7 +1,13 @@
 <template>
   <div class="seach-condition">
     <div class="search-box" v-if="searchShow">
-      <Input v-model="searchContent" v-if="searchBoxShow" placeholder="请输入搜索内容..." style="width: 200px" />
+      <Input
+        v-model="searchContent"
+        placeholder="请输入搜索内容..."
+        style="width: 200px"
+        v-if="searchBoxShow"
+        @on-enter="handleSearch"
+      />
       <Select v-model="selectFilter" v-if="selectShow" style="width:200px" placeholder="请选择...">
         <Option v-for="item in selectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>

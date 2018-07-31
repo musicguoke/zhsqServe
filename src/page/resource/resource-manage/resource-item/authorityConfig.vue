@@ -4,8 +4,8 @@
     <div class="tableSize">
       <el-table :data="list" border style="width: 100%" @filter-change="filterSys" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="moduleId" label="编号" sortable>
-        </el-table-column>
+        <!-- <el-table-column prop="moduleId" label="编号" sortable>
+        </el-table-column> -->
         <el-table-column
           prop="moduleName"
           label="模块名称"

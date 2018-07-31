@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-table :data="dataTargetData" border style="width: 100%">
-             <el-table-column prop="id" label="ID">
-            </el-table-column>
+            <!-- <el-table-column prop="id" label="ID">
+            </el-table-column> -->
             <el-table-column prop="name" label="数据名称" >
             </el-table-column>
             <el-table-column prop="dataId" label="数据编号" sortable>

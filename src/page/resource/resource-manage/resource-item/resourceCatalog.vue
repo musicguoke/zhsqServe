@@ -141,17 +141,12 @@ export default {
       dataColumns: [
         {
           title: '数据名称',
-          key: 'title'
+          key: 'title',
+          width: 400
         }, {
           title: '数据编码',
           key: 'id',
           sortable: true
-        }, {
-          title: '排序',
-          key: 'listorder'
-        }, {
-          title: '更新时间',
-          key: 'updatetime'
         }, {
           title: '操作',
           type: 'action',
