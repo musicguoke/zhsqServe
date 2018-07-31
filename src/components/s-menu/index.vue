@@ -10,7 +10,7 @@
         <Icon type="ios-paper"></Icon>
           目录管理
       </template>
-      <MenuItem name="content-list">资源目录</MenuItem>
+      <MenuItem name="content-list" v-if="userinfo.role!==3&&Number(query.type)!==2">资源目录</MenuItem>
       <MenuItem
         name="modify"
         v-if="userinfo.role!==3&&Number(query.type)!==2"

@@ -16,7 +16,12 @@
       </Card>
       <Card :style="{width:'49%',float:'right',overflow:'hidden',maxHeight: contentHeight}">
         <div v-if="list.length>0">
-          <drag-tree :data="dragTreeData" draggable @on-drop="getDropData" @on-edit="editData">
+          <drag-tree
+            :data="dragTreeData"
+            draggable="true"
+            @on-drop="getDropData"
+            @on-edit="editData"
+          >
           </drag-tree>
           <div>
             <Button style="display: block;margin: 6px auto 0;" type="primary" @click="handleSave">保存</Button>
@@ -209,7 +214,6 @@ export default {
       var dropData = info.dropNode.nodeData;
       var dropParent = info.dropNode.parentNode;
       var dropPosition = info.dropPosition; //0作为子级，-1放在目标节点前面，1放在目标节点后面
-
       //把拖拽元素从父节点中删除
       if (dragParent) {
         dragParent.children.splice(dragParent.children.indexOf(dragData), 1);

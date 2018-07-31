@@ -2,7 +2,7 @@
   <div class="card-content" v-if="isShow" style="min-height: 450px;">
     <Steps :current="current" v-if="newSys">
       <Step title="基本信息" content=""></Step>
-      <Step title="720配置" content=""></Step>
+      <Step title="全景配置" content=""></Step>
       <Step title="专题配置" content=""></Step>
       <Step title="功能配置" content=""></Step>
       <Step title="地图配置" content=""></Step>
@@ -10,7 +10,7 @@
     </Steps>
     <Menu mode="horizontal" ref="tab_menu" style="width: 100%" v-if="!newSys" :theme="theme" :active-name="tabActiveName" @on-select="tabChange">
       <MenuItem name="0">基本信息</MenuItem>
-      <MenuItem name="1">720配置</MenuItem>
+      <MenuItem name="1">全景配置</MenuItem>
       <MenuItem name="2">专题配置</MenuItem>
       <MenuItem name="3">功能配置</MenuItem>
       <MenuItem name="4">地图配置</MenuItem>
@@ -31,7 +31,7 @@
       <div style="width: 500px" v-show="current == 2">
         <my-tree ref="topicTreeTable" :items="topicDataTree" :columns='topicDataColumns' @on-selection-change="selectTopicDataConfig"></my-tree>
       </div>
-      <div v-show="current == 1" class="table-tree-box" :style="{maxHeight: tableHeight + 'px'}">
+      <div v-show="current == 1" class="table-tree-box" :style="{maxHeight: tableHeight + 'px',width: '500px'}">
         <my-tree ref="treeTable" :items="dataTree" :columns='dataColumns' @on-selection-change="select720DataConfig"></my-tree>
       </div>
       <div style="width: 500px;overflow:auto" :style="{maxHeight: tableHeight + 'px'}" v-show="current == 3">
@@ -46,7 +46,7 @@
           <FormItem label="权限等级">
             <Select v-model="qxLevel" @on-change="qx1Change" placeholder="请选择权限等级">
               <Option 
-                v-for="item in ['一级权限', '二级权限', '三级权限'].slice(0, qxLevelNum+1)"
+                v-for="item in ['公众用户可浏览', '部分字段可浏览', '全部字段可浏览'].slice(0, qxLevelNum+1)"
                 :value="item"
                 :key="item"
               >
@@ -54,13 +54,13 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="请选择权限">
+          <!-- <FormItem label="请选择权限">
             <Select v-model="funNum" placeholder="请先选择权限等级">
               <Option v-for="item in arrFun" :value="item" :key="item">
                 {{item}}
               </Option>
             </Select>
-          </FormItem>
+          </FormItem> -->
         </Form>
       </div>
     </div>
@@ -104,6 +104,15 @@ export default {
         grName: '',
         grIspass: '1'
       },
+      dataColumns: [
+        {
+          type: 'selection',
+          width: '50',
+        }, {
+          title: '名称',
+          key: 'dpName'
+        }
+      ],
       dataTree: [],
       topicDataTree: [],
       ms720Str: '',

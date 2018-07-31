@@ -30,7 +30,7 @@
                 <FormItem label="城镇指标" prop="cityTarget">
                     <Input v-model="areaTargetForm.cityTarget"></Input>
                 </FormItem>
-                <FormItem label="区县指标">
+                <FormItem label="区域指标">
                     <Input v-model="areaTargetForm.countyTarget"></Input>
                 </FormItem>
                 <FormItem label="年份" prop="year">

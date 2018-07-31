@@ -16,8 +16,8 @@
       <div class="tableSize">
         <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="vId" label="ID" sortable>
-          </el-table-column>
+          <!-- <el-table-column prop="vId" label="ID" sortable>
+          </el-table-column> -->
           <el-table-column prop="vTitle" label="版本名称" sortable>
           </el-table-column>
           <el-table-column prop="vVersion" label="版本号" sortable>

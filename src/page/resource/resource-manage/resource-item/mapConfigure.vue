@@ -5,8 +5,8 @@
             <el-table :data="mapConfigureData" border style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column prop="id" label="ID" width="60" sortable>
-                </el-table-column>
+                <!-- <el-table-column prop="id" label="ID" width="60" sortable>
+                </el-table-column> -->
                 <el-table-column prop="mName" label="名称" width="100">
                 </el-table-column>
                 <el-table-column prop="mUrl" label="地图地址">

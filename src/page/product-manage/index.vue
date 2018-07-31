@@ -13,17 +13,17 @@
           style="width: 100%"
           :cell-class-name="tableRowClassName"
           @selection-change="handleSelectionChange"
+          @filter-change="handleFilterChange"
         >
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="id" label="系统编号" sortable></el-table-column>
           <el-table-column prop="sysName" label="系统名称"></el-table-column>
           <el-table-column
             prop="sysType"
             label="系统类型"
+            column-key="sysType"
             :filters="[{ text: '综合市情', value: '1' }, { text: '规划定位', value: '2' }, { text: '综合区情', value: '3' }]"
-            :filter-method="filterSysType"
           ></el-table-column>
-          <el-table-column prop="areaName" label="所属区县"></el-table-column>
+          <el-table-column prop="areaName" label="所属区域"></el-table-column>
           <el-table-column
             prop="status"
             label="系统状态"
@@ -36,6 +36,9 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="tablePage">
+          <Page :total="total" :current="page" @on-change="handlePageChange"></Page>
+        </div>
       </div>
       <authority-config
         ref="authConfig"
@@ -69,9 +72,12 @@ export default {
       contentHeight: window.innerHeight - 174 + 'px',
       newSys: true,
       isShow: false,
+      page: 1,
       name: '系统列表',
       selectedId: [],
       sysData: [],
+      total: '',
+      sysType: '',
       searchContent: null
     }
   },
@@ -119,6 +125,14 @@ export default {
         }
       })
     },
+    handleFilterChange(arr) {
+      this.sysType = arr['sysType'].toString()
+      this._getSystemList()
+    },
+    handlePageChange(page) {
+      this.page = page
+      this._getSystemList(page)
+    },
     handleSelectionChange(val) {
       this.selectedId = []
       val.map(v => {
@@ -146,7 +160,7 @@ export default {
       this._getSystemList()
     },
     _getSystemList(page) {
-      getSystemList(page, this.searchContent).then(res => {
+      getSystemList(page, this.searchContent, this.sysType).then(res => {
         if (res.code === 20000) {
           res.data.list.filter(v => {
             if (v.enable === 0) {
@@ -163,6 +177,7 @@ export default {
             }
           })
           this.sysData = res.data.list
+          this.total = res.data.total
         } else {
           this.$Message.error(`${res.message}`)
         }

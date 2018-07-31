@@ -11,8 +11,8 @@
                     <el-table :data="parameterData" border style="width: 100%" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="55">
                         </el-table-column>
-                        <el-table-column prop="metaId" label="ID" width="60" sortable>
-                        </el-table-column>
+                        <!-- <el-table-column prop="metaId" label="ID" width="60" sortable>
+                        </el-table-column> -->
                         <el-table-column prop="metaKey" label="变量名">
                         </el-table-column>
                         <el-table-column prop="metaValue" label="值" :show-overflow-tooltip="true">

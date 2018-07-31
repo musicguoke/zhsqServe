@@ -1,14 +1,35 @@
 html,
 body {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .container {
-    width: 1200px;
-    margin: 0 auto;
+  width: 1200px;
+  margin: 0 auto;
 }
 
+.num-green {
+  color: #6eb550;
+}
+.num-blue {
+  color: #35b8eb;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
 
 /* 头部样式 */
 
@@ -34,10 +55,6 @@ body {
   border-radius: 4px;
   vertical-align: middle;
 }
-.navbar-logo .zsqq {
-}
-
-.navbar-logo .zsqq {}
 
 .navbar-logo .navbar-title {
   display: inline;
@@ -48,65 +65,65 @@ body {
 }
 
 .ivu-select-dropdown {
-    z-index: 902;
+  z-index: 902;
 }
 
 .ivu-menu-item-group-title {
-    height: 36px;
-    line-height: 36px;
-    font-size: 14px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
 }
 /* 首页布局 */
 
 .layout {
-    width: 100%;
-    height: 100%;
-    background: #f5f7f9;
-    position: relative;
-    border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  background: #f5f7f9;
+  position: relative;
+  border-radius: 4px;
 }
 
 .layout-nav {
-    width: 130px;
-    margin-right: 20px;
+  width: 130px;
+  margin-right: 20px;
 }
 
 .ivu-card-bordered,
 .table-tree-box {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 .layout-footer-center {
-    text-align: center;
-    background-color: #4c5260;
-    color: #fff;
+  text-align: center;
+  background-color: #4c5260;
+  color: #fff;
 }
 
 .navbar {
-    width: 100%;
-    border-top: 1px solid #d8dcdf;
-    border-bottom: 1px solid #d8dcdf;
-    background: #fff;
+  width: 100%;
+  border-top: 1px solid #d8dcdf;
+  border-bottom: 1px solid #d8dcdf;
+  background: #fff;
 }
 
 .ivu-table td.total-column {
-    color: #2d8cf0;
+  color: #2d8cf0;
 }
 
 .ivu-table td.normal-column {
-    color: #19be6b;
+  color: #19be6b;
 }
 
 .ivu-table td.error-column {
-    color: #ff6600;
+  color: #ff6600;
 }
 
 .ivu-loading-bar {
-    top: 64px;
+  top: 64px;
 }
 
 .el-tooltip__popper {
-    max-width: 300px;
+  max-width: 300px;
 }
 .el-table .warning-row {
   color: #ed3f14;
@@ -117,107 +134,104 @@ body {
 }
 
 .tablePage {
-    width: 100%;
-    margin-top: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .marginLeft {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .marginRight {
-    margin-right: 20px;
+  margin-right: 20px;
 }
-
 
 /* loading */
 
 .loading {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    z-index: 9999;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 9999;
 }
 
 .loading i {
-    padding: 50px 60px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -60px;
-    margin-left: -50px;
-    display: block;
-    width: 39px;
-    height: 39px;
-    background: url("../../assets/loading.gif") center no-repeat;
-    background-size: 39px 39px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+  padding: 50px 60px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -60px;
+  margin-left: -50px;
+  display: block;
+  width: 39px;
+  height: 39px;
+  background: url("../../assets/loading.gif") center no-repeat;
+  background-size: 39px 39px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
 }
-
 
 /* 导入文件的提示信息 */
 
 .importSlot {
-    width: 100%;
-    height: 60px;
-    border: 1px solid #ccc;
-    position: relative;
+  width: 100%;
+  height: 60px;
+  border: 1px solid #ccc;
+  position: relative;
 }
 
 .importSlotTitle {
-    background-color: #fff;
-    position: absolute;
-    padding: 0 2px;
-    font-size: 16px;
-    left: 15px;
-    top: -13px;
+  background-color: #fff;
+  position: absolute;
+  padding: 0 2px;
+  font-size: 16px;
+  left: 15px;
+  top: -13px;
 }
 
 .importSlot p {
-    margin-left: 10px;
-    margin-top: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
 @media screen and (max-height: 768px) {
-    .ivu-modal-body {
-        max-height: 350px;
-        overflow: auto;
-    }
+  .ivu-modal-body {
+    max-height: 350px;
+    overflow: auto;
+  }
 }
-
 
 /* 用户和管理员选择系统 */
 
 .el-table-filter__content {
-    max-height: 160px;
-    overflow-y: scroll;
+  max-height: 160px;
+  overflow-y: scroll;
 }
 
 .ivu-select-dropdown {
-    max-height: 180px;
+  max-height: 180px;
 }
 
 .chooseSystemTitle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .chooseSystemSpan {
-    font-size: 16px;
-    display: block;
+  font-size: 16px;
+  display: block;
 }
 
 .chooseSystemAdd {
-    font-size: 10px;
-    cursor: pointer;
+  font-size: 10px;
+  cursor: pointer;
 }

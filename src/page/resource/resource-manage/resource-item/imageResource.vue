@@ -2,8 +2,8 @@
     <div>
         <v-search :import-show="false" :delete-show="false" @on-search="search" @on-reset="reset" @on-build="openAddModal"/>
         <el-table :data="imageSourceData" border style="width: 100%">
-             <el-table-column prop="id" label="ID" sortable>
-            </el-table-column>
+             <!-- <el-table-column prop="id" label="ID" sortable>
+            </el-table-column> -->
             <el-table-column prop="fileName" label="图片名称" :show-overflow-tooltip="true">
             </el-table-column>
             <el-table-column prop="filePath" label="图片路径" :show-overflow-tooltip="true">

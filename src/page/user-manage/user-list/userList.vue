@@ -16,16 +16,16 @@
                     </el-table-column>
                     <el-table-column prop="arMobile" label="电话">
                     </el-table-column>
-                    <el-table-column prop="arDescribe" label="用户描述" :show-overflow-tooltip="true">
-                    </el-table-column>
-                    <el-table-column prop="areaname" label="区县" :filters="countyFilterList" column-key="filterByAreaCode" filter-placement="bottom-end">
+                    <!-- <el-table-column prop="arDescribe" label="用户描述" :show-overflow-tooltip="true">
+                    </el-table-column> -->
+                    <el-table-column prop="areaname" label="区域" :filters="countyFilterList" column-key="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column prop="name" label="部门" :filters="departmentFilterList" column-key="filterByBranch" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
                             <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
-                            <Button type="info" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
+                            <Button type="primary" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
                     </el-table-column>
@@ -56,7 +56,7 @@
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
-                        <FormItem label="区县" prop="arAreacode">
+                        <FormItem label="区域" prop="arAreacode">
                             <Select v-model="userForm.arAreacode">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
@@ -114,7 +114,7 @@
                         <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                     </Select>
                 </FormItem>
-                <FormItem label="区县" prop="arAreacode">
+                <FormItem label="区域" prop="arAreacode">
                     <Select v-model="userForm.arAreacode">
                         <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
@@ -289,7 +289,7 @@ export default {
                 arSalt: "", //校验码
                 arGroup: "", //用户组
                 arBranch: "", //部门
-                arAreacode: "", //区县
+                arAreacode: "", //区域
                 arSource: "", //来源
                 name: "",
                 arDescribe: "",//用户描述
@@ -355,7 +355,7 @@ export default {
                 ],
                 arBranch: [{ required: true, message: "请选择部门", trigger: "blur" }],
                 arAreacode: [
-                    { required: true, message: "请选择区县", trigger: "change" }
+                    { required: true, message: "请选择区域", trigger: "change" }
                 ],
                 arPassword: [
                     { required: true, message: "用户密码不能为空", trigger: "blur" },
@@ -383,7 +383,7 @@ export default {
                 ],
                 arBranch: [{ required: true, message: "请选择部门", trigger: "blur" }],
                 arAreacode: [
-                    { required: true, message: "请选择区县", trigger: "change" }
+                    { required: true, message: "请选择区域", trigger: "change" }
                 ],
                 role: [
                     {
@@ -755,7 +755,7 @@ export default {
                 arSalt: this.userForm.arSalt, //校验码
                 arGroup: this.userForm.arGroup, //用户组
                 arBranch: this.userForm.arBranch, //部门
-                arAreacode: this.userForm.arAreacode, //区县
+                arAreacode: this.userForm.arAreacode, //区域
                 arSource: this.userForm.arSource, //来源
                 sysIds: this.userForm.sysId, //多个系统编号
                 grIds: this.userForm.grId, //多个用用角色编号
@@ -995,7 +995,7 @@ export default {
             }
             window.location.href = params;
         },
-        //根据区县和部门进行过滤
+        //根据区域和部门进行过滤
         filterChange(params) {
             console.log(params)
             let filterType = Object.keys(params)[0];

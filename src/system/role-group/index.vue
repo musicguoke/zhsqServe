@@ -10,12 +10,10 @@
         <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="show"/>
         <div class="tableSize">
           <el-table :data="roleList" border style="width: 100%">
-            <el-table-column prop="grId" label="Id" width="100" sortable>
-            </el-table-column>
             <el-table-column prop="grName" label="角色名称">
             </el-table-column>
-            <!-- <el-table-column prop="arTruename" label="描述">
-            </el-table-column> -->
+            <el-table-column prop="arTruename" label="描述">
+            </el-table-column>
             <el-table-column label="操作" width="160" align="center">
               <template slot-scope="scope">
                 <Button type="primary" @click="edit(scope)" size="small" class="marginRight">编辑</Button>

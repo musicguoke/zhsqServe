@@ -2,8 +2,8 @@
     <div>
         <v-search :search-show="false" :delete-show="false" :import-show="false" @on-build="openAddModal" />
         <el-table :data="sTopicTypeData" border style="width: 100%">
-            <el-table-column prop="typeid" label="类型id">
-            </el-table-column>
+            <!-- <el-table-column prop="typeid" label="类型id">
+            </el-table-column> -->
             <el-table-column prop="typename" label="类型名称">
             </el-table-column>
             <el-table-column prop="typetime" label="添加时间" sortable>

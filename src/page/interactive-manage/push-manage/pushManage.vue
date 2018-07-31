@@ -11,8 +11,8 @@
                     <el-table :data="pushData" border style="width: 100%" @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="55">
                         </el-table-column>
-                        <el-table-column prop="pId" label="Id" width="60">
-                        </el-table-column>
+                        <!-- <el-table-column prop="pId" label="Id" width="60">
+                        </el-table-column> -->
                         <el-table-column prop="pRemark" label="推送组/用户">
                         </el-table-column>
                         <el-table-column prop="typeName" label="推送类型">
@@ -90,7 +90,7 @@
                     </el-table-column>
                     <el-table-column prop="arMobile" label="电话">
                     </el-table-column>
-                    <el-table-column prop="areaname" label="区县">
+                    <el-table-column prop="areaname" label="区域">
                     </el-table-column>
                     <el-table-column prop="name" label="部门">
                     </el-table-column>

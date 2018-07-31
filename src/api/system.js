@@ -55,10 +55,12 @@ export function getFeature(id) {
 }
 
 //系统列表
-export function getSystemList(page, sysName) {
+export function getSystemList(page, sysName, type) {
   const data = {
-    page: page || 1,
-    sysName: sysName
+    pageNo: page || 1,
+    sysName: sysName,
+    type: type,
+    pageSize: 10
   }
 
   return axios.post(`${url}/sys/msSystemChildController/list.do`, qs.stringify(data)).then(res => {

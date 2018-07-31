@@ -74,15 +74,16 @@ export default {
       return 0;
     },
     onDragStart(e, treeNode) {
+      e.dataTransfer.setData("data", "")
       this.dragOverStatus.dragNode = {
         nodeData: treeNode.nodeData,
         parentNode: treeNode.parentNodeData
-      };
+      }
       this.$emit("on-dragStart", {
         treeNode: treeNode.nodeData,
         parentNode: treeNode.parentNodeData,
         event: e
-      });
+      })
     },
     onDragEnter(e, treeNode) {
       //当没有设置拖拽节点时，禁止作为目标节点
@@ -168,7 +169,6 @@ export default {
       ) {
         return;
       }
-
       var res = {
         event: e,
         dragNode: this.dragOverStatus.dragNode,
