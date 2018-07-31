@@ -5,6 +5,7 @@
         v-model="searchContent"
         placeholder="请输入搜索内容..."
         style="width: 200px"
+        v-if="searchBoxShow"
         @on-enter="handleSearch"
       />
       <Select v-model="selectFilter" v-if="selectShow" style="width:200px" placeholder="请选择...">
@@ -53,6 +54,10 @@ export default {
     disabled: {
       type: Boolean,
       default: true
+    },
+    searchBoxShow:{
+      type:Boolean,
+      default:true
     },
     selectShow:{
       type:Boolean,

@@ -6,7 +6,7 @@
     </Breadcrumb>
     <Card :style="{maxHeight: departmentListHeight}">
       <div>
-        <v-search :searchShow="false" :deleteShow="false" :buildShow="false" @on-import="openImportModal" />
+        <v-search :selectShow="true" :deleteShow="false" :searchBoxShow="false" :selectList="countyList" :buildShow="false" @on-search="search" @on-reset="reset" @on-import="openImportModal" />
         <div class="tableSize">
           <Row>
             <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">
@@ -82,7 +82,8 @@
 </template>
 
 <script>
-import { getDepartmentList, addAndUpdateDepartment, importDepartment } from "@/api/department-service";
+import {getDepartmentList, addAndUpdateDepartment, importDepartment } from "@/api/department-service";
+import {getAreaCode} from '@/api/user-service'
 import vSearch from '@/components/search/index'
 import { url } from '@/api/config.js'
 export default {
@@ -92,9 +93,11 @@ export default {
   data() {
     return {
       searchName: "",
+      areacode:500000,
       departmentListHeight: window.innerHeight - 174 + "px",
       departmentTreeHeight: window.innerHeight - 260 + "px",
       departmentData: [],
+      countyList:[],
       uploadUrl: url,
       defaultProps: {
         label: "name",
@@ -119,6 +122,7 @@ export default {
   },
   created() {
     this._getDepartmentList();
+    this._getAreacode();
   },
   methods: {
     //向树上绑定按钮
@@ -137,7 +141,7 @@ export default {
         pageNo: 1,
         pageSize: 100,
         method: "listTree",
-        grName: ""
+        areacode: this.areacode
       };
       getDepartmentList(data).then(res => {
         let data = res.data;
@@ -234,6 +238,29 @@ export default {
           this.$Message.error(res.message)
         }
       })
+    },
+    _getAreacode() {
+       getAreaCode().then(res => {
+        if (res.code === 20000) {
+          res.data.list.map(v => {
+            this.countyList.push({
+              value: v.areacode,
+              label: v.areaname
+            })
+          })
+        }
+      })
+    },
+    //查询
+    search(searchName, areacode) {
+      this.searchName = searchName
+      this.areacode = areacode
+      this._getDepartmentList()
+    },
+    //重置
+    reset(){
+      this.areacode = 500000
+      this._getDepartmentList()
     }
   }
 };

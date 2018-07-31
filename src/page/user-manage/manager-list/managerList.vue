@@ -19,12 +19,12 @@
             </el-table-column>
             <el-table-column prop="email" label="邮箱">
             </el-table-column>
-            <el-table-column prop="roleName" label="角色" :filters="managerTypeList" column-key="roleName">
+            <el-table-column prop="roleName" label="角色" :filters="managerTypeFilterList" column-key="roleName">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
-                    <Button type="info" @click="managerEditOpen(scope)" size="small"  class="marginRight">编辑</Button>
-                    <Button type="error" @click="remove(scope)" size="small">删除</Button>
+                    <Button type="info" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
+                    <Button type="error" @click="remove(scope)" size="small" >删除</Button>
                 </template>
             </el-table-column>
         </el-table>   
@@ -111,6 +111,7 @@ export default {
       pageLength: 0,
       nowPage: 1,
       forEachNum: 0,
+      managerNowType:0,
       tabPaneDisable:true,
       managerForm: {
         userName: "",
@@ -144,7 +145,8 @@ export default {
         }
       ],
       isAdd: true,
-      managerTypeList: [
+      managerTypeList:[],
+      managerTypeFilterList: [
         {
           value: 1,
           label: "超级管理员",
@@ -195,6 +197,16 @@ export default {
   },
   created() {
     this._getManagerList(1);
+    this.managerNowType = JSON.parse(localStorage.userInfo).role
+    if(this.managerNowType == 1){
+        this.managerTypeList = this.managerTypeFilterList
+      }else if(this.managerNowType ==2){
+        this.managerTypeList = [{
+            value: 3,
+            label: "普通管理员",
+            text: "普通管理员"
+        }]
+    }
     getSystemList(1).then(res => {
       let data = res.data.list;
       for (let i in data) {
@@ -211,7 +223,7 @@ export default {
       let data = {
         pageNo: page,
         pageSize: 10,
-        roleList: this.roleList
+        roleList: this.roleList.join(',')
       };
       getManagerList(data).then(res => {
         this.userData = res.data.list;
