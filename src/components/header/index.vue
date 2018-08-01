@@ -66,9 +66,6 @@ export default {
       if (this.userInfo.role !== 3) {
         this.$store.commit('setParams', {})
         this.$router.push('/zhsq_admin/system-manage')
-        let params = this.$store.state.params
-        params.sysId = ""
-        this.$store.commit('setParams', params)
       }
     },
     showMessage() {

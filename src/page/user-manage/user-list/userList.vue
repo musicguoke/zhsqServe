@@ -453,10 +453,10 @@ export default {
     created() {
         this._getAreacode()
         this._getUserList()
-        if (this.$store.state.params.sysId) {
+        if (this.$route.params.id) {
             this.isProduct = true;
-            this._getRolesSingleList(this.$store.state.params.sysId);
-            this.userForm.sysId = this.$store.state.params.sysId;
+            this._getRolesSingleList(this.$route.params.id);
+            this.userForm.sysId = this.$route.params.id;
         } else {
             this.isProduct = false;
         }
@@ -502,8 +502,8 @@ export default {
                 }
             }
             if(this.isProduct){
-                this.userForm.arAreacode = this.$store.state.areacode
-                this.userForm.arAreaname = this.$store.state.areaname
+                this.userForm.arAreacode = this.$store.state.params.areacode
+                this.userForm.arAreaname = this.$store.state.params.areaname
             }
             this.$refs.department1.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
             this.$refs.department2.values = [{ value: this.userForm.arBranch, label: this.userForm.name }]
@@ -523,7 +523,7 @@ export default {
                 } else {
                     for (let i in res.data) {
                         this.sysAndGroupList.push({ sysId: res.data[i].sysId, grId: res.data[i].grId })
-                        if (res.data[i].sysId == this.$store.state.params.sysId) {
+                        if (res.data[i].sysId == this.$route.params.id) {
                             this.userForm.grIdProduct = res.data[i].grId
                         }
                     }
@@ -783,12 +783,12 @@ export default {
                 });
             } else {
                 if (this.isAdd) {
-                    this.userForm.sysId = this.$store.state.params.sysId + ",";
+                    this.userForm.sysId = this.$route.params.id + ",";
                     this.userForm.grId = this.userForm.grIdProduct + ",";
                 } else {
                     this.sysAndGroupList.map(v => {
-                        if (v.sysId == this.$store.state.params.sysId) {
-                            this.userForm.sysId += this.$store.state.params.sysId + ",";
+                        if (v.sysId == this.$route.params.id) {
+                            this.userForm.sysId += this.$route.params.id + ",";
                             this.userForm.grId += this.userForm.grIdProduct + ",";
                         } else {
                             this.userForm.sysId += v.sysId + ",";
@@ -1034,8 +1034,8 @@ export default {
         },
         _exportUser() {
             let sysId = "";
-            if (this.$store.state.params.sysId) {
-                sysId = this.$store.state.params.sysId;
+            if (this.$route.params.id) {
+                sysId = this.$route.params.id;
             } else {
                 sysId = this.exportForm.sysId == "0" ? "" : this.exportForm.sysId;
             }
