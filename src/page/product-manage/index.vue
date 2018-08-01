@@ -225,6 +225,7 @@ export default {
               systemname: data.sysName,
               areacode: data.areacode,
               areaname: data.areaName,
+              sysId:data.id
             }
             this.$store.commit('setParams', params)
             this.$router.push({path: '/system/' + id})

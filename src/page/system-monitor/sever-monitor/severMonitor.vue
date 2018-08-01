@@ -103,9 +103,9 @@ export default {
     },
     getSeverDetail(param) {
       this.$router.push({
-        name: 'SeverMonitorDetail',
-        query: param.row
+        name: 'SeverMonitorDetail'
       })
+      this.$store.commit('setMonitorSystemInfo', param.row)
     }
   }
 }
