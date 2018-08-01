@@ -69,7 +69,7 @@
                 </div>
             </FormItem>
             <FormItem label="短信内容" prop="message">
-                <Input v-model="messageSendForm.message" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." ></Input>
+                <Input v-model="messageSendForm.message" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." maxlength="70"></Input>
             </FormItem>
         </Form>
   </Modal>

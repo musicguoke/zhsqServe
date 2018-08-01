@@ -13,7 +13,7 @@
             </el-table-column> -->
             <el-table-column prop="userName" label="用户名">
             </el-table-column>
-            <el-table-column prop="realName" label="姓名">
+            <el-table-column prop="realName" label="姓名" >
             </el-table-column>
             <el-table-column prop="tel" label="电话">
             </el-table-column>
@@ -39,16 +39,16 @@
         <Tab-pane label="基本信息" name="baseInfo">
             <Form :model="managerForm" :label-width="100"  :rules="manageRule" ref="manageRule">
                 <FormItem label="用户名" prop="userName">
-                    <Input v-model="managerForm.userName" placeholder="请输入用户名"></Input>
+                    <Input v-model="managerForm.userName" placeholder="请输入用户名"  maxlength="16"></Input>
                 </FormItem>
                 <FormItem label="真实姓名" prop="realName">
-                    <Input v-model="managerForm.realName" placeholder="请输入真实姓名"></Input>
+                    <Input v-model="managerForm.realName" placeholder="请输入真实姓名" maxlength="6"></Input>
                 </FormItem>
                 <FormItem label="密码" prop="password" v-show="isAdd">
-                    <Input v-model="managerForm.password" placeholder="请输入密码" type="password"></Input>
+                    <Input v-model="managerForm.password" placeholder="请输入密码" type="password" maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="密码" v-show="!isAdd">
-                    <Input v-model="managerForm.editPassword" placeholder="无新密码输入则保持原密码不变" type="password"></Input>
+                    <Input v-model="managerForm.editPassword" placeholder="无新密码输入则保持原密码不变" type="password" maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="管理员类型" prop="role">
                     <Select v-model="managerForm.role" @on-change="managerChange">
@@ -56,10 +56,10 @@
                     </Select>
                 </FormItem>
                 <FormItem label="手机号" prop="tel">
-                    <Input v-model="managerForm.tel" placeholder="请输入手机号"></Input>
+                    <Input v-model="managerForm.tel" placeholder="请输入手机号" maxlength="11"></Input>
                 </FormItem>
                 <FormItem label="邮箱">
-                    <Input v-model="managerForm.email" placeholder="请输入邮箱"></Input>
+                    <Input v-model="managerForm.email" placeholder="请输入邮箱" maxlength="25"></Input>
                 </FormItem>
             </Form>
         </Tab-pane>

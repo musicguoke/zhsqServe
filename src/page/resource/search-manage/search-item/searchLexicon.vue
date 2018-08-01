@@ -21,10 +21,10 @@
         <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate" ref="lexiconModal">
             <Form :model="lexiconForm"  :label-width="80" :rules="lexiconRule" ref="lexiconRule">
                 <FormItem label="数据编码" prop="dataId">
-                    <Input v-model="lexiconForm.dataId" placeholder="请输入..."></Input>
+                    <Input v-model="lexiconForm.dataId" placeholder="请输入..." maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="名称" prop="name">
-                    <Input v-model="lexiconForm.name" placeholder="请输入..."></Input>
+                    <Input v-model="lexiconForm.name" placeholder="请输入..." maxlength="20"></Input>
                 </FormItem>
             </Form>
         </Modal>

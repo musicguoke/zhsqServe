@@ -21,16 +21,16 @@
         <Modal v-model="hotSpotModal" :title=modalTitle @on-ok="addOrUpdate" ref="hotSpotModal">
             <Form :model="hotSpotForm" :label-width="80" :rules="hotSpotRule" ref="hotSpotRule">
                 <FormItem label="名称" prop="name">
-                    <Input v-model="hotSpotForm.name" placeholder="请输入名称..."></Input>
+                    <Input v-model="hotSpotForm.name" placeholder="请输入名称..." maxlength="10"></Input>
                 </FormItem>
                 <FormItem label="父id" prop="parentid">
-                    <Input v-model="hotSpotForm.parentid" placeholder="请输入父id..."></Input>
+                    <Input v-model="hotSpotForm.parentid" placeholder="请输入父id..." maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="数据编号" prop="dataId">
-                    <Input v-model="hotSpotForm.dataId" placeholder="请输入数据编码..."></Input>
+                    <Input v-model="hotSpotForm.dataId" placeholder="请输入数据编码..." maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="序号" prop="listorder">
-                    <Input v-model="hotSpotForm.listorder" placeholder="请输入序号..."></Input>
+                    <Input v-model="hotSpotForm.listorder" placeholder="请输入序号..." maxlength="5"></Input>
                 </FormItem>
             </Form>
         </Modal>
