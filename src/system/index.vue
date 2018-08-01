@@ -37,7 +37,7 @@ export default {
     }
   },
   created() {
-    this.name = this.$store.state.systemname
+    this.name = this.$store.state.params.systemname
   }
 }
 </script>

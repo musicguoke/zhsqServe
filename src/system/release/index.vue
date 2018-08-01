@@ -187,7 +187,7 @@ export default {
   },
   created() {
     this._getTopicDataTree()
-    this.editItemForm.sysId = this.$store.state.id
+    this.editItemForm.sysId = this.$store.state.params.id
   },
   methods: {
     build() {

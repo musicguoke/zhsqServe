@@ -99,9 +99,9 @@ export const configMixin = {
   },
   created() {
     this.sys = this.$route.params.id || ''
-    this.type = this.$store.state.type || ''
-    this.funNum = this.$store.state.funNum
-    if(this.$store.state.funNum >= 0) {
+    this.type = this.$store.state.params.type || ''
+    this.funNum = this.$store.state.params.funNum
+    if(this.$store.state.params.funNum >= 0) {
       this.qxCheck(this.funNum)
     }
   },

@@ -63,7 +63,7 @@ export default {
   created() {
     this._getRolesList()
     this.sysId = this.$route.params.id
-    this.type = this.$store.state.type || ''
+    this.type = this.$store.state.params.type || ''
   },
   mounted() {},
   methods: {
