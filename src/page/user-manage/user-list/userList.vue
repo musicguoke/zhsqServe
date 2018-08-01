@@ -818,7 +818,9 @@ export default {
                 arSource: this.userForm.arSource, //来源
                 sysIds: this.userForm.sysId, //多个系统编号
                 grIds: this.userForm.grId, //多个用用角色编号
-                arDescribe: this.userForm.arDescribe //用户描述
+                arDescribe: this.userForm.arDescribe, //用户描述
+                arCreator:this.userForm.arCreator,//创建人
+                arContacts:this.userForm.arContacts//服务联系人
             };
             if (this.isAdd) {
                 data.arPassword = MD5(this.userForm.arPassword).toString();
