@@ -36,7 +36,12 @@
         <Modal v-model="pushModal" :title=modalTitle @on-ok="savePushMessage">
             <Form :model="pushForm" :label-width="80">
                 <FormItem label="选择系统" v-if="!$route.query.id">
-                    <Select v-model="pushForm.pSys" :label-in-value="true" @on-change="filterGroup">
+                    <Select
+                        v-model="pushForm.pSys"
+                        :label-in-value="true"
+                        @on-change="filterGroup"
+                        filterable
+                    >
                         <Option v-for="item in sysData" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </FormItem>
@@ -153,7 +158,7 @@ export default {
     },
     created() {
         this._getPushList(1)
-        getSystemList(1).then(res => {
+        getSystemList('','','',1000).then(res => {
             let data = res.data.list
             for (let i in data) {
                 this.sysData.push({

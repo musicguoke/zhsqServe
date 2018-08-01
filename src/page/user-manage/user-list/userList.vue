@@ -65,12 +65,17 @@
                             <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
-                            <Select v-model="userForm.arAreacode">
+                            <Select v-model="userForm.arAreacode" filterable>
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="处室/科室" prop="arBranch">
-                            <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1">
+                            <Select
+                                v-model="userForm.arBranch"
+                                @on-open-change="handleBranchOpenChange"
+                                ref="department1"
+                                filterable
+                            >
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
@@ -104,10 +109,21 @@
                     </div>
                     <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
-                            <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index">
+                            <Select
+                                v-model="item.sysId"
+                                @on-change="systemChange(item.sysId,$index)"
+                                style="width:220px"
+                                :ref="'item'+$index"
+                                filterable
+                            >
                                 <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                            <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index">
+                            <Select
+                                v-model="item.grId"
+                                style="width:220px;margin-left:5px;"
+                                :ref="'group'+$index"
+                                filterable
+                            >
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
@@ -641,7 +657,7 @@ export default {
         },
         _getSystemList() {
             this.systemList = []
-            getSystemList().then(res => {
+            getSystemList('', '', '', 1000).then(res => {
                 let data = res.data.list
                 let array = []
                 this.systemLength = res.data.total
