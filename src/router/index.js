@@ -353,12 +353,12 @@ const router = new VueRouter({
           meta: { title: "目录管理" }
         },
         {
-          path: "release",
+          path: "featured-catalog",
           component: Release,
           meta: { title: "发布目录" }
         },
         {
-          path: "modify",
+          path: "release",
           component: Catelog,
           meta: { title: "修改目录" }
         },

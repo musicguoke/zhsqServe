@@ -79,7 +79,7 @@ export default {
       enterSystem(data.id).then(res => {
         if (res.code === 20000) {
           this.$router.push({
-            path: '/system',
+            path: '/system/featured-catalog',
             query: {
               id: data.id,
               type: data.type,

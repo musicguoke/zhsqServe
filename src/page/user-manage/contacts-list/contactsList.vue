@@ -10,15 +10,15 @@
                 <el-table :data="contactsData" border style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="55">
                     </el-table-column>
-                    <el-table-column prop="id" label="ID" sortable>
-                    </el-table-column>
+                    <!-- <el-table-column prop="id" label="ID" sortable>
+                    </el-table-column> -->
                     <el-table-column prop="name" label="姓名">
                     </el-table-column>
                     <el-table-column prop="phone" label="电话">
                     </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
-                            <Button type="info" @click="contactsEditOpen(scope)" size="small" class="marginRight">编辑</Button>
+                            <Button type="primary" @click="contactsEditOpen(scope)" size="small" class="marginRight">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small">删除</Button>
                         </template>
                     </el-table-column>

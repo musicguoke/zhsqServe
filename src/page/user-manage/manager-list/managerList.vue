@@ -9,8 +9,8 @@
       <v-search :searchShow="false" :deleteShow="false" :importShow="false" @on-build="managerAddOpen" />
       <div class="tableSize">
         <el-table :data="userData" border style="width: 100%"  @filter-change="filterChange">
-             <el-table-column prop="id" label="Id" width="60" sortable>
-            </el-table-column>
+            <!-- <el-table-column prop="id" label="Id" width="60" sortable>
+            </el-table-column> -->
             <el-table-column prop="userName" label="用户名">
             </el-table-column>
             <el-table-column prop="realName" label="姓名">
@@ -23,7 +23,7 @@
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
                 <template slot-scope="scope">
-                    <Button type="info" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
+                    <Button type="primary" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
                     <Button type="error" @click="remove(scope)" size="small" >删除</Button>
                 </template>
             </el-table-column>

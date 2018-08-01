@@ -86,9 +86,9 @@ export default {
   },
   methods: {
     tableRowClassName({row, column, rowIndex, columnIndex}) {
-      if (row.enable == 0 && columnIndex === 5) {
+      if (row.enable == 0 && columnIndex === 4) {
         return 'warning-row'
-      } else if (row.enable == 1 && columnIndex === 5) {
+      } else if (row.enable == 1 && columnIndex === 4) {
         return 'success-row'
       }
       return ''

@@ -56,7 +56,7 @@ export default {
       enterSystem(item.id).then(res => {
         if (res.code) {
           this.$router.push({
-            path: '/system',
+            path: '/system/featured-catalog',
             query: {
               id: item.id,
               systemname: item.sysName,
