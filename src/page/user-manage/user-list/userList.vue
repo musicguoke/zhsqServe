@@ -545,29 +545,29 @@ export default {
                         code:res.data.areaCodeList[i].areacode
                     })
                 }
-                // res.data.branchStructList.map(v => {
-                //     this.departmentFilterList.push({
-                //         value: v.name,
-                //         text: v.name,
-                //         code:v.id
-                //     })
-                //     if (v.list) {
-                //         v.list.map(a => {
-                //             this.departmentFilterList.push({
-                //                 value: a.name,
-                //                 text: a.name
-                //             })
-                //             if (a.list) {
-                //                 a.list.map(b => {
-                //                     this.departmentFilterList.push({
-                //                         value: b.name,
-                //                         text: b.name
-                //                     })
-                //                 })
-                //             }
-                //         })
-                //     }
-                // })
+                res.data.branchStructList.map(v => {
+                    this.departmentFilterList.push({
+                        value: v.name,
+                        text: v.name,
+                        code:v.id
+                    })
+                    if (v.list) {
+                        v.list.map(a => {
+                            this.departmentFilterList.push({
+                                value: a.name,
+                                text: a.name
+                            })
+                            if (a.list) {
+                                a.list.map(b => {
+                                    this.departmentFilterList.push({
+                                        value: b.name,
+                                        text: b.name
+                                    })
+                                })
+                            }
+                        })
+                    }
+                })
                 this.total = res.data.page.total
             })
         },
