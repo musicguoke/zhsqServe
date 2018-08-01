@@ -163,7 +163,7 @@ export default {
             type: 'error',
             text: '删除'
           }],
-          width: 120
+          width: 250
         }
       ],
       columns: [
@@ -187,7 +187,7 @@ export default {
   },
   created() {
     this._getTopicDataTree()
-    this.editItemForm.sysId = this.$store.state.params.id
+    this.editItemForm.sysId = this.$route.params.id
   },
   methods: {
     build() {

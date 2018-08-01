@@ -453,10 +453,17 @@ export default {
     created() {
         this._getAreacode()
         this._getUserList()
+<<<<<<< HEAD
         if (this.$store.state.params.sysId) {
             this.isProduct = true;
             this._getRolesSingleList(this.$store.state.params.sysId);
             this.userForm.sysId = this.$store.state.params.sysId;
+=======
+        if (this.$route.params.id) {
+            this.isProduct = true;
+            this._getRolesSingleList(this.$route.params.id);
+            this.userForm.sysId = this.$route.params.id;
+>>>>>>> 5a96406d68fcf81376595879fb5e126c176c1bdc
         } else {
             this.isProduct = false;
         }
@@ -523,7 +530,11 @@ export default {
                 } else {
                     for (let i in res.data) {
                         this.sysAndGroupList.push({ sysId: res.data[i].sysId, grId: res.data[i].grId })
+<<<<<<< HEAD
                         if (res.data[i].sysId == this.$store.state.params.sysId) {
+=======
+                        if (res.data[i].sysId == this.$route.params.id) {
+>>>>>>> 5a96406d68fcf81376595879fb5e126c176c1bdc
                             this.userForm.grIdProduct = res.data[i].grId
                         }
                     }
@@ -783,12 +794,21 @@ export default {
                 });
             } else {
                 if (this.isAdd) {
+<<<<<<< HEAD
                     this.userForm.sysId = this.$store.state.params.sysId + ",";
                     this.userForm.grId = this.userForm.grIdProduct + ",";
                 } else {
                     this.sysAndGroupList.map(v => {
                         if (v.sysId == this.$store.state.params.sysId) {
                             this.userForm.sysId += this.$store.state.params.sysId + ",";
+=======
+                    this.userForm.sysId = this.$route.params.id + ",";
+                    this.userForm.grId = this.userForm.grIdProduct + ",";
+                } else {
+                    this.sysAndGroupList.map(v => {
+                        if (v.sysId == this.$route.params.id) {
+                            this.userForm.sysId += this.$route.params.id + ",";
+>>>>>>> 5a96406d68fcf81376595879fb5e126c176c1bdc
                             this.userForm.grId += this.userForm.grIdProduct + ",";
                         } else {
                             this.userForm.sysId += v.sysId + ",";
@@ -1034,8 +1054,13 @@ export default {
         },
         _exportUser() {
             let sysId = "";
+<<<<<<< HEAD
             if (this.$store.state.params.sysId) {
                 sysId = this.$store.state.params.sysId;
+=======
+            if (this.$route.params.id) {
+                sysId = this.$route.params.id;
+>>>>>>> 5a96406d68fcf81376595879fb5e126c176c1bdc
             } else {
                 sysId = this.exportForm.sysId == "0" ? "" : this.exportForm.sysId;
             }
