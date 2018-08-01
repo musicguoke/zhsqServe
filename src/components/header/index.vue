@@ -98,6 +98,7 @@ export default {
     _logout() {
       logout(this.formInline).then(res => {
         if (res.code === 20000) {
+          this.$store.commit('setParams', {})
           this.$router.replace('/')
         } else {
           this.$Message.error(res.message)

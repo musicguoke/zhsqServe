@@ -312,6 +312,12 @@ const router = new VueRouter({
           meta: { title: "技术支持" }
         },
         {
+          path: "software-version",
+          name: "SoftWareVersion",
+          component: SoftWareVersion,
+          meta: { title: "软件版本" }
+        },
+        {
           path: "sever-monitor",
           name: "SeverMonitor",
           component: SeverMonitor,

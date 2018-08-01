@@ -51,7 +51,7 @@
 import axios from '@/util/http'
 import qs from 'qs'
 import { url } from '@/api/config'
-import { enterSystem } from '@/api/system'
+import { enterSystem, getSysFunNum } from '@/api/system'
 
 export default {
   data() {
@@ -78,17 +78,19 @@ export default {
     _enterSystem(data) {
       enterSystem(data.id).then(res => {
         if (res.code === 20000) {
-          this.$router.push({
-            path: '/system/featured-catalog',
-            query: {
-              id: data.id,
-              type: data.type,
-              funNum: data.funNum,
-              systemname: data.sysName
-            }
-          })
+          this._getSysFunNum(data)
+          this.$router.push({path: `/system/${data.id}/featured-catalog`})
         } else {
           this.$Message.error(res.message)
+        }
+      })
+    },
+    _getSysFunNum(data) {
+      getSysFunNum(data.id).then(res => {
+        if(res.code === 20000) {
+          data.funNum = res.data
+          data.systemname = data.sysName
+          this.$store.commit('setParams', data)
         }
       })
     },

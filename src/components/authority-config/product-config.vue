@@ -27,7 +27,7 @@
           </Select>
         </FormItem>
         <FormItem label="地区选择">
-          <Select v-model="formItem.areacode" filterable>
+          <Select v-model="formItem.areacode">
             <Option v-for="(item, index) in areaQxList" :value="item.areacode" :key="index">
               {{item.areaname}}
             </Option>

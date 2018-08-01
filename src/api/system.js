@@ -135,3 +135,16 @@ export function searchSysById(id) {
       return Promise.resolve(res.data)
   })
 }
+
+// id获取系统权限
+export function getSysFunNum(id) {
+  const data = {
+    sysId: id
+  }
+  
+  return axios.post(
+    `${url}/sys/msMembers/sysIdAuthority.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}

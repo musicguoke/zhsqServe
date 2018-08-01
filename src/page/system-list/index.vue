@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { enterSystem } from '@/api/system'
+import { enterSystem, getSysFunNum } from '@/api/system'
 
 export default {
   data() {
@@ -52,17 +52,24 @@ export default {
         this._enterSystem(item)
       }
     },
-    _enterSystem(item) {
-      enterSystem(item.id).then(res => {
-        if (res.code) {
+    _getSysFunNum(item) {
+      getSysFunNum(item.id).then(res => {
+        if(res.code === 20000) {
           let params = {
             systemname: item.sysName,
             type: item.type,
             areacode: item.areacode,
-            funNum: item.funNum
+            funNum: res.data
           }
           this.$store.commit('setParams', params)
           this.$router.push({path: `/system/${item.id}/featured-catalog`})
+        }
+      })
+    },
+    _enterSystem(item) {
+      enterSystem(item.id).then(res => {
+        if (res.code) {
+          this._getSysFunNum(item)
         }
       })
     }
