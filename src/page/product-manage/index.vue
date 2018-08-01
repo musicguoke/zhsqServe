@@ -219,17 +219,15 @@ export default {
         if (res.code === 20000) {
           this._unreadSuggestList()
           if (id) {
-            this.$router.push({
-              path: '/system',
-              query: {
-                id: id,
-                type: data.type,
-                funNum: data.funNum,
-                systemname: data.sysName,
-                areacode:data.areacode,
-                areaname:data.areaName,
-              }
-            })
+            let params = {
+              type: data.type,
+              funNum: data.funNum,
+              systemname: data.sysName,
+              areacode: data.areacode,
+              areaname: data.areaName,
+            }
+            this.$store.commit('setParams', params)
+            this.$router.push({path: '/system/' + id})
           } else {
             this._getSystemList()
           }

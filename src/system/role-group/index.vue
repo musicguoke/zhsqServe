@@ -62,8 +62,8 @@ export default {
   },
   created() {
     this._getRolesList()
-    this.sysId = this.$route.query.id
-    this.type = this.$route.query.type || ''
+    this.sysId = this.$route.params.id
+    this.type = this.$store.state.type || ''
   },
   mounted() {},
   methods: {

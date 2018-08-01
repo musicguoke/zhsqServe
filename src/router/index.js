@@ -343,9 +343,9 @@ const router = new VueRouter({
       component: Login
     },
     {
-      path: "/system",
+      path: "/system/:id",
       component: SIndex,
-      redirect: "/system/content-list",
+      redirect: "/system/:id/content-list",
       children: [
         {
           path: "content-list",

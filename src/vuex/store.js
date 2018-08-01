@@ -9,7 +9,8 @@ const store = new Vuex.Store({
        10,11, 12, 13, 14, 
        15, 16, 17, 18, 19,
         20,21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-    qxLevelNum: 2
+    qxLevelNum: 2,
+    params: {}
   },
   mutations: {
     setDragTreeNodeHeight (state, value) {
@@ -29,6 +30,9 @@ const store = new Vuex.Store({
     },
     setQxLevel(state, value) {
       state.qxLevelNum = value
+    },
+    setParams(state, obj) {
+      state.params = obj
     }
   },
   getters: {

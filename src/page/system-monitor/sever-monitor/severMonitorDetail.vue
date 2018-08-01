@@ -128,7 +128,7 @@ export default {
         }
     },
     created() {
-        this.systemInfo = this.$route.query
+        this.systemInfo = this.$store.state
         this._getSeverMonitorDetail(1)
     },
     methods: {

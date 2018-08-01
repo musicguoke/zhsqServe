@@ -162,7 +162,7 @@ export default {
                 })
             }
         })
-        if (this.$route.query.id) {
+        if (this.$route.params.id) {
             getRolesList().then(res => {
                 res.data.list.map(v => {
                     this.roleData.push({
@@ -225,7 +225,7 @@ export default {
             }
         },
         openGetUser() {
-            if (this.pushForm.pSys || this.$route.query.id) {
+            if (this.pushForm.pSys || this.$route.params.id) {
                 this.chooseUserModal = true
                 this.searchUserName = ''
                 this._getUserList(1)
@@ -367,7 +367,7 @@ export default {
                 pGroupStr: Array.from(this.pushForm.pGroupList).join(","),
                 pRemark: this.pushForm.pRemark,
                 pType: this.pushForm.pType,
-                sysId: this.$route.query.id ? this.$route.query.id : this.pushForm.pSys,
+                sysId: this.$route.params.id ? this.$route.params.id : this.pushForm.pSys,
                 pContent: this.pushForm.pContent,
                 userIds: this.pushForm.userIds
             }

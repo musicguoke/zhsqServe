@@ -162,7 +162,7 @@ export default {
         //
         this.dataTree = res.json720
         this.topicDataTree = res.dataPublishJson
-        this.qxCheck(this.$route.query.funNum)
+        this.qxCheck(this.$store.state.funNum)
         if (typeof (id) === 'number' && str === 'role') { //获取角色信息
           this._getRoleMapById(id)
         } else if (typeof (id) === 'string') {

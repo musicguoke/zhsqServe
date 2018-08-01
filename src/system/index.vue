@@ -37,7 +37,7 @@ export default {
     }
   },
   created() {
-    this.name = this.$route.query.systemname
+    this.name = this.$store.state.systemname
   }
 }
 </script>

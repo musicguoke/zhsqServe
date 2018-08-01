@@ -85,15 +85,12 @@ export default {
       return JSON.parse(localStorage.getItem('userInfo'))
     },
     query() {
-      return this.$route.query
+      return this.$store.state
     }
   },
   methods: {
     handleMenuClick(name) {
-      this.$router.push({
-        path: `${name}`,
-        query: this.query
-      })
+      this.$router.push({path: `${name}`})
     }
   }
 }

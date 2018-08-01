@@ -98,10 +98,10 @@ export const configMixin = {
     }
   },
   created() {
-    this.sys = this.$route.query.id || ''
-    this.type = this.$route.query.type || ''
-    this.funNum = this.$route.query.funNum
-    if(this.$route.query.funNum >= 0) {
+    this.sys = this.$route.params.id || ''
+    this.type = this.$store.state.type || ''
+    this.funNum = this.$store.state.funNum
+    if(this.$store.state.funNum >= 0) {
       this.qxCheck(this.funNum)
     }
   },

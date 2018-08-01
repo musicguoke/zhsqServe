@@ -187,7 +187,7 @@ export default {
   },
   created() {
     this._getTopicDataTree()
-    this.editItemForm.sysId = this.$route.query.id
+    this.editItemForm.sysId = this.$store.state.id
   },
   methods: {
     build() {
@@ -280,7 +280,7 @@ export default {
             dpAreacode: '',
             dpImagePath: '',
             dpParentid: -1,
-            sysId: this.$route.query.id
+            sysId: this.$route.params.id
           }
         } else {
           this.$Message.error(`添加${res.message}`)

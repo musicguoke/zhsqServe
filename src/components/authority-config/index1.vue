@@ -173,7 +173,7 @@ export default {
         //
         this.dataTree = res.tabDataTreeJson
         this.topicDataTree = res.dataPublishJson
-        this.qxCheck(this.$route.query.funNum)
+        this.qxCheck(this.$store.state.funNum)
         if(typeof(id) === 'number') {
           this._getRoleMapById(id)
         } else if(typeof(id) === 'string') {

@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     query() {
-      return this.$route.query
+      return this.$store.state.params
     },
     unread() {
       return this.$store.state.unread
@@ -68,11 +68,8 @@ export default {
       }
     },
     showMessage() {
-      if (this.query.id) {
-        this.$router.push({
-          path: `/system/message`,
-          query: this.query
-        })
+      if (this.$route.params.id) {
+        this.$router.push({path: `/system/${this.$route.params.id}/message`})
       } else {
         this.$router.push({ name: 'Message' })
       }
@@ -89,9 +86,7 @@ export default {
       }
       if (name === 'personal-center') {
         if (this.query.id) {
-          this.$router.push({
-            path: `/system/${name}`,
-            query: this.query
+          this.$router.push({path: `/system/${this.query.id}/${name}`
           })
         } else {
           this.$router.push(`/zhsq_admin/${name}`)
