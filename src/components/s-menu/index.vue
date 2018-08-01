@@ -17,12 +17,6 @@
       >
         发布目录
       </MenuItem>
-      <MenuItem
-        name="release"
-        v-else-if="Number(query.type)!==2"
-      >
-        发布目录
-      </MenuItem>
       <MenuItem name="featured-catalog">专题目录</MenuItem>
     </Submenu>
     <Submenu name="2">
@@ -85,7 +79,7 @@ export default {
       return JSON.parse(localStorage.getItem('userInfo'))
     },
     query() {
-      return this.$store.state
+      return this.$store.state.params
     }
   },
   methods: {

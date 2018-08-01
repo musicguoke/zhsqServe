@@ -55,14 +55,14 @@ export default {
     _enterSystem(item) {
       enterSystem(item.id).then(res => {
         if (res.code) {
-          this.$router.push({
-            path: '/system/featured-catalog',
-            query: {
-              id: item.id,
-              systemname: item.sysName,
-              type: item.type
-            }
-          })
+          let params = {
+            systemname: item.sysName,
+            type: item.type,
+            areacode: item.areacode,
+            funNum: item.funNum
+          }
+          this.$store.commit('setParams', params)
+          this.$router.push({path: `/system/${item.id}/featured-catalog`})
         }
       })
     }

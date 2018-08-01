@@ -64,6 +64,7 @@ export default {
   methods: {
     linkTo() {
       if (this.userInfo.role !== 3) {
+        this.$store.commit('setParams', {})
         this.$router.push('/zhsq_admin/system-manage')
       }
     },
@@ -89,6 +90,7 @@ export default {
           this.$router.push({path: `/system/${this.query.id}/${name}`
           })
         } else {
+          this.$store.commit('setParams', {})
           this.$router.push(`/zhsq_admin/${name}`)
         }
       }
