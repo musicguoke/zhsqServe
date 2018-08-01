@@ -12,18 +12,18 @@
       </template>
       <MenuItem name="content-list" v-if="userinfo.role!==3">资源目录</MenuItem>
       <MenuItem
-        name="modify"
+        name="release"
         v-if="userinfo.role!==3&&Number(query.type)!==2"
       >
         发布目录
       </MenuItem>
       <MenuItem
-        name="modify"
+        name="release"
         v-else-if="Number(query.type)!==2"
       >
         发布目录
       </MenuItem>
-      <MenuItem name="release">专题目录</MenuItem>
+      <MenuItem name="featured-catalog">专题目录</MenuItem>
     </Submenu>
     <Submenu name="2">
       <template slot="title">

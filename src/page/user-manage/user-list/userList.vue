@@ -8,8 +8,8 @@
             <v-search :importShow="!isProduct" :deleteShow="false" :selectShow="isProduct" :conditionExportShow="true" :selectList="groupSingleFilterList" @on-export="openExportModal" @on-import="openImportModal" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%" @filter-change="filterChange">
-                    <el-table-column prop="arId" label="ID" width="60" sortable>
-                    </el-table-column>
+                    <!-- <el-table-column prop="arId" label="ID" width="60" sortable>
+                    </el-table-column> -->
                     <el-table-column prop="arLoginname" label="用户名">
                     </el-table-column>
                     <el-table-column prop="arTruename" label="姓名">
@@ -20,11 +20,11 @@
                     </el-table-column> -->
                     <el-table-column prop="areaname" label="区域" :filters="countyFilterList" column-key="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
-                    <el-table-column prop="name" label="部门" :filters="departmentFilterList" column-key="filterByBranch" :show-overflow-tooltip="true">
+                    <el-table-column prop="name" label="处室/科室" :filters="departmentFilterList" column-key="filterByBranch" :show-overflow-tooltip="true">
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
-                            <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button>
+                            <!-- <Button type="success" v-if="isProduct" @click="equipmentOpen(scope)" size="small" title="设备信息">设备</Button> -->
                             <Button type="primary" @click="userEditOpen(scope)" size="small" title="编辑">编辑</Button>
                             <Button type="error" @click="remove(scope)" size="small" title="删除">删除</Button>
                         </template>
@@ -32,13 +32,26 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total=total :current="1" @on-change="pageChange" show-total show-elevator ref="userPage"></Page>
+                <Page :total="total" :current="1" @on-change="pageChange" show-total show-elevator ref="userPage"></Page>
             </div>
         </Card>
-        <Modal v-model="userModal" :title=modalTitle @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
+        <Modal
+            v-model="userModal"
+            :title="modalTitle"
+            @on-ok="addOrUpdateUser"
+            @on-cancel="clearFrom"
+            :mask-closable="false"
+            ref="userModal"
+        >
             <Tabs v-show="!isProduct" ref="tab">
                 <Tab-pane label="基本信息" name="baseInfo">
-                    <Form :model="userForm" :label-width="80" :rules="userRule" ref="userRule">
+                    <Form
+                        :model="userForm"
+                        :label-width="80"
+                        :rules="userRule"
+                        ref="userRule"
+                        class="user-form"
+                    >
                         <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                         </FormItem>
@@ -56,7 +69,7 @@
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="部门" prop="arBranch">
+                        <FormItem label="处室/科室" prop="arBranch">
                             <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1">
                                 <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
@@ -102,7 +115,14 @@
                     </Form>
                 </Tab-pane>
             </Tabs>
-            <Form :model="userForm" :label-width="80" v-show="isProduct" :rules="userRuleProduct" ref="userRuleProduct">
+            <Form
+                :model="userForm"
+                :label-width="80"
+                v-show="isProduct"
+                :rules="userRuleProduct"
+                ref="userRuleProduct"
+                class="user-form"
+            >
                 <FormItem label="用户名" prop="arLoginname">
                     <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
                 </FormItem>
@@ -121,7 +141,7 @@
                     </Select> -->
                     <Input v-model="userForm.arAreaname" readonly></Input>
                 </FormItem>
-                <FormItem label="部门" prop="arBranch">
+                <FormItem label="处室/科室" prop="arBranch">
                     <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department2">
                         <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                     </Select>
@@ -1066,4 +1086,8 @@ export default {
 </script>
 
 <style>
+.user-form {
+    max-height: 400px;
+    overflow-y: auto;
+}
 </style>
