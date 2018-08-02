@@ -52,6 +52,7 @@ import axios from '@/util/http'
 import qs from 'qs'
 import { url } from '@/api/config'
 import { enterSystem } from '@/api/system'
+import { unreadSuggestList } from '@/api/suggest'
 
 export default {
   data() {
@@ -76,13 +77,29 @@ export default {
   },
   methods: {
     _enterSystem(data) {
-      enterSystem(data.id).then(res => {
+      let id = ''
+      if (data) {
+        id = data.id
+      }
+      enterSystem(id).then(res => {
         if (res.code === 20000) {
-          data.systemname = data.sysName
-          this.$store.commit('setParams', data)
-          this.$router.push({path: `/system/${data.id}/featured-catalog`})
+          this._unreadSuggestList()
+          if(id) {
+            data.systemname = data.sysName
+            this.$store.commit('setParams', data)
+            this.$router.push({path: `/system/${data.id}/featured-catalog`})
+          } else {
+            this.$router.replace('/zhsq_admin')
+          }
         } else {
           this.$Message.error(res.message)
+        }
+      })
+    },
+    _unreadSuggestList(page) {
+      unreadSuggestList(page).then(res => {
+        if (res.code === 20000) {
+          this.$store.commit('setUnread', res.data)
         }
       })
     },
@@ -112,7 +129,7 @@ export default {
                 }
               } else {
                 // 单个系统自动选择
-                this.$router.replace('/zhsq_admin')
+                this._enterSystem()
               }
             } else {
               this.$Message.error(res.message)

@@ -36,6 +36,7 @@
 
 <script>
 import { enterSystem } from '@/api/system'
+import { unreadSuggestList } from '@/api/suggest'
 
 export default {
   data() {
@@ -52,9 +53,17 @@ export default {
         this._enterSystem(item)
       }
     },
+    _unreadSuggestList(page) {
+      unreadSuggestList(page).then(res => {
+        if (res.code === 20000) {
+          this.$store.commit('setUnread', res.data)
+        }
+      })
+    },
     _enterSystem(item) {
       enterSystem(item.id).then(res => {
         if (res.code) {
+          this._unreadSuggestList()
           let params = {
             systemname: item.sysName,
             type: item.type,

@@ -87,8 +87,7 @@ export default {
       }
       if (name === 'personal-center') {
         if (this.query.id) {
-          this.$router.push({path: `/system/${this.query.id}/${name}`
-          })
+          this.$router.push({path: `/system/${this.query.id}/${name}`})
         } else {
           this.$store.commit('setParams', {})
           this.$router.push(`/zhsq_admin/${name}`)

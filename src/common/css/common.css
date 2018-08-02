@@ -76,6 +76,9 @@ body {
 .ivu-checkbox-inner::after {
   display: block !important;
 }
+.ivu-select-dropdown {
+  width: 100px;
+}
 /* 首页布局 */
 
 .layout {
