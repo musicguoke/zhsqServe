@@ -53,5 +53,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.ivu-card-bordered {
+  overflow-y: scroll;
+}
 </style>

@@ -36,15 +36,15 @@
       <MenuItem name="message-manage">短信管理</MenuItem>
     </Submenu>
     <MenuGroup title="交互管理" v-else></MenuGroup>
-    <Submenu name="4" v-if="userinfo.role!==3">
+    <!-- <Submenu name="4" v-if="userinfo.role!==3">
       <template slot="title">
         <Icon type="loop"></Icon>
           版本管理
       </template>
       <MenuItem name="software-version">软件版本</MenuItem>
-      <!-- <MenuItem name="version-description">版本描述</MenuItem> -->
+      <MenuItem name="version-description">版本描述</MenuItem>
     </Submenu>
-    <MenuGroup title="版本管理" v-else></MenuGroup>
+    <MenuGroup title="版本管理" v-else></MenuGroup> -->
     <Submenu name="5" v-if="userinfo.role!==3">
       <template slot="title">
         <Icon type="stats-bars"></Icon>

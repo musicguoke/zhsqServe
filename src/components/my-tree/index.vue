@@ -349,13 +349,15 @@ export default {
     },
     //点击check勾选框,判断是否有children节点 如果有就一并勾选
     handleCheckClick(data, status) {
+      console.log(status)
       //判断节点是否被选中，是状态为true，否为false
-      let bol = false
-      this.checkGroup.map((v, i) => {
-        if (v == data.id) {
-          bol = true
-        }
-      })
+      // let bol = false
+      let bol = status
+      // this.checkGroup.map((v, i) => {
+      //   if (v == data.id) {
+      //     bol = true
+      //   }
+      // })
       data.isChecked = !bol
       //所有父级节点也改变状态
       if(data.parent) {

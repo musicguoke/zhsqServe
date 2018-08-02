@@ -5,8 +5,9 @@ import { url } from './config.js'
 axios.defaults.withCredentials = true
 
 // 获取软件版本列表
-export function getVersionList(page) {
+export function getVersionList(page, vSysId) {
   const data = {
+    vSysIdStr: vSysId,
     pageNo: page || 1,
     pageSize: 10
   }

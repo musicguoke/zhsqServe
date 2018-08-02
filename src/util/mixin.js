@@ -1,3 +1,5 @@
+import { getSysFunNum } from '@/api/system'
+
 export const configMixin = {
   data() {
     return {
@@ -101,11 +103,24 @@ export const configMixin = {
     this.sys = this.$route.params.id || ''
     this.type = this.$store.state.params.type || ''
     this.funNum = this.$store.state.params.funNum
+    if(!this.$store.state.params.funNum) {
+      this._getSysFunNum(this.sys)
+    }
     if(this.$store.state.params.funNum >= 0) {
       this.qxCheck(this.funNum)
     }
   },
   methods: {
+    _getSysFunNum(id) {
+      getSysFunNum(id).then(res => {
+        if(res.code === 20000) {
+          let data = {
+            funNum: res.data
+          }
+          this.$store.commit('setParams', Object.assign({}, data, this.$store.state.params))
+        }
+      })
+    },
     qxCheck(num) {
       if(num == 0) {
         this.sysFunNum = num
@@ -173,7 +188,7 @@ export const configMixin = {
       this.qx1Change(this.qxLevel, funNum)
       this.funNum = funNum
     },
-    selectMapConfig(section, row) {
+    selectMapConfig(section) {
       // 已选择地图项
       let id = []
       section.map(v => id.push(v.id))
