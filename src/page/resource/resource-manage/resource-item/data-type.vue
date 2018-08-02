@@ -1,7 +1,7 @@
 <template>
   <div class="data-type">
     <v-search :import-show="false" @on-search="search" @on-reset="reset" @on-build="newData" :disabled="selectedId.length <= 0" @on-delete="deleteMany" />
-    <el-table :data="data" border style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table :data="data" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="typename" label="数据名称"></el-table-column>
       <el-table-column label="操作" width="160" align="center">

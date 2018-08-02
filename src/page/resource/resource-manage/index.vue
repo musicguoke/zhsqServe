@@ -58,7 +58,7 @@ export default {
   overflow-y: auto;
 }
 .table {
-  width: 100%;
+  width: 900px;
   margin-left: 16px;
 }
 .ivu-table-wrapper {
