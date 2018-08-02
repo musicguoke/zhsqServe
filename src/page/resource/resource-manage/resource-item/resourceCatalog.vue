@@ -211,7 +211,8 @@ export default {
       }
     },
     rowClick(item, e) {
-      if (e.target.innerText === '删除') {
+      let text = e.target.innerText.trim()
+      if (text === '删除') {
         this.$Modal.confirm({
           title: '提示',
           content: '级联删除且删除的记录不可恢复，继续吗？',
@@ -219,9 +220,9 @@ export default {
             this._deleteMsTabDatainfo(item.id)
           }
         })
-      } else if (e.target.innerText === '编辑') {
+      } else if (text === '编辑') {
         this._getMsTabDatainfoById(item.id)
-      } else if (e.target.innerText === '查看图层') {
+      } else if (text === '查看图层') {
         if (!item.datapath) {
           this.$Message.error('暂无图层地址')
           return

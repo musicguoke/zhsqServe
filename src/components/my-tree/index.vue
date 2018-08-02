@@ -198,8 +198,9 @@ export default {
       this.$emit('on-sort-change', this.cloneColumns[index]['key'], this.cloneColumns[index]['_sortType'])
     },
     // 点击某一行事件
-    RowClick(data, event, index, text) {
+    RowClick(data, e, index, text) {
       let result = this.makeData(data)
+      let event = e || window.event
       this.$emit('on-row-click', result, event, index, text)
     },
     // 点击事件 返回数据处理

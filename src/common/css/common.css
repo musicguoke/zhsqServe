@@ -65,7 +65,7 @@ body {
 }
 
 .ivu-select-dropdown {
-  z-index: 902;
+  z-index: 9999;
 }
 
 .ivu-menu-item-group-title {
@@ -77,7 +77,7 @@ body {
   display: block !important;
 }
 .ivu-select-dropdown {
-  width: 100px;
+  width: auto;
 }
 /* 首页布局 */
 

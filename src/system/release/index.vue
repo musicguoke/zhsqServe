@@ -232,7 +232,8 @@ export default {
       this.dataIdStr = section.toString()
     },
     rowClick(item, e) {
-      if (e.target.innerText === '删除') {
+      let text = e.target.innerText.trim() 
+      if (text == '删除') {
         this.$Modal.confirm({
           title: '提示',
           content: '确认删除吗？',
@@ -240,16 +241,16 @@ export default {
             this._deleteTopicData(item.id)
           }
         })
-      } else if (e.target.innerText === '编辑') {
+      } else if (text == '编辑') {
         this.isAdd = false
         this._getAreaList(item.id)
-      } else if (e.target.innerText === '添加') {
+      } else if (text == '添加') {
         this._getAreaList()
         this._getSTopicTypeList()
         this.editItemForm.dpParentid = item.id
         this.isAdd = true
         this.editItemModal = true
-      } else if (e.target.innerText === '数据目录') {
+      } else if (text == '数据目录') {
         this.editItemForm.dpId = item.id
         this.editItemForm.dpName = item.dpName
         this.editCatalogModal = true
