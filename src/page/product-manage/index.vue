@@ -131,7 +131,7 @@ export default {
     },
     handlePageChange(page) {
       this.page = page
-      this._getSystemList(page)
+      this._getSystemList()
     },
     handleSelectionChange(val) {
       this.selectedId = []
@@ -159,8 +159,8 @@ export default {
       this.name = '系统列表'
       this._getSystemList()
     },
-    _getSystemList(page) {
-      getSystemList(page, this.searchContent, this.sysType).then(res => {
+    _getSystemList() {
+      getSystemList(this.page, this.searchContent, this.sysType).then(res => {
         if (res.code === 20000) {
           res.data.list.filter(v => {
             if (v.enable === 0) {

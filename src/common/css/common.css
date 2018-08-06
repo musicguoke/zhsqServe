@@ -73,6 +73,12 @@ body {
   line-height: 36px;
   font-size: 14px;
 }
+.ivu-checkbox-inner::after {
+  display: block !important;
+}
+.ivu-select-dropdown {
+  width: 100px;
+}
 /* 首页布局 */
 
 .layout {
@@ -81,6 +87,14 @@ body {
   background: #f5f7f9;
   position: relative;
   border-radius: 4px;
+}
+
+.ivu-layout-header {
+  padding: 0;
+}
+
+.ivu-layout-header, .navbar, .content {
+  padding-left: calc(100vw - 100%);
 }
 
 .layout-nav {

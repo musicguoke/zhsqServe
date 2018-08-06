@@ -87,8 +87,7 @@ export default {
       }
       if (name === 'personal-center') {
         if (this.query.id) {
-          this.$router.push({path: `/system/${this.query.id}/${name}`
-          })
+          this.$router.push({path: `/system/${this.query.id}/${name}`})
         } else {
           this.$store.commit('setParams', {})
           this.$router.push(`/zhsq_admin/${name}`)
@@ -98,6 +97,7 @@ export default {
     _logout() {
       logout(this.formInline).then(res => {
         if (res.code === 20000) {
+          this.$store.commit('setParams', {})
           this.$router.replace('/')
         } else {
           this.$Message.error(res.message)

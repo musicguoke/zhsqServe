@@ -469,6 +469,7 @@ export default {
     border-radius: 2px;
   }
   .item-title {
+    display: block;
     text-align: center;
     font-size: 16px;
     line-height: 60px;
@@ -476,6 +477,7 @@ export default {
     background-color: #f7faff;
   }
   .item .i-icon {
+    display: block;
     width: 108px;
     border-right: 1px solid #d8dcdf;
   }

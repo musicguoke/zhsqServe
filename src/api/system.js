@@ -55,12 +55,12 @@ export function getFeature(id) {
 }
 
 //系统列表
-export function getSystemList(page, sysName, type) {
+export function getSystemList(page, sysName, type, pageSize) {
   const data = {
     pageNo: page || 1,
     sysName: sysName,
     type: type,
-    pageSize: 10
+    pageSize: pageSize || 10
   }
 
   return axios.post(`${url}/sys/msSystemChildController/list.do`, qs.stringify(data)).then(res => {
@@ -131,6 +131,19 @@ export function searchSysById(id) {
   
   return axios.post(
     `${url}/sys/msSystemChildController/getMsSystemChildById.do`,
+    qs.stringify(data)).then(res => {
+      return Promise.resolve(res.data)
+  })
+}
+
+// id获取系统权限
+export function getSysFunNum(id) {
+  const data = {
+    sysId: id
+  }
+  
+  return axios.post(
+    `${url}/sys/msMembers/sysIdAuthority.do`,
     qs.stringify(data)).then(res => {
       return Promise.resolve(res.data)
   })

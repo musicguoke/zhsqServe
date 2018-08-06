@@ -1,14 +1,14 @@
 <template>
-<Content :style="{maxHeight:managerHeight}">
+  <Content :style="{maxHeight:managerHeight}">
     <Breadcrumb :style="{padding: '17px 0'}">
       <BreadcrumbItem>用户管理</BreadcrumbItem>
       <BreadcrumbItem>管理员列表</BreadcrumbItem>
     </Breadcrumb>
     <Card>
-  <div>
-      <v-search :searchShow="false" :deleteShow="false" :importShow="false" @on-build="managerAddOpen" />
-      <div class="tableSize">
-        <el-table :data="userData" border style="width: 100%"  @filter-change="filterChange">
+      <div>
+        <v-search :searchShow="false" :deleteShow="false" :importShow="false" @on-build="managerAddOpen" />
+        <div class="tableSize">
+          <el-table :data="userData" border style="width: 100%" @filter-change="filterChange">
             <!-- <el-table-column prop="id" label="Id" width="60" sortable>
             </el-table-column> -->
             <el-table-column prop="userName" label="用户名">
@@ -22,68 +22,80 @@
             <el-table-column prop="roleName" label="角色" :filters="managerTypeFilterList" column-key="roleName">
             </el-table-column>
             <el-table-column label="操作" width="160" align="center">
-                <template slot-scope="scope">
-                    <Button type="primary" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
-                    <Button type="error" @click="remove(scope)" size="small" >删除</Button>
-                </template>
+              <template slot-scope="scope">
+                <Button type="primary" @click="managerEditOpen(scope)" size="small" class="marginRight">编辑</Button>
+                <Button type="error" @click="remove(scope)" size="small">删除</Button>
+              </template>
             </el-table-column>
-        </el-table>   
+          </el-table>
+        </div>
+        <div class="tablePage">
+          <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="managerPage"></Page>
+        </div>
       </div>
-      <div class="tablePage">
-        <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="managerPage"></Page>
-      </div>
-  </div>
-  </Card>
-  <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" ref="managerModal" width="540">
+    </Card>
+    <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" ref="managerModal" width="540">
       <Tabs ref="managerTab">
         <Tab-pane label="基本信息" name="baseInfo">
-            <Form :model="managerForm" :label-width="100"  :rules="manageRule" ref="manageRule">
-                <FormItem label="用户名" prop="userName">
-                    <Input v-model="managerForm.userName" placeholder="请输入用户名"  maxlength="16"></Input>
-                </FormItem>
-                <FormItem label="真实姓名" prop="realName">
-                    <Input v-model="managerForm.realName" placeholder="请输入真实姓名" maxlength="6"></Input>
-                </FormItem>
-                <FormItem label="密码" prop="password" v-show="isAdd">
-                    <Input v-model="managerForm.password" placeholder="请输入密码" type="password" maxlength="20"></Input>
-                </FormItem>
-                <FormItem label="密码" v-show="!isAdd">
-                    <Input v-model="managerForm.editPassword" placeholder="无新密码输入则保持原密码不变" type="password" maxlength="20"></Input>
-                </FormItem>
-                <FormItem label="管理员类型" prop="role">
-                    <Select v-model="managerForm.role" @on-change="managerChange">
-                        <Option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="手机号" prop="tel">
-                    <Input v-model="managerForm.tel" placeholder="请输入手机号" maxlength="11"></Input>
-                </FormItem>
-                <FormItem label="邮箱">
-                    <Input v-model="managerForm.email" placeholder="请输入邮箱" maxlength="25"></Input>
-                </FormItem>
-            </Form>
+          <Form :model="managerForm" :label-width="100" :rules="manageRule" ref="manageRule">
+            <FormItem label="用户名" prop="userName">
+              <Input v-model="managerForm.userName" placeholder="请输入用户名"></Input>
+            </FormItem>
+            <FormItem label="真实姓名" prop="realName">
+              <Input v-model="managerForm.realName" placeholder="请输入真实姓名"></Input>
+            </FormItem>
+            <FormItem label="密码" prop="password" v-show="isAdd">
+              <Input v-model="managerForm.password" placeholder="请输入密码" type="password"></Input>
+            </FormItem>
+            <FormItem label="密码" v-show="!isAdd">
+              <Input v-model="managerForm.editPassword" placeholder="无新密码输入则保持原密码不变" type="password"></Input>
+            </FormItem>
+            <FormItem label="管理员类型" prop="role">
+              <Select v-model="managerForm.role" @on-change="managerChange">
+                <Option v-for="item in managerTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="手机号" prop="tel">
+              <Input v-model="managerForm.tel" placeholder="请输入手机号"></Input>
+            </FormItem>
+            <FormItem label="邮箱">
+              <Input v-model="managerForm.email" placeholder="请输入邮箱"></Input>
+            </FormItem>
+          </Form>
         </Tab-pane>
         <Tab-pane label="选择系统" name="systemChoose" :disabled="tabPaneDisable">
-            <div class="chooseSystemTitle">
-                <span class="chooseSystemSpan">系统选择&nbsp;&nbsp;
-                    <small style="color:red">(注:同种类型下系统不能重复选择)</small>
-                </span>
-                <Button type="info" icon="plus" title="新增系统选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
-            </div>
-            <Form>
-                <FormItem v-for="(item,$index) in sysTypeAndsysList" :key="$index" style="display:flex; justify-content: flex-start">
-                     <Select v-model="item.sysType" @on-change="typeChange(item.sysType,$index)" style="width:220px" :ref="'sysType'+$index">
-                        <Option v-for="item in systemTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Select v-model="item.sysId" @on-change="sysIdSelect(item.sysId,$index)" style="width:220px;margin-left:5px;" :ref="'sysId'+$index">
-                        <Option v-for="item in systemFilterList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                    <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
-                </FormItem>
-            </Form>
+          <div class="chooseSystemTitle">
+            <span class="chooseSystemSpan">系统选择&nbsp;&nbsp;
+              <small style="color:red">(注:同种类型下系统不能重复选择)</small>
+            </span>
+            <Button type="info" icon="plus" title="新增系统选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
+          </div>
+          <Form>
+            <FormItem v-for="(item,$index) in sysTypeAndsysList" :key="$index" style="display:flex; justify-content: flex-start">
+              <Select
+                v-model="item.sysType"
+                @on-change="typeChange(item.sysType,$index)"
+                style="width:220px"
+                :ref="'sysType'+$index"
+                filterable
+              >
+                <Option v-for="item in systemTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <Select
+                v-model="item.sysId"
+                @on-change="sysIdSelect(item.sysId,$index)"
+                style="width:220px;margin-left:5px;"
+                :ref="'sysId'+$index"
+                filterable
+              >
+                <Option v-for="item in systemFilterList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
+            </FormItem>
+          </Form>
         </Tab-pane>
       </Tabs>
-  </Modal>
+    </Modal>
   </Content>
 </template>
 
@@ -111,8 +123,8 @@ export default {
       pageLength: 0,
       nowPage: 1,
       forEachNum: 0,
-      managerNowType:0,
-      tabPaneDisable:true,
+      managerNowType: 0,
+      tabPaneDisable: true,
       managerForm: {
         userName: "",
         realName: "",
@@ -145,7 +157,7 @@ export default {
         }
       ],
       isAdd: true,
-      managerTypeList:[],
+      managerTypeList: [],
       managerTypeFilterList: [
         {
           value: 1,
@@ -198,16 +210,16 @@ export default {
   created() {
     this._getManagerList(1);
     this.managerNowType = JSON.parse(localStorage.userInfo).role
-    if(this.managerNowType == 1){
-        this.managerTypeList = this.managerTypeFilterList
-      }else if(this.managerNowType ==2){
-        this.managerTypeList = [{
-            value: 3,
-            label: "普通管理员",
-            text: "普通管理员"
-        }]
+    if (this.managerNowType == 1) {
+      this.managerTypeList = this.managerTypeFilterList
+    } else if (this.managerNowType == 2) {
+      this.managerTypeList = [{
+        value: 3,
+        label: "普通管理员",
+        text: "普通管理员"
+      }]
     }
-    getSystemList(1).then(res => {
+    getSystemList('', '', '', 1000).then(res => {
       let data = res.data.list;
       for (let i in data) {
         this.systemList.push({
@@ -267,39 +279,39 @@ export default {
           this.managerForm[i] = params.row[i];
         }
       }
-      if(this.managerForm.role == 3){
-          this.tabPaneDisable = false
+      if (this.managerForm.role == 3) {
+        this.tabPaneDisable = false
       }
       this.managerForm.editPassword = "";
       if (params.row.list.length > 0) {
-          for(let i=0;i<params.row.list.length;i++ ){
-              this.sysTypeAndsysList.push({ sysType: params.row.list[i].type, sysId: params.row.list[i].id })
-              this.typeChange(params.row.list[i].type,i)
-          }
+        for (let i = 0; i < params.row.list.length; i++) {
+          this.sysTypeAndsysList.push({ sysType: params.row.list[i].type, sysId: params.row.list[i].id })
+          this.typeChange(params.row.list[i].type, i)
+        }
       }
     },
     managerChange() {
       this.sysId = [];
-      if(this.managerForm.role == 3){
-          this.tabPaneDisable = false
-      }else{
-          this.tabPaneDisable = true
-          this.sysTypeAndsysList = [{ sysType: "", sysId: "" }]
+      if (this.managerForm.role == 3) {
+        this.tabPaneDisable = false
+      } else {
+        this.tabPaneDisable = true
+        this.sysTypeAndsysList = [{ sysType: "", sysId: "" }]
       }
     },
-    typeChange(type,index) {
-        let array = [];
-        this.systemList.map(v => {
-            if (v.type == type) {
-              array.push(v);
-            }
-        });
-        this.systemFilterList[index] = array;
+    typeChange(type, index) {
+      let array = [];
+      this.systemList.map(v => {
+        if (v.type == type) {
+          array.push(v);
+        }
+      });
+      this.systemFilterList[index] = array;
     },
     addOrUpdate() {
       let sysIdStr = []
-      this.sysTypeAndsysList.map(v=>{
-          sysIdStr.push(v.sysId)
+      this.sysTypeAndsysList.map(v => {
+        sysIdStr.push(v.sysId)
       })
       let data = {
         userName: this.managerForm.userName,
@@ -374,7 +386,7 @@ export default {
             }
           });
         },
-        onCancel: () => {}
+        onCancel: () => { }
       });
     },
     filterByRole(value, row, column) {
@@ -389,7 +401,7 @@ export default {
     },
     //点击添加，新增一行系统角色选择
     addChooseSystem() {
-        this.sysTypeAndsysList.push({ sysType: "", sysId: "" })
+      this.sysTypeAndsysList.push({ sysType: "", sysId: "" })
     },
     //移除当前行的选择框
     removeChooseSystem(index) {
@@ -397,18 +409,18 @@ export default {
       this.systemFilterList.splice(index, 1);
     },
     //验证当前是否重复选择系统
-    sysIdSelect(id,index){
+    sysIdSelect(id, index) {
       let list = [];
       this.sysTypeAndsysList.map(v => {
         list.push(v.sysId);
       });
       let setList = Array.from(new Set(list));
       if (list.length > setList.length) {
-            this.$Message.warning("相同系统请勿重复选择");
-            this.$refs["sysType" + index][0].values = [];
-            this.$refs["sysId" + index][0].values = [];
-            this.sysTypeAndsysList[index] = { sysType: "", sysId: "" }   
-        }
+        this.$Message.warning("相同系统请勿重复选择");
+        this.$refs["sysType" + index][0].values = [];
+        this.$refs["sysId" + index][0].values = [];
+        this.sysTypeAndsysList[index] = { sysType: "", sysId: "" }
+      }
     }
   }
 };

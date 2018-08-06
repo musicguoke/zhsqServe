@@ -88,7 +88,7 @@ export default {
       initItems: [], //处理后数据数组
       cloneColumns: [], //处理后的表头数据
       checkGroup: [], //复选框数组
-      checks: false, //全选
+      checks: true, //全选
       screenWidth: document.body.clientWidth, //自适应宽
       tdsWidth: 0, //td总宽
       timer: false, //控制监听时长
@@ -349,13 +349,15 @@ export default {
     },
     //点击check勾选框,判断是否有children节点 如果有就一并勾选
     handleCheckClick(data, status) {
+      console.log(status)
       //判断节点是否被选中，是状态为true，否为false
-      let bol = false
-      this.checkGroup.map((v, i) => {
-        if (v == data.id) {
-          bol = true
-        }
-      })
+      // let bol = false
+      let bol = status
+      // this.checkGroup.map((v, i) => {
+      //   if (v == data.id) {
+      //     bol = true
+      //   }
+      // })
       data.isChecked = !bol
       //所有父级节点也改变状态
       if(data.parent) {
@@ -402,7 +404,11 @@ export default {
     },
     //checkbox 全选 选择事件
     handleCheckAll() {
-      this.checks = !this.checks;
+      if("ActiveXObject" in window) {
+        console.log("ie")
+      } else {
+        this.checks = !this.checks
+      }
       if (this.checks) {
         this.checkGroup = this.getArray(this.checkGroup.concat(this.All(this.items)))
       } else {

@@ -14,13 +14,26 @@
         @on-delete="deleteMany"
       />
       <div class="tableSize">
-        <el-table :data="list" border style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table
+          :data="list"
+          border
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+          @filter-change="handleFilterChange"
+        >
           <el-table-column type="selection" width="55"></el-table-column>
           <!-- <el-table-column prop="vId" label="ID" sortable>
           </el-table-column> -->
           <el-table-column prop="vTitle" label="版本名称" sortable>
           </el-table-column>
           <el-table-column prop="vVersion" label="版本号" sortable>
+          </el-table-column>
+          <el-table-column
+            prop="vSysId"
+            label="系统类型"
+            column-key="sysType"
+            :filters="[{ text: '综合市情', value: '1' }, { text: '规划定位', value: '2' }, { text: '综合区情', value: '3' }]"
+          >
           </el-table-column>
           <el-table-column prop="vPlatform" label="运行平台">
           </el-table-column>
@@ -35,19 +48,26 @@
         </el-table>
       </div>
       <div class="tablePage">
-        <Page :total="listLength" @on-change="_getVersionList"></Page>
+        <Page :total="listLength" :current="page" @on-change="handlePageChange"></Page>
       </div>
     </Card>
-    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500" @on-ok="save" @on-cancel="cancel">
+    <Modal v-model="modalShow" :closable='false' :mask-closable="false" :width="500">
       <h3 slot="header" style="color:#2D8CF0">版本信息</h3>
-      <Form :model="versionInfo" :label-width="90">
+      <Form ref="softwareForm" :rules="rules" :model="versionInfo" :label-width="90">
         <FormItem label="版本名称">
           <Input v-model="versionInfo.vTitle" placeholder="请输入版本名称"></Input>
         </FormItem>
         <FormItem label="版本号">
           <Input v-model="versionInfo.vVersion" placeholder="请输入版本号"></Input>
         </FormItem>
-        <FormItem label="运行平台">
+        <FormItem label="系统类型" prop="vSysId">
+          <Select v-model="versionInfo.vSysId" placeholder="请选择系统类型">
+            <Option value="1">综合市情</Option>
+            <Option value="2">规划定位</Option>
+            <Option value="3">综合区情</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="运行平台" prop="vPlatform">
           <Select v-model="versionInfo.vPlatform" placeholder="请选择设备类型">
             <Option value="android_phone">android_phone</Option>
             <Option value="android_pad">android_pad</Option>
@@ -81,6 +101,10 @@
           <Input v-model="versionInfo.vContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="text" @click="cancel">取消</Button>
+        <Button type="primary" @click="save">保存</Button>
+      </div>
     </Modal>
   </Content>
 </template>
@@ -103,6 +127,8 @@ export default {
       list: [],
       listLength: '',
       isNew: false,
+      page: 1,
+      sysType: '',
       versionInfo: {
         vTitle: '',
         vVersion: '',
@@ -114,6 +140,14 @@ export default {
         vForcedContent: '',
         vSourcename: '',
         sysIdStr: ''
+      },
+      rules: {
+        vPlatform: [
+          { required: true, message: '运行平台不能为空', trigger: 'blur' }
+        ],
+        vSysId: [
+          { required: true, message: '系统类型不能为空', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -126,11 +160,26 @@ export default {
     this._getVersionList()
   },
   methods: {
-    _getVersionList(page) {
-      getVersionList(page).then(res => {
+    handlePageChange(page) {
+      this.page = page
+      this._getVersionList()
+    },
+    handleFilterChange(arr) {
+      this.sysType = arr['sysType'].toString()
+      this._getVersionList()
+    },
+    _getVersionList() {
+      getVersionList(this.page, this.sysType).then(res => {
         if (res.code === 20000) {
           res.data.list.map(v => {
             v.vAddtime = this._mm.formatDate(v.vAddtime)
+            if (v.vSysId == 1) {
+              v.vSysId = '综合市情'
+            } else if (v.vSysId == 2) {
+              v.vSysId = '规划定位'
+            } else if (v.vSysId == 3) {
+              v.vSysId = '综合区情'
+            }
           })
           this.list = res.data.list
           this.listLength = res.data.total
@@ -142,6 +191,7 @@ export default {
     _addVersion(data) {
       addVersion(data).then(res => {
         if (res.code === 20000) {
+          this.modalShow = false
           this._getVersionList()
           this.$Message.success(res.message)
         } else {
@@ -226,19 +276,25 @@ export default {
       })
     },
     save() {
-      if(this.isNew) {
-        this._addVersion(this.versionInfo)
-      } else {
-        this.cancel()
-      }
+      this.$refs['softwareForm'].validate((valid) => {
+        if (valid) {
+          if(this.isNew) {
+            this._addVersion(this.versionInfo)
+          } else {
+            this.cancel()
+          }
+        }
+      })
     },
     cancel() {
+      this.modalShow = false
+      this.$refs['softwareForm'].resetFields()
       this.versionInfo = {
         vTitle: '',
         vVersion: '',
         vPlatform: '',
         vUrl: '',
-        vIsforced: '',
+        vIsforced: '0',
         vContent: '',
         vSysId: '',
         vForcedContent: '',
