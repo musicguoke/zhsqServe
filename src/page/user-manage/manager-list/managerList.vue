@@ -30,7 +30,7 @@
           </el-table>
         </div>
         <div class="tablePage">
-          <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="managerPage"></Page>
+          <Page :total="pageLength"  @on-change="pageChange" show-total show-elevator ref="managerPage"></Page>
         </div>
       </div>
     </Card>

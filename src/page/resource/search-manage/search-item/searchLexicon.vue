@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="lexiconPage"></Page>
+            <Page :total="pageLength"  @on-change="pageChange" show-total show-elevator ref="lexiconPage"></Page>
         </div>
         <Modal v-model="lexiconModal" :title=modalTitle @on-ok="addOrUpdate" ref="lexiconModal">
             <Form :model="lexiconForm"  :label-width="80" :rules="lexiconRule" ref="lexiconRule">

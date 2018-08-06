@@ -25,7 +25,7 @@
                 </el-table>
             </div>
             <div class="tablePage">
-                <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="conectPage"></Page>
+                <Page :total="pageLength"  @on-change="pageChange" show-total show-elevator ref="conectPage"></Page>
             </div>
         </Card>
         <Modal v-model="contactsModal" :closable='false' :mask-closable="false" :title=modalTitle @on-ok="addOrUpdate">

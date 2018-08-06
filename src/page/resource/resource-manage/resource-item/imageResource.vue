@@ -20,7 +20,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="imagePage"></Page>
+            <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="imagePage"></Page>
         </div>
         <Modal v-model="imageSourceModal" :title=modalTitle @on-ok="addOrUpdate" ref="imageModal">
             <Form :model="imageSourceForm" :label-width="80" :rules="imageRule" ref="imageRule">

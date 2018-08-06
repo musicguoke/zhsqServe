@@ -20,7 +20,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="areaTextPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="areaTextPage"></Page>
           </div>
         <Modal v-model="areaTextModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTextModal">
             <Form :model="areaTextForm"  :label-width="100" :rules="areaTextRule" ref="areaTextRule">
