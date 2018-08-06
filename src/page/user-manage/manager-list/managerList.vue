@@ -34,7 +34,7 @@
         </div>
       </div>
     </Card>
-    <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" ref="managerModal" width="540">
+    <Modal v-model="managerModal" :title=modalTitle @on-ok="addOrUpdate" @on-cancel="cancel" ref="managerModal" width="540">
       <Tabs ref="managerTab">
         <Tab-pane label="基本信息" name="baseInfo">
           <Form :model="managerForm" :label-width="100" :rules="manageRule" ref="manageRule">
@@ -363,6 +363,9 @@ export default {
           }
         }
       });
+    },
+    cancel(){
+      this.tabPaneDisable = true
     },
     pageChange(page) {
       this.nowPage = page;
