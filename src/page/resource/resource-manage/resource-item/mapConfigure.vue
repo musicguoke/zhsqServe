@@ -24,7 +24,7 @@
             </el-table>
         </div>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="mapConfigPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="mapConfigPage"></Page>
         </div>
         <Modal v-model="mapConfigureModal" :title=modalTitle @on-ok="addOrUpdate" ref="mapConfigureModal">
             <Form :model="mapConfigureForm" :label-width="80" :rules="mapRule" ref="mapRule">

@@ -21,16 +21,16 @@
         <Modal v-model="hotSearchModal" :title=modalTitle @on-ok="addOrUpdate" ref="hotSearchModal">
             <Form :model="hotSearchForm" :label-width="80" :rules="hotSearchRule" ref="hotSearchRule">
                 <FormItem label="热搜名" prop="dataname">
-                    <Input v-model="hotSearchForm.dataname" placeholder="请输入热搜名..."></Input>
+                    <Input v-model="hotSearchForm.dataname" placeholder="请输入热搜名..." maxlength="10"></Input>
                 </FormItem>
                 <FormItem label="父级编码" prop="parentsCode">
-                    <Input v-model="hotSearchForm.parentsCode" placeholder="请输入父级编码..."></Input>
+                    <Input v-model="hotSearchForm.parentsCode" placeholder="请输入父级编码..." maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="数据编码" prop="dataCode">
-                    <Input v-model="hotSearchForm.dataCode" placeholder="请输入数据编码..."></Input>
+                    <Input v-model="hotSearchForm.dataCode" placeholder="请输入数据编码..."  maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="序号" prop="listorder">
-                    <Input v-model="hotSearchForm.listorder" placeholder="请输入序号..."></Input>
+                    <Input v-model="hotSearchForm.listorder" placeholder="请输入序号..." maxlength="5"></Input>
                 </FormItem>
             </Form>
         </Modal>

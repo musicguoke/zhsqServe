@@ -16,7 +16,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="page720"></Page>
+            <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="page720"></Page>
         </div>
         <Modal v-model="resource720Modal" :title=modalTitle @on-ok="addOrUpdate" ref="modal720">
             <Form :model="resource720Form" :label-width="80" :rules="rule720" ref="rule720">

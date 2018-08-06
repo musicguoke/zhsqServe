@@ -18,7 +18,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="areaTargetPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="areaTargetPage"></Page>
         </div>
         <Modal v-model="areaTargetModal" :title=modalTitle @on-ok="addOrUpdate" ref="areaTargetModal">
             <Form :model="areaTargetForm"  :label-width="80" :rules="areaRule" ref="areaRule">

@@ -53,16 +53,16 @@
                         class="user-form"
                     >
                         <FormItem label="用户名" prop="arLoginname">
-                            <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
+                            <Input v-model="userForm.arLoginname" placeholder="请输入用户名..." maxlength="16"></Input>
                         </FormItem>
                         <FormItem label="真实姓名" prop="arTruename">
-                            <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."></Input>
+                            <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."  maxlength="6"></Input>
                         </FormItem>
                         <FormItem label="密码" prop="arPassword" v-show="isAdd">
-                            <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
+                            <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"  maxlength="20"></Input>
                         </FormItem>
                         <FormItem label="密码" v-show="!isAdd">
-                            <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
+                            <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"  maxlength="20"></Input>
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
                             <Select v-model="userForm.arAreacode" filterable>
@@ -81,22 +81,22 @@
                         </FormItem>
                         </FormItem>
                         <FormItem label="手机号" prop="arMobile">
-                            <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
+                            <Input v-model="userForm.arMobile" placeholder="请输入手机号..."  maxlength="11"></Input>
                         </FormItem>
                         <FormItem label="座机">
-                            <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
+                            <Input v-model="userForm.arTel" placeholder="请输入座机..." maxlength="11"></Input>
                         </FormItem>
                         <FormItem label="邮箱">
-                            <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
+                            <Input v-model="userForm.arEmail" placeholder="请输入邮箱..." maxlength="25"></Input>
                         </FormItem>
                         <FormItem label="开通人">
-                            <Input v-model="userForm.arCreator" placeholder="请输入开通人..."></Input>
+                            <Input v-model="userForm.arCreator" placeholder="请输入开通人..." maxlength="15"></Input>
                         </FormItem>
                         <FormItem label="开通应用服务联系人">
-                            <Input v-model="userForm.arContacts" placeholder="请输入开通应用服务联系人..."></Input>
+                            <Input v-model="userForm.arContacts" placeholder="请输入开通应用服务联系人..." maxlength="11"></Input>
                         </FormItem>
                         <FormItem label="用户描述">
-                            <Input v-model="userForm.arDescribe" type="textarea" :rows="2" placeholder="请输入用户描述..."></Input>
+                            <Input v-model="userForm.arDescribe" type="textarea" :rows="2" placeholder="请输入用户描述..." maxlength="60"></Input>
                         </FormItem>
                     </Form>
                 </Tab-pane>
@@ -140,16 +140,16 @@
                 class="user-form"
             >
                 <FormItem label="用户名" prop="arLoginname">
-                    <Input v-model="userForm.arLoginname" placeholder="请输入用户名..."></Input>
+                    <Input v-model="userForm.arLoginname" placeholder="请输入用户名..." maxlength="16"></Input>
                 </FormItem>
                 <FormItem label="真实姓名" prop="arTruename">
-                    <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."></Input>
+                    <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..." maxlength="6"></Input>
                 </FormItem>
                 <FormItem label="密码" prop="arPassword" v-show="isAdd">
-                    <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"></Input>
+                    <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password" maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="密码" v-show="!isAdd">
-                    <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"></Input>
+                    <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password" maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="区县" prop="arAreacode">
                     <!-- <Select v-model="userForm.arAreacode" disabled>
@@ -168,22 +168,22 @@
                     </Select>
                 </FormItem>
                 <FormItem label="手机号" prop="arMobile">
-                    <Input v-model="userForm.arMobile" placeholder="请输入手机号..."></Input>
+                    <Input v-model="userForm.arMobile" placeholder="请输入手机号..." maxlength="11"></Input>
                 </FormItem>
                 <FormItem label="座机">
-                    <Input v-model="userForm.arTel" placeholder="请输入座机..."></Input>
+                    <Input v-model="userForm.arTel" placeholder="请输入座机..." maxlength="11"></Input>
                 </FormItem>
                 <FormItem label="邮箱">
-                    <Input v-model="userForm.arEmail" placeholder="请输入邮箱..."></Input>
+                    <Input v-model="userForm.arEmail" placeholder="请输入邮箱..." maxlength="25"></Input>
                 </FormItem>
                 <FormItem label="开通人">
-                    <Input v-model="userForm.arCreator" placeholder="请输入开通人..."></Input>
+                    <Input v-model="userForm.arCreator" placeholder="请输入开通人..." maxlength="15"></Input>
                 </FormItem>
                 <FormItem label="开通应用服务联系人">
-                    <Input v-model="userForm.arContacts" placeholder="请输入开通应用服务联系人..."></Input>
+                    <Input v-model="userForm.arContacts" placeholder="请输入开通应用服务联系人..." maxlength="11"></Input>
                 </FormItem>
                 <FormItem label="用户描述">
-                    <Input v-model="userForm.arDescribe" type="textarea" :rows="2" placeholder="请输入用户描述..."></Input>
+                    <Input v-model="userForm.arDescribe" type="textarea" :rows="2" placeholder="请输入用户描述..." maxlength="60"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -771,6 +771,9 @@ export default {
                         });
                         if (sysNum == 0) {
                             this.$Message.error("请至少选择一个系统角色");
+                            this.$refs.userModal.visible = true;
+                            this.userModal = true;
+                            this.$refs.tab.activeKey = "system";
                         } else {
                             this.addOrUpdateFun();
                         }

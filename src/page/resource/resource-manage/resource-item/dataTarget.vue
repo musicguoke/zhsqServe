@@ -21,7 +21,7 @@
             </el-table-column>
         </el-table>
         <div class="tablePage">
-            <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="dataTargetPage"></Page>
+            <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="dataTargetPage"></Page>
         </div>
         <Modal v-model="dataTargetModal" :title=modalTitle @on-ok="addOrUpdate">
             <Form :model="dataTargetForm" label-position="left" :label-width="100">

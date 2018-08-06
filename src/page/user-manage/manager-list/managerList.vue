@@ -13,7 +13,7 @@
             </el-table-column> -->
             <el-table-column prop="userName" label="用户名">
             </el-table-column>
-            <el-table-column prop="realName" label="姓名">
+            <el-table-column prop="realName" label="姓名" >
             </el-table-column>
             <el-table-column prop="tel" label="电话">
             </el-table-column>
@@ -30,7 +30,7 @@
           </el-table>
         </div>
         <div class="tablePage">
-          <Page :total="pageLength" v-show="pageLength>10" @on-change="pageChange" show-total show-elevator ref="managerPage"></Page>
+          <Page :total="pageLength"  @on-change="pageChange" show-total show-elevator ref="managerPage"></Page>
         </div>
       </div>
     </Card>

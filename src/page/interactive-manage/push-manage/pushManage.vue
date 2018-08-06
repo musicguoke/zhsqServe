@@ -29,7 +29,7 @@
                     </el-table>
                 </div>
                 <div class="tablePage">
-                    <Page :total="pageLength" @on-change="pageChange" v-show="pageLength > 10" show-total show-elevator ref="pushPage"></Page>
+                    <Page :total="pageLength" @on-change="pageChange"  show-total show-elevator ref="pushPage"></Page>
                 </div>
             </div>
         </Card>
@@ -68,7 +68,7 @@
                     </RadioGroup>
                 </FormItem>
                 <FormItem label="内容">
-                    <Input v-model="pushForm.pContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+                    <Input v-model="pushForm.pContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..." maxlength="70"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -248,7 +248,7 @@ export default {
             }
             getUserList(data).then(res => {
                 this.userData = []
-                let data = res.data.list
+                let data = res.data.page.list
                 for (let i in data) {
                     this.countyList.map(v => {
                         if (v.value == data[i].arAreacode) {
