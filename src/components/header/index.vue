@@ -12,7 +12,7 @@
       <div class="layout-nav">
         <div class="user-info">
           <Avatar style="background-color: #87d068;margin-top:15px;" icon="person" />
-          <Dropdown trigger="hover" @on-click="userClick" style="margin: 0 10px">
+          <Dropdown trigger="hover" @on-click="userClick" style="margin: 20px 10px 0 10px;">
             <a href="javascript:void(0)" style="color: #fff;">
               {{userInfo.realName}}
               <Icon type="arrow-down-b"></Icon>
@@ -116,10 +116,14 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.navbar-logo span {
-  display: inline-block;
+.navbar-logo {
+  margin-top: 8px;
+  span {
+    display: inline-block;
+  }
 }
 .message-con {
+  margin-top: 20px;
   cursor: pointer;
 }
 .user-info {

@@ -67,7 +67,8 @@ export default {
           let params = {
             systemname: item.sysName,
             type: item.type,
-            areacode: item.areacode
+            areacode: item.areacode,
+            id: item.id
           }
           this.$store.commit('setParams', params)
           this.$router.push({path: `/system/${item.id}/featured-catalog`})

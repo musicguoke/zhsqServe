@@ -52,6 +52,7 @@ import axios from '@/util/http'
 import qs from 'qs'
 import { url } from '@/api/config'
 import { enterSystem } from '@/api/system'
+import { logout } from '@/api/service'
 import { unreadSuggestList } from '@/api/suggest'
 
 export default {
@@ -119,6 +120,9 @@ export default {
         content: '该用户已在其他地方登录，是否强制登录？',
         onOk: () => {
           this._login()
+        },
+        onCancel: () => {
+          this._logout()
         }
       })
     },
@@ -150,8 +154,16 @@ export default {
               this.$Message.error(res.message)
             }
           })
+        }
+      })
+    },
+    _logout() {
+      logout().then(res => {
+        if (res.code === 20000) {
+          this.$store.commit('setParams', {})
+          this.$router.replace('/')
         } else {
-          this.$Message.error('用户名和密码不能为空！')
+          this.$Message.error(res.message)
         }
       })
     }

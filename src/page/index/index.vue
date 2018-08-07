@@ -2,7 +2,6 @@
   <Content>
     <Card style="margin: 17px 0">
       <div class="card-content">
-        <div class="banner" ref="ebox"></div>
         <div class="data-content">
           <div class="data-item">
             <div class="item">
@@ -28,12 +27,12 @@
           </div>
           <div class="data-item">
             <div class="item">
-              <span class="i-icon qx-icon"></span>
+              <span class="i-icon data-icon"></span>
               <div class="num">
-                <p class="num-title">区县数量</p>
+                <p class="num-title">图层数量</p>
                 <i>
-                  <span class="num-green">{{result.county}}</span>
-                  <b>个</b>
+                  <span class="num-blue">{{result.data}}</span>
+                  <b>条</b>
                 </i>
               </div>
             </div>
@@ -50,6 +49,16 @@
           </div>
           <div class="data-item">
             <div class="item">
+              <span class="i-icon qx-icon"></span>
+              <div class="num">
+                <p class="num-title">区县数量</p>
+                <i>
+                  <span class="num-green">{{result.county}}</span>
+                  <b>个</b>
+                </i>
+              </div>
+            </div>
+            <div class="item">
               <span class="i-icon sys-icon"></span>
               <div class="num">
                 <p class="num-title">应用系统数量</p>
@@ -59,16 +68,7 @@
                 </i>
               </div>
             </div>
-            <div class="item">
-              <span class="i-icon data-icon"></span>
-              <div class="num">
-                <p class="num-title">图层数量</p>
-                <i>
-                  <span class="num-blue">{{result.data}}</span>
-                  <b>条</b>
-                </i>
-              </div>
-            </div>
+
           </div>
           <div class="data-item">
             <div class="item">
@@ -110,11 +110,18 @@
             </div>
           </div> -->
         </div>
+        <div class="banner" ref="ebox"></div>
         <div class="data-content data-bot">
           <div class="data-item">
             <span class="item-title">终端分布</span>
             <div class="circle" ref="cbox"></div>
           </div>
+          <div class="data-item">
+            <span class="item-title">终端系统分布</span>
+            <div class="circle" ref="cSysBox"></div>
+          </div>
+        </div>
+        <div class="data-content data-bot">
           <div class="data-item data-table-item">
             <span class="item-title">系统运行状态</span>
             <div class="item-table">
@@ -128,7 +135,6 @@
 </template>
 
 <script>
-// import * as echarts from 'echarts'
 import { getIndex, getLogStatistics, getMetaUrl } from '@/api/service'
 
 export default {
@@ -348,7 +354,7 @@ export default {
           textStyle: {
             fontSize: '20'
           },
-          data: ['iPhone', 'iPad', 'PC', 'Android Phone', 'Android Pad']
+          data: ['PAD', 'Phone', 'PC']
         },
         series: [
           {
@@ -381,19 +387,78 @@ export default {
               }
             },
             data: [
-              {
-                value: this.result.ios_iphone,
-                name: 'iPhone',
+              { 
+                value: this.result.android_pad + this.result.ios_ipad,
+                name: 'PAD',
                 itemStyle: {
                   normal: {
-                    color: 'rgb(1,175,80)'
+                    color: '#f2637b'
                   }
                 }
               },
-              { value: this.result.ios_ipad, name: 'iPad' },
-              { value: this.result.pc, name: 'PC' },
-              { value: this.result.android_phone, name: 'Android Phone' },
-              { value: this.result.android_pad, name: 'Android Pad' }
+              {
+                value: this.result.ios_iphone + this.result.android_phone,
+                name: 'Phone',
+                itemStyle: {
+                  normal: {
+                    color: '#3aa0ff'
+                  }
+                }
+              },
+              {
+                value: this.result.pc,
+                name: 'PC',
+                itemStyle: {
+                  normal: {
+                    color: '#fad337'
+                  }
+                }
+              },
+            ]
+          }
+        ]
+      }
+      myChart.setOption(option)
+    },
+    pie1Initial() {
+      var myChart = echarts.init(this.$refs.cSysBox)
+      var option = {
+        color: ['#3398DB'],
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        grid: {
+          top: '7%',
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: ['IOS', 'Android'],
+            axisTick: {
+              alignWithLabel: true
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: '直接访问',
+            type: 'bar',
+            barWidth: '60%',
+            data: [
+              { value: this.result.ios_iphone + this.result.ios_ipad, name: 'IOS' },
+              { value: this.result.android_phone + this.result.android_pad, name: 'Android' }
             ]
           }
         ]
@@ -406,6 +471,7 @@ export default {
           this.accessResult = res.data.aceessStatistical
           this.result = res.data
           this.pieInitial()
+          this.pie1Initial()
         } else {
           this.$Message.error(res.message)
         }
@@ -446,7 +512,7 @@ export default {
 .banner {
   width: 100%;
   height: 300px;
-  margin-bottom: 17px;
+  margin: 17px 0;
   background-color: #4a7fcf;
 }
 .data-content {
@@ -561,6 +627,7 @@ export default {
   }
   .data-table-item {
     justify-content: flex-start;
+    width: 100%;
   }
   .circle {
     height: 300px;
