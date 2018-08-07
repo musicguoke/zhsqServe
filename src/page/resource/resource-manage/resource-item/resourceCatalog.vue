@@ -156,6 +156,9 @@ export default {
           }, {
             type: 'success',
             text: '查看图层'
+          },{
+            type: 'info',
+            text: '绘制'
           }, {
             type: 'error',
             text: '删除'
@@ -221,7 +224,13 @@ export default {
         })
       } else if (e.target.innerText === '编辑') {
         this._getMsTabDatainfoById(item.id)
-      } else if (e.target.innerText === '查看图层') {
+      } else if (e.target.innerText === '绘制') {
+        if (!item.datapath) {
+          this.$Message.error('暂无图层地址')
+          return
+        }
+        this.addMapLayer(item)
+      }else if (e.target.innerText === '查看图层') {
         if (!item.datapath) {
           this.$Message.error('暂无图层地址')
           return
@@ -345,6 +354,11 @@ export default {
           this.layerFieldsModal = true
         }
       })
+    },
+    //添加图层
+    addMapLayer(data){
+      this.$router.push('map')
+      this.$store.commit('setMapInfo',{isShow:true,datapath:data.datapath}) 
     }
   }
 }
