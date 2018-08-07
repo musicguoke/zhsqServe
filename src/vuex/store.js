@@ -18,7 +18,8 @@ const store = new Vuex.Store({
         ],
         qxLevelNum: 2,
         params: {},
-        monitorSystemInfo: {}
+        monitorSystemInfo: {},
+        mapInfo: { isShow: false, dataPath: '' }
     },
     mutations: {
         setDragTreeNodeHeight(state, value) {
@@ -44,11 +45,18 @@ const store = new Vuex.Store({
         },
         setMonitorSystemInfo(state, obj) {
             state.monitorSystemInfo = obj
+        },
+        setMapInfo(state, obj) {
+            state.mapInfo.isShow = obj.isShow
+            state.mapInfo.dataPath = obj.datapath
         }
     },
     getters: {
         dragTreeData: state => {
             return state.dragTreeData
+        },
+        mapInfo: state => {
+            return state.mapInfo
         }
     },
     plugins: [vuexLocal.plugin]
