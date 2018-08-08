@@ -13,7 +13,7 @@ export default {
 			isShow:false,
 			url:'http://zhsq.digitalcq.com/D2CJsonV2/',
 			jsonUrl:'',
-			contentHeight:document.body.clientHeight - 100 +'px',
+			contentHeight:document.body.clientHeight +'px',
 			contentWidth:document.body.clientWidth +'px'
 		}
 	},
@@ -24,7 +24,7 @@ export default {
 	mounted(){
 		const that = this
 		window.onresize = ()=>{
-			that.contentHeight = document.body.clientHeight - 100 +'px'
+			that.contentHeight = document.body.clientHeight +'px'
 			that.contentWidth = document.body.clientWidth +'px'
 		}
 	},
@@ -68,13 +68,8 @@ export default {
 		
 		//获取底图Json
 		getMapJsonAndImg(){
-			var dataArray = {'img':[],'name':[],'id':[],'url':[]}
 			getNewMapConfig().then(res =>{
 				for( var i in res.data){
-					dataArray.img.push(res.data[i].m_image)
-					dataArray.name.push(res.data[i].m_name)
-					dataArray.id.push(res.data[i].m_order)
-					dataArray.url.push(res.data[i].m_url)
 					if(res.data[i].m_order == 1){
 						getNewMapJson(res.data[i].m_url).then(res =>{
 							this.loadThisMap(res)
@@ -127,7 +122,9 @@ export default {
 .mapControllerBox{
 	position: absolute;
 	left: 0;
-	top: 100px;
+	top: 0px;
+	z-index: 950;
+	background-color: #fff;
 }
 .closeBtn{
 	position: absolute;

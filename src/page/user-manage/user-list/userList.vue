@@ -65,7 +65,7 @@
                             <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"  maxlength="20"></Input>
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
-                            <Select v-model="userForm.arAreacode" filterable>
+                            <Select v-model="userForm.arAreacode" filterable @on-change="clearDepartmentSelect" ref="county">
                                 <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </FormItem>
@@ -484,12 +484,14 @@ export default {
             }
         },
         userAddOpen() {
+            this.$refs.county.query = ''
             this.$refs.userRule.resetFields()
             this.$refs.userRuleProduct.resetFields()
             this.userModal = true
             this.isAdd = true
             this.$refs.tab.activeKey = 'baseInfo'
             this.modalTitle = '新增用户'
+            this.departmentData = []
             this.clearFrom()
             this._getSystemList()
             for (let i in this.userForm) {
@@ -508,6 +510,7 @@ export default {
             this.isAdd = false
             this.$refs.tab.activeKey = 'baseInfo'
             this.modalTitle = '修改用户'
+            this.departmentData = []
             this.clearFrom()
             this._getSystemList()
             this.userForm.arEditPassword = ''
@@ -897,9 +900,11 @@ export default {
         },
         //部门树点击
         handleNodeClick(data) {
-            this.$refs.department1.values = [{ value: data.id, label: data.name }];
-            this.$refs.department2.values = [{ value: data.id, label: data.name }];
-            this.userForm.arBranch = data.id;
+            this.$refs.department1.values = [{ value: data.id, label: data.name }]
+            this.$refs.department2.values = [{ value: data.id, label: data.name }]
+            this.userForm.arBranch = data.id
+            this.$refs.department1.visible = false
+            this.$refs.department2.visible = false
         },
         //点击添加，新增一行系统角色选择
         addChooseSystem() {
@@ -1101,6 +1106,11 @@ export default {
             }
             this._getUserList(1)
             this.$refs.userPage.currentPage = 1
+        },
+        //区县改变清除部门选择框中的内容
+        clearDepartmentSelect(){
+          this.$refs.department1.values = [];
+          this.$refs.department2.values = [];  
         }
     }
 };
