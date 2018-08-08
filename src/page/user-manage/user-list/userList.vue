@@ -504,6 +504,7 @@ export default {
             this.sysAndGroupList = [{ sysId: '', grId: '' }]
         },
         userEditOpen(params) {
+            this.$refs.county.query = ''
             this.$refs.userRule.resetFields()
             this.$refs.userRuleProduct.resetFields()
             this.userModal = true
