@@ -154,15 +154,18 @@ export default {
             type: 'primary',
             text: '编辑'
           }, {
-            type: 'success',
-            text: '查看图层'
-          },{
             type: 'info',
-            text: '绘制'
+            text: '绘制',
+            key: 'datapath'
+          },{
+            type: 'success',
+            text: '查看图层',
+            key: 'datapath'
           }, {
             type: 'error',
             text: '删除'
-          }]
+          }],
+          width: 180
         }
       ]
     }
@@ -214,7 +217,8 @@ export default {
       }
     },
     rowClick(item, e) {
-      if (e.target.innerText === '删除') {
+      let text = e.target.innerText.trim()
+      if (text === '删除') {
         this.$Modal.confirm({
           title: '提示',
           content: '级联删除且删除的记录不可恢复，继续吗？',
@@ -222,7 +226,7 @@ export default {
             this._deleteMsTabDatainfo(item.id)
           }
         })
-      } else if (e.target.innerText === '编辑') {
+      } else if (text === '编辑') {
         this._getMsTabDatainfoById(item.id)
       } else if (e.target.innerText === '绘制') {
         if (!item.datapath) {

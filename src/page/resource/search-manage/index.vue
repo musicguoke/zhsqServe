@@ -40,7 +40,7 @@ export default {
   color: #495060;
 }
 .table {
-  width: 100%;
+  width: 900px;
   margin-left: 16px;
 }
 .ivu-table-wrapper {

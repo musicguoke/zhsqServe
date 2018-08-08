@@ -52,6 +52,7 @@ import axios from '@/util/http'
 import qs from 'qs'
 import { url } from '@/api/config'
 import { enterSystem } from '@/api/system'
+import { logout } from '@/api/service'
 import { unreadSuggestList } from '@/api/suggest'
 
 export default {
@@ -59,7 +60,8 @@ export default {
     return {
       formInline: {
         username: '',
-        password: ''
+        password: '',
+        status: 1
       },
       ruleInline: {
         username: [
@@ -84,10 +86,10 @@ export default {
       enterSystem(id).then(res => {
         if (res.code === 20000) {
           this._unreadSuggestList()
-          if(id) {
+          if (id) {
             data.systemname = data.sysName
             this.$store.commit('setParams', data)
-            this.$router.push({path: `/system/${data.id}/featured-catalog`})
+            this.$router.push({ path: `/system/${data.id}/featured-catalog` })
           } else {
             this.$router.replace('/zhsq_admin')
           }
@@ -112,31 +114,56 @@ export default {
           return Promise.resolve(res.data);
         })
     },
-    _login(name) {
-      this.$refs[name].validate((valid) => {
+    loginMsg() {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '该用户已在其他地方登录，是否强制登录？',
+        onOk: () => {
+          this._login()
+        },
+        onCancel: () => {
+          this._logout()
+        }
+      })
+    },
+    _login() {
+      this.$refs['formInline'].validate((valid) => {
         if (valid) {
           this.login(this.formInline).then(res => {
             if (res.code === 20000) {
-              if (res.data && res.data.userInfo) {
-                localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
-              }
-              if (res.data && res.data.sysUserChildList && res.data.userInfo.role == 3) {
-                if (res.data.sysUserChildList.length > 1) {
-                  localStorage.setItem('sysUserList', JSON.stringify(res.data.userInfo.list))
-                  this.$router.replace('/system-list')
-                } else if (res.data.sysUserChildList.length === 1) {
-                  this._enterSystem(res.data.userInfo.list[0])
-                }
+              if (res.data.status === 2) {
+                this.formInline.status = 2
+                this.loginMsg()
               } else {
-                // 单个系统自动选择
-                this._enterSystem()
+                if (res.data && res.data.userInfo) {
+                  localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+                }
+                if (res.data && res.data.sysUserChildList && res.data.userInfo.role == 3) {
+                  if (res.data.sysUserChildList.length > 1) {
+                    localStorage.setItem('sysUserList', JSON.stringify(res.data.userInfo.list))
+                    this.$router.replace('/system-list')
+                  } else if (res.data.sysUserChildList.length === 1) {
+                    this._enterSystem(res.data.userInfo.list[0])
+                  }
+                } else {
+                  // 单个系统自动选择
+                  this._enterSystem()
+                }
               }
             } else {
               this.$Message.error(res.message)
             }
           })
+        }
+      })
+    },
+    _logout() {
+      logout().then(res => {
+        if (res.code === 20000) {
+          this.$store.commit('setParams', {})
+          this.$router.replace('/')
         } else {
-          this.$Message.error('用户名和密码不能为空！')
+          this.$Message.error(res.message)
         }
       })
     }

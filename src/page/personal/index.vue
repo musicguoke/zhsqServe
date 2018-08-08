@@ -121,7 +121,7 @@ export default {
       getManagerById(id).then(res => {
         if (res.code === 20000) {
           this.sysIdStr = []
-          res.data.list.map(v => this.sysIdStr.push(v.sysId))
+          res.data.list.map(v => this.sysIdStr.push(v.id))
           this.userForm = res.data
           this.password = res.data.password
         } else {
@@ -142,9 +142,9 @@ export default {
             tel: this.userForm.tel,
             userName: this.userForm.userName,
             email: this.userForm.email,
-            role: this.userForm.role,
+            role: this.userForm.role
           }
-          data.sysIdStr = this.userForm.sysIdStr ? this.userForm.sysIdStr.toString() : ''
+          data.sysIdStr = this.sysIdStr.toString()
           if(this.password !== this.userForm.password) {
             data.password = MD5(this.userForm.password).toString()
           }
