@@ -10,7 +10,7 @@
         <div class="tableSize">
           <Row>
             <Col span="9" class="departmentTree" :style="{overflow:'auto',height:departmentTreeHeight}">
-            <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
+            <el-tree :data="departmentData" :default-expanded-keys="[-1]" :props="defaultProps" node-key="id" :render-content="renderContent" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
             </Col>
             <Col span="14" class="departmentInfo" :style="{height:departmentTreeHeight}">
             <div class="fontSize">{{operationType}}</div>
@@ -147,7 +147,7 @@ export default {
         let data = res.data;
         this.departmentData = [
           {
-            id: "-1",
+            id: -1,
             list: [],
             name: "部门列表",
             nameA: "部门列表",

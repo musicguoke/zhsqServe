@@ -76,7 +76,7 @@
                                 ref="department1"
                                 filterable
                             >
-                                <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
+                                <el-tree :data="departmentData" :props="defaultProps" :default-expand-all="false" node-key="id" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
                         </FormItem>
@@ -159,7 +159,7 @@
                 </FormItem>
                 <FormItem label="处室/科室" prop="arBranch">
                     <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department2">
-                        <el-tree :data="departmentData" default-expand-all :props="defaultProps" node-key="fGuid" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
+                        <el-tree :data="departmentData" :default-expand-all="false" :props="defaultProps" node-key="id" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                     </Select>
                 </FormItem>
                 <FormItem label="角色" prop="role">
