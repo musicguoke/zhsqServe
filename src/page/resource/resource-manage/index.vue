@@ -25,7 +25,10 @@
           </Menu>
         </div>
         <div class="table">
-           <router-view/>
+          <keep-alive>
+            <router-view class="router" />
+          </keep-alive>
+          <!-- <router-view v-if="!$route.meta.keepAlive" class="router" /> -->
         </div>
       </div>
     </Card>
@@ -41,9 +44,9 @@ export default {
   },
   methods: {
     //menu改变
-    menuChange(name){
+    menuChange(name) {
       this.$router.push(`${name}`)
-    }, 
+    },
   }
 }
 </script>
