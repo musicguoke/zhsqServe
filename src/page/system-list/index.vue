@@ -4,8 +4,8 @@
       <div class="container">
         <div class="navbar-logo">
           <!-- <div class="layout-logo"></div> -->
-          <span class="navbar-title">
-            <small>管理平台</small>
+          <span class="navbar-title" style="line-height: 64px;">
+            管理平台
           </span>
         </div>
       </div>

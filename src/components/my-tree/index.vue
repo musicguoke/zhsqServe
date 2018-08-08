@@ -264,16 +264,8 @@ export default {
             "isShow": true
           });
         }
-        if (item.selected) {
-          item = Object.assign({}, item, {
-            "isChecked": true
-          });
-        }
-        if (!item.selected) {
-          item = Object.assign({}, item, {
-            "isChecked": false
-          });
-        }
+        item.isChecked = item.selected
+        
         item = Object.assign({}, item, {
           "load": (item.expand ? true : false)
         });
