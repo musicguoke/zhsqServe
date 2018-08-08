@@ -163,6 +163,8 @@ export default {
     checkBtn(row, column) {
       if(column.key && column.key === 'parentId') {
         return row[column.key] === '-1' ? true : false
+      } else if(column.key && column.key === 'datapath') {
+        return row[column.key] ? true : false
       } else {
         return true
       }
@@ -572,7 +574,10 @@ table {
 }
 .btn-td {
   display: flex;
-  justify-content: space-around;
+  // justify-content: flex-start;
+}
+.btn-td button {
+  margin-right: 12px;
 }
 .table > thead > tr > th {
   border-bottom: 1px solid #ddd;

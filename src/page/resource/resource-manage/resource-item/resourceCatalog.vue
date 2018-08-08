@@ -154,15 +154,18 @@ export default {
             type: 'primary',
             text: '编辑'
           }, {
-            type: 'success',
-            text: '查看图层'
-          },{
             type: 'info',
-            text: '绘制'
+            text: '绘制',
+            key: 'datapath'
+          },{
+            type: 'success',
+            text: '查看图层',
+            key: 'datapath'
           }, {
             type: 'error',
             text: '删除'
-          }]
+          }],
+          width: 180
         }
       ]
     }
