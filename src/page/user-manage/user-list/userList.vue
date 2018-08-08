@@ -35,34 +35,21 @@
                 <Page :total="total" :current="1" @on-change="pageChange" show-total show-elevator ref="userPage"></Page>
             </div>
         </Card>
-        <Modal
-            v-model="userModal"
-            :title="modalTitle"
-            @on-ok="addOrUpdateUser"
-            @on-cancel="clearFrom"
-            :mask-closable="false"
-            ref="userModal"
-        >
+        <Modal v-model="userModal" :title="modalTitle" @on-ok="addOrUpdateUser" @on-cancel="clearFrom" :mask-closable="false" ref="userModal">
             <Tabs v-show="!isProduct" ref="tab">
                 <Tab-pane label="基本信息" name="baseInfo">
-                    <Form
-                        :model="userForm"
-                        :label-width="80"
-                        :rules="userRule"
-                        ref="userRule"
-                        class="user-form"
-                    >
+                    <Form :model="userForm" :label-width="80" :rules="userRule" ref="userRule" class="user-form">
                         <FormItem label="用户名" prop="arLoginname">
                             <Input v-model="userForm.arLoginname" placeholder="请输入用户名..." maxlength="16"></Input>
                         </FormItem>
                         <FormItem label="真实姓名" prop="arTruename">
-                            <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..."  maxlength="6"></Input>
+                            <Input v-model="userForm.arTruename" placeholder="请输入真实姓名..." maxlength="6"></Input>
                         </FormItem>
                         <FormItem label="密码" prop="arPassword" v-show="isAdd">
-                            <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password"  maxlength="20"></Input>
+                            <Input v-model="userForm.arPassword" placeholder="请输入密码..." type="password" maxlength="20"></Input>
                         </FormItem>
                         <FormItem label="密码" v-show="!isAdd">
-                            <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password"  maxlength="20"></Input>
+                            <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password" maxlength="20"></Input>
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
                             <Select v-model="userForm.arAreacode" filterable @on-change="clearDepartmentSelect" ref="county">
@@ -70,18 +57,13 @@
                             </Select>
                         </FormItem>
                         <FormItem label="处室/科室" prop="arBranch">
-                            <Select
-                                v-model="userForm.arBranch"
-                                @on-open-change="handleBranchOpenChange"
-                                ref="department1"
-                                filterable
-                            >
+                            <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1" filterable>
                                 <el-tree :data="departmentData" :props="defaultProps" :default-expand-all="false" node-key="id" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
                             </Select>
                         </FormItem>
                         </FormItem>
                         <FormItem label="手机号" prop="arMobile">
-                            <Input v-model="userForm.arMobile" placeholder="请输入手机号..."  maxlength="11"></Input>
+                            <Input v-model="userForm.arMobile" placeholder="请输入手机号..." maxlength="11"></Input>
                         </FormItem>
                         <FormItem label="座机">
                             <Input v-model="userForm.arTel" placeholder="请输入座机..." maxlength="11"></Input>
@@ -109,21 +91,10 @@
                     </div>
                     <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
-                            <Select
-                                v-model="item.sysId"
-                                @on-change="systemChange(item.sysId,$index)"
-                                style="width:220px"
-                                :ref="'item'+$index"
-                                filterable
-                            >
+                            <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index" filterable>
                                 <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
-                            <Select
-                                v-model="item.grId"
-                                style="width:220px;margin-left:5px;"
-                                :ref="'group'+$index"
-                                filterable
-                            >
+                            <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index" filterable>
                                 <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                             <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
@@ -131,14 +102,7 @@
                     </Form>
                 </Tab-pane>
             </Tabs>
-            <Form
-                :model="userForm"
-                :label-width="80"
-                v-show="isProduct"
-                :rules="userRuleProduct"
-                ref="userRuleProduct"
-                class="user-form"
-            >
+            <Form :model="userForm" :label-width="80" v-show="isProduct" :rules="userRuleProduct" ref="userRuleProduct" class="user-form">
                 <FormItem label="用户名" prop="arLoginname">
                     <Input v-model="userForm.arLoginname" placeholder="请输入用户名..." maxlength="16"></Input>
                 </FormItem>
@@ -339,7 +303,7 @@ export default {
                 arGroup: "", //用户组
                 arBranch: "", //部门
                 arAreacode: "", //区县code
-                arAreaname:"",//区县名
+                arAreaname: "",//区县名
                 arSource: "", //来源
                 name: "",
                 arDescribe: "",//用户描述
@@ -347,8 +311,8 @@ export default {
                 grId: "", //角色编号
                 arId: "",
                 grIdProduct: "",
-                arCreator:"",//开通人
-                arContacts:"",//服务联系人
+                arCreator: "",//开通人
+                arContacts: "",//服务联系人
             },
             equipmentForm: {
                 id: "",
@@ -497,7 +461,7 @@ export default {
             for (let i in this.userForm) {
                 this.userForm[i] = ''
             }
-            if(this.isProduct){
+            if (this.isProduct) {
                 this.userForm.arAreacode = this.$store.state.params.areacode
                 this.userForm.arAreaname = this.$store.state.params.areaname
             }
@@ -520,7 +484,7 @@ export default {
                     this.userForm[i] = params.row[i]
                 }
             }
-            if(this.isProduct){
+            if (this.isProduct) {
                 this.userForm.arAreacode = this.$store.state.params.areacode
                 this.userForm.arAreaname = this.$store.state.params.areaname
             }
@@ -557,7 +521,7 @@ export default {
                 pageSize: 10,
                 arTruename: this.searchName,
                 grId: this.filterByGrId == 0 ? '' : this.filterByGrId,
-                arBranchs:this.filterByBranch,
+                arBranchs: this.filterByBranch,
                 arAreacodes: this.filterByAreaCode
             }
             getUserList(data).then(res => {
@@ -581,14 +545,14 @@ export default {
                     this.countyFilterList.push({
                         text: res.data.areaCodeList[i].areaname,
                         value: res.data.areaCodeList[i].areaname,
-                        code:res.data.areaCodeList[i].areacode
+                        code: res.data.areaCodeList[i].areacode
                     })
                 }
                 res.data.branchStructList.map(v => {
                     this.departmentFilterList.push({
                         value: v.name,
                         text: v.name,
-                        code:v.id
+                        code: v.id
                     })
                     if (v.list) {
                         v.list.map(a => {
@@ -615,7 +579,7 @@ export default {
                 pageNo: 1,
                 pageSize: 100,
                 method: "listTree",
-                areacode:500000
+                areacode: 500000
             };
             getDepartmentList(data).then(res => {
                 this.departmentData = res.data;
@@ -643,18 +607,18 @@ export default {
                 })
             });
         },
-        _getDepartmentListByAreaCode(){
-            if(this.userForm.arAreacode){
+        _getDepartmentListByAreaCode() {
+            if (this.userForm.arAreacode) {
                 let data = {
                     pageNo: 1,
                     pageSize: 100,
                     method: "listTree",
-                    areacode:this.userForm.arAreacode
+                    areacode: this.userForm.arAreacode
                 };
                 getDepartmentList(data).then(res => {
                     this.departmentData = res.data;
                 });
-            }else{
+            } else {
                 this.$Message.warning("请先选区县")
             }
         },
@@ -841,8 +805,8 @@ export default {
                 sysIds: this.userForm.sysId, //多个系统编号
                 grIds: this.userForm.grId, //多个用用角色编号
                 arDescribe: this.userForm.arDescribe, //用户描述
-                arCreator:this.userForm.arCreator,//创建人
-                arContacts:this.userForm.arContacts//服务联系人
+                arCreator: this.userForm.arCreator,//创建人
+                arContacts: this.userForm.arContacts//服务联系人
             };
             if (this.isAdd) {
                 data.arPassword = MD5(this.userForm.arPassword).toString();
@@ -1108,9 +1072,9 @@ export default {
             this.$refs.userPage.currentPage = 1
         },
         //区县改变清除部门选择框中的内容
-        clearDepartmentSelect(){
-          this.$refs.department1.values = [];
-          this.$refs.department2.values = [];  
+        clearDepartmentSelect() {
+            this.$refs.department1.values = [];
+            this.$refs.department2.values = [];
         }
     }
 };
@@ -1118,7 +1082,7 @@ export default {
 
 <style>
 .user-form {
-    max-height: 400px;
-    overflow-y: auto;
+  max-height: 400px;
+  overflow-y: auto;
 }
 </style>
