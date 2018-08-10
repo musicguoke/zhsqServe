@@ -8,19 +8,22 @@
             <v-search :importShow="!isProduct" :deleteShow="false" :selectShow="isProduct" :conditionExportShow="true" :selectList="groupSingleFilterList" @on-export="openExportModal" @on-import="openImportModal" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%" @filter-change="filterChange">
-                    <!-- <el-table-column prop="arId" label="ID" width="60" sortable>
-                    </el-table-column> -->
                     <el-table-column prop="arLoginname" label="用户名">
                     </el-table-column>
                     <el-table-column prop="arTruename" label="姓名">
                     </el-table-column>
-                    <el-table-column prop="arMobile" label="电话">
+                    <el-table-column prop="arMobile" width="120" label="电话">
                     </el-table-column>
-                    <!-- <el-table-column prop="arDescribe" label="用户描述" :show-overflow-tooltip="true">
-                    </el-table-column> -->
-                    <el-table-column prop="areaname" label="区域" :filters="countyFilterList" column-key="filterByAreaCode" filter-placement="bottom-end">
+                    <el-table-column prop="areaname" label="区域" width="90" :filters="countyFilterList" column-key="filterByAreaCode" filter-placement="bottom-end">
                     </el-table-column>
                     <el-table-column prop="name" label="处室/科室" :filters="departmentFilterList" column-key="filterByBranch" :show-overflow-tooltip="true">
+                    </el-table-column>
+                    <el-table-column prop="msSystemMembersList" label="系统/用户组">
+                        <template slot-scope="scope">
+                            <p v-for="(item, index) in scope.row.msSystemMembersList" :key="index">
+                                {{item.sysName}}：{{item.grName}}
+                            </p>
+                        </template>
                     </el-table-column>
                     <el-table-column label="操作" width="150" align="center">
                         <template slot-scope="scope">
@@ -53,12 +56,26 @@
                         </FormItem>
                         <FormItem label="区县" prop="arAreacode">
                             <Select v-model="userForm.arAreacode" filterable @on-change="clearDepartmentSelect" ref="county">
-                                <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                <Option v-for="item in countyList" :value="item.areacode" :key="item.areacode">{{ item.areaname }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="处室/科室" prop="arBranch">
-                            <Select v-model="userForm.arBranch" @on-open-change="handleBranchOpenChange" ref="department1" filterable>
-                                <el-tree :data="departmentData" :props="defaultProps" :default-expand-all="false" node-key="id" @node-click="handleNodeClick" :highlight-current="highlightcurrent" :expand-on-click-node="expandonclicknode"></el-tree>
+                            <Select
+                                v-model="userForm.arBranch"
+                                @on-open-change="handleBranchOpenChange"
+                                ref="department1"
+                                filterable
+                            >
+                                <el-tree
+                                    :data="departmentData"
+                                    :props="defaultProps"
+                                    :default-expand-all="false"
+                                    node-key="id"
+                                    @node-click="handleNodeClick"
+                                    :highlight-current="highlightcurrent"
+                                    :expand-on-click-node="expandonclicknode"
+                                >
+                                </el-tree>
                             </Select>
                         </FormItem>
                         </FormItem>
@@ -91,11 +108,25 @@
                     </div>
                     <Form>
                         <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
-                            <Select v-model="item.sysId" @on-change="systemChange(item.sysId,$index)" style="width:220px" :ref="'item'+$index" filterable>
-                                <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Select
+                                v-model="item.sysId"
+                                @on-change="systemChange(item.sysId,$index)"
+                                style="width:220px"
+                                :ref="'item'+$index"
+                                filterable
+                            >
+                                <Option
+                                    v-for="item in systemList"
+                                    :value="item.id"
+                                    :key="item.id"
+                                >{{ item.sysName }}</Option>
                             </Select>
                             <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index" filterable>
-                                <Option v-for="item in groupList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                <Option
+                                    v-for="item in groupList[$index]"
+                                    :value="item.value"
+                                    :key="item.value"
+                                >{{ item.label }}</Option>
                             </Select>
                             <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
                         </FormItem>
@@ -116,9 +147,6 @@
                     <Input v-model="userForm.arEditPassword" placeholder="无新密码输入则保持原密码不变..." type="password" maxlength="20"></Input>
                 </FormItem>
                 <FormItem label="区县" prop="arAreacode">
-                    <!-- <Select v-model="userForm.arAreacode" disabled>
-                        <Option v-for="item in countyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select> -->
                     <Input v-model="userForm.arAreaname" readonly></Input>
                 </FormItem>
                 <FormItem label="处室/科室" prop="arBranch">
@@ -128,7 +156,7 @@
                 </FormItem>
                 <FormItem label="角色" prop="role">
                     <Select v-model="userForm.grIdProduct">
-                        <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        <Option v-for="item in groupSingleList" :value="item.grId" :key="item.grId">{{ item.grName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="手机号" prop="arMobile">
@@ -494,12 +522,7 @@ export default {
             getUserSysAndRole(this.userForm.arId).then(res => {
                 if (!this.isProduct) {
                     this.nowSystemLength = res.data.length
-                    for (let i = 0; i < res.data.length; i++) {
-                        this.sysAndGroupList.push({
-                            sysId: res.data[i].sysId,
-                            grId: res.data[i].grId
-                        })
-                    }
+                    this.sysAndGroupList = res.data
                     for (let i = 0; i < res.data.length; i++) {
                         this.groupList.push([])
                         this._getRolesList(res.data[i].sysId, i)
@@ -536,8 +559,8 @@ export default {
                         data[i].addTime = this._mm.formatDate(data[i].addTime)
                     }
                     this.countyList.map(v => {
-                        if (v.value == data[i].arAreacode) {
-                            data[i].areaname = v.label
+                        if (v.areacode == data[i].arAreacode) {
+                            data[i].areaname = v.areaname
                         }
                     })
                     this.userData.push(data[i])
@@ -576,13 +599,7 @@ export default {
             })
         },
         _getDepartmentList() {
-            let data = {
-                pageNo: 1,
-                pageSize: 100,
-                method: "listTree",
-                areacode: 500000
-            };
-            getDepartmentList(data).then(res => {
+            getDepartmentList().then(res => {
                 this.departmentData = res.data;
                 res.data.map(v => {
                     this.departmentFilterList.push({
@@ -610,15 +627,9 @@ export default {
         },
         _getDepartmentListByAreaCode() {
             if (this.userForm.arAreacode) {
-                let data = {
-                    pageNo: 1,
-                    pageSize: 100,
-                    method: "listTree",
-                    areacode: this.userForm.arAreacode
-                };
-                getDepartmentList(data).then(res => {
-                    this.departmentData = res.data;
-                });
+                getDepartmentList(this.userForm.arAreacode).then(res => {
+                    this.departmentData = res.data
+                })
             } else {
                 this.$Message.warning("请先选区县")
             }
@@ -626,26 +637,20 @@ export default {
         _getSystemList() {
             this.systemList = []
             getSystemList('', '', '', 1000).then(res => {
-                let data = res.data.list
-                let array = []
+                this.systemList = res.data.list.slice()
                 this.systemLength = res.data.total
-                for (let i in data) {
-                    this.systemList.push({
-                        value: data[i].id,
-                        label: data[i].sysName
-                    })
-                }
+                // for (let i in data) {
+                //     this.systemList.push({
+                //         value: data[i].id,
+                //         label: data[i].sysName
+                //     })
+                // }
             })
         },
         _getAreacode() {
             getAreaCode().then(res => {
                 if (res.code === 20000) {
-                    res.data.list.map(v => {
-                        this.countyList.push({
-                            value: v.areacode,
-                            label: v.areaname
-                        })
-                    })
+                    this.countyList = res.data.list
                 }
             })
         },
@@ -792,23 +797,7 @@ export default {
                 0,
                 this.userForm.grId.length - 1
             );
-            let data = {
-                arLoginname: this.userForm.arLoginname,
-                arTruename: this.userForm.arTruename,
-                arTel: this.userForm.arTel, //座机
-                arMobile: this.userForm.arMobile, //手机
-                arEmail: this.userForm.arEmail,
-                arSalt: this.userForm.arSalt, //校验码
-                arGroup: this.userForm.arGroup, //用户组
-                arBranch: this.userForm.arBranch, //部门
-                arAreacode: this.userForm.arAreacode, //区域
-                arSource: this.userForm.arSource, //来源
-                sysIds: this.userForm.sysId, //多个系统编号
-                grIds: this.userForm.grId, //多个用用角色编号
-                arDescribe: this.userForm.arDescribe, //用户描述
-                arCreator: this.userForm.arCreator,//创建人
-                arContacts: this.userForm.arContacts//服务联系人
-            };
+            let data = this.userForm
             if (this.isAdd) {
                 data.arPassword = MD5(this.userForm.arPassword).toString();
                 addUser(data).then(res => {
@@ -936,11 +925,8 @@ export default {
         },
         _getRolesSingleList(id) {
             getRolesList(id).then(res => {
+                this.groupSingleList =  res.data.list
                 for (let i in res.data.list) {
-                    this.groupSingleList.push({
-                        value: parseInt(res.data.list[i].grId),
-                        label: res.data.list[i].grName
-                    });
                     this.groupSingleFilterList.push({
                         value: parseInt(res.data.list[i].grId),
                         label: res.data.list[i].grName

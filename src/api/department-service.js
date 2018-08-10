@@ -4,7 +4,14 @@ import { url } from './config.js'
 
 axios.defaults.withCredentials = true
 
-export function getDepartmentList(data) {
+export function getDepartmentList(code) {
+    const data = {
+        pageNo: 1,
+        pageSize: 100,
+        method: "listTree",
+        areacode: code || 500000
+    }
+
     return axios.post(`${url}/sys/msBranchStruct/listTree.do`, qs.stringify(data)).then(res => {
         return Promise.resolve(res.data)
     })

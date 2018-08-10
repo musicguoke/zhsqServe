@@ -228,7 +228,21 @@
   </Content>
 </template>
 <script>
-import { dayData, dateData, dayLogData, dateLogData, dayUserLogData, dateUserLogData, getDataCount, filterCommon, getSysGroup, getSoftGroup, getUserGroupSearchByDate, getBranchSearchByDate } from '@/api/service-data'
+import {
+  dayData,
+  dateData,
+  dayLogData,
+  dateLogData,
+  dayUserLogData,
+  dateUserLogData,
+  getDataCount,
+  filterCommon,
+  getSysGroup,
+  getSoftGroup,
+  getUserGroupSearchByDate,
+  getBranchSearchByDate,
+  dayQxLogData
+} from '@/api/service-data'
 
 export default {
   name: 'service-analysis',
@@ -242,7 +256,7 @@ export default {
         { title: '最近7日', day: '7' },
         { title: '最近30日', day: '30' }
       ],
-      btnTitle: ['用户排行', '部门排行', '系统版本排行', '软件版本排行'],
+      btnTitle: ['用户排行', '部门排行', '区县排行', '系统版本排行', '软件版本排行'],
       num: 0,
       days: '',
       currentDays: 30,
@@ -336,6 +350,10 @@ export default {
         }
         this._getDateData(Object.assign({}, this.params, data))
       } else if (this.cur == 2) {
+        this.params.start = 1
+        this.params.type = 2
+        this._getQxData(this.params)
+      } else if (this.cur == 3) {
         this._getSysGroup(this.params)
       } else if (this.cur == 3) {
         this._getSoftGroup(this.params)
@@ -732,6 +750,13 @@ export default {
       getBranchSearchByDate(data).then((res) => {
         this.userData = []
         this.departmentObj = null
+        this.data = res.data.data
+        this.total = res.data.total
+      })
+    },
+    _getQxData(data) {
+      dayQxLogData(data).then(res => {
+        this.userData = []
         this.data = res.data.data
         this.total = res.data.total
       })

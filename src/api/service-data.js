@@ -85,6 +85,22 @@ export function dayUserLogData(data) {
   	})
 }
 
+export function dayQxLogData(data) {
+
+	let params = ''
+
+	for(let key in data) {
+		params += `${key}=${data[key]}&`
+	}
+	params = params.substring(0, params.length - 1)
+	const url = commonHeader + `/sys/EslogStatistics/getAreaNameByDate.do?${params}`
+
+	return axios.post(url, qs.stringify(data))
+  	.then(function (res) {
+    	return Promise.resolve(res.data)
+  	})
+}
+
 export function dateUserLogData(data) {
 
 	let params = ''

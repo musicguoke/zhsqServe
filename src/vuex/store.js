@@ -16,6 +16,7 @@ const store = new Vuex.Store({
             15, 16, 17, 18, 19,
             20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
         ],
+        areaList: [],
         qxLevelNum: 2,
         params: {},
         monitorSystemInfo: {},
@@ -33,6 +34,9 @@ const store = new Vuex.Store({
         },
         setUnread(state, value) {
             state.unread = value
+        },
+        setAreaList(state, value) {
+            state.areaList = value
         },
         setQxArray(state, value) {
             state.qxArray = value
