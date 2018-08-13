@@ -66,14 +66,8 @@ export default {
 		},
 		//获取底图Json
 		getMapJsonAndImg() {
-			getNewMapConfig().then(res => {
-				for (var i in res.data) {
-					if (res.data[i].m_order == 1) {
-						getNewMapJson(res.data[i].m_url).then(res => {
-							this.loadThisMap(res)
-						})
-					}
-				}
+			getNewMapJson(`${this.url}zhsqdt/ZHSQDT_New.json`).then(res => {
+				this.loadThisMap(res)
 			})
 		},
 		//加载地图

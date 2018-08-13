@@ -128,7 +128,7 @@
                                     :key="item.value"
                                 >{{ item.label }}</Option>
                             </Select>
-                            <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
+                            <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;"></Button>
                         </FormItem>
                     </Form>
                 </Tab-pane>
@@ -639,12 +639,6 @@ export default {
             getSystemList('', '', '', 1000).then(res => {
                 this.systemList = res.data.list.slice()
                 this.systemLength = res.data.total
-                // for (let i in data) {
-                //     this.systemList.push({
-                //         value: data[i].id,
-                //         label: data[i].sysName
-                //     })
-                // }
             })
         },
         _getAreacode() {

@@ -35,7 +35,7 @@
                 type="checkbox" 
                 :value="item.id"
                 v-model="checkGroup"
-                @click="handleCheckClick(item, item.isChecked, $event,index)"
+                @click="handleCheckClick(item, item.selected, $event,index)"
               >
             </label>
             <div class="btn-td" v-if="column.type === 'action'"> 
@@ -264,7 +264,7 @@ export default {
             "isShow": true
           });
         }
-        item.isChecked = item.selected
+        // item.selected = item.selected
         
         item = Object.assign({}, item, {
           "load": (item.expand ? true : false)
@@ -344,7 +344,7 @@ export default {
     },
     //点击check勾选框,判断是否有children节点 如果有就一并勾选
     handleCheckClick(data, status) {
-      console.log(status)
+      console.log(data.selected)
       //判断节点是否被选中，是状态为true，否为false
       // let bol = false
       let bol = status
@@ -353,19 +353,17 @@ export default {
       //     bol = true
       //   }
       // })
-      data.isChecked = !bol
+      data.selected = !bol
       //所有父级节点也改变状态
       if(data.parent) {
-        this.handleParentCheck(data.parent, data.isChecked)
+        this.handleParentCheck(data.parent, data.selected)
       }
-      this.handleCheck(data, data.isChecked)
+      this.handleCheck(data, data.selected)
       this.$emit('on-tree-select', data)
     },
     handleParentCheck(data, status) {
-      if(data) {
-        data.isChecked = status
-      }
-      if(data && data.isChecked) {
+      data.selected = status?true:!status
+      if(data && data.selected) {
         let index = this.checkGroup.findIndex(v => v === data.id)
         if(index < 0) {
           this.checkGroup.push(data.id)
@@ -378,10 +376,10 @@ export default {
     handleCheck(data, status) {
       if(data.children) {
         data.children.map((v, index) => {
-          v.isChecked = status
+          v.selected = status
         })
       }
-      if (data.isChecked) {
+      if (data.selected) {
         let index = this.checkGroup.findIndex(v => v === data.id)
         if(index < 0) {
           this.checkGroup.push(data.id)
@@ -477,7 +475,7 @@ export default {
       let arr = []
       data.forEach((item) => {
         if (item.selected) {
-          item.isChecked = true
+          item.selected = true
           arr.push(item.id)
         }
         if (item.children && item.children.length > 0) {

@@ -55,3 +55,15 @@ export function getMenu() {
       return Promise.resolve(res.data);
     });
 }
+
+// 文本文件上传
+export function uploadFile(link, data) {
+  return axios.post(
+    `${url}/sys/msHtml${link}/importFile.do`,
+    data,
+    {  
+      headers: {'Content-Type':'multipart/form-data'}  
+    }).then(res => {
+      return Promise.resolve(res.data)
+  })
+}

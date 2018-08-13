@@ -22,6 +22,8 @@
             <MenuItem name="authority-config">功能模块</MenuItem>
             <MenuItem name="statistics">统计配置</MenuItem>
             <MenuItem name="zh-en">中英文对照</MenuItem>
+            <MenuItem name="area-overview">区域概况</MenuItem>
+            <MenuItem name="file-upload">文本文件上传</MenuItem>
           </Menu>
         </div>
         <div class="table">

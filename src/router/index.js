@@ -69,6 +69,10 @@ const AuthorityConfig = r =>
   require(["@/page/resource/resource-manage/resource-item/authorityConfig"], r);
 const ZhEn = r =>
   require(["@/page/resource/resource-manage/resource-item/zh-en"], r);
+const FileUpload = r =>
+  require(["@/page/resource/resource-manage/resource-item/file-upload"], r);
+const AreaOverview = r =>
+require(["@/page/resource/resource-manage/resource-item/area-overview"], r);
 
 //search
 const HotSeach = r =>
@@ -237,6 +241,18 @@ const router = new VueRouter({
               component: ZhEn,
               name: "ZhEn",
               meta: { title: "中英文对照" }
+            },
+            {
+              path: "file-upload",
+              component: FileUpload,
+              name: "FileUpload",
+              meta: { title: "文本文件上传" }
+            },
+            {
+              path: "area-overview",
+              component: AreaOverview,
+              name: "AreaOverview",
+              meta: { title: "文本文件上传" }
             },
             {
               path: "area-target",
