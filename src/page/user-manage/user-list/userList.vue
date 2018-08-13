@@ -798,6 +798,10 @@ export default {
                 this.userForm.grId.length - 1
             );
             let data = this.userForm
+            data.sysIds = this.userForm.sysId
+            data.grIds = this.userForm.grId
+            delete data['sysId']
+            delete data['grId']
             if (this.isAdd) {
                 data.arPassword = MD5(this.userForm.arPassword).toString();
                 addUser(data).then(res => {
@@ -890,6 +894,8 @@ export default {
                 this.$Message.warning("同一个系统下只能选择一个角色");
                 this.$refs["item" + index][0].values = [];
                 this.$refs["group" + index][0].values = [];
+                this.$refs["item" + index][0].query = "";
+                this.$refs["group" + index][0].query = "";
                 this.sysAndGroupList[index] = {
                     sysId: "",
                     grId: ""
