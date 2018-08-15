@@ -749,6 +749,7 @@ export default {
             data.grIds = this.userForm.grId
             delete data['sysId']
             delete data['grId']
+            delete data['arPassword']
             if (this.isAdd) {
                 data.arPassword = MD5(this.userForm.arPassword).toString();
                 addUser(data).then(res => {
