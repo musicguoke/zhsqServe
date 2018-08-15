@@ -898,17 +898,18 @@ export default {
         //系统改变，获取对应系统下的角色
         systemChange(id, index) {
             let list = [];
-            this.sysAndGroupList[index].grId = "";
             this.sysAndGroupList.map(v => {
                 list.push(v.sysId);
             });
+            this.sysAndGroupList[index].grId = "";
+            this.$refs["group" + index][0].query = "";
             let setList = Array.from(new Set(list));
             if (list.length > setList.length) {
                 this.$Message.warning("同一个系统下只能选择一个角色");
                 this.$refs["item" + index][0].values = [];
                 this.$refs["group" + index][0].values = [];
                 this.$refs["item" + index][0].query = "";
-                this.$refs["group" + index][0].query = "";
+                this.groupList[index] = []
                 this.sysAndGroupList[index] = {
                     sysId: "",
                     grId: ""
