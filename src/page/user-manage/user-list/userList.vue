@@ -929,7 +929,6 @@ export default {
                 } else {
                     this.groupList.push(data)
                 }
-                console.log(this.groupList)
             })
         },
         _getRolesSingleList(id) {
