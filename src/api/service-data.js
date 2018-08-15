@@ -95,7 +95,24 @@ export function dayQxLogData(data) {
 	params = params.substring(0, params.length - 1)
 	const url = commonHeader + `/sys/EslogStatistics/getAreaNameByDate.do?${params}`
 
-	return axios.post(url, qs.stringify(data))
+	return axios.get(url)
+  	.then(function (res) {
+    	return Promise.resolve(res.data)
+  	})
+}
+
+//行政区划的用户统计
+export function qxUserLogData(data) {
+
+	let params = ''
+
+	for(let key in data) {
+		params += `${key}=${data[key]}&`
+	}
+	params = params.substring(0, params.length - 1)
+	const url = commonHeader + `/sys/EslogStatistics/getUserByAreacode.do?${params}`
+
+	return axios.get(url)
   	.then(function (res) {
     	return Promise.resolve(res.data)
   	})

@@ -13,6 +13,7 @@ const SystemManage = r => require(["@/page/product-manage/index"], r);
 const UserVisit = r => require(["@/page/behavior/user-visit/index"], r);
 const DataVisit = r => require(["@/page/behavior/data-visit/index"], r);
 const SearchVisit = r => require(["@/page/behavior/search-visit/index"], r);
+const QxVisit = r => require(["@/page/behavior/qx-visit/index"], r);
 const ResourceManage = r =>
   require(["@/page/resource/resource-manage/index"], r);
 const SearchManage = r => require(["@/page/resource/search-manage/index"], r);
@@ -173,6 +174,12 @@ const router = new VueRouter({
           name: "UserVisit",
           component: UserVisit,
           meta: { title: "用户统计" }
+        },
+        {
+          path: "qx-statistics",
+          name: "QxVisit",
+          component: QxVisit,
+          meta: { title: "搜索统计" }
         },
         {
           path: "data-statistics",

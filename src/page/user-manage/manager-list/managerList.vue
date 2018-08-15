@@ -71,7 +71,7 @@
             <Button type="info" icon="plus" title="新增系统选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
           </div>
           <Form>
-            <FormItem v-for="(item,$index) in sysTypeAndsysList" :key="$index" style="display:flex; justify-content: flex-start">
+            <FormItem v-for="(item,$index) in sysTypeAndsysList" :key="$index" style="display:flex; justify-content: space-between">
               <Select
                 v-model="item.sysType"
                 @on-change="typeChange(item.sysType,$index)"
@@ -84,13 +84,13 @@
               <Select
                 v-model="item.sysId"
                 
-                style="width:220px;margin-left:5px;"
+                style="width:220px;"
                 :ref="'sysId'+$index"
                 filterable
               >
                 <Option v-for="item in systemFilterList[$index]" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
-              <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;" v-show="$index != 0"></Button>
+              <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;" v-show="$index != 0"></Button>
             </FormItem>
           </Form>
         </Tab-pane>

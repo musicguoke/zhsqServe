@@ -113,29 +113,6 @@ export default {
       }
       return curArgs
     },
-    deleteNode(dataId) {
-      this.$store.commit('setDragTreeData', this.fingDataID(this.dragTreeData, dataId))
-    },
-    fingDataID(list, dataId) {
-      list.map((v, index) => {
-        if(v.dataId === dataId) {
-          list.splice(index, 1)
-        } else if(v.children) {
-          this.findIdIndex(v.children, dataId)
-        }
-      })
-      return list
-    },
-    findIdIndex(obj, id, title) {
-      obj.map(v => {
-        if(v.id === id) {
-          v.title = title
-        } else if(v.children) {
-          this.findIdIndex(v.children, id, title)
-        }
-      })
-      return obj
-    },
     bindDragMoveEvent() {
       document.bind('mouseup', this.dragEnd)
       document.bind('mousemove', this.dragMove)
