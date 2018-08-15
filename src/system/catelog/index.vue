@@ -208,6 +208,9 @@ export default {
       })
       return list
     },
+    dropData(info) {
+      console.log(info)
+    },
     getDropData(info) {
       var dragData = info.dragNode.nodeData;
       var dragParent = info.dragNode.parentNode;

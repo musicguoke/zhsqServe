@@ -137,13 +137,7 @@ export default {
     },
     //获取树形数据
     _getDepartmentList() {
-      let data = {
-        pageNo: 1,
-        pageSize: 100,
-        method: "listTree",
-        areacode: this.areacode
-      };
-      getDepartmentList(data).then(res => {
+      getDepartmentList(this.areacode).then(res => {
         let data = res.data;
         this.departmentData = [
           {

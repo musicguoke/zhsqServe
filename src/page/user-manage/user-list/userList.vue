@@ -5,7 +5,18 @@
             <BreadcrumbItem>用户列表</BreadcrumbItem>
         </Breadcrumb>
         <Card :style="{maxHeight:userListHeight}">
-            <v-search :importShow="!isProduct" :deleteShow="false" :selectShow="isProduct" :conditionExportShow="true" :selectList="groupSingleFilterList" @on-export="openExportModal" @on-import="openImportModal" @on-search="search" @on-build="userAddOpen" @on-reset="searchReset" />
+            <v-search
+                :importShow="!isProduct"
+                :deleteShow="false"
+                :selectShow="isProduct"
+                :conditionExportShow="true"
+                :selectList="groupSingleFilterList"
+                @on-export="openExportModal"
+                @on-import="openImportModal"
+                @on-search="search"
+                @on-build="userAddOpen"
+                @on-reset="searchReset"
+            />
             <div class="tableSize">
                 <el-table :data="userData" border style="width: 100%" @filter-change="filterChange">
                     <el-table-column prop="arLoginname" label="用户名">
@@ -124,9 +135,9 @@
                             <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index" filterable>
                                 <Option
                                     v-for="item in groupList[$index]"
-                                    :value="item.value"
-                                    :key="item.value"
-                                >{{ item.label }}</Option>
+                                    :value="item.grId"
+                                    :key="item.grId"
+                                >{{ item.grName }}</Option>
                             </Select>
                             <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;"></Button>
                         </FormItem>
@@ -249,7 +260,11 @@
                 <FormItem label="用户角色" v-show="!isProduct">
                     <Select v-model="exportForm.sysId" @on-change="importOrExportSysChange('export')" style="width:185px">
                         <Option value="0">全部</Option>
-                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        <Option
+                            v-for="item in systemList"
+                            :value="item.id"
+                            :key="item.id">{{ item.sysName }}
+                        </Option>
                     </Select>
                     <Select v-model="exportForm.groupId" style="width:185px;margin-left:14px;">
                         <Option value="0">全部</Option>
@@ -259,7 +274,11 @@
                 <FormItem label="用户角色" v-show="isProduct">
                     <Select v-model="exportForm.groupId">
                         <Option value="0">全部</Option>
-                        <Option v-for="item in groupSingleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        <Option
+                            v-for="item in groupSingleList"
+                            :value="item.grId"
+                            :key="item.grId">{{ item.grName }}
+                        </Option>
                     </Select>
                 </FormItem>
                 <FormItem label="时间" v-if="exportForm.type == 2">
@@ -903,25 +922,15 @@ export default {
                 return;
             }
             getRolesList(id).then(res => {
-                let data = res.data.list;
-                if (data.length == 0) {
-                    this.$refs["group" + index][0].notFound = true;
-                } else {
-                    this.$refs["group" + index][0].notFound = false;
-                }
-                let array = [];
-                for (let i in data) {
-                    array.push({
-                        value: data[i].grId,
-                        label: data[i].grName
-                    });
-                }
+                let data = res.data.list
+                this.$refs["group" + index][0].notFound = data.length == 0 ? true : false
                 if (this.groupList[index]) {
-                    this.groupList.splice(index, 1, array);
+                    this.groupList.splice(index, 1, data)
                 } else {
-                    this.groupList.push(array);
+                    this.groupList.push(data)
                 }
-            });
+                console.log(this.groupList)
+            })
         },
         _getRolesSingleList(id) {
             getRolesList(id).then(res => {

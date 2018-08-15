@@ -103,13 +103,16 @@
                 <th>序号
                   <i class="icon-sort"></i>
                 </th>
+                <th v-if="qxObj">区域名称
+                  <i class="icon-sort"></i>
+                </th>
                 <th v-if="type == 4">系统版本
                   <i class="icon-sort"></i>
                 </th>
                 <th v-else-if="type == 5">软件版本
                   <i class="icon-sort"></i>
                 </th>
-                <th v-if="type == 1 || type == 2 && departmentObj == null">部门名称
+                <th v-if="type == 1 && !qxObj || type == 2 && departmentObj == null && !qxObj">部门名称
                   <i class="icon-sort"></i>
                 </th>
                 <th v-if="type == 2">用户名
@@ -137,7 +140,7 @@
                   <i class="icon-sort"></i>
                 </th>
               </tr>
-              <tr v-else>
+              <tr v-else-if="qxData.length==0">
                 <th>序号
                   <i class="icon-sort"></i>
                 </th>
@@ -165,6 +168,11 @@
                 <th>访问时间
                   <i class="icon-sort"></i>
                 </th>
+              </tr>
+              <tr v-else>
+                <th>序号</th>
+                <th>区县</th>
+                <th>访问次数</th>
               </tr>
             </thead>
             <tbody>
@@ -210,6 +218,11 @@
                 <td v-if="type == 2">{{item.softVersion}}</td>
                 <td>{{item.branchName}}</td>
                 <td>{{format(item.visitTime)}}</td>
+              </tr>
+              <tr v-for="(item, index) in qxData" :key="index">
+                <td>{{index + params.start + 1}}</td>
+                <td>{{item.id}}</td>
+                <td>{{item.total}}</td>
               </tr>
             </tbody>
           </table>
@@ -262,12 +275,14 @@ export default {
       currentDays: 30,
       data: [],
       userData: [],
+      qxData: [],
       type: '',
       total: 0,
       obj: {},
       departmentObj: null,
       dataObj: null,
       userObj: null,
+      qxObj: false,
       cur: 0,
       params: {
         startDate: '',
@@ -331,6 +346,7 @@ export default {
       this.departmentObj = null
       this.dataObj = null
       this.userObj = null
+      this.qxObj = null
       this.config = {
         userId: '',
         visitCode: '',
@@ -355,7 +371,7 @@ export default {
         this._getQxData(this.params)
       } else if (this.cur == 3) {
         this._getSysGroup(this.params)
-      } else if (this.cur == 3) {
+      } else if (this.cur == 4) {
         this._getSoftGroup(this.params)
       }
     },
@@ -685,7 +701,7 @@ export default {
     },
     _filterCommon(data) {
       filterCommon(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.type = res.data.type
         this.data = res.data.data
         this.total = res.data.total
@@ -693,7 +709,7 @@ export default {
     },
     _getSysGroup(data) {
       getSysGroup(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.type = 4
         this.data = res.data.data
         this.total = res.data.total
@@ -701,7 +717,7 @@ export default {
     },
     _getSoftGroup(data) {
       getSoftGroup(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.type = 5
         this.data = res.data.data
         this.total = res.data.total
@@ -709,7 +725,7 @@ export default {
     },
     _getDataCount(data) {
       getDataCount(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.type = res.data.type
         this.data = res.data.data
         this.total = res.data.data.length
@@ -717,7 +733,7 @@ export default {
     },
     _getDateData(data) {
       dateData(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.type = res.data.type
         this.data = res.data.data
         this.total = res.data.total
@@ -725,7 +741,7 @@ export default {
     },
     _getDateLogData(data) {
       dateLogData(data).then((res) => {
-        this.data = []
+        this.data = this.qxData = []
         this.type = 2
         this.userData = res.data.data
         this.total = res.data.total
@@ -733,14 +749,14 @@ export default {
     },
     _getDateUserLogData(data) {
       dateUserLogData(data).then((res) => {
-        this.data = []
+        this.data = this.qxData = []
         this.userData = res.data.data
         this.total = res.data.total
       })
     },
     _getUserGroupSearchByDate(data) {
       getUserGroupSearchByDate(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.userObj = null
         this.data = res.data.data
         this.total = res.data.total
@@ -748,7 +764,7 @@ export default {
     },
     _getBranchSearchByDate(data) {
       getBranchSearchByDate(data).then((res) => {
-        this.userData = []
+        this.userData = this.qxData = []
         this.departmentObj = null
         this.data = res.data.data
         this.total = res.data.total
@@ -757,7 +773,9 @@ export default {
     _getQxData(data) {
       dayQxLogData(data).then(res => {
         this.userData = []
-        this.data = res.data.data
+        this.data = []
+        this.qxObj = true
+        this.qxData = res.data.data
         this.total = res.data.total
       })
     }
