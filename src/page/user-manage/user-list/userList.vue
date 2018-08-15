@@ -190,38 +190,6 @@
                 </FormItem>
             </Form>
         </Modal>
-        <Modal v-model="equipmentModal" :title=modalTitle>
-            <el-table :data="equipmentData" border style="width: 100%">
-                <el-table-column prop="arOs" label="设备类型" width="100">
-                </el-table-column>
-                <el-table-column prop="arCodeBind" label="绑定码">
-                </el-table-column>
-                <el-table-column label="操作" width="80" align="center">
-                    <template slot-scope="scope">
-                        <Button type="info" @click="equipmentEditOpen(scope)" size="small" title="编辑">编辑</Button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </Modal>
-        <Modal v-model="equipmentEditModal" :title=modalTitle @on-ok="updateEquipment">
-            <Form :model="equipmentForm" :label-width="100">
-                <FormItem label="设备类型">
-                    <Input v-model="equipmentForm.arOs" readonly placeholder="请输入..."></Input>
-                </FormItem>
-                <FormItem label="绑定码">
-                    <Input v-model="equipmentForm.arCodeBind" placeholder="请输入..."></Input>
-                </FormItem>
-                <FormItem label="登陆次数">
-                    <Input v-model="equipmentForm.arLogincount" readonly placeholder="请输入..."></Input>
-                </FormItem>
-                <FormItem label="注册时间">
-                    <Input v-model="equipmentForm.arRegtime" readonly placeholder="请输入..."></Input>
-                </FormItem>
-                <FormItem label="最后登陆时间">
-                    <Input v-model="equipmentForm.arLastlogintime" readonly placeholder="请输入..."></Input>
-                </FormItem>
-            </Form>
-        </Modal>
         <Modal v-model="importModal" title='导入用户' @on-ok="saveImport">
             <Form :model="importForm" label-position="left" :label-width="100" ref="file_user_form">
                 <FormItem label="用户角色">
@@ -328,8 +296,6 @@ export default {
             filterByAreaCode: "",
             filterByBranch: "",
             userModal: false,
-            equipmentModal: false,
-            equipmentEditModal: false,
             importModal: false,
             modalTitle: "",
             total: 0,
@@ -686,39 +652,7 @@ export default {
             this._getUserList(1);
             this.$refs.userPage.currentPage = 1;
         },
-        //设备列表
-        equipmentOpen(params) {
-            let data = {
-                method: "list",
-                pageNo: 1,
-                pageSize: 10,
-                arId: params.row.arId
-            };
-            getEquipment(data).then(res => {
-                if (res.data.total == 0) {
-                    this.$Message.info("暂无设备信息");
-                    this.equipmentModal = false;
-                } else {
-                    this.equipmentModal = true;
-                    this.equipmentData = res.data.list;
-                    for (let i in this.equipmentData) {
-                        this.equipmentData[i].arLastlogintime = this._mm.formatDate(
-                            this.equipmentData[i].arLastlogintime
-                        );
-                        this.equipmentData[i].arRegtime = this._mm.formatDate(
-                            this.equipmentData[i].arRegtime
-                        );
-                    }
-                }
-            });
-        },
-        //修改设备
-        equipmentEditOpen(params) {
-            this.equipmentEditModal = true;
-            for (let i in params.row) {
-                this.equipmentForm[i] = params.row[i];
-            }
-        },
+
         remove(params) {
             let data = {
                 arId: params.row.arId
@@ -815,6 +749,7 @@ export default {
             data.grIds = this.userForm.grId
             delete data['sysId']
             delete data['grId']
+            delete data['arPassword']
             if (this.isAdd) {
                 data.arPassword = MD5(this.userForm.arPassword).toString();
                 addUser(data).then(res => {
@@ -846,28 +781,6 @@ export default {
             this.groupList = [];
             this.nowSystemLength = 1;
             this.sysAndGroupList = [];
-        },
-        //跟新设备
-        updateEquipment() {
-            let data = {
-                id: this.equipmentForm.id,
-                arId: this.equipmentForm.arId,
-                arActive: this.equipmentForm.arActive,
-                arOs: this.equipmentForm.arOs,
-                arRegip: this.equipmentForm.arRegip,
-                arCodeBind: this.equipmentForm.arCodeBind,
-                arToken: this.equipmentForm.arToken,
-                arRegip: this.equipmentForm.arRegip,
-                sysId: this.equipmentForm.sysId
-            };
-            updateEquipment(data).then(res => {
-                if (res.code == 20000) {
-                    this.$Message.success("修改成功");
-                    this.equipmentModal = false;
-                } else {
-                    this.$Message.error(res.message);
-                }
-            });
         },
         //部门树点击
         handleNodeClick(data) {
