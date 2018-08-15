@@ -66,7 +66,7 @@
         <Tab-pane label="选择系统" name="systemChoose" :disabled="tabPaneDisable">
           <div class="chooseSystemTitle">
             <span class="chooseSystemSpan">系统选择&nbsp;&nbsp;
-              <small style="color:red">(注:同种类型下系统不能重复选择)</small>
+              <small style="color:red">(注:同一个系统类型下只能选择一个系统)</small>
             </span>
             <Button type="info" icon="plus" title="新增系统选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
           </div>
@@ -83,7 +83,7 @@
               </Select>
               <Select
                 v-model="item.sysId"
-                @on-change="sysIdSelect(item.sysId,$index)"
+                
                 style="width:220px;margin-left:5px;"
                 :ref="'sysId'+$index"
                 filterable
@@ -301,12 +301,29 @@ export default {
     },
     typeChange(type, index) {
       let array = [];
-      this.systemList.map(v => {
-        if (v.type == type) {
-          array.push(v);
-        }
+      let list = [];
+      this.sysTypeAndsysList.map(v => {
+        list.push(v.sysType);
       });
-      this.systemFilterList[index] = array;
+      let setList = Array.from(new Set(list));
+      this.sysTypeAndsysList[index].sysId = "";
+      this.$refs["sysId" + index][0].query = "";
+      if (list.length > setList.length) {
+        this.$Message.warning("同类型系统只能选择一个");
+        this.$refs["sysType" + index][0].values = [];
+        this.$refs["sysId" + index][0].values = [];
+        this.$refs["sysType" + index][0].query = "";
+        this.sysTypeAndsysList[index] = { sysType: "", sysId: "" }
+        this.systemFilterList[index] = []
+      } else {
+        this.systemList.map(v => {
+          if (v.type == type) {
+            array.push(v);
+          }
+        })
+        this.systemFilterList[index] = array;
+        this.systemFilterList = Object.assign([], this.systemFilterList)
+      }
     },
     addOrUpdate() {
       let sysIdStr = []
