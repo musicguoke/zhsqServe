@@ -810,18 +810,35 @@ export default {
         },
         //系统改变，获取对应系统下的角色
         systemChange(id, index) {
-            let list = [];
-            this.sysAndGroupList.map(v => {
-                list.push(v.sysId);
+            let list = []
+            let type = []
+            this.sysAndGroupList.map(a => {
+                list.push(a.sysId);
+                this.systemList.map(b =>{
+                    if(a.sysId == b.id){
+                        type.push(b.type)
+                    }
+                })
             });
-            this.sysAndGroupList[index].grId = "";
-            this.$refs["group" + index][0].query = "";
-            let setList = Array.from(new Set(list));
-            if (list.length > setList.length) {
+            this.sysAndGroupList[index].grId = ""
+            this.$refs["group" + index][0].query = ""
+            let setList = Array.from(new Set(list))
+            let setType = Array.from(new Set(type))
+            if(type.length > setType.length){
+                this.$Message.warning("同一类型系统只能选择一个");
+                this.$refs["item" + index][0].values = []
+                this.$refs["group" + index][0].values = []
+                this.$refs["item" + index][0].query = ""
+                this.groupList[index] = []
+                this.sysAndGroupList[index] = {
+                    sysId: "",
+                    grId: ""
+                };
+            }else if (list.length > setList.length) {
                 this.$Message.warning("同一个系统下只能选择一个角色");
-                this.$refs["item" + index][0].values = [];
-                this.$refs["group" + index][0].values = [];
-                this.$refs["item" + index][0].query = "";
+                this.$refs["item" + index][0].values = []
+                this.$refs["group" + index][0].values = []
+                this.$refs["item" + index][0].query = ""
                 this.groupList[index] = []
                 this.sysAndGroupList[index] = {
                     sysId: "",
