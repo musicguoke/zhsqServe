@@ -118,7 +118,7 @@
                         <Button type="info" icon="plus" title="新增系统角色选择" class="chooseSystemAdd" @click="addChooseSystem">添加</Button>
                     </div>
                     <Form>
-                        <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: flex-start">
+                        <FormItem v-for="(item,$index) in sysAndGroupList" :key="$index" style="display:flex; justify-content: space-between">
                             <Select
                                 v-model="item.sysId"
                                 @on-change="systemChange(item.sysId,$index)"
@@ -132,14 +132,14 @@
                                     :key="item.id"
                                 >{{ item.sysName }}</Option>
                             </Select>
-                            <Select v-model="item.grId" style="width:220px;margin-left:5px;" :ref="'group'+$index" filterable>
+                            <Select v-model="item.grId" style="width:220px;" :ref="'group'+$index" filterable>
                                 <Option
                                     v-for="item in groupList[$index]"
                                     :value="item.grId"
                                     :key="item.grId"
                                 >{{ item.grName }}</Option>
                             </Select>
-                            <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;margin-left:5px;"></Button>
+                            <Button type="error" icon="close-round" title="移除" @click="removeChooseSystem($index)" style="padding:4px 10px;"></Button>
                         </FormItem>
                     </Form>
                 </Tab-pane>

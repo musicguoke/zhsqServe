@@ -103,16 +103,13 @@
                 <th>序号
                   <i class="icon-sort"></i>
                 </th>
-                <th v-if="qxObj">区域名称
-                  <i class="icon-sort"></i>
-                </th>
                 <th v-if="type == 4">系统版本
                   <i class="icon-sort"></i>
                 </th>
                 <th v-else-if="type == 5">软件版本
                   <i class="icon-sort"></i>
                 </th>
-                <th v-if="type == 1 && !qxObj || type == 2 && departmentObj == null && !qxObj">部门名称
+                <th v-if="type == 1 || type == 2 && departmentObj == null">部门名称
                   <i class="icon-sort"></i>
                 </th>
                 <th v-if="type == 2">用户名
@@ -140,7 +137,7 @@
                   <i class="icon-sort"></i>
                 </th>
               </tr>
-              <tr v-else-if="qxData.length==0">
+              <tr v-else>
                 <th>序号
                   <i class="icon-sort"></i>
                 </th>
@@ -168,11 +165,6 @@
                 <th>访问时间
                   <i class="icon-sort"></i>
                 </th>
-              </tr>
-              <tr v-else>
-                <th>序号</th>
-                <th>区县</th>
-                <th>访问次数</th>
               </tr>
             </thead>
             <tbody>
@@ -219,14 +211,9 @@
                 <td>{{item.branchName}}</td>
                 <td>{{format(item.visitTime)}}</td>
               </tr>
-              <tr v-for="(item, index) in qxData" :key="index">
-                <td>{{index + params.start + 1}}</td>
-                <td>{{item.id}}</td>
-                <td>{{item.total}}</td>
-              </tr>
             </tbody>
           </table>
-          <div class="block pagination">
+          <div class="pagination">
             <Page v-if="config.search && !config.userId" :total="total" :current.sync="currentPage" @on-change="handleSearch"></Page>
             <Page v-else-if="config.bId && config.userId" :total="total" :current.sync="currentPage" @on-change="handleBidandUserId"></Page>
             <Page v-else-if="config.bId && !config.userId" :total="total" :current.sync="currentPage" @on-change="handleBid"></Page>
@@ -253,8 +240,7 @@ import {
   getSysGroup,
   getSoftGroup,
   getUserGroupSearchByDate,
-  getBranchSearchByDate,
-  dayQxLogData
+  getBranchSearchByDate
 } from '@/api/service-data'
 
 export default {
@@ -282,7 +268,6 @@ export default {
       departmentObj: null,
       dataObj: null,
       userObj: null,
-      qxObj: false,
       cur: 0,
       params: {
         startDate: '',
@@ -308,7 +293,7 @@ export default {
     }
   },
   created() {
-    this.getItemData()
+    this.getItemData(this.$route.query.id)
   },
   methods: {
     export2excel() {
@@ -346,7 +331,6 @@ export default {
       this.departmentObj = null
       this.dataObj = null
       this.userObj = null
-      this.qxObj = null
       this.config = {
         userId: '',
         visitCode: '',
@@ -366,9 +350,7 @@ export default {
         }
         this._getDateData(Object.assign({}, this.params, data))
       } else if (this.cur == 2) {
-        this.params.start = 1
-        this.params.type = 2
-        this._getQxData(this.params)
+        this.$router.push('qx-statistics')
       } else if (this.cur == 3) {
         this._getSysGroup(this.params)
       } else if (this.cur == 4) {
@@ -769,207 +751,10 @@ export default {
         this.data = res.data.data
         this.total = res.data.total
       })
-    },
-    _getQxData(data) {
-      dayQxLogData(data).then(res => {
-        this.userData = []
-        this.data = []
-        this.qxObj = true
-        this.qxData = res.data.data
-        this.total = res.data.total
-      })
     }
   }
 }
 </script>
-<style scoped lang="scss">
-.pagination {
-  margin: 0 auto;
-  margin-top: 10px;
-  display: table;
-}
-.clearfix:after {
-  content: "";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-}
-.head ul {
-  list-style: none;
-  color: #333;
-  .date-box {
-    float: right;
-    margin-right: 0;
-    .block {
-      display: inline-block;
-      margin-left: 20px;
-    }
-  }
-}
-.head ul .head-item {
-  text-align: center;
-  float: left;
-  margin-right: 16px;
-  padding: 6px 15px;
-  line-height: 1.5;
-  font-weight: 400;
-  box-sizing: border-box;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.head .active {
-  border-color: #2d8cf0 !important;
-}
-.head ul .head-item {
-  // width: 88px;
-}
-.head ul li input[type="date"] {
-  width: 186px;
-  height: 30px;
-  border: 1px solid #cdcece;
-  border-radius: 2px;
-}
-.main {
-  width: 100%;
-  margin-top: 20px;
-  color: #333;
-  .current-time {
-    text-align: center;
-    position: relative;
-  }
-}
-.main h2 {
-  margin: 5px 0;
-  padding: 0;
-  text-align: center;
-  font-weight: normal;
-}
-.main .features {
-  width: 100%;
-  margin-top: 22px;
-  margin-bottom: 20px;
-  .breadcrumb {
-    float: left;
-    line-height: 30px;
-    margin-left: 10px;
-    .btn-item {
-      display: inline-block;
-      padding: 0 12px;
-      margin: 0 5px;
-      border: 2px solid #dbdbdb;
-      cursor: pointer;
-    }
-    .active {
-      background-color: #2d8cf0;
-      color: #fff;
-    }
-  }
-}
-.features .export {
-  display: block;
-  float: left;
-  padding: 0 15px;
-  height: 30px;
-  line-height: 30px;
-  border: 1px solid #cdcece;
-  background-color: #fbfcfc;
-  border-radius: 5px;
-  box-shadow: 1px 1px 1px #cdcece, -1px -1px 1px #cdcece;
-  outline: none;
-  cursor: pointer;
-  position: relative;
-}
-.features .export .icon-download {
-  // position: absolute;
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  height: 100%;
-  background: url(../../../assets/download.png) no-repeat left;
-  background-size: 100%;
-  vertical-align: middle;
-}
-.features input[type="text"] {
-  float: left;
-  width: 118px;
-  height: 26px;
-  font-size: 14px;
-  text-align: center;
-  border: 1px solid #cdcece;
-  background-color: #056eeb;
-  color: white;
-}
-.features .search-box {
-  float: right;
-  .search {
-    height: 30px;
-    border: 1px solid #cdcece;
-    border-radius: 5px;
-    outline: 0;
-  }
-  span {
-    margin-left: 20px;
-    display: inline-block;
-    padding: 0 8px;
-    line-height: 30px;
-    color: #fff;
-    background-color: #056ecb;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-}
-
-table {
-  width: 100%;
-  text-align: center;
-  border: 1px solid #dddddd;
-  border-radius: 1px;
-  border-collapse: collapse;
-}
-table tr:nth-of-type(even) {
-  background-color: #f9f9f9;
-}
-table tr:nth-of-type(odd) {
-  background-color: #ffffff;
-}
-table tr th .icon-sort {
-  display: inline-block;
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  width: 16px;
-  height: 16px;
-  background: url(../../../assets/sort.png) no-repeat center;
-  background-size: 10px 15px;
-}
-table tr th .icon-sort:hover {
-  background: url(../../../assets/sorted.png) no-repeat center;
-  background-size: 10px 15px;
-}
-th,
-td {
-  height: 45px;
-  border: 1px solid #dddddd;
-  position: relative;
-}
-.three th {
-  // width: (100%/3)
-}
-.hover,
-.link {
-  color: #0647ed;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.link {
-  position: absolute;
-  right: 0;
-}
-.key-link {
-  right: 13%;
-}
+<style scoped>
+@import '../style.scss';
 </style>
