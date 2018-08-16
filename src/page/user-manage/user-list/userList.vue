@@ -937,8 +937,8 @@ export default {
         },
         //用户导出
         openExportModal() {
-            this.$refs.beginDate.visualValue = "";
-            this.$refs.endDate.visualValue = "";
+            this.$refs.beginDate.handleClear()
+            this.$refs.endDate.handleClear()
             this.modalTitle = "导出筛选条件";
             this.exportUserModal = true;
             this._getSystemList();
