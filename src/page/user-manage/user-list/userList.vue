@@ -951,12 +951,12 @@ export default {
             if (this.$route.params.id) {
                 sysId = this.$route.params.id;
             } else {
-                sysId = this.exportForm.sysId == "0" ? "" : this.exportForm.sysId;
+                sysId = this.exportForm.sysId;
             }
             let data = {
                 sysId: sysId,
-                grId: this.exportForm.groupId == "0" ? "" : this.exportForm.groupId,
-                type: this.exportForm.type == "0" ? "" : this.exportForm.groupId,
+                grId: this.exportForm.groupId,
+                type: this.exportForm.type,
                 beginDate: this.exportForm.beginDate,
                 endDate: this.exportForm.endDate
             };
@@ -968,6 +968,7 @@ export default {
                     params += `${i}=&`;
                 }
             }
+            console.log(params)
             window.location.href = params;
         },
         //根据区域和部门进行过滤
